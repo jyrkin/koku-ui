@@ -170,6 +170,7 @@
 <xs:restriction base="xs:string">
 <xs:enumeration value="Approved" />
 <xs:enumeration value="Declined" />
+<xs:enumeration value="Undecided" />
 </xs:restriction>
 </xs:simpleType>
 <xs:simpleType name="consentStatus">
