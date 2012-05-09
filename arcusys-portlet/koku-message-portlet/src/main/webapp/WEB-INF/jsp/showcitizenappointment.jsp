@@ -1,12 +1,73 @@
+<%@ page import="fi.arcusys.koku.kv.model.KokuMessage" %>
+<%@ page import="fi.arcusys.koku.av.CitizenAppointment" %>
+<%@ page import="fi.arcusys.koku.users.KokuUser" %>
+<%@ page import="fi.arcusys.koku.util.Constants" %>
+<%@ page import="fi.arcusys.koku.web.util.ModelWrapper"%>
+
+
 <%@ include file="init.jsp"%>
 
 <portlet:renderURL var="homeURL" windowState="<%= WindowState.NORMAL.toString() %>" >
 	<portlet:param name="myaction" value="home" />
 </portlet:renderURL>
 
+<portlet:resourceURL var="cancelURL" id="cancelAppointment"></portlet:resourceURL>
+
+<portlet:resourceURL var="appointmentRenderURL" id="createAppointmentRenderUrl">
+</portlet:resourceURL>
+
 <%@ include file="js_koku_detail.jspf" %>
 <%@ include file="js_koku_navigation_helper.jspf" %>
 <%@ include file="js_koku_reset_view.jspf" %>
+
+<%
+	ModelWrapper<CitizenAppointment> messageModel = (ModelWrapper<CitizenAppointment>) request.getAttribute("appointment");
+	
+	CitizenAppointment appointment = messageModel.getModel();
+	
+	String appointmentId = String.valueOf(appointment.getAppointmentId());
+	String targetPerson = appointment.getTargetPersonUser().getUid();
+	
+%>
+
+<script type="text/javascript">
+	<%@ include file="js_koku_ajax.jspf" %>
+
+	var ajaxUrls = {
+			cancelUrl : "<%= cancelURL %>",
+			appointmentRenderUrl :  "<%= appointmentRenderURL %>"
+	};
+	
+	var kokuAjax = new KokuAjax(ajaxUrls);
+	
+	function notify_appointment_cancelled() {
+		jQuery.jGrowl("<spring:message code="notification.canceled.appointment"/>");
+	}
+	
+	function callback(result) {			
+		if (result == 'OK') {
+			jQuery.jGrowl("<spring:message code="notification.canceled.appointment"/>");
+			setTimeout("kokuNavigationHelper.returnMainPage();", 5000);
+		} else if (result == 'FAIL') {
+			jQuery.jGrowl("<spring:message code="notification.canceled.appointment.failed"/>");
+		} else {
+			KokuUtil.errorMsg.showErrorMessage("<spring:message code="error.unLogin" />");
+		}
+	}
+	
+	function cancelAppointment() {
+		var appointments = [], targetPersons = [], comment, taskType;
+		appointments[0] = "<%= appointmentId %>";
+		targetPersons[0] = "<%= targetPerson %>";
+		comment = prompt('<spring:message code="appointment.cancel"/>',"");
+		if(comment == null)	{
+			return;
+		}		
+
+		taskType = "<%= Constants.TASK_TYPE_APPOINTMENT_INBOX_CITIZEN %>";
+		kokuAjax.cancelAppointments(appointments, targetPersons, comment, taskType, callback);
+	}
+</script>
 
 
 <c:choose> 
@@ -62,6 +123,9 @@
 	</div>
 	<div id="task-manager-operation" class="task-manager-operation-part">
 		<input type="button" value="<spring:message code="page.return"/>" onclick="kokuNavigationHelper.returnMainPage()" />
+	</div>
+	<div id="task-manager-operation" class="task-manager-operation-part">
+		<input type="button" value="Peruuta" onclick="cancelAppointment()" />
 	</div>
 </div>
 

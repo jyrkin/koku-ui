@@ -272,10 +272,10 @@ public class TaskHandle {
 		String subQuery;
 		switch (taskType) {
 		case TaskUtil.TASK:
-			subQuery = "(T._state = TaskState.READY OR T._state = TaskState.CLAIMED)" + " AND T._description like '%" + keyword + "%'";
+			subQuery = "(T._state = TaskState.READY OR T._state = TaskState.CLAIMED) AND T._description like '%" + keyword + "%'";
 			break;			
 		case TaskUtil.NOTIFICATION:
-			subQuery = "T._state = TaskState.READY" + " AND T._description like '%" + keyword + "%'";
+			subQuery = "T._state = TaskState.READY AND T._description like '%" + keyword + "%'";
 			break;
 		case TaskUtil.PROCESS:
 			subQuery = "T._description like '%" + keyword + "%'";;
