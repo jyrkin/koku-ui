@@ -24,7 +24,8 @@ import javax.xml.stream.XMLStreamException;
 
 import net.sf.json.JSONObject;
 
-import org.intalio.tempo.workflow.task.Task;
+//import org.intalio.tempo.workflow.task.Task;
+import fi.arcusys.koku.intalio.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -36,11 +37,10 @@ import org.springframework.web.portlet.bind.annotation.ActionMapping;
 import org.springframework.web.portlet.bind.annotation.RenderMapping;
 import org.springframework.web.portlet.bind.annotation.ResourceMapping;
 
+import fi.arcusys.koku.intalio.TaskHandle;
 import fi.arcusys.koku.palvelut.exceptions.IllegalOperationCall;
 import fi.arcusys.koku.palvelut.util.AjaxViewResolver;
 import fi.arcusys.koku.palvelut.util.OperationsValidator;
-import fi.arcusys.koku.palvelut.util.OperationsValidatorImpl;
-import fi.arcusys.koku.palvelut.util.TaskUtil;
 import fi.arcusys.koku.palvelut.util.TokenResolver;
 import fi.arcusys.koku.palvelut.util.XmlProxy;
 import fi.arcusys.koku.util.KokuWebServicesJS;
@@ -180,18 +180,19 @@ public class ViewController extends FormHolderController {
 		mav.addObject(ATTR_PREFERENCES, request.getPreferences());
 		Task t = null;	
 		TokenResolver tokenUtil = new TokenResolver();
+		TaskHandle taskHandle = new TaskHandle();
 		try {
 			if (showFormById) {
 				LOG.debug("Loading taskID: '" +formId+"'");
-				t = TaskUtil.getTask(tokenUtil.getAuthenticationToken(request), formId);
+				t = taskHandle.getTask(formId, tokenUtil.getAuthenticationToken(request));
 			} else {
-				t = TaskUtil.getTaskByDescription(tokenUtil.getAuthenticationToken(request), formDescription);
+				t = taskHandle.getTaskByDescription(tokenUtil.getAuthenticationToken(request), formDescription);
 				// Fallback. Try to get form by Id
 				if (t == null) {
 					LOG.error("Fallback! Couldn't find task by description name. Trying to get form by Id. Description: '" + formDescription + "'");
-					t = TaskUtil.getTask(tokenUtil.getAuthenticationToken(request), formId);
+					t = taskHandle.getTask(formId, tokenUtil.getAuthenticationToken(request));
 				}
-				LOG.debug("Loading taskDescription: '" +t.getDescription()+ "' Id: '"+t.getID()+"'");
+				LOG.debug("Loading taskDescription: '" +t.getDescription()+ "' Id: '"+t.getId()+"'");
 			}
 		} catch (Exception e) {
 			if (request.getUserPrincipal() != null && request.getUserPrincipal().getName() != null) {
