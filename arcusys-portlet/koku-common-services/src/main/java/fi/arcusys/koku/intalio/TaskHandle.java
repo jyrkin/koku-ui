@@ -19,7 +19,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import fi.arcusys.intalio.tms.Task.Input;
+import fi.arcusys.intalio.tms.TaskData;
 import fi.arcusys.intalio.tms.TaskMetadata;
 import fi.arcusys.koku.exceptions.IntalioAuthException;
 import fi.arcusys.koku.util.Properties;
@@ -216,7 +216,7 @@ public class TaskHandle {
 	}
 
 	private fi.arcusys.koku.intalio.Task createTask(TaskMetadata task,
-			fi.arcusys.intalio.tms.Task.Input input) {
+			fi.arcusys.intalio.tms.TaskData input) {
 		if (task == null) {
 			return null;
 		}
@@ -242,7 +242,7 @@ public class TaskHandle {
 	 * @param input
 	 * @return sender name
 	 */
-	private String getSenderNameFromTaskInput(TaskMetadata task, Input input) {
+	private String getSenderNameFromTaskInput(TaskMetadata task, TaskData input) {
 		final String descriptionName = task.getDescription();
 		if (descriptionName.startsWith(Properties.RECEIVED_REQUESTS_FILTER)) {
 			// Uusi pyyntö
@@ -261,7 +261,7 @@ public class TaskHandle {
 		}
 	}
 
-	private String getSenderName(final fi.arcusys.intalio.tms.Task.Input input,
+	private String getSenderName(final fi.arcusys.intalio.tms.TaskData input,
 			final String nodename) {
 		if (input == null || input.getAny() == null || input.getAny().isEmpty()) {
 			return null;

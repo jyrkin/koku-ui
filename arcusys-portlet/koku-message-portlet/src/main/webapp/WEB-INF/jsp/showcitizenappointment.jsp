@@ -124,8 +124,10 @@
 	<div id="task-manager-operation" class="task-manager-operation-part">
 		<input type="button" value="<spring:message code="page.return"/>" onclick="kokuNavigationHelper.returnMainPage()" />
 	</div>
-	<div id="task-manager-operation" class="task-manager-operation-part">
-		<input type="button" value="Peruuta" onclick="cancelAppointment()" />
-	</div>
+	<c:if test="${appointment.model.status} != 'check'">
+		<div id="task-manager-operation" class="task-manager-operation-part">
+			<input type="button" value="Peruuta" onclick="cancelAppointment()" />
+		</div>
+	</c:if>
 </div>
 
