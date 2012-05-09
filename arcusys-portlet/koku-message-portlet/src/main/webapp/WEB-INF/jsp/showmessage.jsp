@@ -1,10 +1,10 @@
-<%@page import="fi.arcusys.koku.web.util.ResponseStatus"%>
+<%@page import="fi.arcusys.koku.common.services.facades.impl.ResponseStatus"%>
 <%@page import="fi.arcusys.koku.web.util.ModelWrapper"%>
 <%@page import="java.util.Collections"%>
 <%@ page import="net.sf.json.JSONArray"%>
 <%@ include file="init.jsp"%>
-<%@ page import="fi.arcusys.koku.kv.model.KokuMessage" %>
-<%@ page import="fi.arcusys.koku.users.KokuUser" %>
+<%@ page import="fi.arcusys.koku.common.services.messages.model.KokuMessage" %>
+<%@ page import="fi.arcusys.koku.common.services.users.KokuUser" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.Enumeration" %>

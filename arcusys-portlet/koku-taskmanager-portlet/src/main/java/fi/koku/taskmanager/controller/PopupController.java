@@ -1,7 +1,7 @@
 package fi.koku.taskmanager.controller;
 
-import static fi.arcusys.koku.util.Constants.ATTR_TASK_LINK;
-import static fi.arcusys.koku.util.Constants.VIEW_POPUP_FORM;
+import static fi.arcusys.koku.common.util.Constants.ATTR_TASK_LINK;
+import static fi.arcusys.koku.common.util.Constants.VIEW_POPUP_FORM;
 
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;

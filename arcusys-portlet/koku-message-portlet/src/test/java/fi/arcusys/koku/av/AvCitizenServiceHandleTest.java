@@ -12,7 +12,10 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import fi.arcusys.koku.exceptions.KokuServiceException;
+import fi.arcusys.koku.common.exceptions.KokuServiceException;
+import fi.arcusys.koku.common.services.appointments.citizen.AvCitizenServiceHandle;
+import fi.arcusys.koku.common.services.appointments.model.KokuAppointment;
+import fi.arcusys.koku.common.util.DummyMessageSource;
 
 public class AvCitizenServiceHandleTest {
 
@@ -28,30 +31,30 @@ public class AvCitizenServiceHandleTest {
 
 	@Before
 	public void setUp() throws Exception {
-		tester = new AvCitizenServiceHandle();
+		tester = new AvCitizenServiceHandle(new DummyMessageSource());
 	}
 
 	@After
 	public void tearDown() throws Exception {
 	}
 	
-	@Ignore
-	@Test
-	public void testGetAppointments() {
-		String user = "Ville Virkamies";
-		int startNum = 1;
-		int maxNum = 5;
-		String taskType = "app_response_employee";
-		
-		List<KokuAppointment> apps;
-		try {
-			apps = tester.getAppointments(user, startNum, maxNum, taskType);
-		} catch (KokuServiceException e) {
-			throw new AssertionError(e);
-		}
-		int expected = 1;
-		int actual = apps.size();
-		assertEquals("createTask first creation date failed", expected, actual);
-	}
+//	@Ignore
+//	@Test
+//	public void testGetAppointments() {
+//		String user = "Ville Virkamies";
+//		int startNum = 1;
+//		int maxNum = 5;
+//		String taskType = "app_response_employee";
+//		
+//		List<KokuAppointment> apps;
+//		try {
+//			apps = tester.getAppointments(user, startNum, maxNum, taskType);
+//		} catch (KokuServiceException e) {
+//			throw new AssertionError(e);
+//		}
+//		int expected = 1;
+//		int actual = apps.size();
+//		assertEquals("createTask first creation date failed", expected, actual);
+//	}
 
 }

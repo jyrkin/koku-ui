@@ -1,11 +1,11 @@
 package fi.arcusys.koku.palvelut.controller;
 
-import static fi.arcusys.koku.util.Constants.ATTR_PREFERENCES;
-import static fi.arcusys.koku.util.Constants.JSON_RESULT;
-import static fi.arcusys.koku.util.Constants.PREF_SHOW_ONLY_FORM_BY_DESCRIPTION;
-import static fi.arcusys.koku.util.Constants.PREF_SHOW_ONLY_FORM_BY_ID;
-import static fi.arcusys.koku.util.Constants.PREF_SHOW_TASKS_BY_ID;
-import static fi.arcusys.koku.util.Constants.RESPONSE;
+import static fi.arcusys.koku.common.util.Constants.ATTR_PREFERENCES;
+import static fi.arcusys.koku.common.util.Constants.JSON_RESULT;
+import static fi.arcusys.koku.common.util.Constants.PREF_SHOW_ONLY_FORM_BY_DESCRIPTION;
+import static fi.arcusys.koku.common.util.Constants.PREF_SHOW_ONLY_FORM_BY_ID;
+import static fi.arcusys.koku.common.util.Constants.PREF_SHOW_TASKS_BY_ID;
+import static fi.arcusys.koku.common.util.Constants.RESPONSE;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -43,7 +43,7 @@ import fi.arcusys.koku.palvelut.util.AjaxViewResolver;
 import fi.arcusys.koku.palvelut.util.OperationsValidator;
 import fi.arcusys.koku.palvelut.util.TokenResolver;
 import fi.arcusys.koku.palvelut.util.XmlProxy;
-import fi.arcusys.koku.util.KokuWebServicesJS;
+import fi.arcusys.koku.common.util.KokuWebServicesJS;
 import fi.koku.settings.KoKuPropertiesUtil;
 
 

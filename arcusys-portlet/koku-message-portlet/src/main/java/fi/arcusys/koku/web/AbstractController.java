@@ -1,18 +1,18 @@
 package fi.arcusys.koku.web;
 
-import static fi.arcusys.koku.util.Constants.JSON_LOGIN_STATUS;
-import static fi.arcusys.koku.util.Constants.PORTAL_MODE_KUNPO;
-import static fi.arcusys.koku.util.Constants.PORTAL_MODE_LOORA;
-import static fi.arcusys.koku.util.Constants.RESPONSE;
-import static fi.arcusys.koku.util.Constants.TOKEN_STATUS_INVALID;
-import static fi.arcusys.koku.util.Properties.PORTAL_MODE;
+import static fi.arcusys.koku.common.util.Constants.JSON_LOGIN_STATUS;
+import static fi.arcusys.koku.common.util.Constants.PORTAL_MODE_KUNPO;
+import static fi.arcusys.koku.common.util.Constants.PORTAL_MODE_LOORA;
+import static fi.arcusys.koku.common.util.Constants.RESPONSE;
+import static fi.arcusys.koku.common.util.Constants.TOKEN_STATUS_INVALID;
+import static fi.arcusys.koku.common.util.Properties.PORTAL_MODE;
 import net.sf.json.JSONObject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ui.ModelMap;
 
-import fi.arcusys.koku.util.PortalRole;
+import fi.arcusys.koku.common.util.PortalRole;
 
 public class AbstractController {
 	private static final Logger LOG = LoggerFactory.getLogger(AbstractController.class);

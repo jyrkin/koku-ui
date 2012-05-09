@@ -1,16 +1,16 @@
 package fi.arcusys.koku.web;
 
 
-import static fi.arcusys.koku.util.Constants.ATTR_CURRENT_PAGE;
-import static fi.arcusys.koku.util.Constants.ATTR_KEYWORD;
-import static fi.arcusys.koku.util.Constants.ATTR_ORDER_TYPE;
-import static fi.arcusys.koku.util.Constants.ATTR_TASK_TYPE;
-import static fi.arcusys.koku.util.Constants.ATTR_USERNAME;
-import static fi.arcusys.koku.util.Constants.ATTR_USER_ID;
-import static fi.arcusys.koku.util.Constants.TASK_TYPE_INFO_REQUEST_BROWSE;
-import static fi.arcusys.koku.util.Constants.TASK_TYPE_INFO_REQUEST_BROWSE_REPLIED;
-import static fi.arcusys.koku.util.Constants.TASK_TYPE_INFO_REQUEST_BROWSE_SENT;
-import static fi.arcusys.koku.util.Constants.VIEW_SHOW_INFO_REQUEST;
+import static fi.arcusys.koku.common.util.Constants.ATTR_CURRENT_PAGE;
+import static fi.arcusys.koku.common.util.Constants.ATTR_KEYWORD;
+import static fi.arcusys.koku.common.util.Constants.ATTR_ORDER_TYPE;
+import static fi.arcusys.koku.common.util.Constants.ATTR_TASK_TYPE;
+import static fi.arcusys.koku.common.util.Constants.ATTR_USERNAME;
+import static fi.arcusys.koku.common.util.Constants.ATTR_USER_ID;
+import static fi.arcusys.koku.common.util.Constants.TASK_TYPE_INFO_REQUEST_BROWSE;
+import static fi.arcusys.koku.common.util.Constants.TASK_TYPE_INFO_REQUEST_BROWSE_REPLIED;
+import static fi.arcusys.koku.common.util.Constants.TASK_TYPE_INFO_REQUEST_BROWSE_SENT;
+import static fi.arcusys.koku.common.util.Constants.VIEW_SHOW_INFO_REQUEST;
 
 import javax.annotation.Resource;
 import javax.portlet.PortletSession;
@@ -26,12 +26,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.portlet.bind.annotation.RenderMapping;
 
-import fi.arcusys.koku.exceptions.KokuServiceException;
-import fi.arcusys.koku.tiva.tietopyynto.employee.KokuEmployeeTietopyyntoServiceHandle;
-import fi.arcusys.koku.tiva.tietopyynto.model.KokuInformationRequestDetail;
-import fi.arcusys.koku.users.UserIdResolver;
+import fi.arcusys.koku.common.exceptions.KokuServiceException;
+import fi.arcusys.koku.common.services.facades.impl.ResponseStatus;
+import fi.arcusys.koku.common.services.inforequest.employee.KokuEmployeeTietopyyntoServiceHandle;
+import fi.arcusys.koku.common.services.inforequest.model.KokuInformationRequestDetail;
+import fi.arcusys.koku.common.services.users.UserIdResolver;
 import fi.arcusys.koku.web.util.ModelWrapper;
-import fi.arcusys.koku.web.util.ResponseStatus;
 import fi.arcusys.koku.web.util.impl.ModelWrapperImpl;
 
 /**
@@ -109,8 +109,7 @@ public class ShowTipyController extends AbstractController {
 			if(taskType.equals(TASK_TYPE_INFO_REQUEST_BROWSE_REPLIED) 
 			   || taskType.equals(TASK_TYPE_INFO_REQUEST_BROWSE_SENT)
 			   || taskType.equals(TASK_TYPE_INFO_REQUEST_BROWSE)) {
-				KokuEmployeeTietopyyntoServiceHandle handle = new KokuEmployeeTietopyyntoServiceHandle();
-				handle.setMessageSource(messageSource);
+				KokuEmployeeTietopyyntoServiceHandle handle = new KokuEmployeeTietopyyntoServiceHandle(messageSource);
 				info = handle.getRequestDetails(reqId);
 				modelWrapper = new ModelWrapperImpl<KokuInformationRequestDetail>(info);
 			}

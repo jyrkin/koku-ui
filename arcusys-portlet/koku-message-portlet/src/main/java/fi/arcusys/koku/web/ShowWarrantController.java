@@ -1,7 +1,7 @@
 package fi.arcusys.koku.web;
 
 
-import static fi.arcusys.koku.util.Constants.*;
+import static fi.arcusys.koku.common.util.Constants.*;
 
 import javax.annotation.Resource;
 import javax.portlet.PortletSession;
@@ -17,13 +17,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.portlet.bind.annotation.RenderMapping;
 
-import fi.arcusys.koku.exceptions.KokuServiceException;
-import fi.arcusys.koku.tiva.warrant.citizens.KokuCitizenWarrantHandle;
-import fi.arcusys.koku.tiva.warrant.employee.KokuEmployeeWarrantHandle;
-import fi.arcusys.koku.tiva.warrant.model.KokuAuthorizationSummary;
-import fi.arcusys.koku.users.UserIdResolver;
+import fi.arcusys.koku.common.exceptions.KokuServiceException;
+import fi.arcusys.koku.common.services.facades.impl.ResponseStatus;
+import fi.arcusys.koku.common.services.users.UserIdResolver;
+import fi.arcusys.koku.common.services.warrants.citizens.KokuCitizenWarrantHandle;
+import fi.arcusys.koku.common.services.warrants.employee.KokuEmployeeWarrantHandle;
+import fi.arcusys.koku.common.services.warrants.model.KokuAuthorizationSummary;
 import fi.arcusys.koku.web.util.ModelWrapper;
-import fi.arcusys.koku.web.util.ResponseStatus;
 import fi.arcusys.koku.web.util.impl.ModelWrapperImpl;
 
 /**
@@ -99,16 +99,13 @@ public class ShowWarrantController extends AbstractController {
 				throw new KokuServiceException("AuthorizationID is not valid! Username: '" + username + "' UserId: '" + userId + "' AuthorizationId: '"+ authorizationId+"'", nfe);
 			}
 			if(taskType.equals(TASK_TYPE_WARRANT_BROWSE_RECEIEVED)) {
-				KokuCitizenWarrantHandle handle = new KokuCitizenWarrantHandle();
-				handle.setMessageSource(messageSource);
+				KokuCitizenWarrantHandle handle = new KokuCitizenWarrantHandle(messageSource);
 				warrant = handle.getAuthorizationSummaryById(authId, userId);
 			} else if(taskType.equals(TASK_TYPE_WARRANT_BROWSE_SENT)) {
-				KokuCitizenWarrantHandle handle = new KokuCitizenWarrantHandle();
-				handle.setMessageSource(messageSource);
+				KokuCitizenWarrantHandle handle = new KokuCitizenWarrantHandle(messageSource);
 				warrant = handle.getAuthorizationSummaryById(authId, userId);
 			} else if (taskType.equals(TASK_TYPE_WARRANT_LIST_CITIZEN_CONSENTS) || taskType.equals(TASK_TYPE_WARRANT_LIST_SUBJECT_CONSENTS)) {
-				KokuEmployeeWarrantHandle handle = new KokuEmployeeWarrantHandle();
-				handle.setMessageSource(messageSource);
+				KokuEmployeeWarrantHandle handle = new KokuEmployeeWarrantHandle(messageSource);
 				try {
 					warrant = handle.getAuthorizationDetails(Integer.valueOf(authorizationId));					
 				} catch (NumberFormatException nfe) {

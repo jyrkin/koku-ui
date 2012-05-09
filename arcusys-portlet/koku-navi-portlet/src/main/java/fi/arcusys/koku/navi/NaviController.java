@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.portlet.bind.annotation.RenderMapping;
 
-import fi.arcusys.koku.util.Properties;
+import fi.arcusys.koku.common.util.Properties;
 
 /**
  * Handles the controller for navigation page

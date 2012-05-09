@@ -7,7 +7,7 @@ import javax.servlet.http.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import fi.arcusys.koku.util.KokuWebServicesJS;
+import fi.arcusys.koku.common.util.KokuWebServicesJS;
 import fi.koku.settings.KoKuPropertiesUtil;
 
 import net.sf.json.JSONObject;

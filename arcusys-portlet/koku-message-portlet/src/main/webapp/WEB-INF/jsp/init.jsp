@@ -4,9 +4,9 @@
 <%@ taglib uri="http://java.sun.com/portlet_2_0" prefix="portlet" %>
 <%@ page import="javax.portlet.PortletPreferences" %>
 <%@ page import="javax.portlet.WindowState" %>
-<%@ page import="fi.arcusys.koku.kv.model.KokuFolderType"%>
-<%@ page import="fi.arcusys.koku.util.Constants" %>
-<%@ page import="fi.arcusys.koku.util.NavigationPortletProperties" %>
+<%@ page import="fi.arcusys.koku.common.services.messages.model.KokuFolderType"%>
+<%@ page import="fi.arcusys.koku.common.util.Constants" %>
+<%@ page import="fi.arcusys.koku.common.util.NavigationPortletProperties" %>
 <%@ page import="fi.arcusys.koku.web.PortletProperties" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 

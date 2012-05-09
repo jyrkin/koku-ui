@@ -1,5 +1,5 @@
 <%@ include file="init.jsp"%>
-<%@ page import="fi.arcusys.koku.kv.model.KokuRequest"%>
+<%@ page import="fi.arcusys.koku.common.services.requests.models.KokuRequest"%>
 <%@ page import="fi.arcusys.koku.web.util.ModelWrapper"%>
 
 

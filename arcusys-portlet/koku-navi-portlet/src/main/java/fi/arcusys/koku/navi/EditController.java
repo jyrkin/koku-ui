@@ -1,12 +1,12 @@
 package fi.arcusys.koku.navi;
 
-import static fi.arcusys.koku.util.Constants.PREF_NAVI_DEFAULT_PATH;
-import static fi.arcusys.koku.util.Constants.PREF_NAVI_FRONTPAGE;
-import static fi.arcusys.koku.util.Constants.PREF_NAVI_KKS;
-import static fi.arcusys.koku.util.Constants.PREF_NAVI_LOK;
-import static fi.arcusys.koku.util.Constants.PREF_NAVI_PYH;
-import static fi.arcusys.koku.util.Constants.PREF_NAVI_RELATIVE_PATH;
-import static fi.arcusys.koku.util.Constants.VIEW_NAVI_CONFIG;
+import static fi.arcusys.koku.common.util.Constants.PREF_NAVI_DEFAULT_PATH;
+import static fi.arcusys.koku.common.util.Constants.PREF_NAVI_FRONTPAGE;
+import static fi.arcusys.koku.common.util.Constants.PREF_NAVI_KKS;
+import static fi.arcusys.koku.common.util.Constants.PREF_NAVI_LOK;
+import static fi.arcusys.koku.common.util.Constants.PREF_NAVI_PYH;
+import static fi.arcusys.koku.common.util.Constants.PREF_NAVI_RELATIVE_PATH;
+import static fi.arcusys.koku.common.util.Constants.VIEW_NAVI_CONFIG;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;

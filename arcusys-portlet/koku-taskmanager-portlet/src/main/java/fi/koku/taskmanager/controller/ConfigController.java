@@ -1,12 +1,12 @@
 package fi.koku.taskmanager.controller;
 
-import static fi.arcusys.koku.util.Constants.PREF_DEFAULT_TASK_TYPE;
-import static fi.arcusys.koku.util.Constants.PREF_EDITABLE;
-import static fi.arcusys.koku.util.Constants.PREF_NOTIFICATION_FILTER;
-import static fi.arcusys.koku.util.Constants.PREF_OPEN_FORM;
-import static fi.arcusys.koku.util.Constants.PREF_REFRESH_DURATION;
-import static fi.arcusys.koku.util.Constants.PREF_TASK_FILTER;
-import static fi.arcusys.koku.util.Constants.VIEW_CONFIG;
+import static fi.arcusys.koku.common.util.Constants.PREF_DEFAULT_TASK_TYPE;
+import static fi.arcusys.koku.common.util.Constants.PREF_EDITABLE;
+import static fi.arcusys.koku.common.util.Constants.PREF_NOTIFICATION_FILTER;
+import static fi.arcusys.koku.common.util.Constants.PREF_OPEN_FORM;
+import static fi.arcusys.koku.common.util.Constants.PREF_REFRESH_DURATION;
+import static fi.arcusys.koku.common.util.Constants.PREF_TASK_FILTER;
+import static fi.arcusys.koku.common.util.Constants.VIEW_CONFIG;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;

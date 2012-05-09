@@ -16,11 +16,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.portlet.bind.annotation.ResourceMapping;
 
-import fi.arcusys.koku.exceptions.KokuServiceException;
-import fi.arcusys.koku.kv.model.KokuRequest;
-import fi.arcusys.koku.kv.request.employee.EmployeeRequestHandle;
-import fi.arcusys.koku.web.exporter.CSVExporter;
-import fi.arcusys.koku.web.exporter.Exporter;
+import fi.arcusys.koku.common.exceptions.KokuServiceException;
+import fi.arcusys.koku.common.services.requests.employee.EmployeeRequestHandle;
+import fi.arcusys.koku.common.services.requests.models.KokuAnswer;
+import fi.arcusys.koku.common.services.requests.models.KokuQuestion;
+import fi.arcusys.koku.common.services.requests.models.KokuRequest;
+import fi.arcusys.koku.common.services.requests.models.KokuResponse;
+import fi.arcusys.koku.common.services.users.KokuUser;
+import fi.arcusys.koku.common.util.DummyMessageSource;
+import fi.arcusys.koku.common.util.MessageUtil;
 
 /**
  * Generates csv file containing response summary information
@@ -49,7 +53,7 @@ public class ExportFileController {
 	public void download(@RequestParam(value = "newRequestId") String requestId,
 			ResourceRequest resourceRequest, ResourceResponse response) {
 		response.setContentType("text/csv; charset=utf-8");
-		EmployeeRequestHandle reqhandle = new EmployeeRequestHandle();
+		EmployeeRequestHandle reqhandle = new EmployeeRequestHandle(new DummyMessageSource());
 		KokuRequest kokuRequest = null;
 		try {
 			kokuRequest = reqhandle.getKokuRequestById(requestId);

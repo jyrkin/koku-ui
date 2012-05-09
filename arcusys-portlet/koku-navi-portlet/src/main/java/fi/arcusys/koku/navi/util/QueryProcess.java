@@ -1,10 +1,10 @@
 package fi.arcusys.koku.navi.util;
 
+import net.sf.json.JSONObject;
+
 import org.springframework.context.MessageSource;
 
-import fi.arcusys.koku.util.PortalRole;
-
-import net.sf.json.JSONObject;
+import fi.arcusys.koku.common.util.PortalRole;
 
 public interface QueryProcess {
 	

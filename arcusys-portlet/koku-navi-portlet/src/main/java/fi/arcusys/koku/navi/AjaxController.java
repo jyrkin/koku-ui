@@ -20,6 +20,7 @@ import javax.portlet.PortletSession;
 import javax.portlet.ResourceResponse;
 
 import net.sf.json.JSONObject;
+import static fi.arcusys.koku.common.util.Constants.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,16 +30,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.portlet.bind.annotation.ResourceMapping;
 
-import fi.arcusys.koku.exceptions.IntalioAuthException;
-import fi.arcusys.koku.exceptions.KokuServiceException;
-import fi.arcusys.koku.intalio.TaskHandle;
+import fi.arcusys.koku.common.exceptions.IntalioAuthException;
+import fi.arcusys.koku.common.exceptions.KokuServiceException;
+import fi.arcusys.koku.common.services.intalio.TaskHandle;
+import fi.arcusys.koku.common.services.users.UserIdResolver;
+import fi.arcusys.koku.common.util.PortalRole;
+import fi.arcusys.koku.common.util.Properties;
 import fi.arcusys.koku.navi.util.QueryProcess;
 import fi.arcusys.koku.navi.util.impl.QueryProcessCitizenImpl;
 import fi.arcusys.koku.navi.util.impl.QueryProcessDummyImpl;
 import fi.arcusys.koku.navi.util.impl.QueryProcessEmployeeImpl;
-import fi.arcusys.koku.users.UserIdResolver;
-import fi.arcusys.koku.util.PortalRole;
-import fi.arcusys.koku.util.Properties;
+import static fi.arcusys.koku.common.util.Properties.*;
+
 
 /**
  * Handles ajax request and return the response with json string

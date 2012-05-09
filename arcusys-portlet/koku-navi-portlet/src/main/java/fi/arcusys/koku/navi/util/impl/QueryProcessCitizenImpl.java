@@ -1,25 +1,26 @@
 package fi.arcusys.koku.navi.util.impl;
 
-import static fi.arcusys.koku.util.Properties.RECEIVED_REQUESTS_FILTER;
-import static fi.arcusys.koku.util.Constants.JSON_APPOINTMENT_TOTAL;
-import static fi.arcusys.koku.util.Constants.JSON_ARCHIVE_INBOX;
-import static fi.arcusys.koku.util.Constants.JSON_CONSENTS_TOTAL;
-import static fi.arcusys.koku.util.Constants.JSON_INBOX;
-import static fi.arcusys.koku.util.Constants.JSON_LOGIN_STATUS;
-import static fi.arcusys.koku.util.Constants.JSON_REQUESTS_TOTAL;
-import static fi.arcusys.koku.util.Constants.TASK_TYPE_APPOINTMENT_INBOX_CITIZEN;
-import static fi.arcusys.koku.util.Constants.TOKEN_STATUS_INVALID;
-import static fi.arcusys.koku.util.Constants.TOKEN_STATUS_VALID;
+import static fi.arcusys.koku.common.util.Constants.JSON_APPOINTMENT_TOTAL;
+import static fi.arcusys.koku.common.util.Constants.JSON_ARCHIVE_INBOX;
+import static fi.arcusys.koku.common.util.Constants.JSON_CONSENTS_TOTAL;
+import static fi.arcusys.koku.common.util.Constants.JSON_INBOX;
+import static fi.arcusys.koku.common.util.Constants.JSON_LOGIN_STATUS;
+import static fi.arcusys.koku.common.util.Constants.JSON_REQUESTS_TOTAL;
+import static fi.arcusys.koku.common.util.Constants.TOKEN_STATUS_INVALID;
+import static fi.arcusys.koku.common.util.Constants.TOKEN_STATUS_VALID;
+import static fi.arcusys.koku.common.util.Properties.RECEIVED_REQUESTS_FILTER;
 import net.sf.json.JSONObject;
 
 import org.apache.log4j.Logger;
 import org.springframework.context.MessageSource;
 
-import fi.arcusys.koku.av.AvCitizenServiceHandle;
-import fi.arcusys.koku.exceptions.KokuServiceException;
-import fi.arcusys.koku.kv.model.KokuFolderType;
-import fi.arcusys.koku.tiva.TivaCitizenServiceHandle;
-import fi.arcusys.koku.util.PortalRole;
+import fi.arcusys.koku.common.exceptions.KokuServiceException;
+import fi.arcusys.koku.common.services.appointments.citizen.AvCitizenServiceHandle;
+import fi.arcusys.koku.common.services.consents.citizen.TivaCitizenServiceHandle;
+import fi.arcusys.koku.common.services.messages.model.KokuFolderType;
+import fi.arcusys.koku.common.util.DummyMessageSource;
+import fi.arcusys.koku.common.util.PortalRole;
+
 
 public class QueryProcessCitizenImpl extends AbstractQueryProcess {
 	
@@ -66,7 +67,7 @@ public class QueryProcessCitizenImpl extends AbstractQueryProcess {
 	 * @throws KokuServiceException 
 	 */
 	private int getTotalAssignedConsents(String userId) throws KokuServiceException {
-		TivaCitizenServiceHandle handle = new TivaCitizenServiceHandle();
+		TivaCitizenServiceHandle handle = new TivaCitizenServiceHandle(new DummyMessageSource());
 		return handle.getTotalAssignedConsents(userId);
 	}
 	
@@ -78,8 +79,8 @@ public class QueryProcessCitizenImpl extends AbstractQueryProcess {
 	 * @throws KokuServiceException 
 	 */
 	private int getTotalAssignedAppointments(String userId) throws KokuServiceException {
-		AvCitizenServiceHandle handle = new AvCitizenServiceHandle(userId);
-		return handle.getTotalAppointmentsNum(userId, TASK_TYPE_APPOINTMENT_INBOX_CITIZEN);
+		AvCitizenServiceHandle handle = new AvCitizenServiceHandle(new DummyMessageSource(), userId);
+		return handle.getTotalAssignedAppointmentsNum(userId);
 	}
 	
 
