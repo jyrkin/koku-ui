@@ -280,6 +280,11 @@
 
 <div></div>
 </div>
+
+<div class="kks-version">
+		<%@ include file="../common/page-footer.jsp"%>
+	</div>
+
 </div>
 
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-1.5.2.min.js"></script>

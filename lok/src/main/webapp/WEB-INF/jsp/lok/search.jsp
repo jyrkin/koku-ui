@@ -219,6 +219,10 @@ This should be changed! --%>
 			</c:otherwise>
 		</c:choose>
 	</div>
+		</div>
+	<div class="lok-version">
+		<%@ include file="../common/page-footer.jsp"%>
+	</div>
 </div>
 <!-- end of koku-lok-div -->
 
