@@ -30,7 +30,12 @@
         </div>
 
 
-    <div class="kks-spacer"></div>
-</div>
+		<div class="kks-spacer"></div>
+	</div>
+
+	<div class="kks-version">
+		<%@ include file="../common/page-footer.jsp"%>
+	</div>
+
 </div>
 

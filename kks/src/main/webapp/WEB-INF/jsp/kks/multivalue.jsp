@@ -98,7 +98,12 @@
 	
 	<div class="kks-reset-floating"></div>
 
-</div>
+	</div>
+
+	<div class="kks-version">
+		<%@ include file="../common/page-footer.jsp"%>
+	</div>
+
 </div>
 
 <script type="text/javascript">

@@ -217,7 +217,12 @@
 		<p><spring:message code="ui.pyh.cannot.send.request"/></p>
 	</c:if>
 
-</div>
+	</div>
+
+	<div class="pyh-version">
+		<%@ include file="../common/page-footer.jsp"%>
+	</div>
+
 </div>
 
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-1.5.2.min.js"></script>

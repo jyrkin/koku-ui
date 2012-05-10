@@ -1,7 +1,7 @@
 <%@ include file="init.jsp"%>
 
-<portlet:actionURL  var="configActionURL" >
-<portlet:param name="myaction" value="config" />
+<portlet:actionURL portletMode="edit" var="configActionURL" >
+	<portlet:param name="myaction" value="config" />
 </portlet:actionURL>
 <div>
 	<form name="configForm" action="${configActionURL}" method="post" >

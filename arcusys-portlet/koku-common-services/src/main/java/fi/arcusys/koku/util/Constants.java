@@ -18,7 +18,7 @@ public final class Constants {
 	public static final String TIME_ZONE 									= "Europe/Helsinki";
 	public static final int PAGE_NUMBER 									= 10; // number of tasks in one page
 	
-	public static final String INTALIO_GROUP_PREFIX							= "koku/";
+	public static final String INTALIO_GROUP_PREFIX							= "koku\\";
 	
 	public static final String PATH_MAIN									= "/Message";
 	

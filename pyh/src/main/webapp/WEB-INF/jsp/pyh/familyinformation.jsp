@@ -155,6 +155,10 @@
 <div class="pyh-reset-floating"></div>
 </br>
 </div>
+	<div class="pyh-version">
+		<%@ include file="../common/page-footer.jsp"%>
+	</div>
+
 </div>
 
 
