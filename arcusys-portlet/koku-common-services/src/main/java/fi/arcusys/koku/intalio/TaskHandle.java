@@ -154,6 +154,9 @@ public class TaskHandle {
 	 */
 	private String getSenderNameFromTaskInput(TaskMetadata task, Input input) {
 		final String descriptionName = task.getDescription();
+		if (descriptionName == null || descriptionName.isEmpty()) {
+			return "Tuntematon";
+		}
 		if (descriptionName.startsWith(Properties.RECEIVED_REQUESTS_FILTER)) {
 			// Uusi pyyntö
 			return getSenderName(input, "User_SenderDisplay");
@@ -165,7 +168,7 @@ public class TaskHandle {
 			return getSenderName(input, "Tiedot_LahettajaDisplay");
 		} else {
 			// Hm?
-			return null;
+			return "Tuntematon";
 		}
 	}
 	
