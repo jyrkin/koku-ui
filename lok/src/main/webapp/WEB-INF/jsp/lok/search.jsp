@@ -6,7 +6,7 @@
  This file is licensed under GNU LGPL version 3.
  Please see the 'license.txt' file in the root directory of the package you received.
  If you did not receive a license, please contact the copyright holder
- (http://www.ixonos.com/).
+ (kohtikumppanuutta@ixonos.com).
 --%>
 <%@ include file="imports.jsp"%>
 
@@ -218,6 +218,10 @@ This should be changed! --%>
 				<spring:message code="koku.lok.no.user.rights" />
 			</c:otherwise>
 		</c:choose>
+	</div>
+		</div>
+	<div class="lok-version">
+		<%@ include file="../common/page-footer.jsp"%>
 	</div>
 </div>
 <!-- end of koku-lok-div -->

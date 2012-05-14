@@ -67,6 +67,13 @@
 .koku-kks .kks-right {
     float: right;
 }
+	
+.koku-kks .kks-version {
+	float: right;
+    opacity:0.5;
+    filter:alpha(opacity=50); /* For IE8 and earlier */
+}	
+	
 .koku-kks .kks-left {
     float: left;
 }

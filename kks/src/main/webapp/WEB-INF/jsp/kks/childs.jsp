@@ -6,7 +6,7 @@
  This file is licensed under GNU LGPL version 3.
  Please see the 'license.txt' file in the root directory of the package you received.
  If you did not receive a license, please contact the copyright holder
- (http://www.ixonos.com/).
+ (kohtikumppanuutta@ixonos.com).
 --%>
 <%@ include file="imports.jsp" %>
 
@@ -56,6 +56,11 @@
 		<br></br>
 	</div>
 
-</div>
+	</div>
+
+	<div class="kks-version">
+		<%@ include file="../common/page-footer.jsp"%>
+	</div>
+
 </div>
 

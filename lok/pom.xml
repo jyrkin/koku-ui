@@ -42,6 +42,12 @@
       <artifactId>personservice-api</artifactId>
       <version>0.0.14</version>
     </dependency>
+    <dependency>
+      <groupId>kohti-kumppanuutta</groupId>
+      <artifactId>portlet-common-web</artifactId>
+      <version>0.0.1</version>
+      <type>war</type>
+    </dependency>
   </dependencies>
 
 </project>

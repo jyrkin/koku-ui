@@ -66,3 +66,25 @@
 .koku-pyh .pyh-left {
 	float: left;
 }
+
+.koku-pyh .pyh-message {
+width: auto;
+position: relative;
+}
+
+.koku-pyh .msg-left {
+width: 500px;
+float: left;
+}
+
+.koku-pyh .msg-right {
+width: 150px;
+float: left;
+}
+
+.koku-pyh .pyh-version {
+	float: right;
+	opacity:0.5;
+    filter:alpha(opacity=50); /* For IE8 and earlier */	
+}
+

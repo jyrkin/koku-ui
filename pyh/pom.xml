@@ -31,7 +31,13 @@
       <groupId>kohti-kumppanuutta</groupId>
       <artifactId>lokservice-api</artifactId>
       <version>${lokservice-api.version}</version>
-    </dependency>    
+    </dependency>
+    <dependency>
+      <groupId>kohti-kumppanuutta</groupId>
+      <artifactId>portlet-common-web</artifactId>
+      <version>0.0.1</version>
+      <type>war</type>
+    </dependency>
   </dependencies>
 
 </project>
