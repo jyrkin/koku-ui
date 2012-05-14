@@ -161,7 +161,7 @@ KokuAjax.prototype.ajaxGetTasks = function(pageObj, presentTasks) {
 				 effect : {
 				 	type: 'fade',
 				 	length: 100
-				 	},
+				 	}
 				},
 				hide: 'mouseout',
 				style: { 
