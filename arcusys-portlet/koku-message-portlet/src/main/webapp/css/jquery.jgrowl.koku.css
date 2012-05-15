@@ -15,7 +15,7 @@ div.jGrowl div.serverErrorWarningMsg span.failureUuid {
 }
 
 #show-message {
-	positon: relative !important;
+	position: relative !important;
 }
 
 .jGrowlThemeSuccess,.jGrowlThemeFailure {
@@ -33,5 +33,4 @@ div.jGrowl div.serverErrorWarningMsg span.failureUuid {
 #jGrowl {
 	position: absolute;
 	top: 20%;
-	float: left;
 }
