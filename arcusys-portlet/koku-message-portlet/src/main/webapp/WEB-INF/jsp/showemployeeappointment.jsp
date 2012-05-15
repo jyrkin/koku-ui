@@ -1,13 +1,79 @@
+<%@ page import="fi.arcusys.koku.av.EmployeeAppointment" %>
+<%@ page import="fi.arcusys.koku.users.KokuUser" %>
+<%@ page import="fi.arcusys.koku.web.util.ModelWrapper"%>
+<%@ page import="fi.arcusys.koku.util.Constants" %>
+
 <%@ include file="init.jsp"%>
 
 <portlet:renderURL var="homeURL" windowState="<%= WindowState.NORMAL.toString() %>" >
 	<portlet:param name="myaction" value="home" />
 </portlet:renderURL>
 
+<portlet:resourceURL var="cancelURL" id="cancelAppointment"></portlet:resourceURL>
+
+<portlet:resourceURL var="appointmentRenderURL" id="createAppointmentRenderUrl">
+</portlet:resourceURL>
+
 <%@ include file="js_koku_detail.jspf" %>
 <%@ include file="js_koku_navigation_helper.jspf" %>
 <%@ include file="js_koku_reset_view.jspf" %>
 
+<%
+	ModelWrapper<EmployeeAppointment> messageModel = (ModelWrapper<EmployeeAppointment>) request.getAttribute("appointment");
+	
+	EmployeeAppointment appointment = messageModel.getModel();
+	
+	String appointmentId = String.valueOf(appointment.getAppointmentId());
+	
+%>
+
+<style type="text/css">
+	<%@include file="../../../css/jquery.jgrowl.koku.css" %>
+</style>
+
+<script type="text/javascript">
+	<%@ include file="js_koku_ajax.jspf" %>
+
+	var ajaxUrls = {
+			cancelUrl : "<%= cancelURL %>",
+			appointmentRenderUrl :  "<%= appointmentRenderURL %>"
+	};
+	
+	var kokuAjax = new KokuAjax(ajaxUrls);
+	
+	function notify_appointment_cancelled() {
+		jQuery.jGrowl("<spring:message code="notification.canceled.appointment"/>");
+	}
+	
+	function callback(result) {		
+		if (result == 'OK') {
+			$.jGrowl.defaults.position = 'top-left';
+			jQuery.jGrowl("<spring:message code="notification.canceled.appointment"/>", { theme: 'jGrowlThemeSuccess'}, '#show-message', '275');
+			setTimeout("kokuNavigationHelper.returnMainPage();", 3000);
+		} else if (result == 'FAIL') {
+			('#jGrowl').css('background-color', '#FF0000');
+			jQuery.jGrowl("<spring:message code="notification.canceled.appointment.failed"/>", { theme: 'jGrowlThemeFailure'}, '#show-message', '275');
+			$("#cancelButton").attr("disabled","enabled");
+		} else {
+			KokuUtil.errorMsg.showErrorMessage("<spring:message code="error.unLogin" />");
+			$("#cancelButton").attr("disabled","enabled");
+		}
+	}
+	
+	function cancelAppointment() {
+		var appointments = [], targetPersons = [], comment, taskType, status;
+		appointments[0] = "<%= appointmentId %>";
+		comment = prompt('<spring:message code="appointment.cancel"/>',"");
+		if(comment == null)	{
+			return;
+		} else {
+			$("#cancelButton").attr("disabled","disabled");
+		}	
+
+		taskType = "<%= Constants.TASK_TYPE_APPOINTMENT_INBOX_CITIZEN %>";
+		kokuAjax.cancelAppointments(appointments, targetPersons, comment, taskType, callback);
+	}
+</script>
 
 <c:choose> 
   <c:when test="${appointment.responseStatus == 'FAIL'}" > 
@@ -148,10 +214,12 @@
 	</c:when> 
 </c:choose>
 	
-	
 	</div>
 	<div id="task-manager-operation" class="task-manager-operation-part">
 		<input type="button" value="<spring:message code="page.return"/>" onclick="kokuNavigationHelper.returnMainPage()" />
+		<c:if test="${appointment.model.status != 'Peruutettu'}">
+			<input type="button" id="cancelButton" value="Peruuta" onclick="cancelAppointment()" />
+		</c:if>
 	</div>
 </div>
 
