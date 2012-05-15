@@ -121,6 +121,7 @@
 						</div>
 					</c:forEach>
 				</c:if>
+                <br/>
 
 				<c:if test="${not empty messages}">
 					<h3 class="portlet-section-subheader">
