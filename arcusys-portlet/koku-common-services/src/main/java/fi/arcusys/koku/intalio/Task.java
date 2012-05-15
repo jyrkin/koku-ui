@@ -17,6 +17,7 @@ public class Task {
 	private String creationDate;
 	private String link;
 	private String senderName;
+	private String formUrl;
 
 	public Task(String id, String processId, String description,
 			String creationDate) {
@@ -94,6 +95,14 @@ public class Task {
 	 */
 	public final void setSenderName(String senderName) {
 		this.senderName = senderName;
+	}
+	
+	public void setFormUrl(String formUrl) {
+		this.formUrl = formUrl;
+	}
+	
+	public String getFormUrl() {
+		return formUrl;
 	}
 
 	

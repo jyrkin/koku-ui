@@ -14,6 +14,7 @@ import static fi.arcusys.koku.util.Constants.ATTR_REQUEST_ID;
 import static fi.arcusys.koku.util.Constants.ATTR_RESPONSE_ID;
 import static fi.arcusys.koku.util.Constants.ATTR_TARGET_PERSON;
 import static fi.arcusys.koku.util.Constants.ATTR_TASK_TYPE;
+import static fi.arcusys.koku.util.Constants.ATTR_TOKEN;
 import static fi.arcusys.koku.util.Constants.ATTR_USER_ID;
 import static fi.arcusys.koku.util.Constants.ATTR_USERNAME;
 import static fi.arcusys.koku.util.Constants.JSON_RENDER_URL;
@@ -117,7 +118,7 @@ public class AjaxController extends AbstractController {
 		final long start = System.nanoTime();
 		final PortletSession portletSession = request.getPortletSession();		
 		final String username = (String) portletSession.getAttribute(ATTR_USERNAME);
-		String userId = (String) portletSession.getAttribute(ATTR_USER_ID);
+		String userId = (String) portletSession.getAttribute(ATTR_USER_ID);;
 		registerUserToWS(portletSession);
 		
 		if (userId == null) {

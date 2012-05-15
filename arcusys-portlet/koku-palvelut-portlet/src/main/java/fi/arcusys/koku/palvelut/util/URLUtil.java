@@ -6,7 +6,8 @@ import java.text.MessageFormat;
 
 import javax.portlet.PortletRequest;
 
-import org.intalio.tempo.workflow.task.Task;
+//import org.intalio.tempo.workflow.task.Task;
+import fi.arcusys.koku.intalio.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -71,9 +72,10 @@ public final class URLUtil {
 	}
 	
 	private static String getXFormURLForTask(Task t, String ticket, String userIncludingRealm) {
-		String url = t.getFormURLAsString();
+//		String url = t.getFormURLAsString();
+		String url = t.getFormUrl();
 		try {
-			Object[] params = new Object[] { XFORMS_FORM_MANAGER_URL, t.getID(), t.getClass().getSimpleName(),
+			Object[] params = new Object[] { XFORMS_FORM_MANAGER_URL, t.getId(), t.getClass().getSimpleName(),
 				URLEncoder.encode(url, CHARACTER_ENCODING), ticket,
 				URLEncoder.encode(userIncludingRealm, CHARACTER_ENCODING) };
 			return MessageFormat.format("{0}?id={1}&type={2}&url={3}&token={4}&user={5}", params);
@@ -86,9 +88,10 @@ public final class URLUtil {
 	
 	private static String getAjaxFormURLForTask(Task t, String formManagerUrl, String ticket, String userIncludingRealm) {
 		// Replace remote web app with the local one in the url.
-		String url = t.getFormURLAsString().replace(REMOTE_AJAXFORMS_WEB_APP_URL_PART, LOCAL_AJAXFORMS_WEB_APP_URL_PART);
+		String url = t.getFormUrl().replace(REMOTE_AJAXFORMS_WEB_APP_URL_PART, LOCAL_AJAXFORMS_WEB_APP_URL_PART);
+//		String url = t.getFormURLAsString().replace(REMOTE_AJAXFORMS_WEB_APP_URL_PART, LOCAL_AJAXFORMS_WEB_APP_URL_PART);
 		try {
-			Object[] params = new Object[] { formManagerUrl, t.getID(), t.getClass().getSimpleName(),
+			Object[] params = new Object[] { formManagerUrl, t.getId(), t.getClass().getSimpleName(),
 				URLEncoder.encode(url, CHARACTER_ENCODING), ticket,
 				URLEncoder.encode(userIncludingRealm, CHARACTER_ENCODING) };
 			return MessageFormat.format("{0}?id={1}&type={2}&url={3}&token={4}&user={5}", params);
@@ -107,7 +110,8 @@ public final class URLUtil {
 	private static FormManagerInformation getFormManagerURLForTask(Task t) {			
 		FormManagerInformation formManagerInformation = new FormManagerInformation();
 		
-		String formUrl = t.getFormURLAsString();
+//		String formUrl = t.getFormURLAsString();
+		String formUrl = t.getFormUrl();
 		LOG.debug("Form url: " + formUrl);
 		if (formUrl.startsWith(ORBEON_FORMS_URL_SCHEME)) { 
 			formManagerInformation.type = FormManagerInformation.FormType.XFORMS;
