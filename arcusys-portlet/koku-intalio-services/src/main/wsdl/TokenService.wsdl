@@ -7,7 +7,6 @@
                 <xsd:sequence>
                     <xsd:element name="name" type="xsd:string"/>
                     <xsd:element name="value" type="xsd:string"/>
-
                 </xsd:sequence>
             </xsd:complexType>
             <xsd:complexType name="Properties">
@@ -17,7 +16,6 @@
             </xsd:complexType>
             <xsd:element name="authenticateUser">
                 <xsd:complexType>
-
                     <xsd:sequence>
                         <xsd:element name="user" type="xsd:string"/>
                         <xsd:element name="password" type="xsd:string"/>
@@ -27,7 +25,6 @@
             <xsd:element name="authenticateUserWithCredentials">
                 <xsd:complexType>
                     <xsd:sequence>
-
                         <xsd:element name="user" type="xsd:string"/>
                         <xsd:element name="credentials" type="tns:Properties"/>
                     </xsd:sequence>
@@ -37,7 +34,6 @@
                 <xsd:complexType>
                     <xsd:sequence>
                         <xsd:element name="token" type="xsd:string"/>
-
                     </xsd:sequence>
                 </xsd:complexType>
             </xsd:element>
@@ -47,7 +43,6 @@
                         <xsd:element name="token" type="xsd:string"/>
                     </xsd:sequence>
                 </xsd:complexType>
-
             </xsd:element>
             <xsd:element name="getTokenPropertiesResponse">
                 <xsd:complexType>
@@ -56,8 +51,21 @@
                     </xsd:sequence>
                 </xsd:complexType>
             </xsd:element>
+            <xsd:element name="isWorkflowAdmin">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="user" type="xsd:string"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="isWorkflowAdminResponse">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="isWorkflowAdmin" type="xsd:boolean"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
             <xsd:element name="getTokenResponse">
-
                 <xsd:complexType>
                     <xsd:sequence>
                         <xsd:element name="out" type="xsd:string"/>
@@ -67,7 +75,6 @@
             <xsd:element name="proxyTicket">
                 <xsd:complexType>
                     <xsd:sequence>
-
                         <xsd:element name="ticket" type="xsd:string"/>
                         <xsd:element name="serviceURL" type="xsd:string"/>
                     </xsd:sequence>
@@ -77,19 +84,21 @@
                 <xsd:complexType>
                     <xsd:sequence>
                         <xsd:element name="openssoToken" type="xsd:string"/>
-
                     </xsd:sequence>
                 </xsd:complexType>
             </xsd:element>
         </xsd:schema>
     </wsdl:types>
+    <wsdl:message name="authenticateEncryptedUserRequest"/>
+    <wsdl:message name="authenticateEncryptedUserResponse"/>
     <wsdl:message name="authenticateUser">
         <wsdl:part name="payload" element="tns:authenticateUser"/>
     </wsdl:message>
     <wsdl:message name="authenticateUserResponse">
-
         <wsdl:part name="payload" element="tns:authenticateUserResponse"/>
     </wsdl:message>
+    <wsdl:message name="isWorkflowAdminRequest"/>
+    <wsdl:message name="isWorkflowAdminResponse"/>
     <wsdl:message name="getTokenFromOpenSSOTokenRequest">
         <wsdl:part name="payload" element="tns:openssoTicket"/>
     </wsdl:message>
@@ -97,7 +106,6 @@
         <wsdl:part name="payload" element="tns:authenticateUserResponse"/>
     </wsdl:message>
     <wsdl:message name="authenticateUserWithCredentials">
-
         <wsdl:part name="payload" element="tns:authenticateUserWithCredentials"/>
     </wsdl:message>
     <wsdl:message name="getTokenProperties">
@@ -107,17 +115,23 @@
         <wsdl:part name="payload" element="tns:getTokenPropertiesResponse"/>
     </wsdl:message>
     <wsdl:message name="getTokenFromTicketRequest">
-
         <wsdl:part name="payload" element="tns:proxyTicket"/>
     </wsdl:message>
     <wsdl:message name="getTokenFromTicketResponse">
         <wsdl:part name="payload" element="tns:authenticateUserResponse"/>
     </wsdl:message>
     <wsdl:portType name="TokenServicePortType">
+        <wsdl:operation name="authenticateEncryptedUser">
+            <wsdl:input message="tns:authenticateEncryptedUserRequest" wsaw:Action="urn:authenticateEncryptedUser"/>
+            <wsdl:output message="tns:authenticateEncryptedUserResponse" wsaw:Action="urn:authenticateEncryptedUserResponse"/>
+        </wsdl:operation>
         <wsdl:operation name="authenticateUser">
             <wsdl:input message="tns:authenticateUser" wsaw:Action="authenticateUser"/>
             <wsdl:output message="tns:authenticateUserResponse" wsaw:Action="http://tempo.intalio.org/security/tokenService/TokenService/authenticateUserResponse"/>
-
+        </wsdl:operation>
+        <wsdl:operation name="isWorkflowAdmin">
+            <wsdl:input message="tns:isWorkflowAdminRequest" wsaw:Action="urn:isWorkflowAdmin"/>
+            <wsdl:output message="tns:isWorkflowAdminResponse" wsaw:Action="urn:isWorkflowAdminResponse"/>
         </wsdl:operation>
         <wsdl:operation name="getTokenFromOpenSSOToken">
             <wsdl:input message="tns:getTokenFromOpenSSOTokenRequest" wsaw:Action="getTokenFromOpenSSOToken"/>
@@ -127,7 +141,6 @@
             <wsdl:input message="tns:authenticateUserWithCredentials" wsaw:Action="authenticateUserWithCredentials"/>
             <wsdl:output message="tns:authenticateUserResponse" wsaw:Action="http://tempo.intalio.org/security/tokenService/TokenService/authenticateUserWithCredentialsResponse"/>
         </wsdl:operation>
-
         <wsdl:operation name="getTokenProperties">
             <wsdl:input message="tns:getTokenProperties" wsaw:Action="getTokenProperties"/>
             <wsdl:output message="tns:getTokenPropertiesResponse" wsaw:Action="http://tempo.intalio.org/security/tokenService/TokenService/getTokenPropertiesResponse"/>
@@ -137,7 +150,6 @@
             <wsdl:output message="tns:getTokenFromTicketResponse" wsaw:Action="http://tempo.intalio.org/security/tokenService/TokenService/getTokenFromTicketResponse"/>
         </wsdl:operation>
     </wsdl:portType>
-
     <wsdl:binding name="TokenServiceSOAP" type="tns:TokenServicePortType">
         <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
         <wsdl:operation name="authenticateUser">
@@ -147,7 +159,6 @@
             </wsdl:input>
             <wsdl:output>
                 <soap:body use="literal"/>
-
             </wsdl:output>
         </wsdl:operation>
         <wsdl:operation name="getTokenFromOpenSSOToken">
@@ -157,7 +168,6 @@
             </wsdl:input>
             <wsdl:output>
                 <soap:body use="literal"/>
-
             </wsdl:output>
         </wsdl:operation>
         <wsdl:operation name="authenticateUserWithCredentials">
@@ -167,7 +177,6 @@
             </wsdl:input>
             <wsdl:output>
                 <soap:body use="literal"/>
-
             </wsdl:output>
         </wsdl:operation>
         <wsdl:operation name="getTokenProperties">
@@ -177,7 +186,6 @@
             </wsdl:input>
             <wsdl:output>
                 <soap:body use="literal"/>
-
             </wsdl:output>
         </wsdl:operation>
         <wsdl:operation name="getTokenFromTicket">
@@ -187,14 +195,12 @@
             </wsdl:input>
             <wsdl:output>
                 <soap:body use="literal"/>
-
             </wsdl:output>
         </wsdl:operation>
     </wsdl:binding>
     <wsdl:service name="TokenService">
         <wsdl:port name="Service" binding="tns:TokenServiceSOAP">
-            <soap:address location="http://trelx28b:8080/axis2/services/TokenService.Service/"/>
+            <soap:address location="http://localhost:8080/axis2/services/TokenService"/>
         </wsdl:port>
     </wsdl:service>
 </wsdl:definitions>
-

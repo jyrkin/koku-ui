@@ -14,6 +14,7 @@ import static fi.arcusys.koku.util.Constants.VIEW_TASK_MANAGER;
 import javax.portlet.PortletSession;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
+import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -114,13 +115,17 @@ public class TaskManagerController {
 	private boolean checkUserToken(RenderRequest request) {
 		String userid = null;
 		String token = null;
+		String sessionId = null;
+		String portletSessionId = null;
 		userid = request.getRemoteUser();
 		
 		try {
 			
 			if(userid != null) { // user is logged in
 				
-				PortletSession portletSession = request.getPortletSession();				
+				PortletSession portletSession = request.getPortletSession();
+				portletSessionId = portletSession.getId();
+				sessionId = request.getRequestedSessionId();
 				token = (String) portletSession.getAttribute(ATTR_TOKEN);
 				
 				if(token == null) {
