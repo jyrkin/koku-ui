@@ -52,7 +52,24 @@ function focusCurrentItem() {
 	}
 
 	function bold(elementId) {
-		jQuery(elementId).css("font-weight", "bold");		
+		jQuery(elementId).css("font-weight", "bold");
+		
+		// Find and close all #child elements 
+		jQuery('.child').hide();
+		// leave only elementId parent(s) open.
+		var moreParents = true;
+		var parentElement = jQuery(elementId).parent();
+		if (parentElement == null) {
+			return;
+		}
+		while(moreParents) {
+			if (parentElement.attr('id') === "koku-navigation") {
+				moreParents = false;	
+			} else {
+				parentElement.show();
+			}
+			parentElement = parentElement.parent();
+		}					
 	};
 
 	/* Oh gosh.. this part really needs refactoring */
@@ -155,11 +172,14 @@ function ajaxUpdate() {
 		});
 };
 
-/**
- * Shows/hides search user interface
- */
-function showArchiveUI() {
-	jQuery('#archive-part').toggle('fast');
+function toggleKokuNavi(toggleId, indicatorId) {
+	jQuery(toggleId).toggle('fast');
+	var indicator = jQuery(indicatorId);
+	if (indicator.html() == "+") {
+		indicator.html('-');
+	} else {
+		indicator.html('+');
+	}
 }
 
 function navigateToPage(naviType) {
