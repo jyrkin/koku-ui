@@ -18,6 +18,7 @@ public final class NavigationPortletProperties {
 		public static final String HELP_LINK						= "navigationPortlet.link.help";
 		
 		public static final String MESSAGES_NEW_MESSAGE 			= "navigationPortlet.link.messages.newMessage";
+		public static final String MESSAGES_REPLY_MESSAGE 			= "navigationPortlet.link.messages.replyMessage";
 		public static final String REQUESTS_NEW_REQUEST				= "navigationPortlet.link.requests.newRequest";
 		public static final String REQUESTS_NEW_TEMPLATE			= "navigationPortlet.link.requests.newTemplate";
 		public static final String APPOINTMENTS_NEW_APPOINTMENT		= "navigationPortlet.link.appointments.newAppointment";
@@ -33,6 +34,7 @@ public final class NavigationPortletProperties {
 		public static final String APPLICATIONS_NEW_KINDERGARTEN	= "navigationPortlet.link.applications.newKindergartenApplication";
 		public static final String APPLICATIONS_NEED_TO_CONFIRM		= "navigationPortlet.link.applications.needToConfirm";
 		public static final String CONSENTS_ANSWER_TO_CONSENT		= "navigationPortlet.link.consents.answerToConsent";
+		
 	}
 	
 	
@@ -45,7 +47,8 @@ public final class NavigationPortletProperties {
 	public static final String PYH_PORTLET_LINK 						= KoKuPropertiesUtil.get(Property.PYH_PORTLET_LINK);		
 	public static final String HELP_LINK 								= KoKuPropertiesUtil.get(Property.HELP_LINK);
 	
-	public static final String MESSAGES_NEW_MESSAGE 		            = KoKuPropertiesUtil.get(Property.MESSAGES_NEW_MESSAGE);		
+	public static final String MESSAGES_NEW_MESSAGE 		            = KoKuPropertiesUtil.get(Property.MESSAGES_NEW_MESSAGE);
+	public static final String MESSAGES_REPLY_MESSAGE 		            = KoKuPropertiesUtil.get(Property.MESSAGES_REPLY_MESSAGE);		
 	public static final String REQUESTS_NEW_REQUEST			            = KoKuPropertiesUtil.get(Property.REQUESTS_NEW_REQUEST);
 	public static final String REQUESTS_NEW_TEMPLATE		            = KoKuPropertiesUtil.get(Property.REQUESTS_NEW_TEMPLATE);
 	public static final String APPOINTMENTS_NEW_APPOINTMENT	            = KoKuPropertiesUtil.get(Property.APPOINTMENTS_NEW_APPOINTMENT);

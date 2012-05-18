@@ -62,14 +62,16 @@ function focusCurrentItem() {
 		if (parentElement == null) {
 			return;
 		}
-		while(moreParents) {
+		/* var maxLoops = 0;
+		while(moreParents || maxLoops <= 15) {
 			if (parentElement.attr('id') === "koku-navigation") {
 				moreParents = false;	
 			} else {
 				parentElement.show();
 			}
 			parentElement = parentElement.parent();
-		}					
+			maxLoops++;
+		}	*/ 				
 	};
 
 	/* Oh gosh.. this part really needs refactoring */
