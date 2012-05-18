@@ -28,6 +28,7 @@ public final class Constants {
   public static final String ENDPOINT = KoKuPropertiesUtil.get("kks.service.endpointaddress");
   public static final String CUSTOMER_ENDPOINT = KoKuPropertiesUtil.get("customer.service.endpointaddress");
   public static final String COMMUNITY_ENDPOINT = KoKuPropertiesUtil.get("community.service.endpointaddress");
+  public static final String LOK_ENDPOINT = KoKuPropertiesUtil.get("lok.service.endpointaddress");
   public static final String TIVA_ENDPOINT = KoKuPropertiesUtil.get("tiva-kks.service.endpointaddress");
   public static final String AUTH_ENDPOINT = KoKuPropertiesUtil.get("authentication.service.endpointaddress");
 
@@ -42,9 +43,12 @@ public final class Constants {
   public static final String AUTH_SERVICE_PASSWORD = KoKuPropertiesUtil
       .get("kks.authentication.community.service.password");
 
-  public static final String KKS_SERVICE_USER_ID = "marko";
-  public static final String KKS_SERVICE_PASSWORD = "marko";
+  public static final String KKS_SERVICE_USER_ID = KoKuPropertiesUtil.get("kks.lok.service.user.id");
+  public static final String KKS_SERVICE_PASSWORD = KoKuPropertiesUtil.get("kks.lok.service.user.id");
 
+  public static final String LOK_SERVICE_USER_ID = KoKuPropertiesUtil.get("kks.lok.service.user.id");
+  public static final String LOK_SERVICE_PASSWORD = KoKuPropertiesUtil.get("kks.lok.service.password");
+  
   public static final String COMMUNITY_TYPE_GUARDIAN_COMMUNITY = "guardian_community";
 
   public static final String ROLE_DEPENDANT = "dependant";

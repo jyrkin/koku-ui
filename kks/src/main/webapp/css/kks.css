@@ -52,6 +52,15 @@
     text-transform: uppercase;
     text-align: left;
 }
+
+.koku-kks .kks-button-table th {
+    padding: 10px;
+}
+
+.koku-kks .kks-button-table td {
+    width: 150px;
+}
+
 .koku-kks .portlet-table-body td{
     border-bottom:1px solid #dedede !important;
     padding:5px;

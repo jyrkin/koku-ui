@@ -79,6 +79,7 @@ public class ChildController {
       model.addAttribute("collections", kksService.getKksCollections(child.getPic(), pic));
       model.addAttribute("creatables", kksService.searchPersonCreatableCollections(child, pic));
       model.addAttribute("registries", kksService.getAuthorizedRegistries(pic));
+      model.addAttribute("kksUser", pic );
 
       if (!model.containsAttribute("creation")) {
         model.addAttribute("creation", new Creation());
