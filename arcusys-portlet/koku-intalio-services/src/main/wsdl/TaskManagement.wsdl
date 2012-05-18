@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/">
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:tns="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/">
     <wsdl:documentation>TaskManagementServices</wsdl:documentation>
     <wsdl:types>
         <xsd:schema attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/">
@@ -7,7 +7,6 @@
                 <xsd:complexType>
                     <xsd:sequence maxOccurs="unbounded">
                         <xsd:element maxOccurs="unbounded" name="task" type="tns:taskMetadata"/>
-
                     </xsd:sequence>
                 </xsd:complexType>
             </xsd:element>
@@ -17,7 +16,21 @@
                         <xsd:element name="participantToken" type="xsd:string"/>
                     </xsd:sequence>
                 </xsd:complexType>
-
+            </xsd:element>
+            <xsd:element name="listTasksFromInstanceResponse">
+                <xsd:complexType>
+                    <xsd:sequence maxOccurs="unbounded">
+                        <xsd:element maxOccurs="unbounded" name="task" type="tns:taskMetadata"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="listTasksFromInstanceRequest">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="participantToken" type="xsd:string"/>
+                        <xsd:element name="instanceId" type="xsd:string"/>
+                    </xsd:sequence>
+                </xsd:complexType>
             </xsd:element>
             <xsd:element name="getTaskResponse">
                 <xsd:complexType>
@@ -27,7 +40,6 @@
                 </xsd:complexType>
             </xsd:element>
             <xsd:element name="getTaskRequest">
-
                 <xsd:complexType>
                     <xsd:sequence>
                         <xsd:element name="taskId" type="xsd:string"/>
@@ -35,9 +47,23 @@
                     </xsd:sequence>
                 </xsd:complexType>
             </xsd:element>
+            <xsd:element name="getTaskOwnerAndStateRequest">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="taskId" type="xsd:string"/>
+                        <xsd:element name="participantToken" type="xsd:string"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="getTaskOwnerAndStateResponse">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="task" type="tns:taskOwnerAndState"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
             <xsd:element name="setOutputRequest">
                 <xsd:complexType>
-
                     <xsd:sequence>
                         <xsd:element name="taskId" type="xsd:string"/>
                         <xsd:element name="data">
@@ -47,7 +73,6 @@
                                 </xsd:sequence>
                             </xsd:complexType>
                         </xsd:element>
-
                         <xsd:element name="participantToken" type="xsd:string"/>
                     </xsd:sequence>
                 </xsd:complexType>
@@ -57,7 +82,6 @@
                     <xsd:sequence>
                         <xsd:element name="taskId" type="xsd:string"/>
                         <xsd:element name="participantToken" type="xsd:string"/>
-
                     </xsd:sequence>
                 </xsd:complexType>
             </xsd:element>
@@ -67,7 +91,6 @@
                         <xsd:element name="taskId" type="xsd:string"/>
                         <xsd:element name="participantToken" type="xsd:string"/>
                     </xsd:sequence>
-
                 </xsd:complexType>
             </xsd:element>
             <xsd:element name="setOutputAndCompleteRequest">
@@ -77,7 +100,6 @@
                         <xsd:element name="data">
                             <xsd:complexType>
                                 <xsd:sequence>
-
                                     <xsd:any maxOccurs="unbounded" minOccurs="0"/>
                                 </xsd:sequence>
                             </xsd:complexType>
@@ -87,7 +109,6 @@
                 </xsd:complexType>
             </xsd:element>
             <xsd:element name="failRequest">
-
                 <xsd:complexType>
                     <xsd:sequence>
                         <xsd:element name="taskId" type="xsd:string"/>
@@ -97,7 +118,6 @@
                     </xsd:sequence>
                 </xsd:complexType>
             </xsd:element>
-
             <xsd:element name="deleteRequest">
                 <xsd:complexType>
                     <xsd:sequence>
@@ -106,8 +126,18 @@
                     </xsd:sequence>
                 </xsd:complexType>
             </xsd:element>
+            <xsd:element name="manageFromInstanceRequest">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="instanceid" type="xsd:string"/>
+                        <xsd:element name="delete" type="xsd:boolean"/>
+                        <xsd:element name="participantToken" type="xsd:string"/>
+                        <xsd:element minOccurs="0" name="taskState" type="xsd:string"/>
+                        <xsd:element name="throwFaultIfNoTask" type="xsd:boolean"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
             <xsd:element name="deleteAllRequest">
-
                 <xsd:complexType>
                     <xsd:sequence>
                         <xsd:element minOccurs="0" name="taskType" type="xsd:string"/>
@@ -117,7 +147,6 @@
                     </xsd:sequence>
                 </xsd:complexType>
             </xsd:element>
-
             <xsd:element name="createRequest">
                 <xsd:complexType>
                     <xsd:sequence>
@@ -127,7 +156,6 @@
                 </xsd:complexType>
             </xsd:element>
             <xsd:element name="updateRequest">
-
                 <xsd:complexType>
                     <xsd:sequence>
                         <xsd:element name="taskMetadata" type="tns:taskMetadata"/>
@@ -137,7 +165,6 @@
             </xsd:element>
             <xsd:element name="storePipaRequest">
                 <xsd:complexType>
-
                     <xsd:sequence>
                         <xsd:element name="task" type="tns:task"/>
                         <xsd:element name="participantToken" type="xsd:string"/>
@@ -147,7 +174,6 @@
             <xsd:element name="deletePipaRequest">
                 <xsd:complexType>
                     <xsd:sequence>
-
                         <xsd:element name="pipaurl" type="xsd:string"/>
                         <xsd:element name="participantToken" type="xsd:string"/>
                     </xsd:sequence>
@@ -157,7 +183,6 @@
                 <xsd:complexType>
                     <xsd:sequence>
                         <xsd:element name="pipaurl" type="xsd:string"/>
-
                         <xsd:element name="participantToken" type="xsd:string"/>
                     </xsd:sequence>
                 </xsd:complexType>
@@ -167,37 +192,35 @@
                     <xsd:sequence>
                         <xsd:element name="metadata" type="tns:taskMetadata"/>
                     </xsd:sequence>
-
                 </xsd:complexType>
             </xsd:element>
             <xsd:element name="initRequest">
                 <xsd:complexType>
                     <xsd:sequence>
                         <xsd:element name="taskId" type="xsd:string"/>
-                        <xsd:element name="input">
-                            <xsd:complexType>
-                                <xsd:sequence>
-
-                                    <xsd:any maxOccurs="unbounded" minOccurs="0"/>
-                                </xsd:sequence>
-                            </xsd:complexType>
-                        </xsd:element>
+                        <xsd:element name="input" type="tns:taskData"/>
                         <xsd:element name="participantToken" type="xsd:string"/>
                         <xsd:element minOccurs="0" name="formUrl" type="xsd:string"/>
                     </xsd:sequence>
                 </xsd:complexType>
             </xsd:element>
-
+            <xsd:element name="initResponse">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="userProcessResponse">
+                            <xsd:complexType>
+                                <xsd:sequence>
+                                    <xsd:any/>
+                                </xsd:sequence>
+                            </xsd:complexType>
+                        </xsd:element>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
             <xsd:element name="okResponse">
                 <xsd:complexType>
                     <xsd:sequence/>
                 </xsd:complexType>
-            </xsd:element>
-            <xsd:element name="userProcessResponse">
-                <xsd:complexType>
-                    <xsd:sequence/>
-                </xsd:complexType>
-
             </xsd:element>
             <xsd:element name="getAttachmentsRequest">
                 <xsd:complexType>
@@ -207,7 +230,6 @@
                     </xsd:sequence>
                 </xsd:complexType>
             </xsd:element>
-
             <xsd:element name="getAttachmentsResponse" type="tns:attachments"/>
             <xsd:element name="addAttachmentRequest">
                 <xsd:complexType>
@@ -217,7 +239,6 @@
                         <xsd:element name="participantToken" type="xsd:string"/>
                     </xsd:sequence>
                 </xsd:complexType>
-
             </xsd:element>
             <xsd:element name="removeAttachmentRequest">
                 <xsd:complexType>
@@ -227,7 +248,6 @@
                         <xsd:element name="participantToken" type="xsd:string"/>
                     </xsd:sequence>
                 </xsd:complexType>
-
             </xsd:element>
             <xsd:complexType name="attachments">
                 <xsd:sequence>
@@ -237,7 +257,6 @@
             <xsd:complexType name="attachmentMetadata">
                 <xsd:sequence>
                     <xsd:element name="mimeType" type="xsd:string"/>
-
                     <xsd:element name="fileName" type="xsd:string"/>
                     <xsd:element name="title" type="xsd:string"/>
                     <xsd:element name="description" type="xsd:string"/>
@@ -247,7 +266,6 @@
             <xsd:complexType name="attachment">
                 <xsd:sequence>
                     <xsd:element name="attachmentMetadata" type="tns:attachmentMetadata"/>
-
                     <xsd:element name="payloadUrl" type="xsd:string"/>
                 </xsd:sequence>
             </xsd:complexType>
@@ -257,7 +275,6 @@
                     <xsd:element maxOccurs="unbounded" minOccurs="0" name="role" type="xsd:string"/>
                     <xsd:element minOccurs="0" name="authorized" type="xsd:string"/>
                 </xsd:sequence>
-
             </xsd:complexType>
             <xsd:complexType name="taskMetadata">
                 <xsd:sequence>
@@ -267,7 +284,6 @@
                     <xsd:element minOccurs="0" name="description" type="xsd:string"/>
                     <xsd:element minOccurs="0" name="processId" type="xsd:string"/>
                     <xsd:element minOccurs="0" name="instanceId" type="xsd:string"/>
-
                     <xsd:element minOccurs="0" name="creationDate" type="xsd:dateTime"/>
                     <xsd:element minOccurs="0" name="deadline" type="xsd:dateTime"/>
                     <xsd:element minOccurs="0" name="priority" nillable="true" type="xsd:int"/>
@@ -277,7 +293,6 @@
                     <xsd:element minOccurs="0" name="failureCode" type="xsd:string"/>
                     <xsd:element minOccurs="0" name="failureReason" type="xsd:string"/>
                     <xsd:element minOccurs="0" name="userProcessCompleteSOAPAction" type="xsd:string"/>
-
                     <xsd:element minOccurs="0" name="processEndpoint" type="xsd:anyURI"/>
                     <xsd:element minOccurs="0" name="initMessageNamespaceURI" type="xsd:anyURI"/>
                     <xsd:element minOccurs="0" name="initOperationSOAPAction" type="xsd:string"/>
@@ -287,37 +302,50 @@
                     <xsd:element minOccurs="0" name="revokeAction" type="tns:accessControlType"/>
                     <xsd:element minOccurs="0" name="saveAction" type="tns:accessControlType"/>
                     <xsd:element minOccurs="0" name="dismissAction" type="tns:accessControlType"/>
-
                     <xsd:element minOccurs="0" name="completeAction" type="tns:accessControlType"/>
                     <xsd:element minOccurs="0" name="attachments" type="tns:attachments"/>
+                    <xsd:element minOccurs="0" name="customMetadata" type="tns:customMetadataType"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="customMetadataType">
+                <xsd:sequence>
+                    <xsd:element maxOccurs="unbounded" minOccurs="0" name="customMetadataKeyValue" type="tns:customMetadataKeyValueType"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="customMetadataKeyValueType">
+                <xsd:sequence>
+                    <xsd:element name="key" type="xsd:string"/>
+                    <xsd:element name="value" type="xsd:string"/>
                 </xsd:sequence>
             </xsd:complexType>
             <xsd:complexType name="task">
                 <xsd:sequence>
                     <xsd:element name="metadata" type="tns:taskMetadata"/>
-                    <xsd:element name="input">
-                        <xsd:complexType>
-
-                            <xsd:sequence>
-                                <xsd:any maxOccurs="unbounded" minOccurs="0"/>
-                            </xsd:sequence>
-                        </xsd:complexType>
-                    </xsd:element>
-                    <xsd:element name="output">
-                        <xsd:complexType>
-                            <xsd:sequence>
-                                <xsd:any maxOccurs="unbounded" minOccurs="0"/>
-
-                            </xsd:sequence>
-                        </xsd:complexType>
-                    </xsd:element>
+                    <xsd:element name="input" type="tns:taskData"/>
+                    <xsd:element minOccurs="0" name="output" type="tns:taskData"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="taskOwnerAndState">
+                <xsd:sequence>
+                    <xsd:element name="metadata" type="tns:taskOwnerAndStateMetadata"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="taskOwnerAndStateMetadata">
+                <xsd:sequence>
+                    <xsd:element minOccurs="0" name="taskState" type="xsd:token"/>
+                    <xsd:element maxOccurs="unbounded" minOccurs="0" name="userOwner" type="xsd:string"/>
+                    <xsd:element maxOccurs="unbounded" minOccurs="0" name="roleOwner" type="xsd:string"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="taskData">
+                <xsd:sequence>
+                    <xsd:any maxOccurs="unbounded" minOccurs="0"/>
                 </xsd:sequence>
             </xsd:complexType>
             <xsd:element name="getAvailableTasksResponse">
                 <xsd:complexType>
                     <xsd:sequence>
                         <xsd:element maxOccurs="unbounded" minOccurs="0" name="task" type="tns:taskMetadata"/>
-
                     </xsd:sequence>
                 </xsd:complexType>
             </xsd:element>
@@ -327,9 +355,8 @@
                         <xsd:element name="participantToken" type="xsd:string"/>
                         <xsd:element name="taskType" type="xsd:string"/>
                         <xsd:element name="subQuery" type="xsd:string"/>
-
-                        <xsd:element name="first" type="xsd:string"/>
-                        <xsd:element name="max" type="xsd:string"/>
+                        <xsd:element minOccurs="0" name="first" type="xsd:string"/>
+                        <xsd:element minOccurs="0" name="max" type="xsd:string"/>
                     </xsd:sequence>
                 </xsd:complexType>
             </xsd:element>
@@ -337,7 +364,6 @@
                 <xsd:complexType>
                     <xsd:sequence>
                         <xsd:element name="participantToken" type="xsd:string"/>
-
                         <xsd:element name="taskType" type="xsd:string"/>
                         <xsd:element name="subQuery" type="xsd:string"/>
                     </xsd:sequence>
@@ -347,27 +373,25 @@
             <xsd:element name="reassignRequest">
                 <xsd:complexType>
                     <xsd:sequence>
-
                         <xsd:element name="taskId" type="xsd:string"/>
                         <xsd:element maxOccurs="unbounded" minOccurs="0" name="userOwner" type="xsd:string"/>
                         <xsd:element maxOccurs="unbounded" minOccurs="0" name="roleOwner" type="xsd:string"/>
                         <xsd:element name="taskState" type="xsd:string"/>
                         <xsd:element name="participantToken" type="xsd:string"/>
+                        <xsd:element minOccurs="0" name="userAction" type="xsd:string"/>
                     </xsd:sequence>
                 </xsd:complexType>
             </xsd:element>
             <xsd:element name="unavailableTaskFault">
-
-                <xsd:complexType>
+                <xsd:complexType mixed="true">
                     <xsd:sequence>
-                        <xsd:element name="reason" type="xsd:string"/>
-                        <xsd:element maxOccurs="unbounded" name="unavailableTaskId" type="xsd:string"/>
+                        <xsd:element minOccurs="0" name="reason" type="xsd:string"/>
+                        <xsd:element maxOccurs="unbounded" minOccurs="0" name="unavailableTaskId" type="xsd:string"/>
                     </xsd:sequence>
                 </xsd:complexType>
             </xsd:element>
             <xsd:element name="invalidParticipantTokenFault">
                 <xsd:complexType>
-
                     <xsd:sequence>
                         <xsd:element name="reason" type="xsd:string"/>
                         <xsd:element name="invalidToken" type="xsd:string"/>
@@ -377,7 +401,6 @@
             <xsd:element name="accessDeniedFault">
                 <xsd:complexType>
                     <xsd:sequence>
-
                         <xsd:element name="reason" type="xsd:string"/>
                     </xsd:sequence>
                 </xsd:complexType>
@@ -387,7 +410,6 @@
                     <xsd:sequence>
                         <xsd:element name="reason" type="xsd:string"/>
                     </xsd:sequence>
-
                 </xsd:complexType>
             </xsd:element>
             <xsd:element name="unavailableAttachmentFault">
@@ -397,38 +419,66 @@
                     </xsd:sequence>
                 </xsd:complexType>
             </xsd:element>
-
+            <xsd:element name="getCustomColumnsRequest">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="participantToken" type="xsd:string"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="getCustomColumnsResponse">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="customColumn" type="xsd:string"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
         </xsd:schema>
     </wsdl:types>
+    <wsdl:message name="getTaskRequest">
+        <wsdl:part name="getTaskRequest" element="tns:getTaskRequest"/>
+    </wsdl:message>
+    <wsdl:message name="getTaskResponse">
+        <wsdl:part name="getTaskResponse" element="tns:getTaskResponse"/>
+    </wsdl:message>
+    <wsdl:message name="invalidInputMessageFault">
+        <wsdl:part name="invalidInputMessageFault" element="tns:invalidInputMessageFault"/>
+    </wsdl:message>
+    <wsdl:message name="unavailableTaskFault">
+        <wsdl:part name="unavailableTaskFault" element="tns:unavailableTaskFault"/>
+    </wsdl:message>
+    <wsdl:message name="invalidParticipantTokenFault">
+        <wsdl:part name="invalidParticipantTokenFault" element="tns:invalidParticipantTokenFault"/>
+    </wsdl:message>
     <wsdl:message name="deletePipaRequest">
         <wsdl:part name="deletePipaRequest" element="tns:deletePipaRequest"/>
     </wsdl:message>
     <wsdl:message name="okResponse">
         <wsdl:part name="okResponse" element="tns:okResponse"/>
     </wsdl:message>
-    <wsdl:message name="invalidParticipantTokenFault">
-
-        <wsdl:part name="invalidParticipantTokenFault" element="tns:invalidParticipantTokenFault"/>
-    </wsdl:message>
-    <wsdl:message name="unavailableTaskFault">
-        <wsdl:part name="unavailableTaskFault" element="tns:unavailableTaskFault"/>
-    </wsdl:message>
-    <wsdl:message name="invalidInputMessageFault">
-        <wsdl:part name="invalidInputMessageFault" element="tns:invalidInputMessageFault"/>
-    </wsdl:message>
-    <wsdl:message name="getTaskRequest">
-
-        <wsdl:part name="getTaskRequest" element="tns:getTaskRequest"/>
-    </wsdl:message>
-    <wsdl:message name="getTaskResponse">
-        <wsdl:part name="getTaskResponse" element="tns:getTaskResponse"/>
-    </wsdl:message>
     <wsdl:message name="removeAttachmentRequest">
         <wsdl:part name="removeAttachmentRequest" element="tns:removeAttachmentRequest"/>
     </wsdl:message>
     <wsdl:message name="unavailableAttachmentFault">
-
         <wsdl:part name="unavailableAttachmentFault" element="tns:unavailableAttachmentFault"/>
+    </wsdl:message>
+    <wsdl:message name="getTaskOwnerAndStateRequest">
+        <wsdl:part name="getTaskOwnerAndStateRequest" element="tns:getTaskOwnerAndStateRequest"/>
+    </wsdl:message>
+    <wsdl:message name="getTaskOwnerAndStateResponse">
+        <wsdl:part name="getTaskOwnerAndStateResponse" element="tns:getTaskOwnerAndStateResponse"/>
+    </wsdl:message>
+    <wsdl:message name="getCustomColumnsRequest">
+        <wsdl:part name="getCustomColumnsRequest" element="tns:getCustomColumnsRequest"/>
+    </wsdl:message>
+    <wsdl:message name="getCustomColumnsResponse">
+        <wsdl:part name="getCustomColumnsResponse" element="tns:getCustomColumnsResponse"/>
+    </wsdl:message>
+    <wsdl:message name="manageFromInstanceRequest">
+        <wsdl:part name="manageFromInstanceRequest" element="tns:manageFromInstanceRequest"/>
+    </wsdl:message>
+    <wsdl:message name="accessDeniedFault">
+        <wsdl:part name="accessDeniedFault" element="tns:accessDeniedFault"/>
     </wsdl:message>
     <wsdl:message name="getAvailableTasksRequest">
         <wsdl:part name="getAvailableTasksRequest" element="tns:getAvailableTasksRequest"/>
@@ -437,7 +487,6 @@
         <wsdl:part name="getAvailableTasksResponse" element="tns:getAvailableTasksResponse"/>
     </wsdl:message>
     <wsdl:message name="countAvailableTasksRequest">
-
         <wsdl:part name="countAvailableTasksRequest" element="tns:countAvailableTasksRequest"/>
     </wsdl:message>
     <wsdl:message name="countAvailableTasksResponse">
@@ -447,27 +496,23 @@
         <wsdl:part name="skipRequest" element="tns:skipRequest"/>
     </wsdl:message>
     <wsdl:message name="createRequest">
-
         <wsdl:part name="createRequest" element="tns:createRequest"/>
-    </wsdl:message>
-    <wsdl:message name="accessDeniedFault">
-        <wsdl:part name="accessDeniedFault" element="tns:accessDeniedFault"/>
     </wsdl:message>
     <wsdl:message name="initRequest">
         <wsdl:part name="initRequest" element="tns:initRequest"/>
     </wsdl:message>
-    <wsdl:message name="userProcessResponse"/>
-
-    <wsdl:message name="setOutputRequest">
-        <wsdl:part name="setOutputRequest" element="tns:setOutputRequest"/>
+    <wsdl:message name="initResponse">
+        <wsdl:part name="initResponse" element="tns:initResponse"/>
     </wsdl:message>
     <wsdl:message name="reassignRequest">
         <wsdl:part name="reassignRequest" element="tns:reassignRequest"/>
     </wsdl:message>
+    <wsdl:message name="setOutputRequest">
+        <wsdl:part name="setOutputRequest" element="tns:setOutputRequest"/>
+    </wsdl:message>
     <wsdl:message name="completeRequest">
         <wsdl:part name="completeRequest" element="tns:completeRequest"/>
     </wsdl:message>
-
     <wsdl:message name="setOutputAndCompleteRequest">
         <wsdl:part name="setOutputAndCompleteRequest" element="tns:setOutputAndCompleteRequest"/>
     </wsdl:message>
@@ -477,7 +522,6 @@
     <wsdl:message name="getAttachmentsResponse">
         <wsdl:part name="getAttachmentsResponse" element="tns:getAttachmentsResponse"/>
     </wsdl:message>
-
     <wsdl:message name="updateRequest">
         <wsdl:part name="updateRequest" element="tns:updateRequest"/>
     </wsdl:message>
@@ -487,7 +531,6 @@
     <wsdl:message name="getPipaResponse">
         <wsdl:part name="getPipaResponse" element="tns:getPipaResponse"/>
     </wsdl:message>
-
     <wsdl:message name="deleteAllRequest">
         <wsdl:part name="deleteAllRequest" element="tns:deleteAllRequest"/>
     </wsdl:message>
@@ -497,7 +540,6 @@
     <wsdl:message name="storePipaRequest">
         <wsdl:part name="storePipaRequest" element="tns:storePipaRequest"/>
     </wsdl:message>
-
     <wsdl:message name="getTaskListRequest">
         <wsdl:part name="getTaskListRequest" element="tns:getTaskListRequest"/>
     </wsdl:message>
@@ -507,198 +549,193 @@
     <wsdl:message name="deleteRequest">
         <wsdl:part name="deleteRequest" element="tns:deleteRequest"/>
     </wsdl:message>
-
     <wsdl:message name="failRequest">
         <wsdl:part name="failRequest" element="tns:failRequest"/>
     </wsdl:message>
+    <wsdl:message name="listTasksFromInstanceRequest">
+        <wsdl:part name="listTasksFromInstanceRequest" element="tns:listTasksFromInstanceRequest"/>
+    </wsdl:message>
+    <wsdl:message name="listTasksFromInstanceResponse">
+        <wsdl:part name="listTasksFromInstanceResponse" element="tns:listTasksFromInstanceResponse"/>
+    </wsdl:message>
     <wsdl:portType name="TaskManagementServicesPortType">
-        <wsdl:operation name="deletePipa">
-            <wsdl:input message="tns:deletePipaRequest" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/deletePipa"/>
-            <wsdl:output message="tns:okResponse" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/TaskManagementServices/deletePipaResponse"/>
-            <wsdl:fault message="tns:invalidParticipantTokenFault" name="invalidParticipantTokenFault" wsaw:Action="urn:deletePipainvalidParticipantTokenFault"/>
-            <wsdl:fault message="tns:unavailableTaskFault" name="unavailableTaskFault" wsaw:Action="urn:deletePipaunavailableTaskFault"/>
-
-            <wsdl:fault message="tns:invalidInputMessageFault" name="invalidInputMessageFault" wsaw:Action="urn:deletePipainvalidInputMessageFault"/>
-        </wsdl:operation>
         <wsdl:operation name="getTask">
             <wsdl:input message="tns:getTaskRequest" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/getTask"/>
-            <wsdl:output message="tns:getTaskResponse" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/TaskManagementServices/getTaskResponse"/>
-            <wsdl:fault message="tns:invalidParticipantTokenFault" name="invalidParticipantTokenFault" wsaw:Action="urn:getTaskinvalidParticipantTokenFault"/>
-            <wsdl:fault message="tns:unavailableTaskFault" name="unavailableTaskFault" wsaw:Action="urn:getTaskunavailableTaskFault"/>
+            <wsdl:output message="tns:getTaskResponse" wsaw:Action="//www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/TaskManagementServices/getTaskResponse"/>
             <wsdl:fault message="tns:invalidInputMessageFault" name="invalidInputMessageFault" wsaw:Action="urn:getTaskinvalidInputMessageFault"/>
+            <wsdl:fault message="tns:unavailableTaskFault" name="unavailableTaskFault" wsaw:Action="urn:getTaskunavailableTaskFault"/>
+            <wsdl:fault message="tns:invalidParticipantTokenFault" name="invalidParticipantTokenFault" wsaw:Action="urn:getTaskinvalidParticipantTokenFault"/>
         </wsdl:operation>
-
+        <wsdl:operation name="deletePipa">
+            <wsdl:input message="tns:deletePipaRequest" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/deletePipa"/>
+            <wsdl:output message="tns:okResponse" wsaw:Action="//www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/TaskManagementServices/deletePipaResponse"/>
+            <wsdl:fault message="tns:invalidInputMessageFault" name="invalidInputMessageFault" wsaw:Action="urn:deletePipainvalidInputMessageFault"/>
+            <wsdl:fault message="tns:unavailableTaskFault" name="unavailableTaskFault" wsaw:Action="urn:deletePipaunavailableTaskFault"/>
+            <wsdl:fault message="tns:invalidParticipantTokenFault" name="invalidParticipantTokenFault" wsaw:Action="urn:deletePipainvalidParticipantTokenFault"/>
+        </wsdl:operation>
         <wsdl:operation name="removeAttachment">
             <wsdl:input message="tns:removeAttachmentRequest" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/removeAttachment"/>
-            <wsdl:output message="tns:okResponse" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/TaskManagementServices/removeAttachmentResponse"/>
-            <wsdl:fault message="tns:invalidParticipantTokenFault" name="invalidParticipantTokenFault" wsaw:Action="urn:removeAttachmentinvalidParticipantTokenFault"/>
-            <wsdl:fault message="tns:unavailableTaskFault" name="unavailableTaskFault" wsaw:Action="urn:removeAttachmentunavailableTaskFault"/>
-            <wsdl:fault message="tns:unavailableAttachmentFault" name="unavailableAttachmentFault" wsaw:Action="urn:removeAttachmentunavailableAttachmentFault"/>
+            <wsdl:output message="tns:okResponse" wsaw:Action="//www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/TaskManagementServices/removeAttachmentResponse"/>
             <wsdl:fault message="tns:invalidInputMessageFault" name="invalidInputMessageFault" wsaw:Action="urn:removeAttachmentinvalidInputMessageFault"/>
+            <wsdl:fault message="tns:unavailableAttachmentFault" name="unavailableAttachmentFault" wsaw:Action="urn:removeAttachmentunavailableAttachmentFault"/>
+            <wsdl:fault message="tns:unavailableTaskFault" name="unavailableTaskFault" wsaw:Action="urn:removeAttachmentunavailableTaskFault"/>
+            <wsdl:fault message="tns:invalidParticipantTokenFault" name="invalidParticipantTokenFault" wsaw:Action="urn:removeAttachmentinvalidParticipantTokenFault"/>
+        </wsdl:operation>
+        <wsdl:operation name="getTaskOwnerAndState">
+            <wsdl:input message="tns:getTaskOwnerAndStateRequest" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/getTaskOwnerAndState"/>
+            <wsdl:output message="tns:getTaskOwnerAndStateResponse" wsaw:Action="//www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/TaskManagementServices/getTaskOwnerAndStateResponse"/>
+            <wsdl:fault message="tns:invalidInputMessageFault" name="invalidInputMessageFault" wsaw:Action="urn:getTaskinvalidInputMessageFault"/>
+            <wsdl:fault message="tns:unavailableTaskFault" name="unavailableTaskFault" wsaw:Action="urn:getTaskunavailableTaskFault"/>
+            <wsdl:fault message="tns:invalidParticipantTokenFault" name="invalidParticipantTokenFault" wsaw:Action="urn:getTaskinvalidParticipantTokenFault"/>
+        </wsdl:operation>
+        <wsdl:operation name="getCustomColumns">
+            <wsdl:input message="tns:getCustomColumnsRequest" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/getCustomColumns"/>
+            <wsdl:output message="tns:getCustomColumnsResponse" wsaw:Action="//www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/getCustomColumnsResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="manageFromInstance">
+            <wsdl:input message="tns:manageFromInstanceRequest" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/manageFromInstance"/>
+            <wsdl:output message="tns:okResponse" wsaw:Action="//www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/TaskManagementServices/manageFromInstanceResponse"/>
+            <wsdl:fault message="tns:accessDeniedFault" name="accessDeniedFault" wsaw:Action="urn:manageFromInstanceaccessDeniedFault"/>
+            <wsdl:fault message="tns:invalidInputMessageFault" name="invalidInputMessageFault" wsaw:Action="urn:manageFromInstanceinvalidInputMessageFault"/>
+            <wsdl:fault message="tns:unavailableTaskFault" name="unavailableTaskFault" wsaw:Action="urn:manageFromInstanceunavailableTaskFault"/>
+            <wsdl:fault message="tns:invalidParticipantTokenFault" name="invalidParticipantTokenFault" wsaw:Action="urn:manageFromInstanceinvalidParticipantTokenFault"/>
         </wsdl:operation>
         <wsdl:operation name="getAvailableTasks">
-
             <wsdl:input message="tns:getAvailableTasksRequest" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/getAvailableTasks"/>
-            <wsdl:output message="tns:getAvailableTasksResponse" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/TaskManagementServices/getAvailableTasksResponse"/>
-            <wsdl:fault message="tns:invalidParticipantTokenFault" name="invalidParticipantTokenFault" wsaw:Action="urn:getAvailableTasksinvalidParticipantTokenFault"/>
+            <wsdl:output message="tns:getAvailableTasksResponse" wsaw:Action="//www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/TaskManagementServices/getAvailableTasksResponse"/>
             <wsdl:fault message="tns:invalidInputMessageFault" name="invalidInputMessageFault" wsaw:Action="urn:getAvailableTasksinvalidInputMessageFault"/>
+            <wsdl:fault message="tns:invalidParticipantTokenFault" name="invalidParticipantTokenFault" wsaw:Action="urn:getAvailableTasksinvalidParticipantTokenFault"/>
         </wsdl:operation>
         <wsdl:operation name="countAvailableTasks">
             <wsdl:input message="tns:countAvailableTasksRequest" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/countAvailableTasks"/>
-            <wsdl:output message="tns:countAvailableTasksResponse" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/TaskManagementServices/countAvailableTasksResponse"/>
-            <wsdl:fault message="tns:invalidParticipantTokenFault" name="invalidParticipantTokenFault" wsaw:Action="urn:countAvailableTasksinvalidParticipantTokenFault"/>
-
+            <wsdl:output message="tns:countAvailableTasksResponse" wsaw:Action="//www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/TaskManagementServices/countAvailableTasksResponse"/>
             <wsdl:fault message="tns:invalidInputMessageFault" name="invalidInputMessageFault" wsaw:Action="urn:countAvailableTasksinvalidInputMessageFault"/>
+            <wsdl:fault message="tns:invalidParticipantTokenFault" name="invalidParticipantTokenFault" wsaw:Action="urn:countAvailableTasksinvalidParticipantTokenFault"/>
         </wsdl:operation>
         <wsdl:operation name="skip">
             <wsdl:input message="tns:skipRequest" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/skip"/>
-            <wsdl:output message="tns:okResponse" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/TaskManagementServices/skipResponse"/>
-            <wsdl:fault message="tns:invalidParticipantTokenFault" name="invalidParticipantTokenFault" wsaw:Action="urn:skipinvalidParticipantTokenFault"/>
-            <wsdl:fault message="tns:unavailableTaskFault" name="unavailableTaskFault" wsaw:Action="urn:skipunavailableTaskFault"/>
+            <wsdl:output message="tns:okResponse" wsaw:Action="//www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/TaskManagementServices/skipResponse"/>
             <wsdl:fault message="tns:invalidInputMessageFault" name="invalidInputMessageFault" wsaw:Action="urn:skipinvalidInputMessageFault"/>
+            <wsdl:fault message="tns:unavailableTaskFault" name="unavailableTaskFault" wsaw:Action="urn:skipunavailableTaskFault"/>
+            <wsdl:fault message="tns:invalidParticipantTokenFault" name="invalidParticipantTokenFault" wsaw:Action="urn:skipinvalidParticipantTokenFault"/>
         </wsdl:operation>
-
         <wsdl:operation name="create">
             <wsdl:input message="tns:createRequest" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/create"/>
-            <wsdl:output message="tns:okResponse" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/TaskManagementServices/createResponse"/>
-            <wsdl:fault message="tns:invalidParticipantTokenFault" name="invalidParticipantTokenFault" wsaw:Action="urn:createinvalidParticipantTokenFault"/>
-            <wsdl:fault message="tns:invalidInputMessageFault" name="invalidInputMessageFault" wsaw:Action="urn:createinvalidInputMessageFault"/>
+            <wsdl:output message="tns:okResponse" wsaw:Action="//www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/TaskManagementServices/createResponse"/>
             <wsdl:fault message="tns:accessDeniedFault" name="accessDeniedFault" wsaw:Action="urn:createaccessDeniedFault"/>
+            <wsdl:fault message="tns:invalidInputMessageFault" name="invalidInputMessageFault" wsaw:Action="urn:createinvalidInputMessageFault"/>
+            <wsdl:fault message="tns:invalidParticipantTokenFault" name="invalidParticipantTokenFault" wsaw:Action="urn:createinvalidParticipantTokenFault"/>
         </wsdl:operation>
         <wsdl:operation name="initProcess">
             <wsdl:input message="tns:initRequest" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/init"/>
-
-            <wsdl:output message="tns:userProcessResponse" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/TaskManagementServices/initProcessResponse"/>
-            <wsdl:fault message="tns:invalidParticipantTokenFault" name="invalidParticipantTokenFault" wsaw:Action="urn:initProcessinvalidParticipantTokenFault"/>
-            <wsdl:fault message="tns:unavailableTaskFault" name="unavailableTaskFault" wsaw:Action="urn:initProcessunavailableTaskFault"/>
+            <wsdl:output message="tns:initResponse" wsaw:Action="//www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/TaskManagementServices/initProcessResponse"/>
             <wsdl:fault message="tns:invalidInputMessageFault" name="invalidInputMessageFault" wsaw:Action="urn:initProcessinvalidInputMessageFault"/>
-        </wsdl:operation>
-        <wsdl:operation name="setOutput">
-            <wsdl:input message="tns:setOutputRequest" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/setOutput"/>
-            <wsdl:output message="tns:okResponse" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/TaskManagementServices/setOutputResponse"/>
-            <wsdl:fault message="tns:invalidParticipantTokenFault" name="invalidParticipantTokenFault" wsaw:Action="urn:setOutputinvalidParticipantTokenFault"/>
-
-            <wsdl:fault message="tns:unavailableTaskFault" name="unavailableTaskFault" wsaw:Action="urn:setOutputunavailableTaskFault"/>
-            <wsdl:fault message="tns:invalidInputMessageFault" name="invalidInputMessageFault" wsaw:Action="urn:setOutputinvalidInputMessageFault"/>
+            <wsdl:fault message="tns:unavailableTaskFault" name="unavailableTaskFault" wsaw:Action="urn:initProcessunavailableTaskFault"/>
+            <wsdl:fault message="tns:invalidParticipantTokenFault" name="invalidParticipantTokenFault" wsaw:Action="urn:initProcessinvalidParticipantTokenFault"/>
         </wsdl:operation>
         <wsdl:operation name="reassign">
             <wsdl:input message="tns:reassignRequest" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/reassign"/>
-            <wsdl:output message="tns:okResponse" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/TaskManagementServices/reassignResponse"/>
-            <wsdl:fault message="tns:invalidParticipantTokenFault" name="invalidParticipantTokenFault" wsaw:Action="urn:reassigninvalidParticipantTokenFault"/>
-            <wsdl:fault message="tns:unavailableTaskFault" name="unavailableTaskFault" wsaw:Action="urn:reassignunavailableTaskFault"/>
+            <wsdl:output message="tns:okResponse" wsaw:Action="//www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/TaskManagementServices/reassignResponse"/>
             <wsdl:fault message="tns:invalidInputMessageFault" name="invalidInputMessageFault" wsaw:Action="urn:reassigninvalidInputMessageFault"/>
-
+            <wsdl:fault message="tns:unavailableTaskFault" name="unavailableTaskFault" wsaw:Action="urn:reassignunavailableTaskFault"/>
+            <wsdl:fault message="tns:invalidParticipantTokenFault" name="invalidParticipantTokenFault" wsaw:Action="urn:reassigninvalidParticipantTokenFault"/>
+        </wsdl:operation>
+        <wsdl:operation name="setOutput">
+            <wsdl:input message="tns:setOutputRequest" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/setOutput"/>
+            <wsdl:output message="tns:okResponse" wsaw:Action="//www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/TaskManagementServices/setOutputResponse"/>
+            <wsdl:fault message="tns:invalidInputMessageFault" name="invalidInputMessageFault" wsaw:Action="urn:setOutputinvalidInputMessageFault"/>
+            <wsdl:fault message="tns:unavailableTaskFault" name="unavailableTaskFault" wsaw:Action="urn:setOutputunavailableTaskFault"/>
+            <wsdl:fault message="tns:invalidParticipantTokenFault" name="invalidParticipantTokenFault" wsaw:Action="urn:setOutputinvalidParticipantTokenFault"/>
         </wsdl:operation>
         <wsdl:operation name="complete">
             <wsdl:input message="tns:completeRequest" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/complete"/>
-            <wsdl:output message="tns:okResponse" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/TaskManagementServices/completeResponse"/>
-            <wsdl:fault message="tns:invalidParticipantTokenFault" name="invalidParticipantTokenFault" wsaw:Action="urn:completeinvalidParticipantTokenFault"/>
-            <wsdl:fault message="tns:unavailableTaskFault" name="unavailableTaskFault" wsaw:Action="urn:completeunavailableTaskFault"/>
+            <wsdl:output message="tns:okResponse" wsaw:Action="//www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/TaskManagementServices/completeResponse"/>
             <wsdl:fault message="tns:invalidInputMessageFault" name="invalidInputMessageFault" wsaw:Action="urn:completeinvalidInputMessageFault"/>
+            <wsdl:fault message="tns:unavailableTaskFault" name="unavailableTaskFault" wsaw:Action="urn:completeunavailableTaskFault"/>
+            <wsdl:fault message="tns:invalidParticipantTokenFault" name="invalidParticipantTokenFault" wsaw:Action="urn:completeinvalidParticipantTokenFault"/>
         </wsdl:operation>
         <wsdl:operation name="setOutputAndComplete">
-
             <wsdl:input message="tns:setOutputAndCompleteRequest" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/setOutputAndComplete"/>
-            <wsdl:output message="tns:okResponse" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/TaskManagementServices/setOutputAndCompleteResponse"/>
-            <wsdl:fault message="tns:invalidParticipantTokenFault" name="invalidParticipantTokenFault" wsaw:Action="urn:setOutputAndCompleteinvalidParticipantTokenFault"/>
-            <wsdl:fault message="tns:unavailableTaskFault" name="unavailableTaskFault" wsaw:Action="urn:setOutputAndCompleteunavailableTaskFault"/>
+            <wsdl:output message="tns:okResponse" wsaw:Action="//www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/TaskManagementServices/setOutputAndCompleteResponse"/>
             <wsdl:fault message="tns:invalidInputMessageFault" name="invalidInputMessageFault" wsaw:Action="urn:setOutputAndCompleteinvalidInputMessageFault"/>
+            <wsdl:fault message="tns:unavailableTaskFault" name="unavailableTaskFault" wsaw:Action="urn:setOutputAndCompleteunavailableTaskFault"/>
+            <wsdl:fault message="tns:invalidParticipantTokenFault" name="invalidParticipantTokenFault" wsaw:Action="urn:setOutputAndCompleteinvalidParticipantTokenFault"/>
         </wsdl:operation>
         <wsdl:operation name="getAttachments">
             <wsdl:input message="tns:getAttachmentsRequest" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/getAttachments"/>
-            <wsdl:output message="tns:getAttachmentsResponse" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/TaskManagementServices/getAttachmentsResponse"/>
-
-            <wsdl:fault message="tns:invalidParticipantTokenFault" name="invalidParticipantTokenFault" wsaw:Action="urn:getAttachmentsinvalidParticipantTokenFault"/>
-            <wsdl:fault message="tns:unavailableTaskFault" name="unavailableTaskFault" wsaw:Action="urn:getAttachmentsunavailableTaskFault"/>
+            <wsdl:output message="tns:getAttachmentsResponse" wsaw:Action="//www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/TaskManagementServices/getAttachmentsResponse"/>
             <wsdl:fault message="tns:invalidInputMessageFault" name="invalidInputMessageFault" wsaw:Action="urn:getAttachmentsinvalidInputMessageFault"/>
+            <wsdl:fault message="tns:unavailableTaskFault" name="unavailableTaskFault" wsaw:Action="urn:getAttachmentsunavailableTaskFault"/>
+            <wsdl:fault message="tns:invalidParticipantTokenFault" name="invalidParticipantTokenFault" wsaw:Action="urn:getAttachmentsinvalidParticipantTokenFault"/>
         </wsdl:operation>
         <wsdl:operation name="update">
             <wsdl:input message="tns:updateRequest" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/update"/>
-            <wsdl:output message="tns:okResponse" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/TaskManagementServices/updateResponse"/>
-            <wsdl:fault message="tns:invalidParticipantTokenFault" name="invalidParticipantTokenFault" wsaw:Action="urn:updateinvalidParticipantTokenFault"/>
-            <wsdl:fault message="tns:invalidInputMessageFault" name="invalidInputMessageFault" wsaw:Action="urn:updateinvalidInputMessageFault"/>
-
+            <wsdl:output message="tns:okResponse" wsaw:Action="//www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/TaskManagementServices/updateResponse"/>
             <wsdl:fault message="tns:accessDeniedFault" name="accessDeniedFault" wsaw:Action="urn:updateaccessDeniedFault"/>
+            <wsdl:fault message="tns:invalidInputMessageFault" name="invalidInputMessageFault" wsaw:Action="urn:updateinvalidInputMessageFault"/>
+            <wsdl:fault message="tns:invalidParticipantTokenFault" name="invalidParticipantTokenFault" wsaw:Action="urn:updateinvalidParticipantTokenFault"/>
         </wsdl:operation>
         <wsdl:operation name="getPipa">
             <wsdl:input message="tns:getPipaRequest" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/getPipa"/>
-            <wsdl:output message="tns:getPipaResponse" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/TaskManagementServices/getPipaResponse"/>
-            <wsdl:fault message="tns:invalidParticipantTokenFault" name="invalidParticipantTokenFault" wsaw:Action="urn:getPipainvalidParticipantTokenFault"/>
-            <wsdl:fault message="tns:unavailableTaskFault" name="unavailableTaskFault" wsaw:Action="urn:getPipaunavailableTaskFault"/>
+            <wsdl:output message="tns:getPipaResponse" wsaw:Action="//www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/TaskManagementServices/getPipaResponse"/>
             <wsdl:fault message="tns:invalidInputMessageFault" name="invalidInputMessageFault" wsaw:Action="urn:getPipainvalidInputMessageFault"/>
+            <wsdl:fault message="tns:unavailableTaskFault" name="unavailableTaskFault" wsaw:Action="urn:getPipaunavailableTaskFault"/>
+            <wsdl:fault message="tns:invalidParticipantTokenFault" name="invalidParticipantTokenFault" wsaw:Action="urn:getPipainvalidParticipantTokenFault"/>
         </wsdl:operation>
-
         <wsdl:operation name="deleteAll">
             <wsdl:input message="tns:deleteAllRequest" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/deleteAll"/>
-            <wsdl:output message="tns:okResponse" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/TaskManagementServices/deleteAllResponse"/>
-            <wsdl:fault message="tns:invalidParticipantTokenFault" name="invalidParticipantTokenFault" wsaw:Action="urn:deleteAllinvalidParticipantTokenFault"/>
+            <wsdl:output message="tns:okResponse" wsaw:Action="//www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/TaskManagementServices/deleteAllResponse"/>
+            <wsdl:fault message="tns:accessDeniedFault" name="accessDeniedFault" wsaw:Action="urn:deleteAllaccessDeniedFault"/>
             <wsdl:fault message="tns:invalidInputMessageFault" name="invalidInputMessageFault" wsaw:Action="urn:deleteAllinvalidInputMessageFault"/>
             <wsdl:fault message="tns:unavailableTaskFault" name="unavailableTaskFault" wsaw:Action="urn:deleteAllunavailableTaskFault"/>
-            <wsdl:fault message="tns:accessDeniedFault" name="accessDeniedFault" wsaw:Action="urn:deleteAllaccessDeniedFault"/>
+            <wsdl:fault message="tns:invalidParticipantTokenFault" name="invalidParticipantTokenFault" wsaw:Action="urn:deleteAllinvalidParticipantTokenFault"/>
         </wsdl:operation>
         <wsdl:operation name="addAttachment">
-
             <wsdl:input message="tns:addAttachmentRequest" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/addAttachment"/>
-            <wsdl:output message="tns:okResponse" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/TaskManagementServices/addAttachmentResponse"/>
-            <wsdl:fault message="tns:invalidParticipantTokenFault" name="invalidParticipantTokenFault" wsaw:Action="urn:addAttachmentinvalidParticipantTokenFault"/>
-            <wsdl:fault message="tns:unavailableTaskFault" name="unavailableTaskFault" wsaw:Action="urn:addAttachmentunavailableTaskFault"/>
+            <wsdl:output message="tns:okResponse" wsaw:Action="//www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/TaskManagementServices/addAttachmentResponse"/>
             <wsdl:fault message="tns:invalidInputMessageFault" name="invalidInputMessageFault" wsaw:Action="urn:addAttachmentinvalidInputMessageFault"/>
+            <wsdl:fault message="tns:unavailableTaskFault" name="unavailableTaskFault" wsaw:Action="urn:addAttachmentunavailableTaskFault"/>
+            <wsdl:fault message="tns:invalidParticipantTokenFault" name="invalidParticipantTokenFault" wsaw:Action="urn:addAttachmentinvalidParticipantTokenFault"/>
         </wsdl:operation>
         <wsdl:operation name="storePipa">
             <wsdl:input message="tns:storePipaRequest" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/storePipa"/>
-            <wsdl:output message="tns:okResponse" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/TaskManagementServices/storePipaResponse"/>
-
-            <wsdl:fault message="tns:invalidParticipantTokenFault" name="invalidParticipantTokenFault" wsaw:Action="urn:storePipainvalidParticipantTokenFault"/>
+            <wsdl:output message="tns:okResponse" wsaw:Action="//www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/TaskManagementServices/storePipaResponse"/>
             <wsdl:fault message="tns:invalidInputMessageFault" name="invalidInputMessageFault" wsaw:Action="urn:storePipainvalidInputMessageFault"/>
+            <wsdl:fault message="tns:invalidParticipantTokenFault" name="invalidParticipantTokenFault" wsaw:Action="urn:storePipainvalidParticipantTokenFault"/>
         </wsdl:operation>
         <wsdl:operation name="getTaskList">
             <wsdl:input message="tns:getTaskListRequest" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/getTaskList"/>
-            <wsdl:output message="tns:getTaskListResponse" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/TaskManagementServices/getTaskListResponse"/>
-            <wsdl:fault message="tns:invalidParticipantTokenFault" name="invalidParticipantTokenFault" wsaw:Action="urn:getTaskListinvalidParticipantTokenFault"/>
+            <wsdl:output message="tns:getTaskListResponse" wsaw:Action="//www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/TaskManagementServices/getTaskListResponse"/>
             <wsdl:fault message="tns:invalidInputMessageFault" name="invalidInputMessageFault" wsaw:Action="urn:getTaskListinvalidInputMessageFault"/>
+            <wsdl:fault message="tns:invalidParticipantTokenFault" name="invalidParticipantTokenFault" wsaw:Action="urn:getTaskListinvalidParticipantTokenFault"/>
         </wsdl:operation>
-
         <wsdl:operation name="delete">
             <wsdl:input message="tns:deleteRequest" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/delete"/>
-            <wsdl:output message="tns:okResponse" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/TaskManagementServices/deleteResponse"/>
-            <wsdl:fault message="tns:invalidParticipantTokenFault" name="invalidParticipantTokenFault" wsaw:Action="urn:deleteinvalidParticipantTokenFault"/>
+            <wsdl:output message="tns:okResponse" wsaw:Action="//www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/TaskManagementServices/deleteResponse"/>
+            <wsdl:fault message="tns:accessDeniedFault" name="accessDeniedFault" wsaw:Action="urn:deleteaccessDeniedFault"/>
             <wsdl:fault message="tns:invalidInputMessageFault" name="invalidInputMessageFault" wsaw:Action="urn:deleteinvalidInputMessageFault"/>
             <wsdl:fault message="tns:unavailableTaskFault" name="unavailableTaskFault" wsaw:Action="urn:deleteunavailableTaskFault"/>
-            <wsdl:fault message="tns:accessDeniedFault" name="accessDeniedFault" wsaw:Action="urn:deleteaccessDeniedFault"/>
+            <wsdl:fault message="tns:invalidParticipantTokenFault" name="invalidParticipantTokenFault" wsaw:Action="urn:deleteinvalidParticipantTokenFault"/>
         </wsdl:operation>
         <wsdl:operation name="fail">
-
             <wsdl:input message="tns:failRequest" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/fail"/>
-            <wsdl:output message="tns:okResponse" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/TaskManagementServices/failResponse"/>
-            <wsdl:fault message="tns:invalidParticipantTokenFault" name="invalidParticipantTokenFault" wsaw:Action="urn:failinvalidParticipantTokenFault"/>
-            <wsdl:fault message="tns:unavailableTaskFault" name="unavailableTaskFault" wsaw:Action="urn:failunavailableTaskFault"/>
-            <wsdl:fault message="tns:invalidInputMessageFault" name="invalidInputMessageFault" wsaw:Action="urn:failinvalidInputMessageFault"/>
+            <wsdl:output message="tns:okResponse" wsaw:Action="//www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/TaskManagementServices/failResponse"/>
             <wsdl:fault message="tns:accessDeniedFault" name="accessDeniedFault" wsaw:Action="urn:failaccessDeniedFault"/>
+            <wsdl:fault message="tns:invalidInputMessageFault" name="invalidInputMessageFault" wsaw:Action="urn:failinvalidInputMessageFault"/>
+            <wsdl:fault message="tns:unavailableTaskFault" name="unavailableTaskFault" wsaw:Action="urn:failunavailableTaskFault"/>
+            <wsdl:fault message="tns:invalidParticipantTokenFault" name="invalidParticipantTokenFault" wsaw:Action="urn:failinvalidParticipantTokenFault"/>
+        </wsdl:operation>
+        <wsdl:operation name="listTasksFromInstance">
+            <wsdl:input message="tns:listTasksFromInstanceRequest" wsaw:Action="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/listTasksFromInstance"/>
+            <wsdl:output message="tns:listTasksFromInstanceResponse" wsaw:Action="//www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/TaskManagementServices/listTasksFromInstanceResponse"/>
+            <wsdl:fault message="tns:accessDeniedFault" name="accessDeniedFault" wsaw:Action="urn:listTasksFromInstanceaccessDeniedFault"/>
+            <wsdl:fault message="tns:invalidInputMessageFault" name="invalidInputMessageFault" wsaw:Action="urn:listTasksFromInstanceinvalidInputMessageFault"/>
+            <wsdl:fault message="tns:unavailableTaskFault" name="unavailableTaskFault" wsaw:Action="urn:listTasksFromInstanceunavailableTaskFault"/>
+            <wsdl:fault message="tns:invalidParticipantTokenFault" name="invalidParticipantTokenFault" wsaw:Action="urn:listTasksFromInstanceinvalidParticipantTokenFault"/>
         </wsdl:operation>
     </wsdl:portType>
     <wsdl:binding name="TaskManagementServicesSOAP" type="tns:TaskManagementServicesPortType">
-
         <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
-        <wsdl:operation name="deletePipa">
-            <soap:operation soapAction="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/deletePipa" style="document"/>
-            <wsdl:input>
-                <soap:body use="literal"/>
-            </wsdl:input>
-            <wsdl:output>
-                <soap:body use="literal"/>
-            </wsdl:output>
-
-            <wsdl:fault name="invalidInputMessageFault">
-                <soap:fault use="literal" name="invalidInputMessageFault"/>
-            </wsdl:fault>
-            <wsdl:fault name="unavailableTaskFault">
-                <soap:fault use="literal" name="unavailableTaskFault"/>
-            </wsdl:fault>
-            <wsdl:fault name="invalidParticipantTokenFault">
-                <soap:fault use="literal" name="invalidParticipantTokenFault"/>
-            </wsdl:fault>
-
-        </wsdl:operation>
         <wsdl:operation name="getTask">
             <soap:operation soapAction="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/getTask" style="document"/>
             <wsdl:input>
@@ -707,7 +744,6 @@
             <wsdl:output>
                 <soap:body use="literal"/>
             </wsdl:output>
-
             <wsdl:fault name="invalidInputMessageFault">
                 <soap:fault use="literal" name="invalidInputMessageFault"/>
             </wsdl:fault>
@@ -717,7 +753,24 @@
             <wsdl:fault name="invalidParticipantTokenFault">
                 <soap:fault use="literal" name="invalidParticipantTokenFault"/>
             </wsdl:fault>
-
+        </wsdl:operation>
+        <wsdl:operation name="deletePipa">
+            <soap:operation soapAction="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/deletePipa" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="invalidInputMessageFault">
+                <soap:fault use="literal" name="invalidInputMessageFault"/>
+            </wsdl:fault>
+            <wsdl:fault name="unavailableTaskFault">
+                <soap:fault use="literal" name="unavailableTaskFault"/>
+            </wsdl:fault>
+            <wsdl:fault name="invalidParticipantTokenFault">
+                <soap:fault use="literal" name="invalidParticipantTokenFault"/>
+            </wsdl:fault>
         </wsdl:operation>
         <wsdl:operation name="removeAttachment">
             <soap:operation soapAction="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/removeAttachment" style="document"/>
@@ -727,7 +780,6 @@
             <wsdl:output>
                 <soap:body use="literal"/>
             </wsdl:output>
-
             <wsdl:fault name="invalidInputMessageFault">
                 <soap:fault use="literal" name="invalidInputMessageFault"/>
             </wsdl:fault>
@@ -737,7 +789,54 @@
             <wsdl:fault name="unavailableTaskFault">
                 <soap:fault use="literal" name="unavailableTaskFault"/>
             </wsdl:fault>
-
+            <wsdl:fault name="invalidParticipantTokenFault">
+                <soap:fault use="literal" name="invalidParticipantTokenFault"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getTaskOwnerAndState">
+            <soap:operation soapAction="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/getTaskOwnerAndState" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="invalidInputMessageFault">
+                <soap:fault use="literal" name="invalidInputMessageFault"/>
+            </wsdl:fault>
+            <wsdl:fault name="unavailableTaskFault">
+                <soap:fault use="literal" name="unavailableTaskFault"/>
+            </wsdl:fault>
+            <wsdl:fault name="invalidParticipantTokenFault">
+                <soap:fault use="literal" name="invalidParticipantTokenFault"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getCustomColumns">
+            <soap:operation soapAction="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/getCustomColumns" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="manageFromInstance">
+            <soap:operation soapAction="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/manageFromInstance" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="accessDeniedFault">
+                <soap:fault use="literal" name="accessDeniedFault"/>
+            </wsdl:fault>
+            <wsdl:fault name="invalidInputMessageFault">
+                <soap:fault use="literal" name="invalidInputMessageFault"/>
+            </wsdl:fault>
+            <wsdl:fault name="unavailableTaskFault">
+                <soap:fault use="literal" name="unavailableTaskFault"/>
+            </wsdl:fault>
             <wsdl:fault name="invalidParticipantTokenFault">
                 <soap:fault use="literal" name="invalidParticipantTokenFault"/>
             </wsdl:fault>
@@ -747,7 +846,6 @@
             <wsdl:input>
                 <soap:body use="literal"/>
             </wsdl:input>
-
             <wsdl:output>
                 <soap:body use="literal"/>
             </wsdl:output>
@@ -757,7 +855,6 @@
             <wsdl:fault name="invalidParticipantTokenFault">
                 <soap:fault use="literal" name="invalidParticipantTokenFault"/>
             </wsdl:fault>
-
         </wsdl:operation>
         <wsdl:operation name="countAvailableTasks">
             <soap:operation soapAction="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/countAvailableTasks" style="document"/>
@@ -767,7 +864,6 @@
             <wsdl:output>
                 <soap:body use="literal"/>
             </wsdl:output>
-
             <wsdl:fault name="invalidInputMessageFault">
                 <soap:fault use="literal" name="invalidInputMessageFault"/>
             </wsdl:fault>
@@ -777,7 +873,6 @@
         </wsdl:operation>
         <wsdl:operation name="skip">
             <soap:operation soapAction="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/skip" style="document"/>
-
             <wsdl:input>
                 <soap:body use="literal"/>
             </wsdl:input>
@@ -787,7 +882,6 @@
             <wsdl:fault name="invalidInputMessageFault">
                 <soap:fault use="literal" name="invalidInputMessageFault"/>
             </wsdl:fault>
-
             <wsdl:fault name="unavailableTaskFault">
                 <soap:fault use="literal" name="unavailableTaskFault"/>
             </wsdl:fault>
@@ -797,7 +891,6 @@
         </wsdl:operation>
         <wsdl:operation name="create">
             <soap:operation soapAction="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/create" style="document"/>
-
             <wsdl:input>
                 <soap:body use="literal"/>
             </wsdl:input>
@@ -807,7 +900,6 @@
             <wsdl:fault name="accessDeniedFault">
                 <soap:fault use="literal" name="accessDeniedFault"/>
             </wsdl:fault>
-
             <wsdl:fault name="invalidInputMessageFault">
                 <soap:fault use="literal" name="invalidInputMessageFault"/>
             </wsdl:fault>
@@ -817,7 +909,6 @@
         </wsdl:operation>
         <wsdl:operation name="initProcess">
             <soap:operation soapAction="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/init" style="document"/>
-
             <wsdl:input>
                 <soap:body use="literal"/>
             </wsdl:input>
@@ -827,27 +918,6 @@
             <wsdl:fault name="invalidInputMessageFault">
                 <soap:fault use="literal" name="invalidInputMessageFault"/>
             </wsdl:fault>
-
-            <wsdl:fault name="unavailableTaskFault">
-                <soap:fault use="literal" name="unavailableTaskFault"/>
-            </wsdl:fault>
-            <wsdl:fault name="invalidParticipantTokenFault">
-                <soap:fault use="literal" name="invalidParticipantTokenFault"/>
-            </wsdl:fault>
-        </wsdl:operation>
-        <wsdl:operation name="setOutput">
-            <soap:operation soapAction="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/setOutput" style="document"/>
-
-            <wsdl:input>
-                <soap:body use="literal"/>
-            </wsdl:input>
-            <wsdl:output>
-                <soap:body use="literal"/>
-            </wsdl:output>
-            <wsdl:fault name="invalidInputMessageFault">
-                <soap:fault use="literal" name="invalidInputMessageFault"/>
-            </wsdl:fault>
-
             <wsdl:fault name="unavailableTaskFault">
                 <soap:fault use="literal" name="unavailableTaskFault"/>
             </wsdl:fault>
@@ -857,7 +927,6 @@
         </wsdl:operation>
         <wsdl:operation name="reassign">
             <soap:operation soapAction="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/reassign" style="document"/>
-
             <wsdl:input>
                 <soap:body use="literal"/>
             </wsdl:input>
@@ -867,7 +936,24 @@
             <wsdl:fault name="invalidInputMessageFault">
                 <soap:fault use="literal" name="invalidInputMessageFault"/>
             </wsdl:fault>
-
+            <wsdl:fault name="unavailableTaskFault">
+                <soap:fault use="literal" name="unavailableTaskFault"/>
+            </wsdl:fault>
+            <wsdl:fault name="invalidParticipantTokenFault">
+                <soap:fault use="literal" name="invalidParticipantTokenFault"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="setOutput">
+            <soap:operation soapAction="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/setOutput" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="invalidInputMessageFault">
+                <soap:fault use="literal" name="invalidInputMessageFault"/>
+            </wsdl:fault>
             <wsdl:fault name="unavailableTaskFault">
                 <soap:fault use="literal" name="unavailableTaskFault"/>
             </wsdl:fault>
@@ -877,7 +963,6 @@
         </wsdl:operation>
         <wsdl:operation name="complete">
             <soap:operation soapAction="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/complete" style="document"/>
-
             <wsdl:input>
                 <soap:body use="literal"/>
             </wsdl:input>
@@ -887,7 +972,6 @@
             <wsdl:fault name="invalidInputMessageFault">
                 <soap:fault use="literal" name="invalidInputMessageFault"/>
             </wsdl:fault>
-
             <wsdl:fault name="unavailableTaskFault">
                 <soap:fault use="literal" name="unavailableTaskFault"/>
             </wsdl:fault>
@@ -897,7 +981,6 @@
         </wsdl:operation>
         <wsdl:operation name="setOutputAndComplete">
             <soap:operation soapAction="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/setOutputAndComplete" style="document"/>
-
             <wsdl:input>
                 <soap:body use="literal"/>
             </wsdl:input>
@@ -907,7 +990,6 @@
             <wsdl:fault name="invalidInputMessageFault">
                 <soap:fault use="literal" name="invalidInputMessageFault"/>
             </wsdl:fault>
-
             <wsdl:fault name="unavailableTaskFault">
                 <soap:fault use="literal" name="unavailableTaskFault"/>
             </wsdl:fault>
@@ -917,7 +999,6 @@
         </wsdl:operation>
         <wsdl:operation name="getAttachments">
             <soap:operation soapAction="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/getAttachments" style="document"/>
-
             <wsdl:input>
                 <soap:body use="literal"/>
             </wsdl:input>
@@ -927,7 +1008,6 @@
             <wsdl:fault name="invalidInputMessageFault">
                 <soap:fault use="literal" name="invalidInputMessageFault"/>
             </wsdl:fault>
-
             <wsdl:fault name="unavailableTaskFault">
                 <soap:fault use="literal" name="unavailableTaskFault"/>
             </wsdl:fault>
@@ -937,7 +1017,6 @@
         </wsdl:operation>
         <wsdl:operation name="update">
             <soap:operation soapAction="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/update" style="document"/>
-
             <wsdl:input>
                 <soap:body use="literal"/>
             </wsdl:input>
@@ -947,7 +1026,6 @@
             <wsdl:fault name="accessDeniedFault">
                 <soap:fault use="literal" name="accessDeniedFault"/>
             </wsdl:fault>
-
             <wsdl:fault name="invalidInputMessageFault">
                 <soap:fault use="literal" name="invalidInputMessageFault"/>
             </wsdl:fault>
@@ -957,7 +1035,6 @@
         </wsdl:operation>
         <wsdl:operation name="getPipa">
             <soap:operation soapAction="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/getPipa" style="document"/>
-
             <wsdl:input>
                 <soap:body use="literal"/>
             </wsdl:input>
@@ -967,7 +1044,6 @@
             <wsdl:fault name="invalidInputMessageFault">
                 <soap:fault use="literal" name="invalidInputMessageFault"/>
             </wsdl:fault>
-
             <wsdl:fault name="unavailableTaskFault">
                 <soap:fault use="literal" name="unavailableTaskFault"/>
             </wsdl:fault>
@@ -977,7 +1053,6 @@
         </wsdl:operation>
         <wsdl:operation name="deleteAll">
             <soap:operation soapAction="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/deleteAll" style="document"/>
-
             <wsdl:input>
                 <soap:body use="literal"/>
             </wsdl:input>
@@ -987,7 +1062,6 @@
             <wsdl:fault name="accessDeniedFault">
                 <soap:fault use="literal" name="accessDeniedFault"/>
             </wsdl:fault>
-
             <wsdl:fault name="invalidInputMessageFault">
                 <soap:fault use="literal" name="invalidInputMessageFault"/>
             </wsdl:fault>
@@ -997,7 +1071,6 @@
             <wsdl:fault name="invalidParticipantTokenFault">
                 <soap:fault use="literal" name="invalidParticipantTokenFault"/>
             </wsdl:fault>
-
         </wsdl:operation>
         <wsdl:operation name="addAttachment">
             <soap:operation soapAction="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/addAttachment" style="document"/>
@@ -1007,7 +1080,6 @@
             <wsdl:output>
                 <soap:body use="literal"/>
             </wsdl:output>
-
             <wsdl:fault name="invalidInputMessageFault">
                 <soap:fault use="literal" name="invalidInputMessageFault"/>
             </wsdl:fault>
@@ -1017,7 +1089,6 @@
             <wsdl:fault name="invalidParticipantTokenFault">
                 <soap:fault use="literal" name="invalidParticipantTokenFault"/>
             </wsdl:fault>
-
         </wsdl:operation>
         <wsdl:operation name="storePipa">
             <soap:operation soapAction="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/storePipa" style="document"/>
@@ -1027,7 +1098,6 @@
             <wsdl:output>
                 <soap:body use="literal"/>
             </wsdl:output>
-
             <wsdl:fault name="invalidInputMessageFault">
                 <soap:fault use="literal" name="invalidInputMessageFault"/>
             </wsdl:fault>
@@ -1037,7 +1107,6 @@
         </wsdl:operation>
         <wsdl:operation name="getTaskList">
             <soap:operation soapAction="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/getTaskList" style="document"/>
-
             <wsdl:input>
                 <soap:body use="literal"/>
             </wsdl:input>
@@ -1047,7 +1116,6 @@
             <wsdl:fault name="invalidInputMessageFault">
                 <soap:fault use="literal" name="invalidInputMessageFault"/>
             </wsdl:fault>
-
             <wsdl:fault name="invalidParticipantTokenFault">
                 <soap:fault use="literal" name="invalidParticipantTokenFault"/>
             </wsdl:fault>
@@ -1057,7 +1125,6 @@
             <wsdl:input>
                 <soap:body use="literal"/>
             </wsdl:input>
-
             <wsdl:output>
                 <soap:body use="literal"/>
             </wsdl:output>
@@ -1067,7 +1134,6 @@
             <wsdl:fault name="invalidInputMessageFault">
                 <soap:fault use="literal" name="invalidInputMessageFault"/>
             </wsdl:fault>
-
             <wsdl:fault name="unavailableTaskFault">
                 <soap:fault use="literal" name="unavailableTaskFault"/>
             </wsdl:fault>
@@ -1077,7 +1143,6 @@
         </wsdl:operation>
         <wsdl:operation name="fail">
             <soap:operation soapAction="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/fail" style="document"/>
-
             <wsdl:input>
                 <soap:body use="literal"/>
             </wsdl:input>
@@ -1087,7 +1152,6 @@
             <wsdl:fault name="accessDeniedFault">
                 <soap:fault use="literal" name="accessDeniedFault"/>
             </wsdl:fault>
-
             <wsdl:fault name="invalidInputMessageFault">
                 <soap:fault use="literal" name="invalidInputMessageFault"/>
             </wsdl:fault>
@@ -1097,12 +1161,32 @@
             <wsdl:fault name="invalidParticipantTokenFault">
                 <soap:fault use="literal" name="invalidParticipantTokenFault"/>
             </wsdl:fault>
-
+        </wsdl:operation>
+        <wsdl:operation name="listTasksFromInstance">
+            <soap:operation soapAction="http://www.intalio.com/BPMS/Workflow/TaskManagementServices-20051109/listTasksFromInstance" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="accessDeniedFault">
+                <soap:fault use="literal" name="accessDeniedFault"/>
+            </wsdl:fault>
+            <wsdl:fault name="invalidInputMessageFault">
+                <soap:fault use="literal" name="invalidInputMessageFault"/>
+            </wsdl:fault>
+            <wsdl:fault name="unavailableTaskFault">
+                <soap:fault use="literal" name="unavailableTaskFault"/>
+            </wsdl:fault>
+            <wsdl:fault name="invalidParticipantTokenFault">
+                <soap:fault use="literal" name="invalidParticipantTokenFault"/>
+            </wsdl:fault>
         </wsdl:operation>
     </wsdl:binding>
     <wsdl:service name="TaskManagementServices">
         <wsdl:port name="TaskManagementServicesSOAP" binding="tns:TaskManagementServicesSOAP">
-            <soap:address location="http://trelx28b:8080/axis2/services/TaskManagementServices.TaskManagementServicesSOAP/"/>
+            <soap:address location="http://localhost:8080/axis2/services/TaskManagementServices"/>
         </wsdl:port>
     </wsdl:service>
 </wsdl:definitions>

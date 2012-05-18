@@ -117,7 +117,6 @@ KokuAjax.prototype.ajaxGetTasks = function(pageObj, presentTasks) {
 		return;
 	}
 		
-	// var url="<%= ajaxURL %>";
 	var url = this.renderUrls.ajaxTaskUrl;
 	url = this.formatUrl(url);
 
@@ -161,7 +160,7 @@ KokuAjax.prototype.ajaxGetTasks = function(pageObj, presentTasks) {
 				 effect : {
 				 	type: 'fade',
 				 	length: 100
-				 	},
+				 	}
 				},
 				hide: 'mouseout',
 				style: { 

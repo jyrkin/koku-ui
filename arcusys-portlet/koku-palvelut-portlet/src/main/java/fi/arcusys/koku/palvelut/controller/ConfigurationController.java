@@ -23,7 +23,8 @@ import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.portlet.WindowState;
 
-import org.intalio.tempo.workflow.task.Task;
+//import org.intalio.tempo.workflow.task.Task;
+import fi.arcusys.koku.intalio.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -118,8 +119,10 @@ public class ConfigurationController {
 	
 	private List<TaskHolder<Task>> getTaskHolders(PortletRequest request) {
 		final String token = new TokenResolver().getAuthenticationToken(request);
+		TaskHandle taskHandle = new TaskHandle();
 		LOG.debug("Token: "+token);
-		List<Task> taskList = TaskUtil.getPIPATaskList(token);
+		//List<Task> taskList = TaskUtil.getPIPATaskList(token);
+		List<Task> taskList = taskHandle.getPIPATaskList(token);
 		LOG.debug("taskList size: "+ taskList.size());
 		List<TaskHolder<Task>> tasks = new ArrayList<TaskHolder<Task>>();
 		for (Task task : taskList) {

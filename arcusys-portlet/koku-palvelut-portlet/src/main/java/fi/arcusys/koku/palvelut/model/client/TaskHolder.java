@@ -1,6 +1,7 @@
 package fi.arcusys.koku.palvelut.model.client;
 
-import org.intalio.tempo.workflow.task.Task;
+//import org.intalio.tempo.workflow.task.Task;
+import fi.arcusys.koku.intalio.Task;
 
 public class TaskHolder<T extends Task> {
     private T _task;

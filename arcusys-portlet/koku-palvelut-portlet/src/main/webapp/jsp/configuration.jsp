@@ -54,11 +54,11 @@
 					<c:forEach var="form" items="${formList}">
 						<c:set value="<%=prefs.getValue(Constants.PREF_SHOW_ONLY_FORM_BY_ID, null) %>" var="formId"></c:set>
 						<c:choose>
-							<c:when test="${formId eq form.task.ID}">
-								<option value="${form.task.ID}" selected="selected">${form.task.description}</option>
+							<c:when test="${formId eq form.task.id}">
+								<option value="${form.task.id}" selected="selected">${form.task.description}</option>
 							</c:when>
 							<c:otherwise>
-								<option value="${form.task.ID}">${form.task.description}</option>
+								<option value="${form.task.id}">${form.task.description}</option>
 							</c:otherwise>
 						</c:choose>
 					</c:forEach>

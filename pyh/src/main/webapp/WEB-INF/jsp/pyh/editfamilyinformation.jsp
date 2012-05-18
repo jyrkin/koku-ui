@@ -162,9 +162,9 @@
 					</span>
 				</div>
 			</c:forEach>
-			</br>
+			<br/>
 		</c:if>
-
+        <br/>
 
 		<div class="pyh-add-family">
 
