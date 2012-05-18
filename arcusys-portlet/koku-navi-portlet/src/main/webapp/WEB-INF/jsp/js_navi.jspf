@@ -50,8 +50,14 @@ function focusCurrentItem() {
 		}		
 		return naviType;
 	}
+	
 
 	function bold(elementId) {
+	
+		function changeParentTreeIndicatorsToOpen(parentElement) {
+			parentElement.siblings('.naviLinkHeaderNonLink').children('.kokuNaviTreeNodeIndicator').html('-');
+		}		
+	
 		jQuery(elementId).css("font-weight", "bold");
 		
 		// Find and close all #child elements 
@@ -62,16 +68,19 @@ function focusCurrentItem() {
 		if (parentElement == null) {
 			return;
 		}
+		changeParentTreeIndicatorsToOpen(parentElement);
+		
 		var maxLoops = 0;
-		while(moreParents && maxLoops <= 10) {
+		while(moreParents && maxLoops <= 10) {
 			if (parentElement.attr('id') === "koku-navigation") {
 				moreParents = false;	
 			} else {
 				parentElement.show();
 			}
 			parentElement = parentElement.parent();
+			changeParentTreeIndicatorsToOpen(parentElement);
 			maxLoops++;
-		}	
+		}
 	};
 
 	/* Oh gosh.. this part really needs refactoring */
