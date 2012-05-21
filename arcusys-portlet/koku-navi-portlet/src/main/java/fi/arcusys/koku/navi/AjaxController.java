@@ -4,10 +4,12 @@ import static fi.arcusys.koku.util.Constants.ATTR_NAVI_TYPE;
 import static fi.arcusys.koku.util.Constants.ATTR_PORTAL_ROLE;
 import static fi.arcusys.koku.util.Constants.ATTR_TOKEN;
 import static fi.arcusys.koku.util.Constants.ATTR_USER_ID;
+import static fi.arcusys.koku.util.Constants.ATTR_NAVI_STATE;
 import static fi.arcusys.koku.util.Constants.INTALIO_GROUP_PREFIX;
 import static fi.arcusys.koku.util.Constants.PORTAL_MODE_KUNPO;
 import static fi.arcusys.koku.util.Constants.PORTAL_MODE_LOORA;
 import static fi.arcusys.koku.util.Constants.RESPONSE;
+import static fi.arcusys.koku.util.Constants.JSON_NAVI_STATE;
 
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
@@ -46,6 +48,7 @@ import fi.arcusys.koku.util.Properties;
 public class AjaxController {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(AjaxController.class);
+	private static final int MAX_NAVI_STATE = 4096;
 	
 	/**
 	 * Gets the amount of new unread messages for user
@@ -59,8 +62,8 @@ public class AjaxController {
 		
 		final PortletSession session = request.getPortletSession();
 		final String username = request.getRemoteUser();
-		String userId = (String) session.getAttribute(ATTR_USER_ID);
-				
+		String userId = (String) session.getAttribute(ATTR_USER_ID);		
+		
 		try {
 			if (username != null && userId == null ) {
 				UserIdResolver resolver = new UserIdResolver();
@@ -105,8 +108,46 @@ public class AjaxController {
 			default: query = new QueryProcessDummyImpl(null); break;
 		}
 		
+		/* Retrieve portlet navigation state */
+		final String naviState = (String) session.getAttribute(ATTR_NAVI_STATE, PortletSession.APPLICATION_SCOPE);
+		
 		JSONObject jsonModel = query.getJsonModel(username, userId, token, portalRole);
 		modelmap.addAttribute(RESPONSE, jsonModel);
+		modelmap.addAttribute(JSON_NAVI_STATE, naviState);
+		return AjaxViewResolver.AJAX_PREFIX;
+	}
+	
+	
+	
+	/** 
+	 * Save portlet navigationState
+	 * 
+	 * @param navigationState
+	 * @param modelmap
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@ResourceMapping(value="naviStatus")
+	public String updateNavigationStatus(
+			@RequestParam(value = "navigationState", required=true) String navigationState, 
+			ModelMap modelmap, PortletRequest request, PortletResponse response) {
+		final PortletSession session = request.getPortletSession();
+
+		String naviState = null;
+		if (navigationState == null || navigationState.isEmpty()) {
+			naviState = (String) session.getAttribute(ATTR_NAVI_STATE, PortletSession.APPLICATION_SCOPE);
+		} else {
+			if (navigationState.length() > MAX_NAVI_STATE) {
+				final String username = request.getRemoteUser();
+				LOG.error("NavigationState JSON is too big! Size: '"+navigationState.length()+"' Maximum size is "+MAX_NAVI_STATE +" bytes. Username: '"+username+"'");
+				naviState = (String) session.getAttribute(ATTR_NAVI_STATE, PortletSession.APPLICATION_SCOPE);
+			} else {				
+				session.setAttribute(ATTR_NAVI_STATE, navigationState, PortletSession.APPLICATION_SCOPE);
+				naviState = navigationState;
+			}
+		}
+		modelmap.addAttribute(JSON_NAVI_STATE, naviState);
 		return AjaxViewResolver.AJAX_PREFIX;
 	}
 		

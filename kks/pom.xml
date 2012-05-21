@@ -17,6 +17,12 @@
       <artifactId>customerservice-api</artifactId>
       <version>0.0.26</version>
     </dependency>     
+    
+     <dependency>
+        <groupId>kohti-kumppanuutta</groupId>
+        <artifactId>lokservice-api</artifactId>
+        <version>0.0.20</version>
+      </dependency>
    
 	<dependency>
       <groupId>kohti-kumppanuutta</groupId>
