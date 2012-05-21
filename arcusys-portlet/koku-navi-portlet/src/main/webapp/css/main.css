@@ -121,4 +121,10 @@
 	.kokuNavigationSettings .naviEditValue {
 		padding-bottom: 4px;
 	}
+	
+	.kokuNaviTreeNodeIndicator {
+		width: 11px;
+		display: block;
+		float: left;
+	}
 }

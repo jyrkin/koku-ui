@@ -3,6 +3,10 @@
 <portlet:resourceURL var="ajaxURL" id="update">
 </portlet:resourceURL>
 
+<portlet:resourceURL var="naviStatusURL" id="naviStatus">
+</portlet:resourceURL>
+
+
 <portlet:renderURL var="naviURL" >
 	<portlet:param name="myaction" value="showNavi" />
 </portlet:renderURL>

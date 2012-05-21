@@ -3,6 +3,9 @@
 <portlet:resourceURL var="ajaxURL" id="update">
 </portlet:resourceURL>
 
+<portlet:resourceURL var="naviStatusURL" id="naviStatus">
+</portlet:resourceURL>
+
 <portlet:renderURL var="naviURL" >
 	<portlet:param name="myaction" value="showNavi" />
 </portlet:renderURL>
@@ -151,7 +154,6 @@
 			<span class="naviLinkHeaderNonLink" onclick="toggleKokuNavi('#kokuNaviInfoRequests', '#kokuNaviTreeNodeIndicatorInfoRequests');">
 				<span class="kokuNaviTreeNodeIndicator" id="kokuNaviTreeNodeIndicatorInfoRequests">+</span>Tietopyynnöt
 			</span>
-			<span class="naviLinkHeaderNonLink">Tietopyynnöt</span>
 			<ul id="kokuNaviInfoRequests" class="child">
 				<li id="newinformation"><a href="<%= defaultPath %><%= NavigationPortletProperties.INFO_REQ_NEW_INFORMATION_REQ %>">Uusi tietopyyntö</a></li>
 				<li id="informationbox"><a href="<%= defaultPath %><%= NavigationPortletProperties.INFO_REQ_RECIEVED_INFO_REQS %>">Saapuneet</a><span id="infoRequests_num" class="message_num"></span></li>

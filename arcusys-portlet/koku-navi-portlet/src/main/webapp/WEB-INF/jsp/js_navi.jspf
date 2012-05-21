@@ -6,28 +6,24 @@ if (!koku_navi_type) {
 }
 var defaultPath = "<%= defaultPath %>";
 var naviRefreshTimer;
+
+<%@ include file="js_navigationState.jspf" %>
+
+var kokuNavigationState = new KokuNavigationState;
 	
 jQuery(document).ready(function() {
+	jQuery('.child').hide();
 	focusCurrentItem();	
+	openSavedNavigation();
 	ajaxUpdate();		
-	clearInterval(naviRefreshTimer);
+	clearInterval(naviRefreshTimer);	
 });
 
-	/* 
-	var pageList = {
-		'NewMessage': '#msg_new',
-		'NewRequest': '#req_new',
-		'ValidRequest': '#req_valid_request',
-		'NewAppointment': '#app_new',
-		'NewKindergarten': '#kid_new',
-		'NewConsent': '#cst_new',
-		'FillConsent': '#cst_new',
-		'SendConsent': '#cst_new',
-		'SelaaValtakirjoja': '#cst_new',
-		'Ilmoitukset': '#cst_new',
-		'Message': '#msg_inbox'
-	}
-	*/ 
+function openSavedNavigation() {
+	// Find and close all #child elements 
+	var data = '<%= navigationState %>';
+	openSavedTreeNodes(data);	
+}
 
 /**
  * Finds the current item in navigation list and decorates the item, e.g. bold font 
@@ -124,6 +120,19 @@ function escapeHTML(value) {
     return value.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 
+function openSavedTreeNodes(navigationState) {
+	if (typeof navigationState == 'undefined' && navigationState == null) {
+		return;
+	}
+	navigationStateParsed = JSON.parse(navigationState);
+	var treeNode;
+	var node;
+	for (node in navigationStateParsed) {
+		treeNode = navigationStateParsed[node];
+		openKokuNavi(treeNode.toggleId, treeNode.indicatorId);
+	}
+}
+
 /**
  * Execute ajax query in Post way, and parse the Json format response, and
  * then create tasks in table and task page filed.
@@ -155,6 +164,8 @@ function ajaxUpdate() {
 	};
 	
 	
+		
+	
 	var url="<%= ajaxURL %>";
 	url = formatUrl(url);
 	
@@ -162,11 +173,12 @@ function ajaxUpdate() {
 		  type: 'POST',
 		  url: url,
 		  global:false,
-		  data: {number:"0"},
+		  // data: {navigationState: kokuNavigationState.getStatus()},
 		  success: function(data) {
 				var obj = jQuery.parseJSON(data);
 				var json = obj.response;
 				var navi_login_status = json["<%=Constants.JSON_LOGIN_STATUS %>"];
+				// openSavedTreeNodes(obj.navigationState);
 				
 				if(navi_login_status == '<%=Constants.TOKEN_STATUS_VALID %>') {
 					updateMessageNum(
@@ -183,14 +195,46 @@ function ajaxUpdate() {
 		});
 };
 
-function toggleKokuNavi(toggleId, indicatorId) {
-	jQuery(toggleId).toggle('fast');
+function updateNavigationStatus() {
+	var url="<%= naviStatusURL %>";
+	url = formatUrl(url);
+	var naviState = JSON.stringify(kokuNavigationState.getStatus());
+	
+	jQuery.post(url, {navigationState: naviState}, function(data) {
+		var obj = jQuery.parseJSON(data);
+		var naviState = obj.navigationState;
+		
+	});
+}
+
+function toggleKokuNavi(toggleId, indicatorId, ajaxUpdate) {
+
+	if (typeof ajaxUpdate == 'undefined' || ajaxUpdate == null) {
+		ajaxUpdate = true;
+	}
 	var indicator = jQuery(indicatorId);
 	if (indicator.html() == "+") {
-		indicator.html('-');
+		openKokuNavi(toggleId, indicatorId);
 	} else {
-		indicator.html('+');
+		closeKokuNavi(toggleId, indicatorId);
+	}	
+	if (ajaxUpdate) {
+		updateNavigationStatus();
 	}
+}
+
+function openKokuNavi(toggleId, indicatorId) {
+	jQuery(toggleId).show('fast');
+	var indicator = jQuery(indicatorId);
+	indicator.html('-');
+	kokuNavigationState.add(toggleId, indicatorId);
+}
+
+function closeKokuNavi(toggleId, indicatorId) {
+	jQuery(toggleId).hide('fast');
+	var indicator = jQuery(indicatorId);	
+	indicator.html('+');
+	kokuNavigationState.remove(toggleId);
 }
 
 function navigateToPage(naviType) {
