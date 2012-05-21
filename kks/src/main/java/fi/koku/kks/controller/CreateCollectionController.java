@@ -146,4 +146,6 @@ public class CreateCollectionController {
     }
     sessionStatus.setComplete();
   }
+  
+
 }

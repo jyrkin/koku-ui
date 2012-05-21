@@ -25,7 +25,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -34,6 +36,7 @@ import org.springframework.web.portlet.bind.annotation.ActionMapping;
 import org.springframework.web.portlet.bind.annotation.RenderMapping;
 
 import fi.koku.kks.model.CollectionForm;
+import fi.koku.kks.model.Deletion;
 import fi.koku.kks.model.Entry;
 import fi.koku.kks.model.EntryValue;
 import fi.koku.kks.model.KKSCollection;
@@ -41,6 +44,9 @@ import fi.koku.kks.model.KksService;
 import fi.koku.kks.model.Person;
 import fi.koku.kks.model.Version;
 import fi.koku.kks.ui.common.Accountable;
+import fi.koku.kks.ui.common.State;
+import fi.koku.kks.ui.common.utils.DeletionValidator;
+import fi.koku.kks.ui.common.utils.Log;
 import fi.koku.kks.ui.common.utils.Utils;
 import fi.koku.services.entity.kks.v1.KksCollectionClassType;
 import fi.koku.services.entity.kks.v1.KksEntryClassType;
@@ -60,6 +66,11 @@ public class CollectionController {
   @Autowired
   @Qualifier("kksService")
   private KksService kksService;
+  
+  @Autowired
+  @Qualifier("deletionValidator")
+  private Validator deleteValidator;
+  
   private final static String VALID = "VALID";
 
   private static final Logger LOG = LoggerFactory.getLogger(CollectionController.class);
@@ -79,6 +90,7 @@ public class CollectionController {
       collectionForm.setEntries(c.getEntries());
       session.setAttribute("kks.collection", c);
       String pic = Utils.getPicFromSession(session);
+
 
       boolean parent = c.isParent();
       boolean canSave = !parent || hasParentGroups(c.getCollectionClass());
@@ -293,4 +305,72 @@ public class CollectionController {
     return "multivalue";
   }
   
+  
+  @ActionMapping(params = "action=toDeleteConfirmation")
+  public void forwardToDelete(PortletSession session, @ModelAttribute(value = "child") Person child,
+      @RequestParam(value = "collection", required = false ) String collection,  ActionResponse response, SessionStatus sessionStatus) {
+      LOG.debug("show collection");
+      response.setRenderParameter("action", "showDeleteConfirmation" );
+      response.setRenderParameter("pic", child.getPic());
+      response.setRenderParameter("collection", collection );
+      sessionStatus.setComplete();
+  }
+  
+  @RenderMapping(params = "action=showDeleteConfirmation")
+  public String showDelete(PortletSession session, @ModelAttribute(value = "child") Person child,
+      @RequestParam(value = "collection") String collection, @RequestParam(value = "error", required = false ) String error, RenderResponse response, Model model) {
+    LOG.debug("show collection");
+    try {
+      model.addAttribute("child", child);
+      KKSCollection c = kksService.getKksCollection(collection, Utils.getUserInfoFromSession(session));
+      model.addAttribute("collection", c);
+      
+      if ( error != null ) {
+        model.addAttribute("error", error );
+      }
+    } catch (ServiceFault e) {
+      LOG.error("Failed to get KKS collection " + collection );
+      return "error";
+    }
+    return "delete";
+  }
+  
+  @ActionMapping(params = "action=deleteCollection")
+  public void delete(PortletSession session, @ModelAttribute(value = "child") Person child, 
+      @RequestParam(value = "collection", required = false) String collection, 
+      @RequestParam(value="collectionName") String collectionName, 
+      @RequestParam(value="collectionType") String collectionType,   
+      @ModelAttribute(value = "deletable") Deletion deletion, 
+      BindingResult errors, ActionResponse response, SessionStatus sessionStatus) {
+
+    deleteValidator.validate(deletion, errors);
+    
+    if ( errors.hasErrors() ) {
+      response.setRenderParameter("action", "showDeleteConfirmation" );
+      response.setRenderParameter("pic", child.getPic());
+      response.setRenderParameter("collection", collection );
+      sessionStatus.setComplete();
+      return;
+    }
+    
+    boolean success = kksService.updateKksCollectionStatus(child.getPic(), collection, State.DELETED.toString(),
+        Utils.getPicFromSession(session));   
+
+    if (!success) {
+      response.setRenderParameter("error", "ui.kks.delete.failed");
+      response.setRenderParameter("action", "showDeleteConfirmation" );
+      response.setRenderParameter("pic", child.getPic());
+      response.setRenderParameter("collection", collection );
+    } else {    
+      Log.getInstance().remove(Utils.getPicFromSession(session), child.getPic(), collectionType, "(" + collection + " )" + collectionName + " removed with reason: " +  deletion.getComment() );
+      response.setRenderParameter("action", "showChild");
+      response.setRenderParameter("pic", child.getPic());
+    }
+    sessionStatus.setComplete();
+  }
+  
+  @ModelAttribute("deletable")
+  public Deletion getDeletionValue() {
+    return new Deletion();
+  }
 }

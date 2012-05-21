@@ -1,0 +1,42 @@
+// Object to store navigationStatus
+KokuNavigationState = function() {
+
+	/////////////////////////////
+	// Private variables
+	
+	var state = {};
+	
+	/////////////////////////////
+	// Public methods
+	
+	var public = {
+		add : addBranch,
+		remove : removeBranch,
+		getStatus : getNaviStatus,
+		clear : clear
+	} 
+	
+	/////////////////////////////
+	// Private methods
+	
+	function addBranch(toggleId, indicatorId) {
+		state[toggleId] = {
+			toggleId : toggleId,
+			indicatorId : indicatorId
+		};
+	}
+	
+	function removeBranch(toggleId) {
+		delete state[toggleId];
+	}
+	
+	function getNaviStatus() {
+		return state;
+	}
+	
+	function clear() {
+		state =  {};
+	}
+	
+	return public;
+};
