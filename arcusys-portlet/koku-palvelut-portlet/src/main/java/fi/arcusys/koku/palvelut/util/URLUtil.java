@@ -50,7 +50,7 @@ public final class URLUtil {
 		
 		try {
 			String realm = MigrationUtil.getCompanyWebId(request);
-			userName = realm + "/" + MigrationUtil.getUser(request);
+			userName = realm + "\\" + MigrationUtil.getUser(request);
 		} catch (Exception e) {
 			LOG.error("Couldn't fetch realm or username from request.", e);
 			return null;
@@ -75,7 +75,8 @@ public final class URLUtil {
 //		String url = t.getFormURLAsString();
 		String url = t.getFormUrl();
 		try {
-			Object[] params = new Object[] { XFORMS_FORM_MANAGER_URL, t.getId(), t.getClass().getSimpleName(),
+//			Object[] params = new Object[] { XFORMS_FORM_MANAGER_URL, t.getId(), t.getClass().getSimpleName(),
+			Object[] params = new Object[] { XFORMS_FORM_MANAGER_URL, t.getId(), t.getProcessTaskType(),
 				URLEncoder.encode(url, CHARACTER_ENCODING), ticket,
 				URLEncoder.encode(userIncludingRealm, CHARACTER_ENCODING) };
 			return MessageFormat.format("{0}?id={1}&type={2}&url={3}&token={4}&user={5}", params);
@@ -91,7 +92,8 @@ public final class URLUtil {
 		String url = t.getFormUrl().replace(REMOTE_AJAXFORMS_WEB_APP_URL_PART, LOCAL_AJAXFORMS_WEB_APP_URL_PART);
 //		String url = t.getFormURLAsString().replace(REMOTE_AJAXFORMS_WEB_APP_URL_PART, LOCAL_AJAXFORMS_WEB_APP_URL_PART);
 		try {
-			Object[] params = new Object[] { formManagerUrl, t.getId(), t.getClass().getSimpleName(),
+//			Object[] params = new Object[] { formManagerUrl, t.getId(), t.getClass().getSimpleName(),
+			Object[] params = new Object[] { formManagerUrl, t.getId(), t.getProcessTaskType(),
 				URLEncoder.encode(url, CHARACTER_ENCODING), ticket,
 				URLEncoder.encode(userIncludingRealm, CHARACTER_ENCODING) };
 			return MessageFormat.format("{0}?id={1}&type={2}&url={3}&token={4}&user={5}", params);

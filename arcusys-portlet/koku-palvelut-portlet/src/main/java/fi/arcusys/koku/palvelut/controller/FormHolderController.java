@@ -56,22 +56,6 @@ public abstract class FormHolderController
 		for (Task task : taskList) {
 			if (task.getDescription().equals(description)) {
 				String taskFormURL = getFormUrlByTask(request, token, task);
-//				try {
-//					// String userName = MigrationUtil.getUser(request);
-//					Scanner scanner = new Scanner(description);
-//					scanner.useDelimiter(" ");
-//					String action = "";
-//					while (scanner.hasNext()) {
-//						action = action + scanner.next() + "_";
-//					}
-//					
-//					// Does not work.. 
-//					// String actionString = action.substring(0, action.length());
-//					// String customerId = getPortletContext().getInitParameter("loggingCustomer");
-//					// String applicationId = getPortletContext().getInitParameter("loggingApplication");
-//				} catch (Exception e) {
-//					LOG.error("Something went wrong when parsing task description. Username: '"+request.getUserPrincipal().getName()+"' Description: '"+description+"'", e);
-//				}
 				return new FormHolder(description, taskFormURL);
 			}
 		}
