@@ -13,6 +13,7 @@ package fi.koku.kks.controller;
 
 import java.util.List;
 
+import javax.portlet.ActionResponse;
 import javax.portlet.PortletSession;
 import javax.portlet.RenderRequest;
 
@@ -20,7 +21,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.portlet.bind.annotation.ActionMapping;
 import org.springframework.web.portlet.bind.annotation.RenderMapping;
 
 import fi.koku.kks.model.KksService;
@@ -53,6 +58,21 @@ public class MainController {
       model.addAttribute("child", new Person());
       return "search";
     }
+  }
+  
+  @ActionMapping(params = "action=logoutKKS")
+  public void logout(@RequestParam(value = "pic") String pic, @RequestParam(value = "collection") String collection, ActionResponse response, SessionStatus sessionStatus) {
+    response.setRenderParameter("action", "renderLogout");
+    response.setRenderParameter("pic", pic);
+    response.setRenderParameter("collection", collection );
+    sessionStatus.setComplete();
+  }
+  
+  @RenderMapping(params = "action=renderLogout")
+  public String renderLogout(@RequestParam(value = "pic") String pic, @RequestParam(value = "collection") String collection, PortletSession session, RenderRequest req, Model model) {
+    model.addAttribute("pic", pic );
+    model.addAttribute("collection", collection );
+    return "logout";
   }
 
   public List<Person> getChilds(PortletSession session) {

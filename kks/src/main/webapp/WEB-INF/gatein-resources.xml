@@ -17,4 +17,21 @@
 			<js-priority>10</js-priority>
 		</param>
 	</javascript>
+  
+    <javascript>
+      <param>
+        <js-module>jQueryIdle</js-module>
+        <js-path>/js/jquery.idle-timer.js</js-path>
+        <js-priority>10</js-priority>
+      </param>
+    </javascript>
+    
+    <javascript>
+      <param>
+        <js-module>jQueryUI</js-module>
+        <js-path>/js/jquery-ui-1.8.20.custom.min.js</js-path>
+        <js-priority>10</js-priority>
+      </param>
+    </javascript>
+  
 </gatein-resources>

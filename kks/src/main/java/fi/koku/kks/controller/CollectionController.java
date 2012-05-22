@@ -52,6 +52,7 @@ import fi.koku.services.entity.kks.v1.KksCollectionClassType;
 import fi.koku.services.entity.kks.v1.KksEntryClassType;
 import fi.koku.services.entity.kks.v1.KksGroupType;
 import fi.koku.services.entity.kks.v1.ServiceFault;
+import fi.koku.settings.KoKuPropertiesUtil;
 
 /**
  * Controller for managing collection showing and value setting
@@ -91,9 +92,13 @@ public class CollectionController {
       session.setAttribute("kks.collection", c);
       String pic = Utils.getPicFromSession(session);
 
+      String idleTime = KoKuPropertiesUtil.get("kks.session.time.out.seconds");
+      String redirectTime = KoKuPropertiesUtil.get("kks.session.dialog.redirect.timeout.seconds");
+      
 
       boolean parent = c.isParent();
       boolean canSave = !parent || hasParentGroups(c.getCollectionClass());
+      
       model.addAttribute("child", child);
       model.addAttribute("collection", c);
       model.addAttribute("authorized", kksService.getAuthorizedRegistries(pic));
@@ -101,6 +106,8 @@ public class CollectionController {
       model.addAttribute("parent", parent);
       model.addAttribute("empty_collection", c == null || c.getEntries() == null || c.getEntries().size() == 0);
       model.addAttribute("can_save", canSave);
+      model.addAttribute("idleTime", idleTime != null ? idleTime : "720" );
+      model.addAttribute("redirectTime", redirectTime != null ? redirectTime : "120" );
 
       if (!model.containsAttribute("version")) {
         Version v = new Version();
@@ -114,6 +121,9 @@ public class CollectionController {
       
       if (StringUtils.isNotEmpty(print)) {
         model.addAttribute("print_mode", print);
+        model.addAttribute("can_print", true);
+      } else {
+        model.addAttribute("can_print", false);
       }
       return "collection";
     } catch (ServiceFault e) {
@@ -145,14 +155,16 @@ public class CollectionController {
   @ActionMapping(params = "action=saveCollection")
   public void save(PortletSession session, @ModelAttribute(value = "child") Person child, @ModelAttribute(value = "collectionForm") CollectionForm collectionForm, BindingResult bindingResult,
       @RequestParam(required = false) String multiValueId, @RequestParam(required = false) String type,
-      @RequestParam(value = "valueId", required = false) String valueId, Model model, ActionResponse response,
+      @RequestParam(value = "valueId", required = false) String valueId,
+      @RequestParam(value = "close", required = false) Boolean close,
+      Model model, ActionResponse response,
       SessionStatus sessionStatus) {
     LOG.debug("save collection");
 
     KKSCollection collection = (KKSCollection) session.getAttribute("kks.collection");
     collection.setEntries(collectionForm.getEntries());
     boolean success = kksService.updateKksCollection(collection, child.getPic(), Utils.getPicFromSession(session));
-
+    
     if (!success) {
       response.setRenderParameter("error", "collection.update.failed");
       response.setRenderParameter("action", "showCollection");
@@ -170,11 +182,19 @@ public class CollectionController {
           response.setRenderParameter("entryId", multiValueId);
         }
       } else {
-        response.setRenderParameter("action", "showChild");
+        
+        if ( close != null && close ) {
+          response.setRenderParameter("action", "showChild");                   
+        } else {       
+          response.setRenderParameter("action", "showCollection");   
+          response.setRenderParameter("collection", collection.getId());
+        }
+        
         response.setRenderParameter("pic", child.getPic());
         session.removeAttribute("kks.collection");
+        sessionStatus.setComplete();
       }
-      sessionStatus.setComplete();
+      
     }
   }
 

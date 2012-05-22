@@ -1,4 +1,5 @@
 @charset "UTF-8";
+@import url('jquery-ui-1.8.20.custom.css');
 
 .koku-kks .kks-home a {
     float:right;
@@ -96,6 +97,17 @@
     margin-top: 20px;
 }
 
+.koku-kks .kks-top-right {
+    float: right;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+.koku-kks .kks-top-left {
+    float: left;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
 .koku-kks a.create {
     cursor:pointer;
     text-transform:uppercase;
@@ -128,11 +140,18 @@
     padding-top: 10px;  
 }
 .koku-kks .kks-read-only-text {
-    display: block;
+    display: block;    
     padding: 5px;
     padding-bottom: 10px
 }
-
+.koku-kks .kks-status-text {
+    display: block;    
+    font: cursive;
+    font-size: 14px;
+    padding: 5px;
+    padding-top: 7px;
+    padding-bottom: 10px;
+}
 .koku-kks .kks-read-only-description {
     display: block;
     padding: 5px;
