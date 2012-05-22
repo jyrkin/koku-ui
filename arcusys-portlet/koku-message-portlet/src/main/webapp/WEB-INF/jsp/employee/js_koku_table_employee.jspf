@@ -38,7 +38,7 @@ KokuTable.prototype.createAppoitmentsTable = function() {
 	function createOpenAppointmentsTable(tasks) {
 		var columnNames = [
 					   "<spring:message code="message.choose" />",
-	                   "<spring:message code="message.to" />",
+	                   "<spring:message code="message.from" />",
 	                   "<spring:message code="message.subject" />",
 	                   "<spring:message code="message.description" />"
 	                  ];
@@ -54,7 +54,7 @@ KokuTable.prototype.createAppoitmentsTable = function() {
 	function createReadyAppointmentsTable(tasks) {
 		var columnNames = [
 					   "<spring:message code="message.choose" />",
-	                   "<spring:message code="message.to" />",
+	                   "<spring:message code="message.from" />",
 	                   "<spring:message code="message.subject" />",
 	                   "<spring:message code="message.description" />",
 	                   "<spring:message code="message.status" />"

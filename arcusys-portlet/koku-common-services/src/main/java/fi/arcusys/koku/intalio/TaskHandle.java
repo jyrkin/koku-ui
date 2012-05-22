@@ -40,6 +40,9 @@ public class TaskHandle {
 	private static final String LOCAL_AJAXFORMS_WEB_APP_URL_PART = "/palvelut-portlet/ajaxforms/";
 	private static final String ADDRESS_REGEX = "http://.+/gi/";
 
+	private static final String START_TASK_SEARCH = "0";
+	private static final String MAX_TASKS = "50";
+	
 	private final TaskManagementService taskMngServ = new TaskManagementService();
 
 	private String message;
@@ -105,10 +108,10 @@ public class TaskHandle {
 		return createTasks(tasklist, participantToken);
 	}
 
-	public List<Task> getTaskList(String token) {
-		List<TaskMetadata> tasklist = taskMngServ.getTaskList(token);
-		return createTasklistByMetadata(tasklist);
-	}
+//	public List<Task> getTaskList(String token) {
+//		List<TaskMetadata> tasklist = taskMngServ.getTaskList(token);
+//		return createTasklistByMetadata(tasklist );
+//	}
 
 	public Task getTask(String taskId, String token) {
 		fi.arcusys.intalio.tms.Task task = taskMngServ.getTask(taskId, token);
@@ -117,19 +120,19 @@ public class TaskHandle {
 
 	public List<Task> getPIPATaskList(String token) {
 		List<TaskMetadata> metadata = taskMngServ.getAvailableTasks(token,
-				"PIPATask", "", "", "");
-		return createTasklistByMetadata(metadata);
+				TaskUtil.PROCESS_TYPE, "", START_TASK_SEARCH, MAX_TASKS);
+		return createTasklistByMetadata(metadata, TaskUtil.PROCESS_TYPE);
 	}
 
 	public Task getTaskByDescription(String token, String description) {
 		Task task = null;
 		List<TaskMetadata> metadata = taskMngServ.getAvailableTasks(
-				token, "PIPATask", "", "", "");
+				token, TaskUtil.PROCESS_TYPE, "", START_TASK_SEARCH, MAX_TASKS);
 
 		if (!metadata.isEmpty()) {
 			for (TaskMetadata data : metadata) {
 				if (data.getDescription().equals(description)) {
-					task = createTaskByMetadata(data);
+					task = createTaskByMetadata(data, TaskUtil.PROCESS_TYPE);
 					break;
 				}
 			}
@@ -137,8 +140,6 @@ public class TaskHandle {
 		} else {
 			return null;
 		}
-
-		
 	}
 
 	/**
@@ -180,7 +181,7 @@ public class TaskHandle {
 	}
 
 	private Task createTaskByMetadata(
-			fi.arcusys.intalio.tms.TaskMetadata taskMetadata) {
+			fi.arcusys.intalio.tms.TaskMetadata taskMetadata, String processTaskType) {
 		Task task = new Task();
 
 		task.setCreationDate(taskMetadata.getCreationDate().toString());
@@ -190,28 +191,20 @@ public class TaskHandle {
 		task.setState(taskMetadata.getTaskState());
 		task.setType(taskMetadata.getTaskType());
 		task.setFormUrl(taskMetadata.getFormUrl());
+		task.setProcessTaskType(processTaskType);
 
 		return task;
 	}
 
 	private List<Task> createTasklistByMetadata(
-			List<fi.arcusys.intalio.tms.TaskMetadata> tasksMetadata) {
+			List<fi.arcusys.intalio.tms.TaskMetadata> tasksMetadata, String processTaskType) {
 		List<Task> taskList = new ArrayList<Task>(tasksMetadata.size());
 		Task task = null;
 
 		for (fi.arcusys.intalio.tms.TaskMetadata metaData : tasksMetadata) {
-			task = new Task();
-			task.setCreationDate(metaData.getCreationDate().toString());
-			task.setDescription(metaData.getDescription());
-			task.setId(metaData.getTaskId());
-			task.setProcessId(metaData.getProcessId());
-			task.setState(metaData.getTaskState());
-			task.setType(metaData.getTaskType());
-			task.setFormUrl(metaData.getFormUrl());
-
+			task = createTaskByMetadata(metaData, processTaskType);
 			taskList.add(task);
 		}
-
 		return taskList;
 	}
 

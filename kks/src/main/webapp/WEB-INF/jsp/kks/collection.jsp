@@ -47,6 +47,11 @@
     <portlet:param name="action" value="createNewVersion" />
     <portlet:param name="pic" value="${child.pic}" />
 </portlet:actionURL>
+<portlet:actionURL var="logoutURL">
+    <portlet:param name="action" value="logoutKKS" />
+    <portlet:param name="pic" value="${child.pic}" />
+    <portlet:param name="collection" value="${collection.id}" />
+</portlet:actionURL>
 
 <div class="koku-kks"> 
 <div class="portlet-section-body">
@@ -107,26 +112,14 @@
             </div>
     </div>
     
-<div class="kks-home">
-	<div class="kks-right">
-		<a href="${homeUrl}"><spring:message code="ui.kks.back" /> </a>
-	</div>
-</div>
-
-<div class="kks-reset-floating"></div>
-
-<div class="kks-left">
-<h1 class="portlet-section-header kks-print">
-    <c:out value="${child.name}"/><c:out value=" "/><c:out value="${collection.name}"/> 
-    <c:if test="${not collection.state.active}">
-        (<spring:message code="ui.kks.locked" />)
-    </c:if>
-
-</h1>
-</div>
 <div class="kks-right">
-
-		<c:if test="${empty print_mode}">
+	<div class="kks-left">
+		<div >
+		<strong><a href="${homeUrl}"><spring:message code="ui.kks.close.collection" /> </a></strong>
+		
+		</div>
+		<br/>
+			<c:if test="${empty print_mode}">
 		<div>
 				<a href="
 						<portlet:actionURL>
@@ -162,12 +155,28 @@
             </a>
             </div>
         </c:if> 
+	</div>
+	
+</div>
+
+
+
+<div class="kks-left">
+<h1 class="portlet-section-header kks-print">
+    <c:out value="${child.name}"/><c:out value=" "/><c:out value="${collection.name}"/> 
+    <c:if test="${not collection.state.active}">
+        (<spring:message code="ui.kks.locked" />)
+    </c:if>
+
+</h1>
+<div class="kks-reset-floating"></div>
+<div id="top-status" class="kks-status-text">      
+</div>
+
 </div>
 
 <div class="kks-reset-floating"></div>
 
-
-<div class="kks-reset-floating"></div>
     <div  class="kks-content kks-print">
     
         <c:if test="${ empty_collection }"><spring:message code="ui.kks.no.authorization" /></c:if>
@@ -176,11 +185,20 @@
           	
             <form:form class="form-wrapper" name="entryForm" commandName="collectionForm" method="post" 
                 action="${saveActionUrl}">
-
+   
                 <c:forEach var="group" items="${collection.collectionClass.kksGroups.kksGroup }">
 					<c:if test="${not empty authorized[group.register] || master }">	
                     <c:if test="${not empty group.name}">
-                        <h2 class="portlet-section-subheader"><c:out value="${group.name}"/></h2>
+                        <h2 class="portlet-section-subheader"><c:out value="${group.name}"/>
+                         <span class="kks-right kks-no-print">
+                        <c:if test="${ not empty_collection && can_save && collection.state.active && empty print_mode}">
+	                    <input name=save-button type="submit" class="portlet-form-button"
+	                        value="<spring:message code="ui.kks.save"/>" >
+	                    <input name=save-button type="submit" class="portlet-form-button"
+	                        value="<spring:message code="ui.kks.save.close"/>" onclick="addCloseToForm();">
+	                	</c:if>
+	                	</span>
+	                	</h2>
                     </c:if>
                     <c:if test="${not empty group.description}">
                         <div class="portlet-section-text">
@@ -318,19 +336,45 @@
                     </c:if>
                 </c:forEach>
 
-                <div class="kks-bottom-right kks-no-print">
+                <div class="kks-bottom-left kks-no-print">
 	                <c:if test="${ not empty_collection && can_save && collection.state.active && empty print_mode}">
-	                    <input type="submit" class="portlet-form-button"
+	                    <input name="save-button" type="submit" class="portlet-form-button"
 	                        value="<spring:message code="ui.kks.save"/>" >
+	                    <input name="save-button" type="submit" class="portlet-form-button"
+	                        value="<spring:message code="ui.kks.save.close"/>" onclick="addCloseToForm();">
 	                </c:if>
+	                <div id="bottom-status" class="kks-status-text"></div>
+                </div>
+                <div class="kks-bottom-right kks-no-print">
+                	<c:if test="${ not empty_collection }">
+						<div class="kks-home">
+							<div class="kks-right">
+								<strong><a href="${homeUrl}"><spring:message code="ui.kks.close.collection" /> </a></strong>
+							</div>
+						</div>
+					</c:if>
                 </div>
                 <div class="kks-reset-floating" ></div>
+                
+                
             </form:form>
 
         </c:if>
     </div>
 </div>
+
+<div id="sessionTimeoutWarning" style="display: none"></div>
+<div id="savingDialog" style="display: none"></div>
 <br />
+
+<fmt:message key="ui.kks.session.expire" var="sessionExpire"/>
+<fmt:message key="ui.kks.session.expire.title" var="sessionTitle"/>
+<fmt:message key="ui.kks.save" var="sessionSave"/>
+<fmt:message key="ui.kks.session.end" var="sessionEnd"/>
+<fmt:message key="ui.kks.session.no.save" var="sessionEndNoSave"/> 
+<fmt:message key="ui.kks.session.saving.title" var="sessionSaveTitle"/>
+<fmt:message key="ui.kks.session.saving" var="sessionSaveDesc"/>
+<fmt:message key="ui.kks.session.read.only" var="sessionStatus"/>
 
 <div class="kks-version">
 		<%@ include file="../common/page-footer.jsp"%>
@@ -340,7 +384,158 @@
 
   
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-1.5.2.min.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-ui-1.8.20.custom.min.js"></script>
 <script type="text/javascript">
+
+var idleTime = ${idleTime}; // number of miliseconds until the user is considered idle
+var initialSessionTimeoutMessage = '${sessionExpire}';
+var initialSaveMessage = '${sessionSaveDesc}';
+var initialStatusMessage= '${sessionStatus}';
+var sessionTimeoutCountdownId = 'sessionTimeoutCountdown';
+var redirectAfter = ${redirectTime}; // number of seconds to wait before redirecting the user
+var redirectTo = '${logoutURL}'; // URL to relocate the user to once they have timed out
+var keepAliveURL = 'keepAlive.php'; // URL to call to keep the session alive
+var expiredMessage = '${sessionEnd}'; // message to show user when the countdown reaches 0
+var running = false; // var to check if the countdown is running
+var timer; // reference to the setInterval timer so it can be stopped
+var dialogTimer;
+var timerNeeded= ${!empty_collection && can_save && collection.state.active && !can_print};
+
+$(document).ready(function() {
+	
+	$("a.create").click(function() {
+		$(this).toggleClass("active").next().slideToggle("fast");
+	});
+
+	if ( timerNeeded ) {
+		// create the warning window and set autoOpen to false
+		var savingDialog = $("#savingDialog");
+		$(savingDialog).html(initialSaveMessage);
+		$(savingDialog).dialog({
+			title: '${sessionSaveTitle}',
+			autoOpen: false,	// set this to false so we can manually open it
+			closeOnEscape: false,
+			draggable: false,
+			width: 460,
+			minHeight: 50, 
+			modal: true,
+			
+			resizable: false,
+			open: function() {
+				// scrollbar fix for IE
+				$('body').css('overflow','hidden');
+			},
+			close: function() {
+				// reset overflow
+				$('body').css('overflow','auto');
+			}
+		}); // end of dialog
+		
+		var b = '${sessionSave}';
+		var c = '${sessionEndNoSave}';
+		var buttonOpts = {};
+		buttonOpts[b] = function () {			
+			$('#collectionForm').submit();
+		    $(this).dialog("close");
+		    $(savingDialog).dialog('open');		    
+		};
+		
+		buttonOpts[c] = function () {	
+			var topStatus = $("#top-status");
+			$(topStatus).html(initialStatusMessage);
+			
+			var bottomStatus = $("#bottom-status");
+			$(bottomStatus).html(initialStatusMessage);
+			
+		    $(this).dialog("close");
+		    clearInterval(dialogTimer);			    
+		};
+	
+
+	
+		
+		
+		// create the warning window and set autoOpen to false
+		var sessionTimeoutWarningDialog = $("#sessionTimeoutWarning");
+		$(sessionTimeoutWarningDialog).html(initialSessionTimeoutMessage);
+		$(sessionTimeoutWarningDialog).dialog({
+			title: '${sessionTitle}',
+			autoOpen: false,	// set this to false so we can manually open it
+			closeOnEscape: false,
+			draggable: false,
+			width: 460,
+			minHeight: 50, 
+			modal: true,
+			buttons: buttonOpts,
+			beforeclose: function() { // bind to beforeclose so if the user clicks on the "X" or escape to close the dialog, it will work too
+				// stop the timer
+				clearInterval(timer);
+					
+				// stop countdown
+				running = false;
+				
+				$("input").each(function(){
+			        $(this).attr("disabled","disabled");
+			  	});
+				
+				$("input[name=save-button]").each(function(){
+			        $(this).hide();
+			  	});
+			    
+			    $("textarea").each(function(){
+			        $(this).attr("disabled","disabled");
+			  	});
+
+			    $("a.create").hide();		    
+			    
+			},
+			resizable: false,
+			open: function() {
+				// scrollbar fix for IE
+				$('body').css('overflow','hidden');
+			},
+			close: function() {
+				// reset overflow
+				$('body').css('overflow','auto');
+			}
+		}); // end of dialog
+	
+		
+		// create a timer that runs every second
+		dialogTimer = setInterval(function(){
+			idleTime -= 1;
+			
+			// if the counter is 0, redirect the user
+			if(idleTime === 0) {
+				clearInterval(dialogTimer);
+				var counter = redirectAfter;
+				running = true;
+				
+				// intialisze timer
+				$('#'+sessionTimeoutCountdownId).html(redirectAfter);
+				// open dialog
+				$(sessionTimeoutWarningDialog).dialog('open');
+				
+				// create a timer that runs every second
+				timer = setInterval(function(){
+					counter -= 1;
+					
+					// if the counter is 0, redirect the user
+					if(counter === 0) {
+						$(sessionTimeoutWarningDialog).html(expiredMessage);
+						$(sessionTimeoutWarningDialog).dialog('disable');
+						window.location = redirectTo;
+					} else {
+						$('#'+sessionTimeoutCountdownId).html(counter);
+					};
+				}, 1000);
+			}
+		}, 1000);
+	
+	}
+
+});
+
 
 window.onload = function() { 
 	  var txts = document.getElementsByTagName('TEXTAREA') 
@@ -362,13 +557,7 @@ window.onload = function() {
 	  } 
 	}
 
-	$(document).ready(function() {
 
-		$("a.create").click(function() {
-			$(this).toggleClass("active").next().slideToggle("fast");
-		});
-
-	});
 
        function addMultivalueIdToForm( multiId ) {
            $('#collectionForm')
@@ -390,6 +579,13 @@ window.onload = function() {
 	                        '<input name="type" type="hidden" value="' + type + '"/>');
 
 	    }
+	   
+	   function addCloseToForm() {
+	        $('#collectionForm')
+	                .append(
+	                        '<input name="close" type="hidden" value="true"/>');
+
+	    }
 
 	    function doSubmitNewMulti( type ) {
 	        addTypeToForm(type);
@@ -404,4 +600,9 @@ window.onload = function() {
 	            $('#collectionForm').submit();
 
 	        }
+	       
 </script>
+
+
+  
+

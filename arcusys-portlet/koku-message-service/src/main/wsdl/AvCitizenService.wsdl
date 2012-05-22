@@ -79,6 +79,7 @@
 <xs:element name="appointmentId" type="xs:long" />
 <xs:element minOccurs="0" name="status" type="tns:appointmentSummaryStatus" />
 <xs:element minOccurs="0" name="sender" type="xs:string" />
+<xs:element minOccurs="0" name="senderRole" type="xs:string" />
 <xs:element minOccurs="0" name="senderUserInfo" type="ns1:user" />
 <xs:element minOccurs="0" name="subject" type="xs:string" />
 <xs:element minOccurs="0" name="description" type="xs:string" />

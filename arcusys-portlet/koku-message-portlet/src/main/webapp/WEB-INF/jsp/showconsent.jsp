@@ -40,7 +40,7 @@
 		<span class="text-bold"><spring:message code="consent.secondApprover"/>:</span> <c:out value="${consent.model.anotherPermitterUser.fullName}" /><br />
 		<span class="text-bold"><spring:message code="consent.recipients"/>:</span>
 		<c:forEach var="recipientUsers" items="${consent.model.recipientUsers}" varStatus="loopStatus">
-			<c:out value="${recipientUsers.fullName}" />,
+			<c:out value="${recipientUsers.fullName}" />${not loopStatus.last ? ', ' : ''}
 		</c:forEach>
 		<br />
 		

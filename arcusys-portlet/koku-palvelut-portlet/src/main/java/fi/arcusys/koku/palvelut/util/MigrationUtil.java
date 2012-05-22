@@ -13,7 +13,7 @@ public class MigrationUtil {
 	
 	public static String getCompanyWebId(PortletRequest request) {
 //		PortalUtil.getCompany(request).getWebId()
-		return "test";
+		return "koku";
 	}
 
 	public static String getUser(PortletRequest request) {
