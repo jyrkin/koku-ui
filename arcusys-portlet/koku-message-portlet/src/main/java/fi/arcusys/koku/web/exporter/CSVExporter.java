@@ -38,6 +38,10 @@ public class CSVExporter implements Exporter {
 			}
 		};
 
+	/*
+	 * Holds the answers and name/comment information of one person
+	 * for one row in the resulting CSV file.
+	 */
 	private class CSVPerson{
 		private List<String[]> rowAnswers;
 		private String name;
@@ -50,7 +54,6 @@ public class CSVExporter implements Exporter {
 		}
 
 		public void addAnswer(String answer) {
-			Map<Integer, Integer> columnWidths = CSVExporter.this.columnWidths;
 			String[] splitAnswer = answer.split(INNER_FIELD_SEPARATOR);
 			this.rowAnswers.add(splitAnswer);
 			int i = this.rowAnswers.indexOf(splitAnswer);
@@ -63,7 +66,7 @@ public class CSVExporter implements Exporter {
 			}
 		}
 
-		public String getFormattedRow() {
+		public String getFormattedAnswerRow() {
 			StringBuilder row = new StringBuilder();
 			row.append(addQuote(this.name) + SEPARATOR);
 			for (String[] answer : this.rowAnswers) {
@@ -94,16 +97,22 @@ public class CSVExporter implements Exporter {
 		this.columnWidths = new HashMap<Integer, Integer>();
 	}
 
+	/*
+	 * Add a person entry to the persons list.
+	 */
 	private CSVPerson addPerson(String name, String comment) {
 		CSVPerson person = new CSVPerson(name, comment);
 		this.persons.add(person);
 		return person;
 	}
 
-	private String getFormattedRows() {
+	/*
+	 * Returns all the answer rows of people who gave an answer in a CSV format
+	 * */
+	private String getFormattedAnswerRows() {
 		StringBuilder formattedRow = new StringBuilder();
 		for (CSVPerson person : this.persons) {
-			formattedRow.append(person.getFormattedRow());
+			formattedRow.append(person.getFormattedAnswerRow());
 		}
 		return formattedRow.toString();
 	}
@@ -112,11 +121,26 @@ public class CSVExporter implements Exporter {
 		return columnWidths.get(column);
 	}
 
+	/*
+	 * Transform the data given in the constructor and return it as a csv string.
+	 */
 	@Override
 	public String getContents() {
 		final Locale locale = MessageUtil.getLocale();
-		StringBuilder csv = null;
+		String responseSummary = messageSource.getMessage("export.responseSummary", null, locale);
+		String respondent = messageSource.getMessage("export.respondent", null, locale);
+		String comment = messageSource.getMessage("export.comment", null, locale);
+		String missed = messageSource.getMessage("export.missed", null, locale);
+		return getContents(responseSummary, respondent, comment, missed);
+	}
 
+	/*
+	 * Two separate methods to make testing easier,
+	 * mocking a messageSource object discovered to be non-trivial.
+	 */
+	public String getContents(String responseSummary, String respondent, String comment, String missed) {
+
+		/* Iterate over the data in kokuRequest and input them into the data structures */
 		for (KokuResponse res : kokuRequest.getRespondedList()) {
 			CSVPerson person = this.addPerson(res.getReplierUser().getFullName(), res.getComment());
 			Collections.sort(res.getAnswers(), SORT_BY_ANSWER_NUMBER);
@@ -130,15 +154,17 @@ public class CSVExporter implements Exporter {
 			}
 		}
 
-		csv = new StringBuilder(4096);
+		StringBuilder csv = new StringBuilder(4096);
+
 		/* UTF-8 BOM (Do not remove, otherwise Excel won't recognize characters correctly!) */
 		csv.append('\uFEFF');
-		/* Headers */
-		csv.append(addQuote(messageSource.getMessage("export.responseSummary", null, locale)));
-		csv.append(NEW_LINE);
-		csv.append(addQuote(messageSource.getMessage("export.respondent", null, locale))+SEPARATOR);
 
-		// Question descriptions
+		/* Headers */
+		csv.append(addQuote(responseSummary));
+		csv.append(NEW_LINE);
+		csv.append(addQuote(respondent)+SEPARATOR);
+
+		/*  Question descriptions */
 		for (KokuQuestion q : kokuRequest.getQuestions()) {
 			int i = kokuRequest.getQuestions().indexOf(q);
 			int width = getColumnWidth(i);
@@ -146,24 +172,30 @@ public class CSVExporter implements Exporter {
 			csv.append(addQuote(description) + getSeparators(width));
 		}
 
-		// Comment header
-		csv.append(addQuote(messageSource.getMessage("export.comment", null, locale)));
+		/*  Comment header */
+		csv.append(addQuote(comment));
 		csv.append(NEW_LINE);
 
 		/* Data */
-		csv.append(this.getFormattedRows());
-
-		csv.append(NEW_LINE);
-		csv.append(addQuote(messageSource.getMessage("export.missed", null, locale)));
+		csv.append(this.getFormattedAnswerRows());
 		csv.append(NEW_LINE);
 
+		/* Entries of people who didn't answer */
+		csv.append(addQuote(missed));
+		csv.append(NEW_LINE);
 		for (KokuUser name : kokuRequest.getUnrespondedList()) {
 			csv.append(addQuote(name.getFullName()));
 			csv.append(NEW_LINE);
 		}
+
 		return csv.toString();
 	}
 
+	/**
+	 * Returns n SEPARATORs, used for padding in CSV export
+	 * @param s
+	 * @return
+	 */
 	private static String getSeparators(int n) {
 		StringBuilder s = new StringBuilder();
 		for (int i = 0; i < n; i++) {
