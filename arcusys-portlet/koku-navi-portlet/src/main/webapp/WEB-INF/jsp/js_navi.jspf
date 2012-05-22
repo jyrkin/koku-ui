@@ -31,10 +31,10 @@ function openSavedNavigation() {
 function focusCurrentItem() {
 
 	function getNaviType() {
-		// var naviType = koku_navi_type;
 		var naviType = readKokuCookie();		
 		var global_url = document.URL;
 		var index = global_url.lastIndexOf("NAVI_TYPE=");
+
 		/* Quick fix for Salo. Findout why param is different kunpo/loora sides */
 		if (index < 0) {
 			index = global_url.lastIndexOf("naviType=");
@@ -50,13 +50,30 @@ function focusCurrentItem() {
 
 	function bold(elementId) {
 	
+		function getIndicatorElement(element) {
+			if (typeof element == 'undefined' || element == null) {
+				return;
+			}
+			return element.siblings('.naviLinkHeaderNonLink').children('.kokuNaviTreeNodeIndicator');			
+		}
+		
 		function changeParentTreeIndicatorsToOpen(parentElement) {
-			parentElement.siblings('.naviLinkHeaderNonLink').children('.kokuNaviTreeNodeIndicator').html('-');
-		}		
+			getIndicatorElement(parentElement).html('-');
+		}
+		
+		function rememberCurrentOpenNode(element) {	
+			if (typeof element == 'undefined' || element == null) {
+				return;
+			}
+			
+			var indicatorElements = getIndicatorElement(element);
+			var indicatorId = indicatorElements.get(0).attributes.id.value;
+			var elemId = element.attr('id');		
+			openKokuNavi('#'+elemId, '#'+indicatorId);
+		}
 	
 		jQuery(elementId).css("font-weight", "bold");
-		
-		// Find and close all #child elements 
+		// Find and close all #child elements
 		jQuery('.child').hide();
 		// leave only elementId parent(s) open.
 		var moreParents = true;
@@ -65,6 +82,7 @@ function focusCurrentItem() {
 			return;
 		}
 		changeParentTreeIndicatorsToOpen(parentElement);
+		rememberCurrentOpenNode(parentElement);
 		
 		var maxLoops = 0;
 		while(moreParents && maxLoops <= 10) {
