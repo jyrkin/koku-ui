@@ -298,8 +298,6 @@
 	</div>
 </div>
 
-
-
 <div></div>
 </div>
 
@@ -311,6 +309,8 @@
 
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-1.5.2.min.js"></script>
 <script type="text/javascript">
+
+
 	$(document).ready(function() {
 
 		$("a.create").click(function() {
