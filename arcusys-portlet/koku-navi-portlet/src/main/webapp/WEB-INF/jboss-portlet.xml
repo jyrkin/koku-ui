@@ -8,6 +8,7 @@
 			<link type="text/css" rel="stylesheet" href="/css/main.css" />
 			<script type="text/javascript" src="/js/jquery-1.5.2.min.js" />
 			<script type="text/javascript" src="/js/main.js" />
+			<script type="text/javascript" src="/js/json2.js" />			
 		</header-content>
 	</portlet>
 </portlet-app>
