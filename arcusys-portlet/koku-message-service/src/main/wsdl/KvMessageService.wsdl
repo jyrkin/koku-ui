@@ -85,6 +85,7 @@
 <xs:extension base="tns:messageSummary">
 <xs:sequence>
 <xs:element minOccurs="0" name="content" type="xs:string" />
+<xs:element minOccurs="0" name="originalContent" type="xs:string" />
 <xs:element maxOccurs="unbounded" minOccurs="0" name="deliveryFailedTo" nillable="true" type="ns1:user" />
 
 </xs:sequence>
