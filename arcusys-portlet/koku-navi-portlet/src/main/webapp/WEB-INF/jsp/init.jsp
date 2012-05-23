@@ -3,6 +3,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib uri="http://java.sun.com/portlet_2_0" prefix="portlet" %>
 <%@ page import="javax.portlet.PortletPreferences" %>
+<%@ page import="javax.portlet.PortletSession" %>
 <%@ page import="javax.portlet.WindowState" %>
 <%@ page import="fi.arcusys.koku.util.Constants" %>
 <%@ page import="fi.arcusys.koku.util.NavigationPortletProperties" %>
@@ -12,12 +13,6 @@
 
 <%
 	PortletPreferences preferences = renderRequest.getPreferences();
-// 	final String useRelativePath = preferences.getValue(Constants.PREF_NAVI_RELATIVE_PATH, "true");	
-// 	final String kksPref = preferences.getValue(Constants.PREF_NAVI_KKS, "/KKS");
-// 	final String lokPref = preferences.getValue(Constants.PREF_NAVI_LOK, "/LOK");
-// 	final String pyhPref = preferences.getValue(Constants.PREF_NAVI_PYH, "/PYH");
-// 	final String defaultPathPref = preferences.getValue(Constants.PREF_NAVI_DEFAULT_PATH, "/portal/auth/portal/default/koku/Message");
-// 	final String frontPagePath = preferences.getValue(Constants.PREF_NAVI_FRONTPAGE, "/portal/auth/portal/default/koku/");
 
 	final String defaultPath = NavigationPortletProperties.NAVIGATION_PORTLET_PATH;
 	final String frontPagePath = NavigationPortletProperties.FRONTPAGE_LINK;
@@ -28,10 +23,7 @@
 
 	final String defaultPage = defaultPath.substring(defaultPath.lastIndexOf('/')+1, defaultPath.length());
 	final String naviPortalMode = Properties.PORTAL_MODE;
-	request.setAttribute("naviPortalMode", naviPortalMode);	
+	request.setAttribute("naviPortalMode", naviPortalMode);
 	final String portalInfo = renderRequest.getPortalContext().getPortalInfo();	
-	
-	/* Current position in navigation */
-	// final String navigationType = (String) renderRequest.getPortletSession().getAttribute("naviType");
-	
+	final String navigationState = (String) renderRequest.getPortletSession().getAttribute(Constants.ATTR_NAVI_STATE, PortletSession.APPLICATION_SCOPE);
 %>

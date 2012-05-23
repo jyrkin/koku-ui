@@ -18,13 +18,22 @@ public class Task {
 	private String link;
 	private String senderName;
 	private String formUrl;
+	
+	/**
+	 * Possible values:
+	 * 	* "PIPATask"
+	 *  * "PATask"
+	 *  * "Notification"
+	 */
+	private String processTaskType;
 
 	public Task(String id, String processId, String description,
-			String creationDate) {
+			String creationDate, String processTaskType) {
 		this.id = id;
 		this.processId = processId;
 		this.description = description;
 		this.creationDate = creationDate;
+		this.processTaskType = processTaskType;
 	}
 		
 	public Task() {}
@@ -105,5 +114,11 @@ public class Task {
 		return formUrl;
 	}
 
-	
+	public String getProcessTaskType() {
+		return processTaskType;
+	}
+
+	public void setProcessTaskType(String processTaskType) {
+		this.processTaskType = processTaskType;
+	}	
 }

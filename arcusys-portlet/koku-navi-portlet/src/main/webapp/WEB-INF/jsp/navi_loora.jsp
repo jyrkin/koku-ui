@@ -3,6 +3,9 @@
 <portlet:resourceURL var="ajaxURL" id="update">
 </portlet:resourceURL>
 
+<portlet:resourceURL var="naviStatusURL" id="naviStatus">
+</portlet:resourceURL>
+
 <portlet:renderURL var="naviURL" >
 	<portlet:param name="myaction" value="showNavi" />
 </portlet:renderURL>
@@ -54,19 +57,25 @@
 	String pyhPath = pyhPref;
 %>		
 		
-		<!--  VIESTIT -->
 		<li><a href="<%= frontPagePath %>">Etusivu</a></li>
 		<li id="kks"><a href="<%= kksPath %>">Sopimukset ja suunnitelmat</a>
 		<li id="lok"><a href="<%= lokPath %>">Lokihallinta</a></li>
 		
-		<li><span class="naviLinkHeaderNonLink">Viestit</span>
-			<ul class="child">
+		<!--  VIESTIT -->
+		<li>
+			<span class="naviLinkHeaderNonLink" onclick="toggleKokuNavi('#kokuNaviMessages', '#kokuNaviTreeNodeIndicatorMessage');">
+				<span class="kokuNaviTreeNodeIndicator" id="kokuNaviTreeNodeIndicatorMessage">+</span>Viestit
+			</span>
+			<ul id="kokuNaviMessages" class="child">
 				<!-- Show "New message" only for employee in Jboss portal -->
 				<li id="msg_new"><a href="<%= defaultPath %><%= NavigationPortletProperties.MESSAGES_NEW_MESSAGE %>">Uusi viesti</a> </li>
 				<li id="msg_inbox"><a href="javascript:void(0)" onclick="navigateToPage('msg_inbox')">Saapuneet</a><span id="inbox_num" class="message_num"></span></li>
 				<li id="msg_outbox"><a href="javascript:void(0)" onclick="navigateToPage('msg_outbox')">Lähetetyt</a></li>
-				<li><a href="javascript:void(0)" onclick="showArchiveUI()">Arkistoidut</a>
-					<ul id="archive-part">
+				<li>
+					<span class="naviLinkHeaderNonLink" onclick="toggleKokuNavi('#archive-part', '#kokuNaviTreeNodeIndicatorMessageArchived');">
+						<span class="kokuNaviTreeNodeIndicator" id="kokuNaviTreeNodeIndicatorMessageArchived">+</span>Arkistoidut
+					</span>
+					<ul id="archive-part" class="child">
 						<li id="msg_archive_inbox"><a href="javascript:void(0)" onclick="navigateToPage('msg_archive_inbox')">Saapuneet</span></a><span id="archive_inbox_num" class="message_num"></span></li>
 						<li id="msg_archive_outbox"><a href="javascript:void(0)" onclick="navigateToPage('msg_archive_outbox')">Lähetetyt</a></li>
 					</ul>
@@ -75,20 +84,28 @@
 		</li>
 			
 		<!--  PYYNNÖT -->
-		<!-- For citizen in Gatein portal-->
-		<li><span class="naviLinkHeaderNonLink">Pyynnöt</span>
-			<ul class="child">
+		<li>
+			<span class="naviLinkHeaderNonLink" onclick="toggleKokuNavi('#kokuNaviRequests', '#kokuNaviTreeNodeIndicatorConstants');">
+				<span class="kokuNaviTreeNodeIndicator" id="kokuNaviTreeNodeIndicatorConstants">+</span>Pyynnöt
+			</span>
+			<ul id="kokuNaviRequests" class="child">
 				<li id="req_new"><a href="<%= defaultPath %><%= NavigationPortletProperties.REQUESTS_NEW_REQUEST %>">Uusi pyyntö</a></li>
 				<li id="luopohja"><a href="<%= defaultPath %><%= NavigationPortletProperties.REQUESTS_NEW_TEMPLATE%>">Luo uusi pohja</a></li>
-				<li><span class="naviLinkHeaderNonLink">Saapuneet</span>
-					<ul class="child">
+				<li>
+					<span class="naviLinkHeaderNonLink" onclick="toggleKokuNavi('#kokuNaviRequestsRecevied', '#kokuNaviTreeNodeIndicatorRequestsRecevied');">
+						<span class="kokuNaviTreeNodeIndicator" id="kokuNaviTreeNodeIndicatorRequestsRecevied">+</span>Saapuneet
+					</span>
+					<ul id="kokuNaviRequestsRecevied" class="child">
 						<li id="req_valid_request"><a href="<%= defaultPath %><%= NavigationPortletProperties.REQUESTS_RECIEVED_REQUESTS %>">Saapuneet</a><span id="requests_num" class="message_num"></span></li>
 						<li id="<%=Constants.TASK_TYPE_REQUEST_REPLIED %>"><a href="javascript:void(0)" onclick="navigateToPage('<%=Constants.TASK_TYPE_REQUEST_REPLIED %>')">Vastatut</a></li>
 						<li id="<%=Constants.TASK_TYPE_REQUEST_OLD %>"><a href="javascript:void(0)" onclick="navigateToPage('<%=Constants.TASK_TYPE_REQUEST_OLD %>')">Vanhat</a></li>
 					</ul>
-				</li>				
-				<li><span class="naviLinkHeaderNonLink">Lähetetyt</span>
-					<ul class="child">
+				</li>
+				<li>
+					<span class="naviLinkHeaderNonLink" onclick="toggleKokuNavi('#kokuNaviRequestsSent', '#kokuNaviTreeNodeIndicatorRequestsSent');">
+						<span class="kokuNaviTreeNodeIndicator" id="kokuNaviTreeNodeIndicatorRequestsSent">+</span>Lähetetyt
+					</span>
+					<ul id="kokuNaviRequestsSent" class="child">
 						<li id="<%=Constants.TASK_TYPE_REQUEST_VALID_EMPLOYEE %>"><a href="javascript:void(0)" onclick="navigateToPage('<%=Constants.TASK_TYPE_REQUEST_VALID_EMPLOYEE %>')">Avoimet</a></li>
 						<li id="<%=Constants.TASK_TYPE_REQUEST_DONE_EMPLOYEE %>"><a  href="javascript:void(0)" onclick="navigateToPage('<%=Constants.TASK_TYPE_REQUEST_DONE_EMPLOYEE %>')">Valmiit</a></li>
 					</ul>
@@ -97,9 +114,11 @@
 		</li>
 		
 		<!-- TAPAAMISET -->
-		<!-- For employee in Jboss portal-->
-		<li><span class="naviLinkHeaderNonLink">Tapaamiset</span>
-			<ul class="child">
+		<li>
+			<span class="naviLinkHeaderNonLink" onclick="toggleKokuNavi('#kokuNaviAppointment', '#kokuNaviTreeNodeIndicatorApp');">
+				<span class="kokuNaviTreeNodeIndicator" id="kokuNaviTreeNodeIndicatorApp">+</span>Tapaamiset
+			</span>
+			<ul id="kokuNaviAppointment" class="child">
 				<li id="app_new"><a href="<%= defaultPath %><%= NavigationPortletProperties.APPOINTMENTS_NEW_APPOINTMENT %>" >Uusi tapaaminen</a></li>
 				<li id="app_inbox_employee"><a href="javascript:void(0)" onclick="navigateToPage('app_inbox_employee')">Avoimet</a></li>
 				<li id="app_response_employee"><a href="javascript:void(0)" onclick="navigateToPage('app_response_employee')">Valmiit</a></li>
@@ -107,24 +126,35 @@
 		</li>
 		
 		<!--  SUOSTUMUKSET -->
-		<li><span class="naviLinkHeaderNonLink">Suostumukset</span>
-			<ul class="child">
+		<li>
+			<span class="naviLinkHeaderNonLink" onclick="toggleKokuNavi('#kokuNaviConsents', '#kokuNaviTreeNodeIndicatorConsents');">
+				<span class="kokuNaviTreeNodeIndicator" id="kokuNaviTreeNodeIndicatorConsents">+</span>Suostumukset
+			</span>
+			<ul id="kokuNaviConsents" class="child">
 				<li id="cst_new"><a href="<%= defaultPath %><%= NavigationPortletProperties.CONSENTS_NEW_CONSENT_TEMPLATE %>">Uusi suostumuspohja</a></li>
 				<li id="sendconsent"><a href="<%= defaultPath %><%= NavigationPortletProperties.CONSENTS_NEW_CONSENT %>">Uusi suostumuspyyntö</a></li>
 				<li id="fillconsent"><a href="<%= defaultPath %><%= NavigationPortletProperties.CONSENTS_CUSTOMER_CONSENT %>">Kirjaa asiakkaan suostumus</a></li>				
 				<li id="<%= Constants.TASK_TYPE_CONSENT_EMPLOYEE_CONSENTS%>"><a href="javascript:void(0)" onclick="navigateToPage('<%= Constants.TASK_TYPE_CONSENT_EMPLOYEE_CONSENTS%>')">Lähetetyt suostumuspyynnöt</a></li>
 			</ul>
 		</li>
-		<li><span class="naviLinkHeaderNonLink">Valtakirjat</span>
-			<ul class="child">
+		
+		<!--  VALTAKIRJAT -->
+		<li>
+			<span class="naviLinkHeaderNonLink"  onclick="toggleKokuNavi('#kokuNaviWarrants', '#kokuNaviTreeNodeIndicatorWarrants')">
+				<span class="kokuNaviTreeNodeIndicator" id="kokuNaviTreeNodeIndicatorWarrants">+</span>Valtakirjat
+			</span>
+			<ul id="kokuNaviWarrants" class="child">
 				<li id="<%= Constants.TASK_TYPE_WARRANT_LIST_CITIZEN_CONSENTS%>"><a href="javascript:void(0)" onclick="navigateToPage('<%= Constants.TASK_TYPE_WARRANT_LIST_CITIZEN_CONSENTS%>')">Asiakkaan valtakirjat </a></li> 
 				<li id="<%= Constants.TASK_TYPE_WARRANT_LIST_SUBJECT_CONSENTS%>"><a href="javascript:void(0)" onclick="navigateToPage('<%= Constants.TASK_TYPE_WARRANT_LIST_SUBJECT_CONSENTS%>')">Asian valtakirjat</a></li>
 			</ul>
 		</li>
 			
 		<!--  TIETOPYYNNÖT -->
-		<li><span class="naviLinkHeaderNonLink">Tietopyynnöt</span>
-			<ul class="child">
+		<li>
+			<span class="naviLinkHeaderNonLink" onclick="toggleKokuNavi('#kokuNaviInfoRequests', '#kokuNaviTreeNodeIndicatorInfoRequests');">
+				<span class="kokuNaviTreeNodeIndicator" id="kokuNaviTreeNodeIndicatorInfoRequests">+</span>Tietopyynnöt
+			</span>
+			<ul id="kokuNaviInfoRequests" class="child">
 				<li id="newinformation"><a href="<%= defaultPath %><%= NavigationPortletProperties.INFO_REQ_NEW_INFORMATION_REQ %>">Uusi tietopyyntö</a></li>
 				<li id="informationbox"><a href="<%= defaultPath %><%= NavigationPortletProperties.INFO_REQ_RECIEVED_INFO_REQS %>">Saapuneet</a><span id="infoRequests_num" class="message_num"></span></li>
 				<li><span class="naviLinkHeaderNonLink">Lähetetyt</span>
@@ -139,8 +169,12 @@
 			</ul>
 		</li>
 		
-		<li><span class="naviLinkHeaderNonLink">Asiointipalvelut</span>
-			<ul class="child">
+		<!--  ASIOINTIPALVELUT -->		
+		<li>
+			<span class="naviLinkHeaderNonLink" onclick="toggleKokuNavi('#kokuNaviApplications', '#kokuNaviTreeNodeIndicatorApplications');">
+				<span class="kokuNaviTreeNodeIndicator" id="kokuNaviTreeNodeIndicatorApplications">+</span>Asiointipalvelut
+			</span>
+			<ul id="kokuNaviApplications" class="child">
 				<li><span class="naviLinkHeaderNonLink">Palveluhakemukset</span>
 					<ul class="child">
 						<!--  show only employees -->						

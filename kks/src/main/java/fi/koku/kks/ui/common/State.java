@@ -18,5 +18,5 @@ package fi.koku.kks.ui.common;
  * 
  */
 public enum State {
-  ACTIVE, LOCKED
+  ACTIVE, LOCKED, DELETED
 }

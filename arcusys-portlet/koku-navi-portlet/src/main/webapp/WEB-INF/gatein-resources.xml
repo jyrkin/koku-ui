@@ -25,6 +25,14 @@
 			<js-priority>10</js-priority>
 		</param>
 	</javascript>
+	
+	<javascript>
+		<param>
+			<js-module>json2</js-module>
+			<js-path>/js/json2.js</js-path>
+			<js-priority>10</js-priority>
+		</param>
+	</javascript>
 
 </gatein-resources>
 

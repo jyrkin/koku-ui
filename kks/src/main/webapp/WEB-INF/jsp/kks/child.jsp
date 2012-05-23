@@ -32,6 +32,10 @@
 	<portlet:param name="action" value="sendConsentRequest" />
 	<portlet:param name="pic" value="${child.pic}" />
 </portlet:actionURL>
+<portlet:actionURL var="deleteCollectionURL">
+	<portlet:param name="action" value="toDeleteConfirmation" />
+    <portlet:param name="pic" value="${child.pic}" />
+</portlet:actionURL>
 
 <div class="koku-kks"> 
 <div class="portlet-section-body">
@@ -45,7 +49,7 @@
 	<h1 class="portlet-section-header kks-print">
 		<c:out value="${child.name}"/><c:out value=" "/><spring:message code="ui.kks.title" />
 	</h1>
-
+	
 	<div class="kks-error-bindings">    		
     	<c:if test="${not empty error}"><div class="error"><spring:message code="${error}"></spring:message> </div></c:if>
 		<spring:hasBindErrors name="creation">
@@ -64,7 +68,11 @@
 
 		<table class="portlet-table-body kks-print" width="100%" border="0">
 			<tr>
-				<th><spring:message code="ui.kks.collection" /></th>
+				<th width="35%"><spring:message code="ui.kks.collection" /></th>
+				<c:if test="${ sessionScope.municipal_employee }">
+					<th>
+					</th>
+				</c:if>
 				<th><spring:message code="ui.kks.last.entry" />
 				</th>
 
@@ -82,16 +90,30 @@
 					<c:if
 						test="${ sessionScope.municipal_employee || not collection.versioned }">
 						<tr>
-							<td><span class="collection"><strong><a
-									href="
-						<portlet:renderURL>
-							<portlet:param name="action" value="showCollection" />
-							<portlet:param name="pic" value="${child.pic}" />
-							<portlet:param name="collection" value="${collection.id}" />
-						</portlet:renderURL>">
-										<c:out value="${ collection.name }"/> </a> 
-										</strong> </span></td>
-							<td><c:out value="${collection.modifierFullName}"/><c:out value=" "/><fmt:formatDate
+									<td>
+										<div>
+											<strong><a href="
+														<portlet:renderURL>
+															<portlet:param name="action" value="showCollection" />
+															<portlet:param name="pic" value="${child.pic}" />
+															<portlet:param name="collection" value="${collection.id}" />
+														</portlet:renderURL>">
+														<c:out value="${ collection.name }" /></a> 
+											</strong> 											
+										</div>
+									</td>
+									<c:if test="${ sessionScope.municipal_employee }">
+										<td>
+										<form:form name="deleteForm-${collection.id}" method="post"
+												action="${deleteCollectionURL}">
+											<c:if test="${ collection.creator eq kksUser }">
+											    <input type="hidden" id="collection" name="collection" value="${ collection.id }"/>
+												<input type="submit" class="portlet-form-button" value="<spring:message code="ui.kks.delete"/>">
+											</c:if>
+										</form:form>
+										</td>
+									</c:if>
+									<td><c:out value="${collection.modifierFullName}"/><c:out value=" "/><fmt:formatDate
 									pattern="dd.MM.yyyy" value="${collection.creationTime}" />
 							</td>
 
@@ -276,8 +298,6 @@
 	</div>
 </div>
 
-
-
 <div></div>
 </div>
 
@@ -289,6 +309,8 @@
 
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-1.5.2.min.js"></script>
 <script type="text/javascript">
+
+
 	$(document).ready(function() {
 
 		$("a.create").click(function() {

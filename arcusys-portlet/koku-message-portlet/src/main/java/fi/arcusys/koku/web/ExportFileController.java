@@ -3,9 +3,6 @@ package fi.arcusys.koku.web;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Locale;
 
 import javax.annotation.Resource;
 import javax.portlet.ResourceRequest;
@@ -20,13 +17,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.portlet.bind.annotation.ResourceMapping;
 
 import fi.arcusys.koku.exceptions.KokuServiceException;
-import fi.arcusys.koku.kv.model.KokuAnswer;
-import fi.arcusys.koku.kv.model.KokuQuestion;
 import fi.arcusys.koku.kv.model.KokuRequest;
-import fi.arcusys.koku.kv.model.KokuResponse;
 import fi.arcusys.koku.kv.request.employee.EmployeeRequestHandle;
-import fi.arcusys.koku.users.KokuUser;
-import fi.arcusys.koku.util.MessageUtil;
+import fi.arcusys.koku.web.exporter.CSVExporter;
+import fi.arcusys.koku.web.exporter.Exporter;
 
 /**
  * Generates csv file containing response summary information
@@ -38,28 +32,12 @@ import fi.arcusys.koku.util.MessageUtil;
 public class ExportFileController {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ExportFileController.class);
-	
+	private static final int MAX_FILENAME_SIZE = 15;
+	private static final String FILENAME_REGEX_FILTER = "[^a-zA-ZåäöÅÄÖ_ ]";
+
 	@Resource
 	private ResourceBundleMessageSource messageSource;
-	
-	private static final String SEPARATOR 					= ";";
-	private static final String TEXT_DELIMITER				= "\"";
-	private static final String NEW_LINE					= "\n";
-	private static final String FILTER						= "\\r\\n|\\r|\\n|"+SEPARATOR+"|"+TEXT_DELIMITER;
-	
-	private static final Comparator<KokuAnswer> SORT_BY_ANSWER_NUMBER = new Comparator<KokuAnswer>() {
-			@Override
-			public int compare(KokuAnswer o1, KokuAnswer o2) {
-				if (o1.getQuestionNumber() > o2.getQuestionNumber()) {
-					return 1;
-				} else if (o1.getQuestionNumber() < o2.getQuestionNumber()) {
-					return -1;
-				} else {
-					return 0;
-				}
-			}
-		};
-	
+
 	/**
 	 * Generates the request summary with given request id in csv format 
 	 * for downloading
@@ -85,8 +63,16 @@ public class ExportFileController {
 		String requestSubject = kokuRequest.getSubject();
 		if (requestSubject == null || requestSubject.isEmpty()) {
 			requestSubject = "vastaus";
+		} else {
+			requestSubject = requestSubject.replaceAll(FILENAME_REGEX_FILTER, "");
+			requestSubject = requestSubject.substring(0, MAX_FILENAME_SIZE);
+
+			/* Firefox doesn't seem to handle spaces for some reason, the filename after
+			 * a space is truncated and the .csv file extension is lost, this fixes it.
+			 */
+			requestSubject = requestSubject.replaceAll(" ", "_");
 		}
-		
+
 		/* Note: Do not change Pragma and Cache-Control values. Otherwise IE doesn't recognize
 		 * CSV file properly when using HTTPS. See http://support.microsoft.com/kb/316431 for more details.
 		 * This is issue with IE5 - IE9 versions. */
@@ -96,61 +82,20 @@ public class ExportFileController {
 		response.setProperty("Content-Disposition", "attachment; filename="+requestSubject+".csv");
 		response.setProperty("Content-Type", "text/xml, charset=UTF-8; encoding=UTF-8");
 
-
-		final String username = resourceRequest.getUserPrincipal().getName();
-		final Locale locale = MessageUtil.getLocale();
 		PrintWriter responseWriter = null;
 		try {
 			responseWriter = response.getWriter();
 			final BufferedWriter writer = new BufferedWriter(responseWriter);
-			/* UTF-8 BOM (Do not remove, otherwise Excel won't recognize characters correctly!) */
-			writer.append('\uFEFF');
-			/* Headers */
-			writer.write(addQuote(messageSource.getMessage("export.responseSummary", null, locale)));
-			writer.write(NEW_LINE);
-			writer.write(addQuote(messageSource.getMessage("export.respondent", null, locale))+SEPARATOR);
-
-			for (KokuQuestion q : kokuRequest.getQuestions()) {
-				writer.write(addQuote(q.getDescription()) + SEPARATOR);
-			}				
-			writer.write(addQuote(messageSource.getMessage("export.comment", null, locale)));
-			writer.write(NEW_LINE);
 			
-			/* Data */
-			for (KokuResponse res : kokuRequest.getRespondedList()) {
-				writer.write(addQuote(res.getReplierUser().getFullName())+SEPARATOR);					
-				Collections.sort(res.getAnswers(), SORT_BY_ANSWER_NUMBER);
-				for (KokuAnswer answer : res.getAnswers()) {
-					if (answer != null) {
-						writer.write(addQuote(answer.getAnswer()) + SEPARATOR);													
-					}
-				}		
-				writer.write(addQuote(res.getComment()));
-				writer.write(NEW_LINE);
-			}
-			
-			writer.write(NEW_LINE);
-			writer.write(addQuote(messageSource.getMessage("export.missed", null, locale)));
-			writer.write(NEW_LINE);
-
-			for (KokuUser name : kokuRequest.getUnrespondedList()) {
-				writer.write(addQuote(name.getFullName()));
-				writer.write(NEW_LINE);
-			}
+			Exporter csvExporter = new CSVExporter(kokuRequest, messageSource);
+			writer.write(csvExporter.getContents());
 			writer.flush();
-			writer.close();				
+			writer.close();
 		} catch (IOException e) {
+			final String username = resourceRequest.getUserPrincipal().getName();
 			LOG.error("Generate csv file failed. Username: '"+username+"'  RequestId: '"+kokuRequest.getRequestId()+"'");
 		}
 	}
-	
-	/**
-	 * Adds the quotation mark char '"' to the string
-	 * @param s
-	 * @return
-	 */
-	private String addQuote(String s) {		
-		return TEXT_DELIMITER+s.replaceAll(FILTER, "")+TEXT_DELIMITER;
-	}
+
 
 }

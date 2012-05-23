@@ -32,8 +32,8 @@
 	#koku-navigation a:hover, #koku-navigation .current {
 		color:#25aae1;
 	}
-	#koku-navigation ul.child{
-		
+	#koku-navigation ul.child {
+		padding-left: 10px;		
 	}
 	#koku-navigation ul.open{
 		display:inline;
@@ -102,7 +102,7 @@
 	}
 	
 	.naviLinkHeaderNonLink {
-		cursor: default;	
+		cursor: pointer;
 	}
 	
 	.kokuNavigationInfo {
@@ -120,5 +120,11 @@
 	
 	.kokuNavigationSettings .naviEditValue {
 		padding-bottom: 4px;
+	}
+	
+	.kokuNaviTreeNodeIndicator {
+		width: 11px;
+		display: block;
+		float: left;
 	}
 }

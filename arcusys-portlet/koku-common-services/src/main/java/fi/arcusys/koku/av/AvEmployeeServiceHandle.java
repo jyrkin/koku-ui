@@ -133,6 +133,7 @@ public class AvEmployeeServiceHandle extends AbstractHandle {
 		empAppointment.setDescription(appointment.getDescription());
 		empAppointment.setStatus(localizeActionRequestStatus(appointment.getStatus()));		
 		empAppointment.setAcceptedSlots(appointment.getAcceptedSlots());
+		empAppointment.setSenderRole(appointment.getSenderRole());
 		empAppointment.getRecipients().addAll(appointment.getRecipients());
 		empAppointment.setCancellationComment(appointment.getCancelComment());
 		empAppointment.getUsersRejected().addAll(convertUserRejectedToKokuUserRejected(appointment.getUsersRejectedWithComments()));
