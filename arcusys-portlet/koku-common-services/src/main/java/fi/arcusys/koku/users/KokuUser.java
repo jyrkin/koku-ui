@@ -38,7 +38,8 @@ public class KokuUser {
 			setLastname(user.getLastname());
 			setDisplayname(user.getDisplayName());
 			setPhoneNumber(user.getPhoneNumber());
-			setEmail(user.getEmail());			
+			setEmail(user.getEmail());
+			setUid(user.getUid());
 		}
 	}
 
@@ -48,7 +49,8 @@ public class KokuUser {
 			setLastname(user.getLastname());
 			setDisplayname(user.getDisplayName());
 			setPhoneNumber(user.getPhoneNumber());
-			setEmail(user.getEmail());			
+			setEmail(user.getEmail());	
+			setUid(user.getUid());
 		}
 	}
 
@@ -58,7 +60,8 @@ public class KokuUser {
 			setLastname(user.getLastname());
 			setDisplayname(user.getDisplayName());
 			setPhoneNumber(user.getPhoneNumber());
-			setEmail(user.getEmail());			
+			setEmail(user.getEmail());
+			setUid(user.getUid());
 		}
 	}
 
@@ -68,7 +71,8 @@ public class KokuUser {
 			setLastname(user.getLastname());
 			setDisplayname(user.getDisplayName());
 			setPhoneNumber(user.getPhoneNumber());
-			setEmail(user.getEmail());			
+			setEmail(user.getEmail());
+			setUid(user.getUid());
 		}
 	}
 
@@ -79,6 +83,7 @@ public class KokuUser {
 			setDisplayname(user.getDisplayName());
 			setPhoneNumber(user.getPhoneNumber());
 			setEmail(user.getEmail());
+			setUid(user.getUid());
 		}
 	}
 
@@ -100,6 +105,7 @@ public class KokuUser {
 			setDisplayname(user.getDisplayName());
 			setPhoneNumber(user.getPhoneNumber());
 			setEmail(user.getEmail());
+			setUid(user.getUid());
 		}
 	}
 	
@@ -110,6 +116,7 @@ public class KokuUser {
 			setDisplayname(user.getDisplayName());
 			setPhoneNumber(user.getPhoneNumber());
 			setEmail(user.getEmail());
+			setUid(user.getUid());
 		}
 	}
 
@@ -120,6 +127,7 @@ public class KokuUser {
 			setDisplayname(user.getDisplayName());
 			setPhoneNumber(user.getPhoneNumber());
 			setEmail(user.getEmail());
+			setUid(user.getUid());
 		}
 	}
 	

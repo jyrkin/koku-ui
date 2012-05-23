@@ -28,6 +28,7 @@ import fi.arcusys.koku.av.AvCitizenServiceHandle;
 import fi.arcusys.koku.av.AvEmployeeServiceHandle;
 import fi.arcusys.koku.av.KokuAppointment;
 import fi.arcusys.koku.exceptions.KokuServiceException;
+import fi.arcusys.koku.util.Constants;
 import fi.arcusys.koku.web.util.ModelWrapper;
 import fi.arcusys.koku.web.util.ResponseStatus;
 import fi.arcusys.koku.web.util.impl.ModelWrapperImpl;
@@ -95,6 +96,7 @@ public class ShowAppointmentController {
 		
 		ModelWrapper<KokuAppointment> model = null;		
 		KokuAppointment app = null;
+		//  String currentUserId = (String) request.getPortletSession().getAttribute(Constants.ATTR_USER_ID);
 		try {
 			if (taskType.equals(TASK_TYPE_APPOINTMENT_RESPONSE_CITIZEN)
 					|| taskType.equals(TASK_TYPE_APPOINTMENT_RESPONSE_CITIZEN_OLD)) {

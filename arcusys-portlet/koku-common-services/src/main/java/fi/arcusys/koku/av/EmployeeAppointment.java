@@ -21,6 +21,7 @@ public class EmployeeAppointment extends KokuAppointment {
 	private final List<UserWithTarget> rejectedUsers = new ArrayList<UserWithTarget>();
 	private final List<UserWithTarget> unrespondedUsers = new ArrayList<UserWithTarget>();
 	private final List<KokuAppointmentUserRejected> usersRejected = new ArrayList<KokuAppointmentUserRejected>();
+	private String senderRole;
 	
 	/* getters */	
 	public List<AppointmentReceipientTO> getRecipients() {
@@ -53,6 +54,14 @@ public class EmployeeAppointment extends KokuAppointment {
 				
 	public final List<KokuAppointmentUserRejected> getUsersRejected() {
 		return usersRejected;
+	}
+
+	public String getSenderRole() {
+		return senderRole;
+	}
+
+	public void setSenderRole(String senderRole) {
+		this.senderRole = senderRole;
 	}
 
 	public static class UserWithTarget {

@@ -2,6 +2,7 @@
 <%@ page import="fi.arcusys.koku.users.KokuUser" %>
 <%@ page import="fi.arcusys.koku.web.util.ModelWrapper"%>
 <%@ page import="fi.arcusys.koku.util.Constants" %>
+<%@ page import="javax.portlet.PortletRequest" %>
 
 <%@ include file="init.jsp"%>
 
@@ -24,6 +25,9 @@
 	EmployeeAppointment appointment = messageModel.getModel();
 	
 	String appointmentId = String.valueOf(appointment.getAppointmentId());
+	
+	String currentUserId = (String) renderRequest.getPortletSession().getAttribute(Constants.ATTR_USER_ID);
+	String senderUserId = appointment.getSenderUser().getUid();
 	
 %>
 
@@ -89,6 +93,9 @@
 		<div id="show-message" style="padding:12px">
 		<c:if test="${appointment.model.senderUser != null}">
 		<span class="request-c-1"><spring:message code="message.from"/>: <c:out value="${appointment.model.senderUser.fullName}" /> </span><br />
+		</c:if>
+		<c:if test="${appointment.model.senderRole != null}">
+			<span class="request-c-1"><spring:message code="appointment.senderRole"/>: <c:out value="${appointment.model.senderRole}" /></span><br />
 		</c:if>
 		<span class="request-c-1"><spring:message code="message.subject"/>:</span> <c:out value="${appointment.model.subject}" /><br />
 		<span class="request-c-1"><spring:message code="message.description"/>:</span> <c:out value="${appointment.model.description}" /><br />
@@ -217,7 +224,7 @@
 	</div>
 	<div id="task-manager-operation" class="task-manager-operation-part">
 		<input type="button" value="<spring:message code="page.return"/>" onclick="kokuNavigationHelper.returnMainPage()" />
-		<c:if test="${appointment.model.status != 'Peruutettu'}">
+		<c:if test="${appointment.model.status != 'Peruutettu' && currentUserUid == senderUserUid}">
 			<input type="button" id="cancelButton" value="<spring:message code="appointment.cancel.button"/>" onclick="cancelAppointment()" />
 		</c:if>
 	</div>
