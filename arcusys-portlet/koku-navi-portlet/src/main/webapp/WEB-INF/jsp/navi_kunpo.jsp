@@ -59,14 +59,14 @@
 			<span class="naviLinkHeaderNonLink" onclick="toggleKokuNavi('#kokuNaviMessages', '#kokuNaviTreeNodeIndicatorMessage');">
 				<span class="kokuNaviTreeNodeIndicator" id="kokuNaviTreeNodeIndicatorMessage">+</span>Viestit
 			</span>
-			<ul id="kokuNaviMessages" class="child">
+			<ul id="kokuNaviMessages" class="child" style="display:none;">
 				<li id="msg_inbox"><a href="javascript:void(0)" onclick="navigateToPage('msg_inbox')">Saapuneet</a><span id="inbox_num" class="message_num"></span></li>
 				<li id="msg_outbox"><a href="javascript:void(0)" onclick="navigateToPage('msg_outbox')">Lähetetyt</a></li>				
 				<li>
 					<span class="naviLinkHeaderNonLink" onclick="toggleKokuNavi('#archive-part', '#kokuNaviTreeNodeIndicatorMessageArchived');">
 						<span class="kokuNaviTreeNodeIndicator" id="kokuNaviTreeNodeIndicatorMessageArchived">+</span>Arkistoidut
 					</span>
-					<ul id="archive-part" class="child">
+					<ul id="archive-part" class="child" style="display:none;">
 						<li id="msg_archive_inbox"><a href="javascript:void(0)" onclick="navigateToPage('msg_archive_inbox')">Saapuneet</span></a><span id="archive_inbox_num" class="message_num"></span></li>
 						<li id="msg_archive_outbox"><a href="javascript:void(0)" onclick="navigateToPage('msg_archive_outbox')">Lähetetyt</a></li>						
 					</ul>
@@ -79,7 +79,7 @@
 			<span class="naviLinkHeaderNonLink" onclick="toggleKokuNavi('#kokuNaviRequests', '#kokuNaviTreeNodeIndicatorConstants');">
 				<span class="kokuNaviTreeNodeIndicator" id="kokuNaviTreeNodeIndicatorConstants">+</span>Pyynnöt
 			</span>
-			<ul id="kokuNaviRequests" class="child">
+			<ul id="kokuNaviRequests" class="child" style="display:none;">
 				<li id="req_valid_request"><a href="<%= defaultPath %><%= NavigationPortletProperties.REQUESTS_RECIEVED_REQUESTS %>">Saapuneet</a><span id="requests_num" class="message_num"></span></li>
 				<li id="<%=Constants.TASK_TYPE_REQUEST_REPLIED %>"><a href="javascript:void(0)" onclick="navigateToPage('<%=Constants.TASK_TYPE_REQUEST_REPLIED %>')">Vastatut</a></li>
 				<li id="<%=Constants.TASK_TYPE_REQUEST_OLD %>"><a href="javascript:void(0)" onclick="navigateToPage('<%=Constants.TASK_TYPE_REQUEST_OLD %>')">Vanhat</a></li>
@@ -91,7 +91,7 @@
 			<span class="naviLinkHeaderNonLink" onclick="toggleKokuNavi('#kokuNaviAppointment', '#kokuNaviTreeNodeIndicatorApp');">
 				<span class="kokuNaviTreeNodeIndicator" id="kokuNaviTreeNodeIndicatorApp">+</span>Tapaamiset
 			</span>
-			<ul id="kokuNaviAppointment" class="child">
+			<ul id="kokuNaviAppointment" class="child" style="display:none;">
 				<li id="<%= Constants.TASK_TYPE_APPOINTMENT_INBOX_CITIZEN%>"><a href="javascript:void(0)" onclick="navigateToPage('<%= Constants.TASK_TYPE_APPOINTMENT_INBOX_CITIZEN%>')">Vastausta odottavat</a><span id="appointments_num" class="message_num"></span></li>
 				<li id="<%= Constants.TASK_TYPE_APPOINTMENT_RESPONSE_CITIZEN%>"><a href="javascript:void(0)" onclick="navigateToPage('<%= Constants.TASK_TYPE_APPOINTMENT_RESPONSE_CITIZEN%>')">Vastatut</a></li>
 				<li id="<%= Constants.TASK_TYPE_APPOINTMENT_RESPONSE_CITIZEN_OLD%>"><a href="javascript:void(0)" onclick="navigateToPage('<%= Constants.TASK_TYPE_APPOINTMENT_RESPONSE_CITIZEN_OLD%>')">Vanhat</a></li>
@@ -103,7 +103,7 @@
 			<span class="naviLinkHeaderNonLink" onclick="toggleKokuNavi('#kokuNaviConsents', '#kokuNaviTreeNodeIndicatorConsents');">
 				<span class="kokuNaviTreeNodeIndicator" id="kokuNaviTreeNodeIndicatorConsents">+</span>Suostumukset
 			</span>
-			<ul id="kokuNaviConsents" class="child">
+			<ul id="kokuNaviConsents" class="child" style="display:none;">
 				<li id="<%= Constants.TASK_TYPE_CONSENT_ASSIGNED_CITIZEN%>"><a href="javascript:void(0)" onclick="navigateToPage('<%= Constants.TASK_TYPE_CONSENT_ASSIGNED_CITIZEN%>')">Saapuneet</a><span id="consents_num" class="message_num"></span></li>
 				<li id="<%= Constants.TASK_TYPE_CONSENT_CITIZEN_CONSENTS%>"><a href="javascript:void(0)" onclick="navigateToPage('<%= Constants.TASK_TYPE_CONSENT_CITIZEN_CONSENTS%>')">Vastatut</a></li>
 				<li id="<%= Constants.TASK_TYPE_CONSENT_CITIZEN_CONSENTS_OLD%>"><a href="javascript:void(0)" onclick="navigateToPage('<%= Constants.TASK_TYPE_CONSENT_CITIZEN_CONSENTS_OLD%>')">Vanhat</a></li>					
@@ -115,14 +115,14 @@
 			<span class="naviLinkHeaderNonLink"  onclick="toggleKokuNavi('#kokuNaviWarrants', '#kokuNaviTreeNodeIndicatorWarrants')">
 				<span class="kokuNaviTreeNodeIndicator" id="kokuNaviTreeNodeIndicatorWarrants">+</span>Valtakirjat
 			</span>
-			<ul id="kokuNaviWarrants" class="child">
+			<ul id="kokuNaviWarrants" class="child" style="display:none;">
 				<li id="valtakirjaconsent"><a href="<%= defaultPath %><%= NavigationPortletProperties.WARRANTS_NEW_WARRANT %>">Anna valtakirja</a></li>
 				<li id="<%= Constants.TASK_TYPE_WARRANT_BROWSE_RECEIEVED%>"><a href="javascript:void(0)" onclick="navigateToPage('<%= Constants.TASK_TYPE_WARRANT_BROWSE_RECEIEVED%>')">Vastaanotetut</a></li>
 				<li>
 					<span class="naviLinkHeaderNonLink" onclick="toggleKokuNavi('#kokuNaviWarrantsOwn', '#kokuNaviTreeNodeIndicatorWarrantsOwn');">
 						<span class="kokuNaviTreeNodeIndicator" id="kokuNaviTreeNodeIndicatorWarrantsOwn">+</span>Omat valtakirjat
 					</span>
-					<ul id="kokuNaviWarrantsOwn" class="child">
+					<ul id="kokuNaviWarrantsOwn" class="child" style="display:none;">
 						<li id="<%= Constants.TASK_TYPE_WARRANT_BROWSE_SENT%>"><a href="javascript:void(0)" onclick="navigateToPage('<%= Constants.TASK_TYPE_WARRANT_BROWSE_SENT%>')">Valtuuttajana</a></li>
 						<li id="selaaOmiaValtakirjoja"><a href="<%= defaultPath %><%= NavigationPortletProperties.WARRANTS_BROWSE_WARRANTS %>">Valtuutettuna</a></li>
 					</ul>
@@ -135,12 +135,12 @@
 			<span class="naviLinkHeaderNonLink" onclick="toggleKokuNavi('#kokuNaviApplications', '#kokuNaviTreeNodeIndicatorApplications');">
 				<span class="kokuNaviTreeNodeIndicator" id="kokuNaviTreeNodeIndicatorApplications">+</span>Asiointipalvelut
 			</span>
-			<ul id="kokuNaviApplications" class="child">
+			<ul id="kokuNaviApplications" class="child" style="display:none;">
 				<li>
 					<span onclick="toggleKokuNavi('#kokuNaviApplicationsDayCare', '#kokuNaviTreeNodeIndicatorApplicationsDayCare');" class="naviLinkHeaderNonLink">
 						<span class="kokuNaviTreeNodeIndicator" id="kokuNaviTreeNodeIndicatorApplicationsDayCare">+</span>Palveluhakemukset
 					</span>
-					<ul id="kokuNaviApplicationsDayCare" class="child">
+					<ul id="kokuNaviApplicationsDayCare" class="child" style="display:none;">
 						<li id="kid_new"><a href="<%= defaultPath %><%= NavigationPortletProperties.APPLICATIONS_NEW_KINDERGARTEN %>">Päivähoitohakemus</a></li>
 						<li id="applicationsConfirm"><a href="<%= defaultPath %><%= NavigationPortletProperties.APPLICATIONS_NEED_TO_CONFIRM %>">Hakemusten vahvistuspyynnöt</a></li>
 					</ul>

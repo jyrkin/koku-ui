@@ -59,6 +59,7 @@ public final class Constants {
 	public static final String ATTR_PORTAL_ROLE								= "portalRole";
 	public static final String ATTR_NAVI_TYPE								= "naviType";
 	public static final String ATTR_NAVI_STATE								= "naviState";
+	public static final String ATTR_NAVI_POSITION							= "naviPosition";
 	public static final String ATTR_KOKU_USER								= "kokuUser";
 	
 	/** PortalId. Check Portal types PORTAL_*  */
@@ -157,6 +158,8 @@ public final class Constants {
 	public static final String JSON_REQUESTS_TOTAL							= "requestsTotal";
 	public static final String JSON_INFO_REQUESTS_TOTAL						= "infoRequestsTotal";
 	public static final String JSON_NAVI_STATE								= "navigationState";
+	public static final String JSON_NAVI_POSITION							= "navigationPosition";
+
                                                                     	
 	/* PortletPreferences keys: */                                  	
 	public static final String PREF_REFRESH_DURATION 						= "refreshDuration";

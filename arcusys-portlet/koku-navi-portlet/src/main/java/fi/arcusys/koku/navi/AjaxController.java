@@ -10,6 +10,9 @@ import static fi.arcusys.koku.util.Constants.PORTAL_MODE_KUNPO;
 import static fi.arcusys.koku.util.Constants.PORTAL_MODE_LOORA;
 import static fi.arcusys.koku.util.Constants.RESPONSE;
 import static fi.arcusys.koku.util.Constants.JSON_NAVI_STATE;
+import static fi.arcusys.koku.util.Constants.TASK_TYPE_MESSAGE_INBOX;
+import static fi.arcusys.koku.util.Constants.ATTR_NAVI_POSITION;
+import static fi.arcusys.koku.util.Constants.JSON_NAVI_POSITION;
 
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
@@ -130,12 +133,14 @@ public class AjaxController {
 	 */
 	@ResourceMapping(value="naviStatus")
 	public String updateNavigationStatus(
+			@RequestParam(value = "currentPosition", required=true) String currentPosition,
 			@RequestParam(value = "navigationState", required=true) String navigationState, 
 			ModelMap modelmap, PortletRequest request, PortletResponse response) {
 		final PortletSession session = request.getPortletSession();
 
+		/* Save navigationState */
 		String naviState = null;
-		if (navigationState == null || navigationState.isEmpty()) {
+		if (navigationState == null || navigationState.trim().isEmpty()) {
 			naviState = (String) session.getAttribute(ATTR_NAVI_STATE, PortletSession.APPLICATION_SCOPE);
 		} else {
 			if (navigationState.length() > MAX_NAVI_STATE) {
@@ -147,10 +152,19 @@ public class AjaxController {
 				naviState = navigationState;
 			}
 		}
+		
+		/* Save current position */
+		if (currentPosition != null && !currentPosition.trim().isEmpty()) {
+			session.setAttribute(ATTR_NAVI_POSITION, currentPosition, PortletSession.APPLICATION_SCOPE);
+		} else {
+			session.setAttribute(ATTR_NAVI_POSITION, TASK_TYPE_MESSAGE_INBOX, PortletSession.APPLICATION_SCOPE);
+		}
+		
+		modelmap.addAttribute(JSON_NAVI_POSITION, currentPosition);
 		modelmap.addAttribute(JSON_NAVI_STATE, naviState);
 		return AjaxViewResolver.AJAX_PREFIX;
 	}
-		
+	
 	private String resolveIntalioToken(String userId) throws IntalioAuthException {
 		TaskHandle handle = new TaskHandle();
 		// Magic password! Fix also TaskManagerController magic password when possible.

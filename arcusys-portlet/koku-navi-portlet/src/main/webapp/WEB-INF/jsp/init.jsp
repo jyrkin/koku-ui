@@ -26,4 +26,5 @@
 	request.setAttribute("naviPortalMode", naviPortalMode);
 	final String portalInfo = renderRequest.getPortalContext().getPortalInfo();	
 	final String navigationState = (String) renderRequest.getPortletSession().getAttribute(Constants.ATTR_NAVI_STATE, PortletSession.APPLICATION_SCOPE);
+	final String navigationPosition = (String) renderRequest.getPortletSession().getAttribute(Constants.ATTR_NAVI_POSITION, PortletSession.APPLICATION_SCOPE);
 %>
