@@ -16,8 +16,7 @@ import fi.arcusys.koku.kv.requestservice.Answer;
 import fi.arcusys.koku.kv.requestservice.Question;
 import fi.arcusys.koku.kv.requestservice.QuestionType;
 import fi.arcusys.koku.users.KokuUser;
-import fi.arcusys.koku.web.exporter.CSVExporter;
-//import fi.arcusys.koku.web.exporter.Exporter;
+import fi.arcusys.koku.web.exporter.csv.CSVExporter;
 
 public class ExportFileControllerTest {
 
@@ -49,7 +48,7 @@ public class ExportFileControllerTest {
 	public void exporterTest() {
 		CSVExporter exporter = new CSVExporter(request, null);
 		String csv = exporter.getContents("Vastauksen yhteenveto", "Vastaaja", "Kommentti", "Vastaamattomat");
-		assertEquals("CSV string doesn't match", CSV_EXPECTED_STRING_NO_UNIQUE_SORTING, csv);
+		assertEquals("CSV string doesn't match", CSV_EXPECTED_STRING_UNIQUE_SORTING, csv);
 	}
 
 	private KokuRequest createKokuRequestTest1() {

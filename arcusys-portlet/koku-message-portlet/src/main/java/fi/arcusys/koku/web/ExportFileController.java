@@ -19,8 +19,8 @@ import org.springframework.web.portlet.bind.annotation.ResourceMapping;
 import fi.arcusys.koku.exceptions.KokuServiceException;
 import fi.arcusys.koku.kv.model.KokuRequest;
 import fi.arcusys.koku.kv.request.employee.EmployeeRequestHandle;
-import fi.arcusys.koku.web.exporter.CSVExporter;
 import fi.arcusys.koku.web.exporter.Exporter;
+import fi.arcusys.koku.web.exporter.csv.CSVExporter;
 
 /**
  * Generates csv file containing response summary information
@@ -39,7 +39,7 @@ public class ExportFileController {
 	private ResourceBundleMessageSource messageSource;
 
 	/**
-	 * Generates the request summary with given request id in csv format 
+	 * Generates the request summary with given request id in csv format
 	 * for downloading
 	 * @param requestId
 	 * @param resourceRequest
@@ -86,8 +86,12 @@ public class ExportFileController {
 		try {
 			responseWriter = response.getWriter();
 			final BufferedWriter writer = new BufferedWriter(responseWriter);
-			
+
 			Exporter csvExporter = new CSVExporter(kokuRequest, messageSource);
+
+			/* UTF-8 BOM (Do not remove, otherwise Excel won't recognize characters correctly!) */
+			writer.write('\uFEFF');
+
 			writer.write(csvExporter.getContents());
 			writer.flush();
 			writer.close();
