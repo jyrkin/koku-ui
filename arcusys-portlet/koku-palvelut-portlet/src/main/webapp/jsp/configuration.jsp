@@ -36,7 +36,7 @@
 						<c:forEach var="form" items="${formList}">
 							<tr class="row">
 								<td class="description">${form.task.description}</td>
-								<td class="value">${form.task.ID}</td>
+								<td class="value">${form.task.id}</td>
 							</tr>
 						</c:forEach>
 						</tbody>
