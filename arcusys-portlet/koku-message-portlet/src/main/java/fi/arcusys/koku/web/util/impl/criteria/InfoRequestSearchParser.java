@@ -123,16 +123,12 @@ public class InfoRequestSearchParser {
 		
 		@Override
 		public Calendar getSentTo() {
-			Calendar cal = Calendar.getInstance();
-			cal.setTime((stringToDate(searchMap.get(CREATED_TO))));
-			return cal;
+			return getTime(CREATED_TO);
 		}
 		
 		@Override
 		public Calendar getSentFrom() {
-			Calendar cal = Calendar.getInstance();
-			cal.setTime((stringToDate(searchMap.get(CREATED_FROM))));
-			return cal;
+			return getTime(CREATED_FROM);
 		}
 		
 		@Override
@@ -142,15 +138,21 @@ public class InfoRequestSearchParser {
 		
 		@Override
 		public Calendar getRepliedTo() {
-			Calendar cal = Calendar.getInstance();
-			cal.setTime((stringToDate(searchMap.get(REPLIED_TO))));
-			return cal;
+			return getTime(REPLIED_TO);
 		}
 		
 		@Override
 		public Calendar getRepliedFrom() {
+			return getTime(REPLIED_FROM);
+		}
+		
+		private Calendar getTime(String key) {
+			final Date date = stringToDate(searchMap.get(key));
+			if (date == null) {
+				return null;
+			} 
 			Calendar cal = Calendar.getInstance();
-			cal.setTime((stringToDate(searchMap.get(REPLIED_FROM))));
+			cal.setTime(date);
 			return cal;
 		}
 		
