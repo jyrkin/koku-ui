@@ -59,10 +59,10 @@ public class AvEmployeeServiceHandle extends AbstractHandle implements EmployeeA
 	}
 	
 	@Override
-	public ResultList<KokuAppointment> getOpenAppoiments(String uid, AppointmentsSearchCriteria criteria, Page page)
+	public ResultList<EmployeeAppointment> getOpenAppoiments(String uid, AppointmentsSearchCriteria criteria, Page page)
 			throws KokuServiceException {		
 		final AppointmentCriteria wsCriteria = createAppointmentCriteria(criteria);
-		final List<KokuAppointment> appointments = getAppointmentList(
+		final List<EmployeeAppointment> appointments = getAppointmentList(
 					aes.getCreatedAppointments(
 							uid,  
 							wsCriteria, 
@@ -71,14 +71,14 @@ public class AvEmployeeServiceHandle extends AbstractHandle implements EmployeeA
 					)
 				);
 		final int appointmentsTotal = aes.getTotalCreatedAppointmentNum(uid, wsCriteria);
-		return new ResultListImpl<KokuAppointment>(appointments, appointmentsTotal, page);
+		return new ResultListImpl<EmployeeAppointment>(appointments, appointmentsTotal, page);
 	}
 
 	@Override
-	public ResultList<KokuAppointment> getReadyAppointments(String uid, AppointmentsSearchCriteria criteria, Page page)
+	public ResultList<EmployeeAppointment> getReadyAppointments(String uid, AppointmentsSearchCriteria criteria, Page page)
 			throws KokuServiceException {
 		final AppointmentCriteria wsCriteria = createAppointmentCriteria(criteria);
-		final List<KokuAppointment> appointments = getAppointmentList(
+		final List<EmployeeAppointment> appointments = getAppointmentList(
 					aes.getProcessedAppointments(
 							uid, 
 							wsCriteria,
@@ -87,7 +87,7 @@ public class AvEmployeeServiceHandle extends AbstractHandle implements EmployeeA
 					)
 				);
 		final int appointmentsTotal = aes.getTotalProcessedAppointments(uid, wsCriteria);
-		return new ResultListImpl<KokuAppointment>(appointments, appointmentsTotal, page);	
+		return new ResultListImpl<EmployeeAppointment>(appointments, appointmentsTotal, page);	
 	}	
 	
 	private AppointmentCriteria createAppointmentCriteria(AppointmentsSearchCriteria searchCriteria) {
@@ -108,20 +108,12 @@ public class AvEmployeeServiceHandle extends AbstractHandle implements EmployeeA
 	 * @param taskType task type requested
 	 * @return a list of summary appointments
 	 */
-	private List<KokuAppointment> getAppointmentList(List<AppointmentSummary> appSummaryList) {
-		List<KokuAppointment> appList = new ArrayList<KokuAppointment>();					
-		for (AppointmentSummary appSummary : appSummaryList) {
-			KokuAppointment kokuAppointment = new KokuAppointment();
-			kokuAppointment.setAppointmentId(appSummary.getAppointmentId());
-			kokuAppointment.setSenderUser(new KokuUser(appSummary.getSenderUserInfo()));
-			// KOKU-1234 - 'Tapaamiset'-listauksiin tarvitaan tieto kenelle viesti on lähetetty (Työntekijän puoli)
-			kokuAppointment.setReceivingUser(new KokuUser());
-			kokuAppointment.setSubject(appSummary.getSubject());
-			kokuAppointment.setDescription(appSummary.getDescription());
-			kokuAppointment.setStatus(localizeActionRequestStatus(appSummary.getStatus()));
-			appList.add(kokuAppointment);
-		}
-		return appList;
+	private List<EmployeeAppointment> getAppointmentList(List<Appointment> appList) {
+		List<EmployeeAppointment> empAppList = new ArrayList<EmployeeAppointment>();					
+		for (Appointment app : appList) 
+		    empAppList.add(fillEmployeeAppointment(app, new EmployeeAppointment()));
+		
+		return empAppList;
 	}
 
 	/**
@@ -139,21 +131,25 @@ public class AvEmployeeServiceHandle extends AbstractHandle implements EmployeeA
 		}
 		EmployeeAppointment empAppointment = new EmployeeAppointment();
 		Appointment appointment = aes.getAppointmentById(appId);
-		empAppointment.setAppointmentId(appointment.getAppointmentId());
-		empAppointment.setSenderUser(new KokuUser(appointment.getSenderUserInfo()));
-		empAppointment.setSubject(appointment.getSubject());
-		empAppointment.setDescription(appointment.getDescription());
-		empAppointment.setStatus(localizeActionRequestStatus(appointment.getStatus()));		
-		empAppointment.setAcceptedSlots(appointment.getAcceptedSlots());
-		empAppointment.setSenderRole(appointment.getSenderRole());
-		empAppointment.getRecipients().addAll(appointment.getRecipients());
-		empAppointment.setCancellationComment(appointment.getCancelComment());
-		empAppointment.getUsersRejected().addAll(convertUserRejectedToKokuUserRejected(appointment.getUsersRejectedWithComments()));
-		empAppointment.getRejectedUsers().addAll(formatRejectedUsers(getUsers(appointment.getUsersRejectedWithComments()), appointment.getRecipients()));
-		empAppointment.getUnrespondedUsers().addAll(calcUnrespondedUsers(appointment));
-		List<Slot> allSlots = formatSlots(appointment.getSlots(), appointment.getAcceptedSlots(), appointment.getRecipients());		
-		setSlots(empAppointment, allSlots);
-		return empAppointment;
+		return fillEmployeeAppointment(appointment, empAppointment);
+	}
+	
+	private EmployeeAppointment fillEmployeeAppointment(final Appointment appointment, final EmployeeAppointment empAppointment) {
+	    empAppointment.setAppointmentId(appointment.getAppointmentId());
+        empAppointment.setSenderUser(new KokuUser(appointment.getSenderUserInfo()));
+        empAppointment.setSubject(appointment.getSubject());
+        empAppointment.setDescription(appointment.getDescription());
+        empAppointment.setStatus(localizeActionRequestStatus(appointment.getStatus()));     
+        empAppointment.setAcceptedSlots(appointment.getAcceptedSlots());
+        empAppointment.setSenderRole(appointment.getSenderRole());
+        empAppointment.getRecipients().addAll(appointment.getRecipients());
+        empAppointment.setCancellationComment(appointment.getCancelComment());
+        empAppointment.getUsersRejected().addAll(convertUserRejectedToKokuUserRejected(appointment.getUsersRejectedWithComments()));
+        empAppointment.getRejectedUsers().addAll(formatRejectedUsers(getUsers(appointment.getUsersRejectedWithComments()), appointment.getRecipients()));
+        empAppointment.getUnrespondedUsers().addAll(calcUnrespondedUsers(appointment));
+        List<Slot> allSlots = formatSlots(appointment.getSlots(), appointment.getAcceptedSlots(), appointment.getRecipients());     
+        setSlots(empAppointment, allSlots);
+        return empAppointment;
 	}
 	
 	private List<KokuAppointmentUserRejected> convertUserRejectedToKokuUserRejected(List<AppointmentUserRejected> rejectedUsers) {

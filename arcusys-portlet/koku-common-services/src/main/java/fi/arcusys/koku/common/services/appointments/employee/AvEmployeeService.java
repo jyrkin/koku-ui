@@ -37,7 +37,7 @@ public class AvEmployeeService {
 	 * @param maxNum the maximum number
 	 * @return a list of summary of appointments
 	 */
-	public List<AppointmentSummary> getCreatedAppointments(String user, AppointmentCriteria criteria, int startNum, int maxNum) throws KokuServiceException {
+	public List<Appointment> getCreatedAppointments(String user, AppointmentCriteria criteria, int startNum, int maxNum) throws KokuServiceException {
 		try {
 			return service.getCreatedAppointments(user, startNum, maxNum, criteria);
 		} catch(RuntimeException e) {
@@ -52,7 +52,7 @@ public class AvEmployeeService {
 	 * @param maxNum the maximum number
 	 * @return a list of summary of appointments
 	 */
-	public List<AppointmentSummary> getProcessedAppointments(String user, AppointmentCriteria criteria, int startNum, int maxNum) throws KokuServiceException {
+	public List<Appointment> getProcessedAppointments(String user, AppointmentCriteria criteria, int startNum, int maxNum) throws KokuServiceException {
 		try {
 			return service.getProcessedAppointments(user, startNum, maxNum, criteria);
 		} catch(RuntimeException e) {

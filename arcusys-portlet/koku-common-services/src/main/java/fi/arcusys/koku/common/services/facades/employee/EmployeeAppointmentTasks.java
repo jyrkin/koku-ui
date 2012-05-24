@@ -1,7 +1,7 @@
 package fi.arcusys.koku.common.services.facades.employee;
 
 import fi.arcusys.koku.common.exceptions.KokuServiceException;
-import fi.arcusys.koku.common.services.appointments.model.KokuAppointment;
+import fi.arcusys.koku.common.services.appointments.model.EmployeeAppointment;
 import fi.arcusys.koku.common.services.facades.Page;
 import fi.arcusys.koku.common.services.facades.ResultList;
 
@@ -23,7 +23,7 @@ public interface EmployeeAppointmentTasks {
 	 * @return
 	 * @throws KokuServiceException
 	 */
-	ResultList<KokuAppointment> getOpenAppoiments(String uid, AppointmentsSearchCriteria criteria, Page page) throws KokuServiceException;
+	ResultList<EmployeeAppointment> getOpenAppoiments(String uid, AppointmentsSearchCriteria criteria, Page page) throws KokuServiceException;
 	
 	/**
 	 * Return list of answered or old appointments 
@@ -35,7 +35,7 @@ public interface EmployeeAppointmentTasks {
 	 * @return
 	 * @throws KokuServiceException
 	 */
-	ResultList<KokuAppointment> getReadyAppointments(String uid, AppointmentsSearchCriteria criteria, Page page) throws KokuServiceException;
+	ResultList<EmployeeAppointment> getReadyAppointments(String uid, AppointmentsSearchCriteria criteria, Page page) throws KokuServiceException;
 	
 	public interface AppointmentsSearchCriteria {
 		String getTargetPersonSsn();
