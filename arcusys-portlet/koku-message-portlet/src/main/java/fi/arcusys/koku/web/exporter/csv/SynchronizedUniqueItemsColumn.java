@@ -5,10 +5,13 @@ import static fi.arcusys.koku.web.exporter.csv.CSVExporter.SEPARATOR;
 import static fi.arcusys.koku.web.exporter.csv.CSVExporter.addQuote;
 import static fi.arcusys.koku.web.exporter.csv.CSVExporter.getSeparators;
 
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+
+import fi.arcusys.koku.web.util.Strings;
 
 /* This column only outputs unique items, and it synchronizes the same
  * answers given by multiple people to the same output CSV column */
@@ -18,7 +21,13 @@ class SynchronizedUniqueItemsColumn implements Column {
 
 	/* Mapping of answer strings to sets of strings which represent the
 	 * people who gave that particular answer */
-	private Map<String, Set<CSVPerson>> columnAnswerMap = new TreeMap<String, Set<CSVPerson>>();
+	private Map<String, Set<CSVPerson>> columnAnswerMap = new TreeMap<String, Set<CSVPerson>>(
+			new Comparator<String>() {
+				public int compare(String o1, String o2) {
+					return Strings.compareNatural(o1, o2);
+				}
+			}
+			);
 
 	public SynchronizedUniqueItemsColumn(String header) {
 		this.header = header;
@@ -27,6 +36,10 @@ class SynchronizedUniqueItemsColumn implements Column {
 	public void splitAndAddAnswer(String fullAnswer, CSVPerson person) {
 		Set<CSVPerson> answeredPeople;
 		for (String answer : fullAnswer.split(INNER_FIELD_SEPARATOR)) {
+			if (answer.isEmpty() || answer == null) {
+				continue;
+			}
+
 			if (columnAnswerMap.containsKey(answer)) {
 				answeredPeople = columnAnswerMap.get(answer);
 			} else {
