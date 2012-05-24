@@ -359,32 +359,38 @@ public class CollectionController {
   public void delete(PortletSession session, @ModelAttribute(value = "child") Person child, 
       @RequestParam(value = "collection", required = false) String collection, 
       @RequestParam(value="collectionName") String collectionName, 
-      @RequestParam(value="collectionType") String collectionType,   
+      @RequestParam(value="collectionType") String collectionType,  
+      @RequestParam(value="cancel", required=false) Boolean cancel,
       @ModelAttribute(value = "deletable") Deletion deletion, 
       BindingResult errors, ActionResponse response, SessionStatus sessionStatus) {
 
-    deleteValidator.validate(deletion, errors);
-    
-    if ( errors.hasErrors() ) {
-      response.setRenderParameter("action", "showDeleteConfirmation" );
+    if ( cancel != null && cancel ) {
+      response.setRenderParameter("action", "showChild" );
       response.setRenderParameter("pic", child.getPic());
-      response.setRenderParameter("collection", collection );
-      sessionStatus.setComplete();
-      return;
-    }
-    
-    boolean success = kksService.updateKksCollectionStatus(child.getPic(), collection, State.DELETED.toString(),
-        Utils.getPicFromSession(session));   
-
-    if (!success) {
-      response.setRenderParameter("error", "ui.kks.delete.failed");
-      response.setRenderParameter("action", "showDeleteConfirmation" );
-      response.setRenderParameter("pic", child.getPic());
-      response.setRenderParameter("collection", collection );
-    } else {    
-      Log.getInstance().remove(Utils.getPicFromSession(session), child.getPic(), collectionType, "(" + collection + " )" + collectionName + " removed with reason: " +  deletion.getComment() );
-      response.setRenderParameter("action", "showChild");
-      response.setRenderParameter("pic", child.getPic());
+    } else {
+      deleteValidator.validate(deletion, errors);
+      
+      if ( errors.hasErrors() ) {
+        response.setRenderParameter("action", "showDeleteConfirmation" );
+        response.setRenderParameter("pic", child.getPic());
+        response.setRenderParameter("collection", collection );
+        sessionStatus.setComplete();
+        return;
+      }
+      
+      boolean success = kksService.updateKksCollectionStatus(child.getPic(), collection, State.DELETED.toString(),
+          Utils.getPicFromSession(session));   
+  
+      if (!success) {
+        response.setRenderParameter("error", "ui.kks.delete.failed");
+        response.setRenderParameter("action", "showDeleteConfirmation" );
+        response.setRenderParameter("pic", child.getPic());
+        response.setRenderParameter("collection", collection );
+      } else {    
+        Log.getInstance().remove(Utils.getPicFromSession(session), child.getPic(), collectionType, "(" + collection + " )" + collectionName + " removed with reason: " +  deletion.getComment() );
+        response.setRenderParameter("action", "showChild");
+        response.setRenderParameter("pic", child.getPic());
+      }
     }
     sessionStatus.setComplete();
   }

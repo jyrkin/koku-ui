@@ -73,14 +73,15 @@
 			<br/>
 			<div>
 			
-			<table class="kks-button-table" >
-				<tr class="kks-button-table">
-					<td class="kks-button-table"><input type="submit" class="portlet-form-button" value="<spring:message code="ui.kks.delete"/>"> </td>
-					<td class="kks-button-table" style="padding-top: 2px"><a href="${homeUrl}"><spring:message code="ui.kks.cancel" /> </a>
-					<td style="width: 80%"/>
-				</tr>			
-			</table>
-
+			<div class="kks-left">
+				<input type="submit" class="portlet-form-button" value="<spring:message code="ui.kks.delete"/>"> 
+			</div>
+			
+			<div class="kks-left">			
+				<input type="submit" class="portlet-form-button" onclick="addCancelToForm();"  value="<spring:message code="ui.kks.cancel"/>">
+			</div>
+			<div class="kks-reset-floating"></div> 
+			
 			</div>
 
 		</form:form>
@@ -116,5 +117,12 @@ window.onload = function() {
 	      txts[i].onblur = func;
 	    } 
 	  } 
+	}
+		
+	function addCancelToForm() {
+	    $('#deletable')
+	            .append(
+	                    '<input name="cancel" type="hidden" value="true"/>');
+	
 	}
 </script>

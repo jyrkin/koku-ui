@@ -111,7 +111,8 @@
                 </c:if>
             </div>
     </div>
-    
+
+<div class="kks-reset-floating"></div>    
 <div class="kks-right">
 	<div class="kks-left">
 		<div >
