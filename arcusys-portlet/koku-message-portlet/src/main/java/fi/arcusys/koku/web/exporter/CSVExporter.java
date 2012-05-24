@@ -10,12 +10,9 @@ import java.util.Map;
 
 import org.springframework.context.support.ResourceBundleMessageSource;
 
-import fi.arcusys.koku.kv.model.KokuAnswer;
-import fi.arcusys.koku.kv.model.KokuQuestion;
-import fi.arcusys.koku.kv.model.KokuRequest;
-import fi.arcusys.koku.kv.model.KokuResponse;
-import fi.arcusys.koku.users.KokuUser;
-import fi.arcusys.koku.util.MessageUtil;
+import fi.arcusys.koku.common.services.requests.models.*;
+import fi.arcusys.koku.common.services.users.KokuUser;
+import fi.arcusys.koku.common.util.MessageUtil;
 
 public class CSVExporter implements Exporter {
 

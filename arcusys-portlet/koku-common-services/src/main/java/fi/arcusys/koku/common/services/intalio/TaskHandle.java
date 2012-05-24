@@ -208,7 +208,7 @@ public class TaskHandle {
 		return taskList;
 	}
 
-	private fi.arcusys.koku.intalio.Task createTask(TaskMetadata task,
+	private fi.arcusys.koku.common.services.intalio.Task createTask(TaskMetadata task,
 			fi.arcusys.intalio.tms.TaskData input) {
 		if (task == null) {
 			return null;

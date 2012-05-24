@@ -24,7 +24,7 @@ import javax.portlet.RenderResponse;
 import javax.portlet.WindowState;
 
 //import org.intalio.tempo.workflow.task.Task;
-import fi.arcusys.koku.intalio.Task;
+import fi.arcusys.koku.common.services.intalio.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;

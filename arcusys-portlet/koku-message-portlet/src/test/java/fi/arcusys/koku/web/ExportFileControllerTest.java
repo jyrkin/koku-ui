@@ -8,14 +8,12 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import fi.arcusys.koku.kv.model.KokuAnswer;
-import fi.arcusys.koku.kv.model.KokuQuestion;
-import fi.arcusys.koku.kv.model.KokuRequest;
-import fi.arcusys.koku.kv.model.KokuResponse;
+import fi.arcusys.koku.common.services.requests.models.*;
+
 import fi.arcusys.koku.kv.requestservice.Answer;
 import fi.arcusys.koku.kv.requestservice.Question;
 import fi.arcusys.koku.kv.requestservice.QuestionType;
-import fi.arcusys.koku.users.KokuUser;
+import fi.arcusys.koku.common.services.users.KokuUser;
 import fi.arcusys.koku.web.exporter.CSVExporter;
 //import fi.arcusys.koku.web.exporter.Exporter;
 

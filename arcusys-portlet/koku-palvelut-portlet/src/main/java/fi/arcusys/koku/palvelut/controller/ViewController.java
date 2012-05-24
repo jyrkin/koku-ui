@@ -25,7 +25,7 @@ import javax.xml.stream.XMLStreamException;
 import net.sf.json.JSONObject;
 
 //import org.intalio.tempo.workflow.task.Task;
-import fi.arcusys.koku.intalio.Task;
+import fi.arcusys.koku.common.services.intalio.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -37,7 +37,7 @@ import org.springframework.web.portlet.bind.annotation.ActionMapping;
 import org.springframework.web.portlet.bind.annotation.RenderMapping;
 import org.springframework.web.portlet.bind.annotation.ResourceMapping;
 
-import fi.arcusys.koku.intalio.TaskHandle;
+import fi.arcusys.koku.common.services.intalio.TaskHandle;
 import fi.arcusys.koku.palvelut.exceptions.IllegalOperationCall;
 import fi.arcusys.koku.palvelut.util.AjaxViewResolver;
 import fi.arcusys.koku.palvelut.util.OperationsValidator;

@@ -1,18 +1,18 @@
 package fi.arcusys.koku.navi;
 
-import static fi.arcusys.koku.util.Constants.ATTR_NAVI_TYPE;
-import static fi.arcusys.koku.util.Constants.ATTR_PORTAL_ROLE;
-import static fi.arcusys.koku.util.Constants.ATTR_TOKEN;
-import static fi.arcusys.koku.util.Constants.ATTR_USER_ID;
-import static fi.arcusys.koku.util.Constants.ATTR_NAVI_STATE;
-import static fi.arcusys.koku.util.Constants.INTALIO_GROUP_PREFIX;
-import static fi.arcusys.koku.util.Constants.PORTAL_MODE_KUNPO;
-import static fi.arcusys.koku.util.Constants.PORTAL_MODE_LOORA;
-import static fi.arcusys.koku.util.Constants.RESPONSE;
-import static fi.arcusys.koku.util.Constants.JSON_NAVI_STATE;
-import static fi.arcusys.koku.util.Constants.TASK_TYPE_MESSAGE_INBOX;
-import static fi.arcusys.koku.util.Constants.ATTR_NAVI_POSITION;
-import static fi.arcusys.koku.util.Constants.JSON_NAVI_POSITION;
+import static fi.arcusys.koku.common.util.Constants.ATTR_NAVI_TYPE;
+import static fi.arcusys.koku.common.util.Constants.ATTR_PORTAL_ROLE;
+import static fi.arcusys.koku.common.util.Constants.ATTR_TOKEN;
+import static fi.arcusys.koku.common.util.Constants.ATTR_USER_ID;
+import static fi.arcusys.koku.common.util.Constants.ATTR_NAVI_STATE;
+import static fi.arcusys.koku.common.util.Constants.INTALIO_GROUP_PREFIX;
+import static fi.arcusys.koku.common.util.Constants.PORTAL_MODE_KUNPO;
+import static fi.arcusys.koku.common.util.Constants.PORTAL_MODE_LOORA;
+import static fi.arcusys.koku.common.util.Constants.RESPONSE;
+import static fi.arcusys.koku.common.util.Constants.JSON_NAVI_STATE;
+import static fi.arcusys.koku.common.util.Constants.TASK_TYPE_MESSAGE_INBOX;
+import static fi.arcusys.koku.common.util.Constants.ATTR_NAVI_POSITION;
+import static fi.arcusys.koku.common.util.Constants.JSON_NAVI_POSITION;
 
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;

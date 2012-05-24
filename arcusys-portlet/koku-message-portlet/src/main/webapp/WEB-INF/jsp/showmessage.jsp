@@ -8,7 +8,7 @@
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.Enumeration" %>
-<%@ page import="fi.arcusys.koku.util.Properties" %>
+<%@ page import="fi.arcusys.koku.common.util.Properties" %>
 
 <portlet:renderURL var="homeURL" windowState="<%= WindowState.NORMAL.toString() %>" >
 	<portlet:param name="myaction" value="home" />
