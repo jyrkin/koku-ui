@@ -1,27 +1,27 @@
 package fi.koku.taskmanager.controller;
 
-import static fi.arcusys.koku.util.Constants.ATTR_CURRENT_PAGE;
-import static fi.arcusys.koku.util.Constants.ATTR_KEYWORD;
-import static fi.arcusys.koku.util.Constants.ATTR_MY_ACTION;
-import static fi.arcusys.koku.util.Constants.ATTR_ORDER_TYPE;
-import static fi.arcusys.koku.util.Constants.ATTR_TASK_LINK;
-import static fi.arcusys.koku.util.Constants.ATTR_TASK_TYPE;
-import static fi.arcusys.koku.util.Constants.ATTR_TOKEN;
-import static fi.arcusys.koku.util.Constants.ATTR_USERNAME;
-import static fi.arcusys.koku.util.Constants.JSON_EDITABLE;
-import static fi.arcusys.koku.util.Constants.JSON_LOGIN_STATUS;
-import static fi.arcusys.koku.util.Constants.JSON_RENDER_URL;
-import static fi.arcusys.koku.util.Constants.JSON_TASKS;
-import static fi.arcusys.koku.util.Constants.JSON_TASK_STATE;
-import static fi.arcusys.koku.util.Constants.JSON_TOKEN_STATUS;
-import static fi.arcusys.koku.util.Constants.JSON_TOTAL_ITEMS;
-import static fi.arcusys.koku.util.Constants.JSON_TOTAL_PAGES;
-import static fi.arcusys.koku.util.Constants.MY_ACTION_TASKFORM;
-import static fi.arcusys.koku.util.Constants.PREF_EDITABLE;
-import static fi.arcusys.koku.util.Constants.PREF_TASK_FILTER;
-import static fi.arcusys.koku.util.Constants.RESPONSE;
-import static fi.arcusys.koku.util.Constants.TOKEN_STATUS_INVALID;
-import static fi.arcusys.koku.util.Constants.TOKEN_STATUS_VALID;
+import static fi.arcusys.koku.common.util.Constants.ATTR_CURRENT_PAGE;
+import static fi.arcusys.koku.common.util.Constants.ATTR_KEYWORD;
+import static fi.arcusys.koku.common.util.Constants.ATTR_MY_ACTION;
+import static fi.arcusys.koku.common.util.Constants.ATTR_ORDER_TYPE;
+import static fi.arcusys.koku.common.util.Constants.ATTR_TASK_LINK;
+import static fi.arcusys.koku.common.util.Constants.ATTR_TASK_TYPE;
+import static fi.arcusys.koku.common.util.Constants.ATTR_TOKEN;
+import static fi.arcusys.koku.common.util.Constants.ATTR_USERNAME;
+import static fi.arcusys.koku.common.util.Constants.JSON_EDITABLE;
+import static fi.arcusys.koku.common.util.Constants.JSON_LOGIN_STATUS;
+import static fi.arcusys.koku.common.util.Constants.JSON_RENDER_URL;
+import static fi.arcusys.koku.common.util.Constants.JSON_TASKS;
+import static fi.arcusys.koku.common.util.Constants.JSON_TASK_STATE;
+import static fi.arcusys.koku.common.util.Constants.JSON_TOKEN_STATUS;
+import static fi.arcusys.koku.common.util.Constants.JSON_TOTAL_ITEMS;
+import static fi.arcusys.koku.common.util.Constants.JSON_TOTAL_PAGES;
+import static fi.arcusys.koku.common.util.Constants.MY_ACTION_TASKFORM;
+import static fi.arcusys.koku.common.util.Constants.PREF_EDITABLE;
+import static fi.arcusys.koku.common.util.Constants.PREF_TASK_FILTER;
+import static fi.arcusys.koku.common.util.Constants.RESPONSE;
+import static fi.arcusys.koku.common.util.Constants.TOKEN_STATUS_INVALID;
+import static fi.arcusys.koku.common.util.Constants.TOKEN_STATUS_VALID;
 
 import java.util.List;
 
@@ -44,9 +44,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.portlet.bind.annotation.ResourceMapping;
 
-import fi.arcusys.koku.intalio.Task;
-import fi.arcusys.koku.intalio.TaskHandle;
-import fi.arcusys.koku.util.TaskUtil;
+import fi.arcusys.koku.common.services.intalio.Task;
+import fi.arcusys.koku.common.services.intalio.TaskHandle;
+import fi.arcusys.koku.common.util.TaskUtil;
 
 /**
  * Handles ajax request from web and returns the data with json string

@@ -1,39 +1,38 @@
 package fi.arcusys.koku.web;
 
-import static fi.arcusys.koku.util.Constants.ATTR_APPLICATION_ID;
-import static fi.arcusys.koku.util.Constants.ATTR_APPOIMENT_ID;
-import static fi.arcusys.koku.util.Constants.ATTR_AUTHORIZATION_ID;
-import static fi.arcusys.koku.util.Constants.ATTR_CONSENT_ID;
-import static fi.arcusys.koku.util.Constants.ATTR_CURRENT_PAGE;
-import static fi.arcusys.koku.util.Constants.ATTR_KEYWORD;
-import static fi.arcusys.koku.util.Constants.ATTR_KOKU_USER;
-import static fi.arcusys.koku.util.Constants.ATTR_MESSAGE_ID;
-import static fi.arcusys.koku.util.Constants.ATTR_MY_ACTION;
-import static fi.arcusys.koku.util.Constants.ATTR_ORDER_TYPE;
-import static fi.arcusys.koku.util.Constants.ATTR_REQUEST_ID;
-import static fi.arcusys.koku.util.Constants.ATTR_RESPONSE_ID;
-import static fi.arcusys.koku.util.Constants.ATTR_TARGET_PERSON;
-import static fi.arcusys.koku.util.Constants.ATTR_TASK_TYPE;
-import static fi.arcusys.koku.util.Constants.ATTR_TOKEN;
-import static fi.arcusys.koku.util.Constants.ATTR_USER_ID;
-import static fi.arcusys.koku.util.Constants.ATTR_USERNAME;
-import static fi.arcusys.koku.util.Constants.JSON_RENDER_URL;
-import static fi.arcusys.koku.util.Constants.JSON_RESULT;
-import static fi.arcusys.koku.util.Constants.MY_ACTION_SHOW_APPLICATION_KINDERGARTEN;
-import static fi.arcusys.koku.util.Constants.MY_ACTION_SHOW_APPOINTMENT;
-import static fi.arcusys.koku.util.Constants.MY_ACTION_SHOW_CONSENT;
-import static fi.arcusys.koku.util.Constants.MY_ACTION_SHOW_REQUEST;
-import static fi.arcusys.koku.util.Constants.MY_ACTION_SHOW_REQUEST_RESPONSE;
-import static fi.arcusys.koku.util.Constants.MY_ACTION_SHOW_TIPY;
-import static fi.arcusys.koku.util.Constants.MY_ACTION_SHOW_WARRANT;
-import static fi.arcusys.koku.util.Constants.MY_ACTION_SHOW_MESSAGE;
-import static fi.arcusys.koku.util.Constants.RESPONSE;
-import static fi.arcusys.koku.util.Constants.RESPONSE_FAIL;
-import static fi.arcusys.koku.util.Constants.RESPONSE_OK;
-import static fi.arcusys.koku.util.Constants.SUGGESTION_APPLICATION_KINDERGARTEN;
-import static fi.arcusys.koku.util.Constants.SUGGESTION_CONSENT;
-import static fi.arcusys.koku.util.Constants.SUGGESTION_NO_TYPE;
-import static fi.arcusys.koku.util.Constants.SUGGESTION_WARRANT;
+import static fi.arcusys.koku.common.util.Constants.ATTR_APPLICATION_ID;
+import static fi.arcusys.koku.common.util.Constants.ATTR_APPOIMENT_ID;
+import static fi.arcusys.koku.common.util.Constants.ATTR_AUTHORIZATION_ID;
+import static fi.arcusys.koku.common.util.Constants.ATTR_CONSENT_ID;
+import static fi.arcusys.koku.common.util.Constants.ATTR_CURRENT_PAGE;
+import static fi.arcusys.koku.common.util.Constants.ATTR_KEYWORD;
+import static fi.arcusys.koku.common.util.Constants.ATTR_KOKU_USER;
+import static fi.arcusys.koku.common.util.Constants.ATTR_MESSAGE_ID;
+import static fi.arcusys.koku.common.util.Constants.ATTR_MY_ACTION;
+import static fi.arcusys.koku.common.util.Constants.ATTR_ORDER_TYPE;
+import static fi.arcusys.koku.common.util.Constants.ATTR_REQUEST_ID;
+import static fi.arcusys.koku.common.util.Constants.ATTR_RESPONSE_ID;
+import static fi.arcusys.koku.common.util.Constants.ATTR_TARGET_PERSON;
+import static fi.arcusys.koku.common.util.Constants.ATTR_TASK_TYPE;
+import static fi.arcusys.koku.common.util.Constants.ATTR_USERNAME;
+import static fi.arcusys.koku.common.util.Constants.ATTR_USER_ID;
+import static fi.arcusys.koku.common.util.Constants.JSON_RENDER_URL;
+import static fi.arcusys.koku.common.util.Constants.JSON_RESULT;
+import static fi.arcusys.koku.common.util.Constants.MY_ACTION_SHOW_APPLICATION_KINDERGARTEN;
+import static fi.arcusys.koku.common.util.Constants.MY_ACTION_SHOW_APPOINTMENT;
+import static fi.arcusys.koku.common.util.Constants.MY_ACTION_SHOW_CONSENT;
+import static fi.arcusys.koku.common.util.Constants.MY_ACTION_SHOW_MESSAGE;
+import static fi.arcusys.koku.common.util.Constants.MY_ACTION_SHOW_REQUEST;
+import static fi.arcusys.koku.common.util.Constants.MY_ACTION_SHOW_REQUEST_RESPONSE;
+import static fi.arcusys.koku.common.util.Constants.MY_ACTION_SHOW_TIPY;
+import static fi.arcusys.koku.common.util.Constants.MY_ACTION_SHOW_WARRANT;
+import static fi.arcusys.koku.common.util.Constants.RESPONSE;
+import static fi.arcusys.koku.common.util.Constants.RESPONSE_FAIL;
+import static fi.arcusys.koku.common.util.Constants.RESPONSE_OK;
+import static fi.arcusys.koku.common.util.Constants.SUGGESTION_APPLICATION_KINDERGARTEN;
+import static fi.arcusys.koku.common.util.Constants.SUGGESTION_CONSENT;
+import static fi.arcusys.koku.common.util.Constants.SUGGESTION_NO_TYPE;
+import static fi.arcusys.koku.common.util.Constants.SUGGESTION_WARRANT;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,14 +57,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.portlet.bind.annotation.ResourceMapping;
 
-import fi.arcusys.koku.exceptions.KokuServiceException;
-import fi.arcusys.koku.hak.model.HakServiceHandle;
-import fi.arcusys.koku.tiva.TivaEmployeeServiceHandle;
-import fi.arcusys.koku.tiva.warrant.employee.KokuEmployeeWarrantHandle;
-import fi.arcusys.koku.users.KokuUser;
-import fi.arcusys.koku.users.KokuUserService;
-import fi.arcusys.koku.users.UserIdResolver;
-import fi.arcusys.koku.util.Properties;
+import fi.arcusys.koku.common.exceptions.KokuCommonException;
+import fi.arcusys.koku.common.exceptions.KokuServiceException;
+import fi.arcusys.koku.common.services.consents.employee.TivaEmployeeServiceHandle;
+import fi.arcusys.koku.common.services.hak.employee.HakServiceHandle;
+import fi.arcusys.koku.common.services.users.KokuUser;
+import fi.arcusys.koku.common.services.users.KokuUserService;
+import fi.arcusys.koku.common.services.users.UserIdResolver;
+import fi.arcusys.koku.common.services.warrants.employee.KokuEmployeeWarrantHandle;
+import fi.arcusys.koku.common.util.DummyMessageSource;
+import fi.arcusys.koku.common.util.Properties;
 import fi.arcusys.koku.web.util.KokuActionProcess;
 import fi.arcusys.koku.web.util.KokuTaskQueryProcess;
 import fi.arcusys.koku.web.util.exception.KokuActionProcessException;
@@ -128,14 +129,14 @@ public class AjaxController extends AbstractController {
 				userId = resolver.getUserId(username, getPortalRole());
 				portletSession.setAttribute(ATTR_USER_ID, userId);
 				LOG.debug("UserResolver took "+((System.nanoTime()-startUser)/1000/1000) + "ms");
-			} catch (KokuServiceException e) {
+			} catch (KokuCommonException e) {
 				LOG.error("Failed to get UserUid username: '"+username+"' portalRole: '"+getPortalRole()+"'", e);
 			} catch (Exception e) {
 				LOG.error("Error while trying to resolve userId. See following error msg: "+ e);
 			}
 		}
 		
-		KokuTaskQueryProcess query = null;		
+		KokuTaskQueryProcess query = null;	
 		if (Properties.IS_KUNPO_PORTAL) {
 			query = new QueryProcessCitizenImpl(messageSource);
 		} else if (Properties.IS_LOORA_PORTAL) {
@@ -144,7 +145,7 @@ public class AjaxController extends AbstractController {
 			query = new QueryProcessDummyImpl(messageSource);
 			LOG.error("PortalMode unknown! Only kunpo/loora portal modes are supported. Please check that properties file is properly configured.");
 		}
-		final JSONObject jsonModel = query.getJsonModel(taskType, page, keyword, field, orderType, userId);
+		final JSONObject jsonModel = query.getJsonModel(taskType, page, keyword, field, userId);
 		modelmap.addAttribute(RESPONSE, jsonModel);
 		LOG.debug("getTasks  - "+((System.nanoTime()-start)/1000/1000) + "ms");
 		return AjaxViewResolver.AJAX_PREFIX;
@@ -437,13 +438,13 @@ public class AjaxController extends AbstractController {
 		List resultList = null;
 		try {
 			if (suggestionType.equals(SUGGESTION_CONSENT)) {
-				TivaEmployeeServiceHandle tivaHandle = new TivaEmployeeServiceHandle();					
+				TivaEmployeeServiceHandle tivaHandle = new TivaEmployeeServiceHandle(new DummyMessageSource());					
 				resultList = tivaHandle.searchConsentTemplates(keyword, MAX_SUGGESTION_RESULTS);
 			} else if (suggestionType.equals(SUGGESTION_WARRANT)) {
-				KokuEmployeeWarrantHandle handle = new KokuEmployeeWarrantHandle();
+				KokuEmployeeWarrantHandle handle = new KokuEmployeeWarrantHandle(new DummyMessageSource());
 				resultList = handle.searchWarrantTemplates(keyword, MAX_SUGGESTION_RESULTS);
 			} else if (suggestionType.equals(SUGGESTION_APPLICATION_KINDERGARTEN)) {
-				HakServiceHandle handle = new HakServiceHandle();
+				HakServiceHandle handle = new HakServiceHandle(new DummyMessageSource());
 				resultList = handle.searchKindergartenByName(keyword, MAX_SUGGESTION_RESULTS);
 			} else if (suggestionType.equals(SUGGESTION_NO_TYPE)) {
 				resultList = new ArrayList<String>();
@@ -455,7 +456,7 @@ public class AjaxController extends AbstractController {
 		}
 		
 		jsonModel.put(JSON_RESULT, resultList);
-		modelmap.addAttribute(RESPONSE, jsonModel);		
+		modelmap.addAttribute(RESPONSE, jsonModel);
 		return AjaxViewResolver.AJAX_PREFIX;
 	}
 	

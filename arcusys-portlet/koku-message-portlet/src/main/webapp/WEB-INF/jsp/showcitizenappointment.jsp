@@ -1,7 +1,7 @@
-<%@ page import="fi.arcusys.koku.kv.model.KokuMessage" %>
-<%@ page import="fi.arcusys.koku.av.CitizenAppointment" %>
-<%@ page import="fi.arcusys.koku.users.KokuUser" %>
-<%@ page import="fi.arcusys.koku.util.Constants" %>
+<%@ page import="fi.arcusys.koku.common.services.messages.model.KokuMessage" %>
+<%@ page import="fi.arcusys.koku.common.services.appointments.model.CitizenAppointment" %>
+<%@ page import="fi.arcusys.koku.common.services.users.KokuUser" %>
+<%@ page import="fi.arcusys.koku.common.util.Constants" %>
 <%@ page import="fi.arcusys.koku.web.util.ModelWrapper"%>
 
 

@@ -1,5 +1,7 @@
 package fi.arcusys.koku.web.util;
 
+import fi.arcusys.koku.common.services.facades.impl.ResponseStatus;
+
 
 /**
  * 

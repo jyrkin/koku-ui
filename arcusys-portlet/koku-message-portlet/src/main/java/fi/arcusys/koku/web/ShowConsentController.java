@@ -15,15 +15,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.portlet.bind.annotation.RenderMapping;
 
-import fi.arcusys.koku.exceptions.KokuServiceException;
-import fi.arcusys.koku.tiva.KokuConsent;
-import fi.arcusys.koku.tiva.TivaCitizenServiceHandle;
-import fi.arcusys.koku.tiva.TivaEmployeeServiceHandle;
-import fi.arcusys.koku.users.UserIdResolver;
+import fi.arcusys.koku.common.exceptions.KokuServiceException;
+import fi.arcusys.koku.common.services.consents.citizen.TivaCitizenServiceHandle;
+import fi.arcusys.koku.common.services.consents.employee.TivaEmployeeServiceHandle;
+import fi.arcusys.koku.common.services.consents.model.KokuConsent;
+import fi.arcusys.koku.common.services.facades.impl.ResponseStatus;
+import fi.arcusys.koku.common.services.users.UserIdResolver;
 import fi.arcusys.koku.web.util.ModelWrapper;
-import fi.arcusys.koku.web.util.ResponseStatus;
 import fi.arcusys.koku.web.util.impl.ModelWrapperImpl;
-import static fi.arcusys.koku.util.Constants.*;
+import static fi.arcusys.koku.common.util.Constants.*;
 
 /**
  * Shows task form page and store the current query information on the jsp page
@@ -95,12 +95,10 @@ public class ShowConsentController extends AbstractController {
 				throw new KokuServiceException("UserId is null. Can't show consent details! username: '"+username+"'");
 			}
 			if(taskType.equals(TASK_TYPE_CONSENT_CITIZEN_CONSENTS) || taskType.equals(TASK_TYPE_CONSENT_CITIZEN_CONSENTS_OLD)) {
-				TivaCitizenServiceHandle handle = new TivaCitizenServiceHandle(userId);
-				handle.setMessageSource(messageSource);
+				TivaCitizenServiceHandle handle = new TivaCitizenServiceHandle(messageSource, userId);
 				consent = handle.getConsentById(consentId);
 			} else if(taskType.equals(TASK_TYPE_CONSENT_EMPLOYEE_CONSENTS)) {
-				TivaEmployeeServiceHandle handle = new TivaEmployeeServiceHandle();
-				handle.setMessageSource(messageSource);
+				TivaEmployeeServiceHandle handle = new TivaEmployeeServiceHandle(messageSource);
 				consent = handle.getConsentDetails(consentId);
 			}
 	//		else if (taskType.equals(TASK_TYPE_WARRANT_LIST_CITIZEN_CONSENTS)) {

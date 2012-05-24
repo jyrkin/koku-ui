@@ -5,9 +5,9 @@
 <%@ page import="javax.portlet.PortletPreferences" %>
 <%@ page import="javax.portlet.PortletSession" %>
 <%@ page import="javax.portlet.WindowState" %>
-<%@ page import="fi.arcusys.koku.util.Constants" %>
-<%@ page import="fi.arcusys.koku.util.NavigationPortletProperties" %>
-<%@ page import="fi.arcusys.koku.util.Properties" %>
+<%@ page import="fi.arcusys.koku.common.util.Constants" %>
+<%@ page import="fi.arcusys.koku.common.util.NavigationPortletProperties" %>
+<%@ page import="fi.arcusys.koku.common.util.Properties" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %> 
 <portlet:defineObjects />
 
@@ -26,4 +26,5 @@
 	request.setAttribute("naviPortalMode", naviPortalMode);
 	final String portalInfo = renderRequest.getPortalContext().getPortalInfo();	
 	final String navigationState = (String) renderRequest.getPortletSession().getAttribute(Constants.ATTR_NAVI_STATE, PortletSession.APPLICATION_SCOPE);
+	final String navigationPosition = (String) renderRequest.getPortletSession().getAttribute(Constants.ATTR_NAVI_POSITION, PortletSession.APPLICATION_SCOPE);
 %>

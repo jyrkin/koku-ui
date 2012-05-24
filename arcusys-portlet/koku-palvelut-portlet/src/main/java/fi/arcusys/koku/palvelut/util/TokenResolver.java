@@ -1,6 +1,6 @@
 package fi.arcusys.koku.palvelut.util;
 
-import static fi.arcusys.koku.util.Constants.INTALIO_GROUP_PREFIX;
+import static fi.arcusys.koku.common.util.Constants.INTALIO_GROUP_PREFIX;
 
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletSession;
@@ -9,8 +9,8 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import fi.arcusys.koku.exceptions.IntalioAuthException;
-import fi.arcusys.koku.intalio.TaskHandle;
+import fi.arcusys.koku.common.exceptions.IntalioAuthException;
+import fi.arcusys.koku.common.services.intalio.TaskHandle;
 
 
 public class TokenResolver {

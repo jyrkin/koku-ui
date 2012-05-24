@@ -24,7 +24,6 @@
     <bean id="exceptionResolver" class="org.springframework.web.portlet.handler.SimpleMappingExceptionResolver">
 		<property name="defaultErrorView" value="error"/>
     </bean>
-
 	
 	<bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
 		<property name="basenames">
@@ -35,6 +34,4 @@
 			</list>
 		</property>
 	</bean>
-
-
 </beans>

@@ -1,10 +1,10 @@
 package fi.arcusys.koku.web;
 
-import static fi.arcusys.koku.util.Constants.ATTR_CURRENT_PAGE;
-import static fi.arcusys.koku.util.Constants.ATTR_KEYWORD;
-import static fi.arcusys.koku.util.Constants.ATTR_ORDER_TYPE;
-import static fi.arcusys.koku.util.Constants.ATTR_TASK_TYPE;
-import static fi.arcusys.koku.util.Constants.VIEW_SHOW_REQUEST;
+import static fi.arcusys.koku.common.util.Constants.ATTR_CURRENT_PAGE;
+import static fi.arcusys.koku.common.util.Constants.ATTR_KEYWORD;
+import static fi.arcusys.koku.common.util.Constants.ATTR_ORDER_TYPE;
+import static fi.arcusys.koku.common.util.Constants.ATTR_TASK_TYPE;
+import static fi.arcusys.koku.common.util.Constants.VIEW_SHOW_REQUEST;
 
 import javax.portlet.PortletSession;
 import javax.portlet.RenderRequest;
@@ -18,12 +18,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.portlet.bind.annotation.RenderMapping;
 
-import fi.arcusys.koku.exceptions.KokuServiceException;
-import fi.arcusys.koku.kv.model.KokuRequest;
-import fi.arcusys.koku.kv.request.employee.EmployeeRequestHandle;
-import fi.arcusys.koku.util.Constants;
+import fi.arcusys.koku.common.exceptions.KokuServiceException;
+import fi.arcusys.koku.common.services.facades.impl.ResponseStatus;
+import fi.arcusys.koku.common.services.requests.employee.EmployeeRequestHandle;
+import fi.arcusys.koku.common.services.requests.models.KokuRequest;
+import fi.arcusys.koku.common.util.Constants;
+import fi.arcusys.koku.common.util.DummyMessageSource;
 import fi.arcusys.koku.web.util.ModelWrapper;
-import fi.arcusys.koku.web.util.ResponseStatus;
 import fi.arcusys.koku.web.util.impl.ModelWrapperImpl;
 
 
@@ -77,7 +78,7 @@ public class ShowRequestController {
 		KokuRequest kokuRequest = null;
 		try {
 			if (taskType.equals(Constants.TASK_TYPE_REQUEST_VALID_EMPLOYEE) || taskType.equals(Constants.TASK_TYPE_REQUEST_DONE_EMPLOYEE)) {
-				EmployeeRequestHandle reqhandle = new EmployeeRequestHandle();
+				EmployeeRequestHandle reqhandle = new EmployeeRequestHandle(new DummyMessageSource());
 				kokuRequest = reqhandle.getKokuRequestById(requestId);			
 			} else {
 				throw new KokuServiceException("No operation for taskType: '"+taskType+"' username: '" + request.getUserPrincipal().getName() + "'");

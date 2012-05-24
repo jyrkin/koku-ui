@@ -1,7 +1,7 @@
 package fi.arcusys.koku.web.util.impl;
 
+import fi.arcusys.koku.common.services.facades.impl.ResponseStatus;
 import fi.arcusys.koku.web.util.ModelWrapper;
-import fi.arcusys.koku.web.util.ResponseStatus;
 
 /**
  * ModelWrapper implementation

@@ -1,7 +1,7 @@
-<%@ page import="fi.arcusys.koku.av.EmployeeAppointment" %>
-<%@ page import="fi.arcusys.koku.users.KokuUser" %>
+<%@ page import="fi.arcusys.koku.common.services.appointments.model.EmployeeAppointment" %>
+<%@ page import="fi.arcusys.koku.common.services.users.KokuUser" %>
 <%@ page import="fi.arcusys.koku.web.util.ModelWrapper"%>
-<%@ page import="fi.arcusys.koku.util.Constants" %>
+<%@ page import="fi.arcusys.koku.common.util.Constants" %>
 <%@ page import="javax.portlet.PortletRequest" %>
 
 <%@ include file="init.jsp"%>

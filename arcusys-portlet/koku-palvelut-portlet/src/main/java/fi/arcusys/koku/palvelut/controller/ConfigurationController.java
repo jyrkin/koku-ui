@@ -1,13 +1,13 @@
 package fi.arcusys.koku.palvelut.controller;
 
-import static fi.arcusys.koku.util.Constants.ATTR_FORM_LIST;
-import static fi.arcusys.koku.util.Constants.ATTR_PORTAL_ID;
-import static fi.arcusys.koku.util.Constants.ATTR_PREFERENCES;
-import static fi.arcusys.koku.util.Constants.PORTAL_GATEIN;
-import static fi.arcusys.koku.util.Constants.PORTAL_JBOSS;
-import static fi.arcusys.koku.util.Constants.PREF_SHOW_ONLY_FORM_BY_DESCRIPTION;
-import static fi.arcusys.koku.util.Constants.PREF_SHOW_ONLY_FORM_BY_ID;
-import static fi.arcusys.koku.util.Constants.PREF_SHOW_TASKS_BY_ID;
+import static fi.arcusys.koku.common.util.Constants.ATTR_FORM_LIST;
+import static fi.arcusys.koku.common.util.Constants.ATTR_PORTAL_ID;
+import static fi.arcusys.koku.common.util.Constants.ATTR_PREFERENCES;
+import static fi.arcusys.koku.common.util.Constants.PORTAL_GATEIN;
+import static fi.arcusys.koku.common.util.Constants.PORTAL_JBOSS;
+import static fi.arcusys.koku.common.util.Constants.PREF_SHOW_ONLY_FORM_BY_DESCRIPTION;
+import static fi.arcusys.koku.common.util.Constants.PREF_SHOW_ONLY_FORM_BY_ID;
+import static fi.arcusys.koku.common.util.Constants.PREF_SHOW_TASKS_BY_ID;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,7 +24,7 @@ import javax.portlet.RenderResponse;
 import javax.portlet.WindowState;
 
 //import org.intalio.tempo.workflow.task.Task;
-import fi.arcusys.koku.intalio.Task;
+import fi.arcusys.koku.common.services.intalio.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -33,7 +33,7 @@ import org.springframework.web.portlet.ModelAndView;
 import org.springframework.web.portlet.bind.annotation.ActionMapping;
 import org.springframework.web.portlet.bind.annotation.RenderMapping;
 
-import fi.arcusys.koku.intalio.TaskHandle;
+import fi.arcusys.koku.common.services.intalio.TaskHandle;
 import fi.arcusys.koku.palvelut.model.client.TaskHolder;
 import fi.arcusys.koku.palvelut.util.TaskUtil;
 import fi.arcusys.koku.palvelut.util.TokenResolver;
@@ -87,7 +87,7 @@ public class ConfigurationController {
 			ActionResponse response) throws Exception {
 		LOG.debug("handleActionRequestInternal - Save settings");
 		
-		fi.arcusys.koku.intalio.Task task = null;
+		fi.arcusys.koku.common.services.intalio.Task task = null;
 		try {
 			final TokenResolver tokenUtil = new TokenResolver();
 			final String token = tokenUtil.getAuthenticationToken(request);
