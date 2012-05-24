@@ -11,7 +11,7 @@ import java.util.Map;
 /* This column handles multiple answers with the same value from one person
  * It doesn't synchronize the answers to the same CSV column,
  * but it does padding CSV columns so that the headers and the columns after this column align properly*/
-class ListItemsColumn implements Column {
+class ListItemsCSVColumn implements CSVColumn {
 
 	private String header;
 	private int maxWidth = 0;
@@ -20,7 +20,7 @@ class ListItemsColumn implements Column {
 	private Map<CSVPerson, String[]> columnAnswers = new HashMap<CSVPerson, String[]>();
 
 
-	public ListItemsColumn(String header) {
+	public ListItemsCSVColumn(String header) {
 		this.header = header;
 	}
 

@@ -38,13 +38,13 @@ public class CSVExporter implements Exporter {
 	private KokuRequest kokuRequest;
 	private ResourceBundleMessageSource messageSource;
 	private List<CSVPerson> persons;
-	private List<Column> answerColumns;
+	private List<CSVColumn> answerColumns;
 
 	public CSVExporter(KokuRequest kokuRequest, ResourceBundleMessageSource messageSource) {
 		this.kokuRequest = kokuRequest;
 		this.messageSource = messageSource;
 		this.persons = new ArrayList<CSVPerson>();
-		this.answerColumns = new ArrayList<Column>();
+		this.answerColumns = new ArrayList<CSVColumn>();
 	}
 
 	/* Add a person entry to the persons list. */
@@ -56,9 +56,9 @@ public class CSVExporter implements Exporter {
 
 	private void addAnswerColumn(String header, QuestionType type) {
 		if (type == QuestionType.CALENDAR) {
-			this.answerColumns.add(new SynchronizedUniqueItemsColumn(header));
+			this.answerColumns.add(new SynchronizedUniqueItemsCSVColumn(header));
 		} else {
-			this.answerColumns.add(new ListItemsColumn(header));
+			this.answerColumns.add(new ListItemsCSVColumn(header));
 		}
 	}
 
@@ -68,7 +68,7 @@ public class CSVExporter implements Exporter {
 
 	private String getFormattedQuestionHeaders() {
 		StringBuilder headers = new StringBuilder();
-		for (Column answerColumn : this.answerColumns) {
+		for (CSVColumn answerColumn : this.answerColumns) {
 			headers.append(answerColumn.getFormattedColumnHeader());
 		}
 		return headers.toString();
@@ -83,7 +83,7 @@ public class CSVExporter implements Exporter {
 			answers.append(SEPARATOR);
 
 			/* Column answers */
-			for (Column answerColumn : this.answerColumns) {
+			for (CSVColumn answerColumn : this.answerColumns) {
 				answers.append(answerColumn.getFormattedPersonColumnAnswer(person));
 			}
 

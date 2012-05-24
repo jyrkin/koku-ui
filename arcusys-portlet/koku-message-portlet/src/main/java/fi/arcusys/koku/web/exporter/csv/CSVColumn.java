@@ -1,6 +1,6 @@
 package fi.arcusys.koku.web.exporter.csv;
 
-interface Column {
+interface CSVColumn {
 
 	/* If the answer can be split (IE. it has INNER_FIELD_SEPARATORs),
 	 * split it and then add it to the structure */

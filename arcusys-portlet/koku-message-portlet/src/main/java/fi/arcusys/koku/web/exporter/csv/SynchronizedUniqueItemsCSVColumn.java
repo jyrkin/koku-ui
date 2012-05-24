@@ -15,7 +15,7 @@ import fi.arcusys.koku.web.util.Strings;
 
 /* This column only outputs unique items, and it synchronizes the same
  * answers given by multiple people to the same output CSV column */
-class SynchronizedUniqueItemsColumn implements Column {
+class SynchronizedUniqueItemsCSVColumn implements CSVColumn {
 
 	private String header;
 
@@ -29,7 +29,7 @@ class SynchronizedUniqueItemsColumn implements Column {
 			}
 			);
 
-	public SynchronizedUniqueItemsColumn(String header) {
+	public SynchronizedUniqueItemsCSVColumn(String header) {
 		this.header = header;
 	}
 
