@@ -20,7 +20,7 @@ import fi.arcusys.koku.web.exporter.csv.CSVExporter;
 
 public class ExportFileControllerTest {
 
-	public static final String CSV_EXPECTED_STRING_UNIQUE_SORTING = "\uFEFF\"Vastauksen yhteenveto\"\n"
+	public static final String CSV_EXPECTED_STRING_UNIQUE_SORTING = "\"Vastauksen yhteenveto\"\n"
 			+ "\"Vastaaja\";\"Say five things which are not Jackie Chan\";;;\"Pick a date\";;;;;;;;\"Kommentti\"\n"
 			+ "\"Kalle Kuntalainen\";\"Carrot\";\"Car\";\"Jackie Chan\";;;\"23.5.2012\";\"24.5.2012\";\"25.5.2012\";\"26.5.2012\";\"27.5.2012\";\"28.5.2012\";\"Another comment foo bar baz lol olo lol\"\n"
 			+ "\"Kirsi Kuntalainen\";\"Jackie Chan\";\"Jackie Chan\";;\"21.5.2012\";\"22.5.2012\";\"23.5.2012\";\"24.5.2012\";\"25.5.2012\";;;;\"This is a comment string foo bar baz\"\n"
@@ -28,7 +28,7 @@ public class ExportFileControllerTest {
 			+ "\"Vastaamattomat\"\n";
 
 
-	public static final String CSV_EXPECTED_STRING_NO_UNIQUE_SORTING = "\uFEFF\"Vastauksen yhteenveto\"\n"
+	public static final String CSV_EXPECTED_STRING_NO_UNIQUE_SORTING = "\"Vastauksen yhteenveto\"\n"
 			+ "\"Vastaaja\";\"Say five things which are not Jackie Chan\";;;\"Pick a date\";;;;;;\"Kommentti\"\n"
 			+ "\"Kalle Kuntalainen\";\"Carrot\";\"Car\";\"Jackie Chan\";\"23.5.2012\";\"24.5.2012\";\"25.5.2012\";\"26.5.2012\";\"27.5.2012\";\"28.5.2012\";\"Another comment foo bar baz lol olo lol\"\n"
 			+ "\"Kirsi Kuntalainen\";\"Jackie Chan\";\"Jackie Chan\";;\"21.5.2012\";\"22.5.2012\";\"23.5.2012\";\"24.5.2012\";\"25.5.2012\";;\"This is a comment string foo bar baz\"\n"

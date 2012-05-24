@@ -58,7 +58,11 @@ public class CSVExporter implements Exporter {
 	}
 
 	private void addAnswerColumn(String header, QuestionType type) {
-		this.answerColumns.add(new Column(header));
+		if (type == QuestionType.CALENDAR) {
+			this.answerColumns.add(new SynchronizedUniqueItemsColumn(header));
+		} else {
+			this.answerColumns.add(new ListItemsColumn(header));
+		}
 	}
 
 	private void splitAndAddAnswer(String answer, CSVPerson person, int column) {
@@ -83,7 +87,7 @@ public class CSVExporter implements Exporter {
 
 			/* Column answers */
 			for (Column answerColumn : this.answerColumns) {
-				answers.append(answerColumn.getFormattedPersonColumnAnswers(person));
+				answers.append(answerColumn.getFormattedPersonColumnAnswer(person));
 			}
 
 			/* Comment field */
@@ -163,4 +167,11 @@ public class CSVExporter implements Exporter {
 		return TEXT_DELIMITER+s.replaceAll(FILTER, "")+TEXT_DELIMITER;
 	}
 
+	protected static String getSeparators(int n) {
+		StringBuilder s = new StringBuilder();
+		for (int i = 0; i < n; i++) {
+			s.append(SEPARATOR);
+		}
+		return s.toString();
+	}
 }

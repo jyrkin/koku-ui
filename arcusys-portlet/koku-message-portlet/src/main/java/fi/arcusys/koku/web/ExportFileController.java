@@ -68,8 +68,7 @@ public class ExportFileController {
 			requestSubject = requestSubject.substring(0, MAX_FILENAME_SIZE);
 
 			/* Firefox doesn't seem to handle spaces for some reason, the filename after
-			 * a space is truncated and the .csv file extension is lost, this fixes it.
-			 */
+			 * a space is truncated and the .csv file extension is lost, this fixes it. */
 			requestSubject = requestSubject.replaceAll(" ", "_");
 		}
 
