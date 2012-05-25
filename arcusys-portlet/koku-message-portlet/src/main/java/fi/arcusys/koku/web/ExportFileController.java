@@ -80,7 +80,7 @@ public class ExportFileController {
 		response.setProperty("Cache-Control", "private, must-revalidate");
 
 		response.setProperty("Content-Disposition", "attachment; filename="+requestSubject+".csv");
-		response.setProperty("Content-Type", "text/xml, charset=UTF-8; encoding=UTF-8");
+		response.setProperty("Content-Type", "text/csv, charset=UTF-8; encoding=UTF-8");
 
 		PrintWriter responseWriter = null;
 		try {
