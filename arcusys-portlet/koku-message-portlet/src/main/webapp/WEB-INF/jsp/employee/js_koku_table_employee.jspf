@@ -35,19 +35,34 @@ KokuTable.prototype.createAppoitmentsTable = function() {
 	 * Private methods
 	 */
 	 
+	 
+	function flattenReciviers(tasks) {
+	
+		for (var i = 0; i < tasks.length; i++)  {
+			if (tasks[i].recipients) {
+				tasks[i]["cleanHtmlReceviers"] =  tasks[i].recipients.targetPerson.fullName;
+			} else {
+				tasks[i]["cleanHtmlReceviers"] = "<spring:message code="unknown" />";
+			}
+		}	
+	}
+	 
 	function createOpenAppointmentsTable(tasks) {
 		var columnNames = [
 					   "<spring:message code="message.choose" />",
 	                   "<spring:message code="message.from" />",
+	                   "<spring:message code="message.to" />",
 	                   "<spring:message code="message.subject" />",
 	                   "<spring:message code="message.description" />"
 	                  ];
 	
 		var columnIds = [
-						 "receivingUser",
+						 "senderUser",
+						 "cleanHtmlReceviers",
 		                 "cleanHtmlsubject",
 		                 "cleanHtmldescription"
 		                ];
+		flattenReciviers(tasks);
 		return createTable(tasks, columnNames, columnIds, "appointmentsTable", true);		                
 	};
 	
@@ -61,12 +76,13 @@ KokuTable.prototype.createAppoitmentsTable = function() {
 	                  ];
 	
 		var columnIds = [
-						 "receivingUser",
+						 "senderUser",						 
+						 "cleanHtmlReceviers",
 		                 "cleanHtmlsubject",
 		                 "cleanHtmldescription",
 		                 "status"
 		                ];
-
+		flattenReciviers(tasks);
 		return createTable(tasks, columnNames, columnIds, "appointmentsTable", true);
 	};
 	

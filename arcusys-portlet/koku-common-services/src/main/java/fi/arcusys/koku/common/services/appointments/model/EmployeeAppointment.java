@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fi.arcusys.koku.av.employeeservice.Appointment.AcceptedSlots;
-import fi.arcusys.koku.av.employeeservice.AppointmentReceipientTO;
 import fi.arcusys.koku.common.services.users.KokuUser;
 
 /**
@@ -16,7 +15,7 @@ public class EmployeeAppointment extends KokuAppointment {
 
 	private final List<Slot> approvedSlots = new ArrayList<Slot>();
 	private final List<Slot> unapprovedSlots = new ArrayList<Slot>();
-	private final List<AppointmentReceipientTO> recipients = new ArrayList<AppointmentReceipientTO>();
+	private final List<KokuAppoimentRecipient> recipients = new ArrayList<KokuAppoimentRecipient>();
 	private AcceptedSlots acceptedSlots;
 	private final List<UserWithTarget> rejectedUsers = new ArrayList<UserWithTarget>();
 	private final List<UserWithTarget> unrespondedUsers = new ArrayList<UserWithTarget>();
@@ -24,7 +23,7 @@ public class EmployeeAppointment extends KokuAppointment {
 	private String senderRole;
 	
 	/* getters */	
-	public List<AppointmentReceipientTO> getRecipients() {
+	public List<KokuAppoimentRecipient> getRecipients() {
 		return recipients;
 	}
 		
@@ -89,5 +88,20 @@ public class EmployeeAppointment extends KokuAppointment {
 			return recipientsUsers;
 		}
 	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "EmployeeAppointment [approvedSlots=" + approvedSlots
+				+ ", unapprovedSlots=" + unapprovedSlots + ", recipients="
+				+ recipients + ", acceptedSlots=" + acceptedSlots
+				+ ", rejectedUsers=" + rejectedUsers + ", unrespondedUsers="
+				+ unrespondedUsers + ", usersRejected=" + usersRejected
+				+ ", senderRole=" + senderRole + "]";
+	}
+	
+	
 }
 

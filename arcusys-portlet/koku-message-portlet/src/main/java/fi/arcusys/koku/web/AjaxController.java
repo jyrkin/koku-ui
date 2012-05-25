@@ -147,7 +147,7 @@ public class AjaxController extends AbstractController {
 		}
 		final JSONObject jsonModel = query.getJsonModel(taskType, page, keyword, field, userId);
 		modelmap.addAttribute(RESPONSE, jsonModel);
-		LOG.debug("getTasks  - "+((System.nanoTime()-start)/1000/1000) + "ms");
+		LOG.warn("getTasks  - "+((System.nanoTime()-start)/1000/1000) + "ms");
 		return AjaxViewResolver.AJAX_PREFIX;
 	}
 	

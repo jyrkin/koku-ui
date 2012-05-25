@@ -66,6 +66,7 @@ public class AjaxController {
 	@ResourceMapping(value = "update")
 	public String showAjax(ModelMap modelmap, PortletRequest request, PortletResponse response) {
 		
+		final long start = System.nanoTime();
 		final PortletSession session = request.getPortletSession();
 		final String username = request.getRemoteUser();
 		String userId = (String) session.getAttribute(ATTR_USER_ID);		
@@ -120,6 +121,7 @@ public class AjaxController {
 		JSONObject jsonModel = query.getJsonModel(username, userId, token, portalRole);
 		modelmap.addAttribute(RESPONSE, jsonModel);
 		modelmap.addAttribute(JSON_NAVI_STATE, naviState);
+		LOG.warn("NAVI update  - "+((System.nanoTime()-start)/1000/1000) + "ms");
 		return AjaxViewResolver.AJAX_PREFIX;
 	}
 	
@@ -139,6 +141,8 @@ public class AjaxController {
 			@RequestParam(value = "currentPosition", required=true) String currentPosition,
 			@RequestParam(value = "navigationState", required=true) String navigationState, 
 			ModelMap modelmap, PortletRequest request, PortletResponse response) {
+		final long start = System.nanoTime();
+
 		final PortletSession session = request.getPortletSession();
 
 		/* Save navigationState */
@@ -165,6 +169,7 @@ public class AjaxController {
 		
 		modelmap.addAttribute(JSON_NAVI_POSITION, currentPosition);
 		modelmap.addAttribute(JSON_NAVI_STATE, naviState);
+		LOG.warn("NAVI status  - "+((System.nanoTime()-start)/1000/1000) + "ms");
 		return AjaxViewResolver.AJAX_PREFIX;
 	}
 	

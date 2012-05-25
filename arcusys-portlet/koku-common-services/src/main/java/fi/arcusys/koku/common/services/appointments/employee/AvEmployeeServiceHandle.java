@@ -28,6 +28,7 @@ import fi.arcusys.koku.common.exceptions.KokuServiceException;
 import fi.arcusys.koku.common.services.AbstractHandle;
 import fi.arcusys.koku.common.services.appointments.model.EmployeeAppointment;
 import fi.arcusys.koku.common.services.appointments.model.EmployeeAppointment.UserWithTarget;
+import fi.arcusys.koku.common.services.appointments.model.KokuAppoimentRecipient;
 import fi.arcusys.koku.common.services.appointments.model.KokuAppointment;
 import fi.arcusys.koku.common.services.appointments.model.KokuAppointmentUserRejected;
 import fi.arcusys.koku.common.services.appointments.model.Slot;
@@ -142,7 +143,10 @@ public class AvEmployeeServiceHandle extends AbstractHandle implements EmployeeA
         empAppointment.setStatus(localizeActionRequestStatus(appointment.getStatus()));     
         empAppointment.setAcceptedSlots(appointment.getAcceptedSlots());
         empAppointment.setSenderRole(appointment.getSenderRole());
-        empAppointment.getRecipients().addAll(appointment.getRecipients());
+        for (AppointmentReceipientTO recipient : appointment.getRecipients()) {
+        	empAppointment.getRecipients().add(new KokuAppoimentRecipient(recipient));        	
+        }
+        
         empAppointment.setCancellationComment(appointment.getCancelComment());
         empAppointment.getUsersRejected().addAll(convertUserRejectedToKokuUserRejected(appointment.getUsersRejectedWithComments()));
         empAppointment.getRejectedUsers().addAll(formatRejectedUsers(getUsers(appointment.getUsersRejectedWithComments()), appointment.getRecipients()));
