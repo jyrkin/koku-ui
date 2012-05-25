@@ -55,7 +55,7 @@ public class CSVExporter implements Exporter {
 	}
 
 	private void addAnswerColumn(String header, QuestionType type) {
-		if (type == QuestionType.CALENDAR) {
+		if (type == QuestionType.CALENDAR || type == QuestionType.MULTIPLE_CHOICE) {
 			this.answerColumns.add(new SynchronizedUniqueItemsCSVColumn(header));
 		} else {
 			this.answerColumns.add(new ListItemsCSVColumn(header));
