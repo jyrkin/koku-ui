@@ -646,4 +646,10 @@ public class KksService {
         Constants.COMMUNITY_SERVICE_USER_ID, Constants.COMMUNITY_SERVICE_PASSWORD);
     return service;
   }
+  
+  
+  public boolean sendMessage( Message message ) {
+    
+    return false;
+  }
 }

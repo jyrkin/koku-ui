@@ -36,6 +36,11 @@
 	<portlet:param name="action" value="toDeleteConfirmation" />
     <portlet:param name="pic" value="${child.pic}" />
 </portlet:actionURL>
+<portlet:actionURL var="sendMailURL">
+	<portlet:param name="action" value="toMessage" />
+    <portlet:param name="pic" value="${child.pic}" />
+    <portlet:param name="childName" value="${child.name}" />
+</portlet:actionURL>
 
 <div class="koku-kks"> 
 <div class="portlet-section-body">
@@ -68,8 +73,10 @@
 
 		<table class="portlet-table-body kks-print" width="100%" border="0">
 			<tr>
-				<th width="35%"><spring:message code="ui.kks.collection" /></th>
+				<th><spring:message code="ui.kks.collection" /></th>
 				<c:if test="${ sessionScope.municipal_employee }">
+					<th>
+					</th>
 					<th>
 					</th>
 				</c:if>
@@ -79,8 +86,8 @@
 				<c:if test="${ sessionScope.municipal_employee }">
 					<th><spring:message code="ui.kks.entry.state" />
 					</th>
-					<th><spring:message code="ui.kks.consents" />
-					</th>
+					<!-- <th><spring:message code="ui.kks.consents" />
+					</th> -->
 				</c:if>
 			</tr>
 
@@ -104,13 +111,21 @@
 									</td>
 									<c:if test="${ sessionScope.municipal_employee }">
 										<td>
+										
+										<form:form name="sendForm-${collection.id}" method="post"
+												action="${sendMailURL}">											
+											    <input type="hidden" id="collectionName" name="collectionName" value="${ collection.name }"/>
+												<input type="submit" class="portlet-form-button" value="<spring:message code="ui.kks.send.button"/>">
+										</form:form>
+										</td>
+										<td>
 										<form:form name="deleteForm-${collection.id}" method="post"
 												action="${deleteCollectionURL}">
 											<c:if test="${ collection.creator eq kksUser }">
 											    <input type="hidden" id="collection" name="collection" value="${ collection.id }"/>
 												<input type="submit" class="portlet-form-button" value="<spring:message code="ui.kks.delete"/>">
 											</c:if>
-										</form:form>
+										</form:form>										
 										</td>
 									</c:if>
 									<td><c:out value="${collection.modifierFullName}"/><c:out value=" "/><fmt:formatDate
@@ -147,7 +162,7 @@
 											</c:if>
 										</c:otherwise>
 									</c:choose></td>
-									<td>
+									<!-- <td>
 										<c:if test="${not collection.consentRequested && not empty collection.collectionClass.consentType }">
 					                        <form:form name="sendForm-${collection.id}"  method="post" action="${sendConsentURL}">
 					                                <input type="hidden" id="collectionId" name="collectionId" value="${ collection.id }"/>
@@ -159,7 +174,7 @@
 					
 					                        </form:form>
 				                        </c:if>
-									</td>
+									</td> -->
 							</c:if>
 						</tr>
 					</c:if>
