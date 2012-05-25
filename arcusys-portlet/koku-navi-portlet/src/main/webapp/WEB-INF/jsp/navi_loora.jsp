@@ -157,10 +157,11 @@
 			<ul id="kokuNaviInfoRequests" class="child">
 				<li id="newinformation"><a href="<%= defaultPath %><%= NavigationPortletProperties.INFO_REQ_NEW_INFORMATION_REQ %>">Uusi tietopyyntö</a></li>
 				<li id="informationbox"><a href="<%= defaultPath %><%= NavigationPortletProperties.INFO_REQ_RECIEVED_INFO_REQS %>">Saapuneet</a><span id="infoRequests_num" class="message_num"></span></li>
-				<li><span class="naviLinkHeaderNonLink">Lähetetyt</span>
-					<ul class="child">
-						<%-- <li id="info_request_open"><a href="<%= defaultPath %>/Ilmoitukset">Avoimet</a></li> --%>
-						<%-- <li id="sendconsent"><a href="<%= defaultPath %>/Ilmoitukset">Valmiit</a></li> --%>
+				<li>
+					<span class="naviLinkHeaderNonLink" onclick="toggleKokuNavi('#kokuNaviInfoRequestsSent', '#kokuNaviTreeNodeIndicatorInfoRequestsSent');">
+						<span class="kokuNaviTreeNodeIndicator" id="kokuNaviTreeNodeIndicatorInfoRequestsSent">+</span>Lähetetyt
+					</span>
+					<ul id="kokuNaviInfoRequestsSent" class="child" style="display:none;">
 						<li id="<%= Constants.TASK_TYPE_INFO_REQUEST_BROWSE_SENT%>"><a href="javascript:void(0)" onclick="navigateToPage('<%= Constants.TASK_TYPE_INFO_REQUEST_BROWSE_SENT%>')">Lähetetyt</a></li>
 						<li id="<%= Constants.TASK_TYPE_INFO_REQUEST_BROWSE_REPLIED %>"><a href="javascript:void(0)" onclick="navigateToPage('<%= Constants.TASK_TYPE_INFO_REQUEST_BROWSE_REPLIED%>')">Vastatut</a></li>
 					</ul>
