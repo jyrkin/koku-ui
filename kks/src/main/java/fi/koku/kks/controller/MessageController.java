@@ -95,39 +95,45 @@ public class MessageController {
   }
 
   @ActionMapping(params = "action=sendMessage")
-  public void send(PortletSession session, @RequestParam(value = "collectionName") String collectionName, @RequestParam(value = "childName") String childName, @RequestParam(value = "cancel", required = false ) String cancel,
+  public void send(PortletSession session, @RequestParam(value = "collectionName") String collectionName, @RequestParam(value = "childName") String childName, 
+      @RequestParam(value = "cancel", required = false ) Boolean cancel,
       @ModelAttribute(value = "child") Person child, @ModelAttribute(value = "kks_message") Message message,
       BindingResult errors, ActionResponse response,
       SessionStatus sessionStatus) {
     
-    messageValidator.validate(message, errors);
-    
-    if ( errors.hasErrors() ) {
-      response.setRenderParameter("action", "showMessageErrors" );
+    if ( cancel != null && cancel ) {
+      response.setRenderParameter("action", "showChild" );
       response.setRenderParameter("pic", child.getPic());
-      response.setRenderParameter("collectionName", collectionName );
-      response.setRenderParameter("childName", childName );
-      response.setRenderParameter("error", "ui.kks.send.message.mandatory" );
-      sessionStatus.setComplete();
-      return;
-    }
-    
-    
-    boolean result = kksService.sendMessage(Utils.getPicFromSession(session), message);
-    
-    if ( !result ) {
-      response.setRenderParameter("action", "showMessage" );
+    } else {
+      messageValidator.validate(message, errors);
+      
+      if ( errors.hasErrors() ) {
+        response.setRenderParameter("action", "showMessageErrors" );
+        response.setRenderParameter("pic", child.getPic());
+        response.setRenderParameter("collectionName", collectionName );
+        response.setRenderParameter("childName", childName );
+        response.setRenderParameter("error", "ui.kks.send.message.mandatory" );
+        sessionStatus.setComplete();
+        return;
+      }
+      
+      
+      boolean result = kksService.sendMessage(Utils.getPicFromSession(session), message);
+      
+      if ( !result ) {
+        response.setRenderParameter("action", "showMessage" );
+        response.setRenderParameter("pic", child.getPic());
+        response.setRenderParameter("collectionName", collectionName );
+        response.setRenderParameter("childName", childName );
+        response.setRenderParameter("error", "ui.kks.send.message.failed" );
+        sessionStatus.setComplete();
+        return;
+      }
+      
+      response.setRenderParameter("action", "showChild");
       response.setRenderParameter("pic", child.getPic());
-      response.setRenderParameter("collectionName", collectionName );
-      response.setRenderParameter("childName", childName );
-      response.setRenderParameter("error", "ui.kks.send.message.failed" );
-      sessionStatus.setComplete();
-      return;
+      response.setRenderParameter("message", "ui.kks.send.message.sent");
     }
-    
-    response.setRenderParameter("action", "showChild");
-    response.setRenderParameter("pic", child.getPic());
-    response.setRenderParameter("message", "ui.kks.send.message.sent");
     sessionStatus.setComplete();
   }  
   

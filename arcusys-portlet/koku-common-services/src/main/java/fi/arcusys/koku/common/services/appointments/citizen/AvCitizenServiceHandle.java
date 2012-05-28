@@ -130,7 +130,7 @@ public class AvCitizenServiceHandle extends AbstractHandle implements CitizenApp
 		ctzAppointment.setAppointmentId(appointment.getAppointmentId());
 		ctzAppointment.setSenderUser(new KokuUser(appointment.getSenderUserInfo()));
 		// KOKU-1234 - 'Tapaamiset'-listauksiin tarvitaan tieto kenelle viesti on lähetetty (Työntekijän puoli)
-		ctzAppointment.setReceivingUser(new KokuUser());
+		// ctzAppointment.setReceivingUser(new KokuUser());
 		ctzAppointment.setSubject(appointment.getSubject());
 		ctzAppointment.setDescription(appointment.getDescription());
 		if (appointment.getStatus() != null) {

@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?><wsdl:definitions name="KokuKunpoSuostumusService" targetNamespace="http://soa.tiva.koku.arcusys.fi/" xmlns:ns1="http://schemas.xmlsoap.org/wsdl/soap/http" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://soa.tiva.koku.arcusys.fi/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <wsdl:types>
-<xs:schema elementFormDefault="unqualified" targetNamespace="http://soa.tiva.koku.arcusys.fi/" version="1.0" xmlns:ns1="http://soa.common.koku.arcusys.fi/" xmlns:ns2="http://services.koku.fi/entity/tiva/v1" xmlns:tns="http://soa.tiva.koku.arcusys.fi/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://soa.tiva.koku.arcusys.fi/" xmlns:ns1="http://soa.common.koku.arcusys.fi/" xmlns:ns2="http://services.koku.fi/entity/tiva/v1" xmlns:tns="http://soa.tiva.koku.arcusys.fi/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
 <xs:import namespace="http://soa.common.koku.arcusys.fi/" />
 <xs:import namespace="http://services.koku.fi/entity/tiva/v1" />
 <xs:element name="getAssignedConsents" type="tns:getAssignedConsents" />
@@ -185,6 +185,7 @@
 </xs:simpleType>
 <xs:simpleType name="actionRequestStatus">
 <xs:restriction base="xs:string">
+<xs:enumeration value="Undecided" />
 <xs:enumeration value="Given" />
 <xs:enumeration value="Declined" />
 </xs:restriction>

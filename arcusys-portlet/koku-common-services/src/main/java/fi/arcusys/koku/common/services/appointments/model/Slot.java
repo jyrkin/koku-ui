@@ -14,14 +14,14 @@ public class Slot {
 
     private long appointmentId;
     private int slotNumber;
-    private String date;
+    private String appointmentDate;
     private String startTime;
     private String endTime;
     private String location;
     private String comment;
     private boolean approved;
     private KokuUser targetPersonUser;
-    private final List<KokuUser> recipientUsers = new ArrayList<KokuUser>();;
+    private final List<KokuUser> recipientUsers = new ArrayList<KokuUser>();
     
     
     /* getters */
@@ -33,8 +33,8 @@ public class Slot {
     	return slotNumber;
     }
     
-    public String getDate() {
-    	return date;
+    public String getAppointmentDate() {
+    	return appointmentDate;
     }
     
     public String getStartTime() {
@@ -66,8 +66,8 @@ public class Slot {
     	this.slotNumber = slotNumber;
     }
     
-    public void setAppointmentDate(String date) {
-    	this.date = date;
+    public void setAppointmentDate(String appointmentDate) {
+    	this.appointmentDate = appointmentDate;
     }
     
     public void setStartTime(String startTime) {
@@ -119,10 +119,11 @@ public class Slot {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result
+				+ ((appointmentDate == null) ? 0 : appointmentDate.hashCode());
+		result = prime * result
 				+ (int) (appointmentId ^ (appointmentId >>> 32));
 		result = prime * result + (approved ? 1231 : 1237);
 		result = prime * result + ((comment == null) ? 0 : comment.hashCode());
-		result = prime * result + ((date == null) ? 0 : date.hashCode());
 		result = prime * result + ((endTime == null) ? 0 : endTime.hashCode());
 		result = prime * result
 				+ ((location == null) ? 0 : location.hashCode());
@@ -152,6 +153,13 @@ public class Slot {
 			return false;
 		}
 		Slot other = (Slot) obj;
+		if (appointmentDate == null) {
+			if (other.appointmentDate != null) {
+				return false;
+			}
+		} else if (!appointmentDate.equals(other.appointmentDate)) {
+			return false;
+		}
 		if (appointmentId != other.appointmentId) {
 			return false;
 		}
@@ -163,13 +171,6 @@ public class Slot {
 				return false;
 			}
 		} else if (!comment.equals(other.comment)) {
-			return false;
-		}
-		if (date == null) {
-			if (other.date != null) {
-				return false;
-			}
-		} else if (!date.equals(other.date)) {
 			return false;
 		}
 		if (endTime == null) {
@@ -219,14 +220,11 @@ public class Slot {
 	@Override
 	public String toString() {
 		return "Slot [appointmentId=" + appointmentId + ", slotNumber="
-				+ slotNumber + ", date=" + date + ", startTime=" + startTime
-				+ ", endTime=" + endTime + ", location=" + location
-				+ ", comment=" + comment + ", approved=" + approved
-				+ ", targetPersonUser=" + targetPersonUser
-				+ ", recipientUsers=" + recipientUsers + "]";
+				+ slotNumber + ", appointmentDate=" + appointmentDate
+				+ ", startTime=" + startTime + ", endTime=" + endTime
+				+ ", location=" + location + ", comment=" + comment
+				+ ", approved=" + approved + ", targetPersonUser="
+				+ targetPersonUser + ", recipientUsers=" + recipientUsers + "]";
 	}
-
-	
-    
 
 }

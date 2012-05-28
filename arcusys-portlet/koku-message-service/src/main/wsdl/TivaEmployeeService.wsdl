@@ -128,6 +128,7 @@
 </xs:complexType>
 <xs:simpleType name="actionRequestStatus">
 <xs:restriction base="xs:string">
+<xs:enumeration value="Undecided" />
 <xs:enumeration value="Given" />
 <xs:enumeration value="Declined" />
 </xs:restriction>

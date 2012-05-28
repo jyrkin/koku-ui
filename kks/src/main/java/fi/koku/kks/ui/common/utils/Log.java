@@ -36,7 +36,7 @@ public class Log {
 
   private static final Logger logger = LoggerFactory.getLogger(Log.class);
   
-  public static final String CLIENT_ID = "pyh";
+  public static final String CLIENT_ID = "kks";
   public static final String UPDATE = "update";
   public static final String SEND = "send";
   public static final String REMOVE = "remove";
