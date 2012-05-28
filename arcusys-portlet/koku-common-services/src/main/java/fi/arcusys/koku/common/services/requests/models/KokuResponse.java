@@ -85,7 +85,7 @@ public class KokuResponse {
 	@Override
 	public String toString() {
 		return "KokuResponse [answers=" + answers + ", name=" + name
-				+ ", comment=" + comment + "]";
+				+ ", comment=" + comment + ", replierUser=" + replierUser + "]";
 	}
 
 	/* (non-Javadoc)
