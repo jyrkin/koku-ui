@@ -1,4 +1,4 @@
-<%@ page import="fi.arcusys.koku.util.Constants" %>
+<%@ page import="fi.arcusys.koku.common.util.Constants" %>
 <%@ page import="javax.portlet.PortletRequest" %>
 
 /*

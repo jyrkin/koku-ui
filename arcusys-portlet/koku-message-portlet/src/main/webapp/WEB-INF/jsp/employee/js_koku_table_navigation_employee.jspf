@@ -264,6 +264,7 @@ KokuTableNavigationEmployee.prototype.switchSearchTimeMode = function() {
 KokuTableNavigationEmployee.prototype.cancelAppointments = function() {		
 		var messageList = [];
 		var targetPersons = [];
+		var privilidgesError = false;
 		
 		jQuery('input:checkbox[name="message"]:checked').each(function(){
 			var index =  jQuery(this).val();
@@ -273,7 +274,6 @@ KokuTableNavigationEmployee.prototype.cancelAppointments = function() {
 			var status = task['status'];
 			var senderUid = task['senderUser']['uid'];
 			var currentUserUid = kokuUser.uid;
-			var privilidgesError = false;
 			
 			if (senderUid == currentUserUid) {
 				if(status != 'Peruutettu') { // check if cancelled or not
