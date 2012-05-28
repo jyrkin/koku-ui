@@ -95,7 +95,7 @@
 		<span class="request-c-1"><spring:message code="message.from"/>: <c:out value="${appointment.model.senderUser.fullName}" /> </span><br />
 		</c:if>
 		<c:if test="${appointment.model.senderRole != null}">
-			<span class="request-c-1"><spring:message code="appointment.senderRole"/>: <c:out value="${appointment.model.senderRole}" /></span><br />
+			<span class="request-c-1"><spring:message code="appointment.senderRole"/>:</span> <c:out value="${appointment.model.senderRole}" /><br />
 		</c:if>
 		<span class="request-c-1"><spring:message code="message.subject"/>:</span> <c:out value="${appointment.model.subject}" /><br />
 		<span class="request-c-1"><spring:message code="message.description"/>:</span> <c:out value="${appointment.model.description}" /><br />
@@ -224,7 +224,7 @@
 	</div>
 	<div id="task-manager-operation" class="task-manager-operation-part">
 		<input type="button" value="<spring:message code="page.return"/>" onclick="kokuNavigationHelper.returnMainPage()" />
-		<c:if test="${appointment.model.status != 'Peruutettu' && currentUserUid == senderUserUid}">
+		<c:if test="<%= !appointment.getStatus().equals("Peruutettu") && currentUserId.equals(senderUserId)%>">
 			<input type="button" id="cancelButton" value="<spring:message code="appointment.cancel.button"/>" onclick="cancelAppointment()" />
 		</c:if>
 	</div>

@@ -40,7 +40,9 @@ KokuTable.prototype.createAppoitmentsTable = function() {
 	
 		for (var i = 0; i < tasks.length; i++)  {
 			if (tasks[i].recipients) {
-				tasks[i]["cleanHtmlReceviers"] =  tasks[i].recipients.targetPerson.fullName;
+				for (var j = 0; j < tasks[i].recipients.length; j++) {
+					tasks[i]["cleanHtmlReceviers"] += tasks[i].recipients[j].targetPerson.fullName + " ";
+				}
 			} else {
 				tasks[i]["cleanHtmlReceviers"] = "<spring:message code="unknown" />";
 			}
@@ -57,7 +59,7 @@ KokuTable.prototype.createAppoitmentsTable = function() {
 	                  ];
 	
 		var columnIds = [
-						 "senderUser",
+						 "senderUserFullName",
 						 "cleanHtmlReceviers",
 		                 "cleanHtmlsubject",
 		                 "cleanHtmldescription"
@@ -76,7 +78,7 @@ KokuTable.prototype.createAppoitmentsTable = function() {
 	                  ];
 	
 		var columnIds = [
-						 "senderUser",						 
+						 "senderUserFullName",						 
 						 "cleanHtmlReceviers",
 		                 "cleanHtmlsubject",
 		                 "cleanHtmldescription",
@@ -229,7 +231,7 @@ KokuEmployeeTable.prototype.createInfoRequestsTable = function(tasks) {
 			} else {
 				tasks[i]["recieverName"] = getName(tasks[i].recieverUser);		
 			}		
-			tasks[i]["senderName"] = getName(tasks[i].senderUser);
+			tasks[i]["senderName"] = getName(tasks[i].senderUserFullName);
 			tasks[i]["targetPersonName"] = getName(tasks[i].targetPersonUser);
 		}
 	}
@@ -333,7 +335,7 @@ KokuEmployeeTable.prototype.createBrowseUserWarrantsTable = function(tasks) {
 			} else {
 				tasks[i]["recieverName"] = getName(tasks[i].recieverUser);		
 			}		
-			tasks[i]["senderName"] = getName(tasks[i].senderUser);
+			tasks[i]["senderName"] = getName(tasks[i].senderUserFullName);
 			tasks[i]["targetPersonName"] = getName(tasks[i].targetPersonUser);
 		}
 	}

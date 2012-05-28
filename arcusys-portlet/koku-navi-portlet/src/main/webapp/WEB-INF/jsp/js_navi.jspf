@@ -2,7 +2,7 @@
 <%@ include file="js_navigationState.jspf" %>
 var kokuNavigationState = new KokuNavigationState;
 
-function updateNavigationStatus(currentPosition, navigationState) {
+function updateNavigationStatus(currentPosition, navigationState, callback) {
 	var url="<%= naviStatusURL %>";
 	url = formatUrl(url);
 	var naviState = JSON.stringify(navigationState.getStatus());
@@ -11,6 +11,9 @@ function updateNavigationStatus(currentPosition, navigationState) {
 		var obj = jQuery.parseJSON(data);
 		var naviState = obj.navigationState;
 		koku_navi_type = obj.navigationPosition;
+		if (typeof callback != 'undefined' && callback != null) {
+			callback();
+		}
 	});
 }
 
@@ -104,7 +107,7 @@ function focusCurrentItem(naviType) {
 	switch(currentPage) {
 		case '<%= defaultPage %>':		
 			// var naviType = readKokuCookie();
-			if(naviType != "") {
+			if(typeof naviType != 'undefined' && naviType != null && naviType != null) {
 				bold("#"+naviType);				
 			} else {
 				bold('#msg_inbox'); 
@@ -249,25 +252,27 @@ function closeKokuNavi(toggleId, indicatorId) {
 function navigateToPage(naviType) {
 	if (typeof kokuNavigationHelper === "undefined" || kokuNavigationHelper === null) {
 		// createKokuCookie(naviType);
-		updateNavigationStatus(naviType, kokuNavigationState);		
-		window.location = "<%= defaultPath %>" + "?resetView=true&NAVI_TYPE=" + naviType;
-		return;
+		updateNavigationStatus(naviType, kokuNavigationState, function() {
+			window.location = "<%= defaultPath %>" + "?resetView=true&NAVI_TYPE=" + naviType;
+			return;
+		});		
 	}
 	if (typeof kokuNavigationHelper.getHelperIdentifier() === "undefined") {
 		/* console.error("Bug in code!! kokuNavigationHelper.getHelperIdentifier() is not defined!"); */
 		return;
 	}
 	/* If navi_type is missing we are not in Message-portlet page ->  */
-	updateNavigationStatus(naviType, kokuNavigationState);
-	// createKokuCookie(naviType);
+	updateNavigationStatus(naviType, kokuNavigationState, function() {
+		// createKokuCookie(naviType);
 	
-	/* Update current position in navigation to server (session)  */
-	switch(kokuNavigationHelper.getHelperIdentifier()) {
-		case "MessagePortlet":
-			window.location = kokuNavigationHelper.getReturnMainPageLink() + "&NAVI_TYPE=" + naviType;
-			break;
-		default:
-			window.location = "<%= defaultPath %>" + "?resetView=true&NAVI_TYPE=" + naviType;
-			break;
-	}
+		/* Update current position in navigation to server (session)  */
+		switch(kokuNavigationHelper.getHelperIdentifier()) {
+			case "MessagePortlet":
+				window.location = kokuNavigationHelper.getReturnMainPageLink() + "&NAVI_TYPE=" + naviType;
+				break;
+			default:
+				window.location = "<%= defaultPath %>" + "?resetView=true&NAVI_TYPE=" + naviType;
+				break;
+			}
+	});
 }

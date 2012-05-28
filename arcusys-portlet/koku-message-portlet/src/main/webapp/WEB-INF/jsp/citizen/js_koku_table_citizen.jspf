@@ -44,7 +44,7 @@ KokuTable.prototype.createAppoitmentsTable = function() {
 	                  ];
 	
 		var columnIds = [
-						 "senderUser",
+						 "senderUserFullName",
 		                 "cleanHtmlsubject",
 		                 "cleanHtmldescription"
 		                ];
@@ -60,7 +60,7 @@ KokuTable.prototype.createAppoitmentsTable = function() {
 	                  ];
 	
 		var columnIds = [
-						 "senderUser",
+						 "senderUserFullName",
 		                 "cleanHtmlsubject",
 		                 "cleanHtmldescription"
 		                ];
@@ -76,7 +76,7 @@ KokuTable.prototype.createAppoitmentsTable = function() {
 	                  ];
 	
 		var columnIds = [
-						 "senderUser",
+						 "senderUserFullName",
 		                 "cleanHtmlsubject",
 		                 "cleanHtmldescription",
 		                 "status"
