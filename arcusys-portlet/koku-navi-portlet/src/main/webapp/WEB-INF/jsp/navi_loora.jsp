@@ -170,14 +170,17 @@
 			</ul>
 		</li>
 		
-		<!--  ASIOINTIPALVELUT -->		
+		<!--  ASIOINTIPALVELUT -->
 		<li>
 			<span class="naviLinkHeaderNonLink" onclick="toggleKokuNavi('#kokuNaviApplications', '#kokuNaviTreeNodeIndicatorApplications');">
 				<span class="kokuNaviTreeNodeIndicator" id="kokuNaviTreeNodeIndicatorApplications">+</span>Asiointipalvelut
 			</span>
 			<ul id="kokuNaviApplications" class="child" style="display:none;">
-				<li><span class="naviLinkHeaderNonLink">Palveluhakemukset</span>
-					<ul class="child">
+				<li>
+					<span class="naviLinkHeaderNonLink" onclick="toggleKokuNavi('#kokuNavikokurApplicationsService', '#kokuNaviTreeNodeIndicatorApplicationsService');">
+						<span class="kokuNaviTreeNodeIndicator" id="kokuNaviTreeNodeIndicatorApplicationsService">+</span>Palveluhakemukset
+					</span>
+					<ul id="kokuNavikokurApplicationsService" class="child">
 						<!--  show only employees -->						
 						<li id="<%= Constants.TASK_TYPE_APPLICATION_KINDERGARTEN_BROWSE%>"><a href="javascript:void(0)" onclick="navigateToPage('<%= Constants.TASK_TYPE_APPLICATION_KINDERGARTEN_BROWSE%>')">Päivähoitohakemukset</a></li>
 					</ul>

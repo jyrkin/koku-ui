@@ -148,7 +148,8 @@ KokuCitizenTable.prototype.createRequestsTable = function() {
 	
 	function createTable(tasks, columnNames, tableName) {
 		if (tasks == undefined || tasks == null || tasks.length == 0) {
-			return showErrorMsgYouDontHaveAnyTipys();
+			//return showErrorMsgYouDontHaveAnyTipys();
+			return KokuUtil.errorMsg.showErrorMsg("<spring:message code="errorMsg.noContent"/>");			
 		}
 		
 		var columnIds = [
