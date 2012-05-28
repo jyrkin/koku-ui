@@ -12,6 +12,8 @@
 package fi.koku.kks.controller;
 
 
+import java.util.Locale;
+
 import javax.portlet.ActionResponse;
 import javax.portlet.PortletSession;
 import javax.portlet.RenderResponse;
@@ -23,6 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindException;
@@ -41,6 +44,7 @@ import fi.koku.kks.model.Entry;
 import fi.koku.kks.model.EntryValue;
 import fi.koku.kks.model.KKSCollection;
 import fi.koku.kks.model.KksService;
+import fi.koku.kks.model.Message;
 import fi.koku.kks.model.Person;
 import fi.koku.kks.model.Version;
 import fi.koku.kks.ui.common.Accountable;
@@ -71,6 +75,9 @@ public class CollectionController {
   @Autowired
   @Qualifier("deletionValidator")
   private Validator deleteValidator;
+  
+  @Autowired
+  private ApplicationContext context;
   
   private final static String VALID = "VALID";
 
@@ -382,11 +389,38 @@ public class CollectionController {
       response.setRenderParameter("pic", child.getPic());
       response.setRenderParameter("collection", collection );
     } else {    
-      Log.getInstance().remove(Utils.getPicFromSession(session), child.getPic(), collectionType, "(" + collection + " )" + collectionName + " removed with reason: " +  deletion.getComment() );
-      response.setRenderParameter("action", "showChild");
-      response.setRenderParameter("pic", child.getPic());
+      boolean messageHandled = handleMessage(session, child, collection,
+          collectionName, deletion, response);
+      
+      if (messageHandled) {
+        Log.getInstance().remove(Utils.getPicFromSession(session), child.getPic(), collectionType, "(" + collection + " )" + collectionName + " removed with reason: " +  deletion.getComment() );
+        response.setRenderParameter("action", "showChild");
+        response.setRenderParameter("pic", child.getPic());
+      }
     }
     sessionStatus.setComplete();
+  }
+
+  private boolean handleMessage(PortletSession session, Person child,
+      String collection, String collectionName, Deletion deletion,
+      ActionResponse response ) {
+    boolean messageHandled = deletion.isSendMessage() ? false : true;
+    if ( deletion.isSendMessage() ) {
+      Message message = new Message();
+      message.setTargetChild(child.getPic());      
+      message.setTitle(context.getMessage("ui.kks.collection.deleted", 
+          new Object[] {child.getName(), collectionName }, Locale.getDefault()));
+      message.setMessage(deletion.getComment() );
+      messageHandled = kksService.sendMessage(Utils.getPicFromSession(session), message);
+      
+      if ( !messageHandled ) {
+        response.setRenderParameter("error", "ui.kks.send.message.failed");
+        response.setRenderParameter("action", "showDeleteConfirmation" );
+        response.setRenderParameter("pic", child.getPic());
+        response.setRenderParameter("collection", collection );          
+      }
+    } 
+    return messageHandled;
   }
   
   @ModelAttribute("deletable")

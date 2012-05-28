@@ -76,8 +76,10 @@
 				<th><spring:message code="ui.kks.collection" /></th>
 				<c:if test="${ sessionScope.municipal_employee }">
 					<th>
+						<spring:message code="ui.kks.messages" />
 					</th>
 					<th>
+						<spring:message code="ui.kks.actions" />
 					</th>
 				</c:if>
 				<th><spring:message code="ui.kks.last.entry" />

@@ -59,6 +59,8 @@ import fi.koku.services.entity.kks.v1.KksServicePortType;
 import fi.koku.services.entity.kks.v1.KksTagNamesType;
 import fi.koku.services.entity.kks.v1.KksType;
 import fi.koku.services.entity.kks.v1.ServiceFault;
+import fi.koku.services.entity.kv.v1.DeliverMessageResponse;
+import fi.koku.services.entity.kv.v1.KokuCommonMessagingService;
 import fi.koku.services.entity.person.v1.PersonConstants;
 import fi.koku.services.entity.person.v1.PersonService;
 import fi.koku.services.entity.tiva.v1.Consent;
@@ -89,6 +91,7 @@ public class KksService {
   private CustomerServicePortType customerService;
   private FamilyService familyService;
   private KokuTivaToKksService tivaService;
+  private KokuCommonMessagingService messageService;
   private AuthorizationInfoService authorizationService;
   private PersonService personService;
 
@@ -102,6 +105,7 @@ public class KksService {
     familyService = getFamilyService();
     authorizationService = getAuthorizationService();
     tivaService = getTivaService();
+    messageService = getKvService();
     personService = new PersonService();
   }
 
@@ -459,6 +463,37 @@ public class KksService {
     return getChilds(user);
   }
 
+  public List<String> getGuardians(String pic ) {
+    List<String> pics = new ArrayList<String>();
+    CommunityQueryCriteriaType communityQueryCriteria = new CommunityQueryCriteriaType();
+    communityQueryCriteria.setCommunityType(Constants.COMMUNITY_TYPE_GUARDIAN_COMMUNITY);
+    MemberPicsType mpt = new MemberPicsType();
+    mpt.getMemberPic().add(pic);
+    communityQueryCriteria.setMemberPics(mpt);
+    CommunitiesType communitiesType = null;
+
+    try {
+      communitiesType = communityService.opQueryCommunities(communityQueryCriteria, getCommynityAuditInfo(pic));
+    } catch (fi.koku.services.entity.community.v1.ServiceFault fault) {
+      LOG.error("Failed to get communities", fault);
+    }
+
+    if (communitiesType != null) {
+      List<CommunityType> communities = communitiesType.getCommunity();
+      for (CommunityType community : communities) {
+        MembersType membersType = community.getMembers();
+        List<MemberType> members = membersType.getMember();
+
+        for (MemberType member : members) {
+          if (member.getRole().equals(Constants.ROLE_GUARDIAN )) {
+            pics.add(member.getPic());
+          }
+        }
+      }
+    }
+    return pics;
+  }
+  
   public List<Person> getChilds(String pic) {
     List<Person> childs = new ArrayList<Person>();
     CommunityQueryCriteriaType communityQueryCriteria = new CommunityQueryCriteriaType();
@@ -633,6 +668,11 @@ public class KksService {
     ConsentServiceFactory csf = new ConsentServiceFactory();
     return csf.getService();
   }
+  
+  private KokuCommonMessagingService getKvService() {
+    KvMessageFactory kmf = new KvMessageFactory();
+    return kmf.getService();
+  }
 
   private AuthorizationInfoService getAuthorizationService() {
     AuthorizationInfoServiceFactory f = new AuthorizationInfoServiceFactory(Constants.AUTH_SERVICE_USER_ID,
@@ -648,8 +688,15 @@ public class KksService {
   }
   
   
-  public boolean sendMessage( Message message ) {
-    
-    return false;
+  public boolean sendMessage( String user, Message message ) {
+    try {
+      List<String> guardians =  getGuardians(message.getTargetChild());
+      LOG.debug("Sending message from " + user + " to " + guardians );
+      messageService.deliverMessage(user,guardians, message.getTitle(), message.getMessage() );
+      LOG.debug("Message from "+ user + " sent ");    
+      return true;
+    } catch (Exception e) {
+      return false;
+    }
   }
 }
