@@ -205,7 +205,7 @@ public String htmlToCode(String s)
 	<div id="failedEmailDelivery"></div>
 	<div id="task-manager-operation" class="task-manager-operation-part">
 		<input type="button" value="<spring:message code="page.return"/>" onclick="kokuNavigationHelper.returnMainPage()" />
-		<% if (Properties.IS_KUNPO_PORTAL) { %>
+		<% if (Properties.IS_KUNPO_PORTAL && !messageModel.getModel().isReplyDisabled()) { %>
 		<input type="button" value="<spring:message code="message.replyMessage"/>" onclick="KokuMessage.citizen.replyToMessage()" />
 		<% } %>
 	</div>

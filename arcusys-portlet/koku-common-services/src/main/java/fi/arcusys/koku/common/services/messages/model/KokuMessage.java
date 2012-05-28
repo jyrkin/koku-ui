@@ -21,6 +21,7 @@ public class KokuMessage {
 	private String messageType;
 	private String messageStatus;
 	private String messageStatusLocalized;
+	private boolean replyDisabled;
 	private List<KokuUser> deliveryFailedTo;
 	
 	/**
@@ -107,6 +108,14 @@ public class KokuMessage {
 	 */
 	public final void setMessageStatusLocalized(String messageStatusLocalized) {
 		this.messageStatusLocalized = messageStatusLocalized;
+	}
+
+	public boolean isReplyDisabled() {
+		return replyDisabled;
+	}
+
+	public void setReplyDisabled(boolean replyDisabled) {
+		this.replyDisabled = replyDisabled;
 	}
 
 	public final List<KokuUser> getDeliveryFailedTo() {

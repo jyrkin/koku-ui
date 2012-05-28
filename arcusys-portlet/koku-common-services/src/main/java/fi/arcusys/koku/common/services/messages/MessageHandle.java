@@ -179,6 +179,7 @@ public class MessageHandle extends AbstractHandle implements MessageTasks {
 		kokuMessage.setMessageType(MessageUtil.getMessageType(message.getMessageType()));
 		kokuMessage.setMessageStatus(message.getMessageStatus().value());
 		kokuMessage.setMessageStatusLocalized(localizeMsgStatus(message.getMessageStatus()));
+		kokuMessage.setReplyDisabled(message.isReplyDisabled());
 		for (User recipientUser : message.getRecipientUserInfos()) {
 			kokuMessage.getRecipientUsers().add(new KokuUser(recipientUser));
 		}
