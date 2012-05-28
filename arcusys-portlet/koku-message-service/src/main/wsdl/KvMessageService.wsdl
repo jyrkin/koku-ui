@@ -14,7 +14,6 @@
 <xs:element name="getMessagesOld" type="tns:getMessagesOld" />
 <xs:element name="getMessagesOldResponse" type="tns:getMessagesOldResponse" />
 <xs:element name="getMessagesResponse" type="tns:getMessagesResponse" />
-
 <xs:element name="getTotalMessages" type="tns:getTotalMessages" />
 <xs:element name="getTotalMessagesOld" type="tns:getTotalMessagesOld" />
 <xs:element name="getTotalMessagesOldResponse" type="tns:getTotalMessagesOldResponse" />
@@ -32,7 +31,6 @@
 <xs:complexType name="archiveOldMessagesResponse">
 <xs:sequence />
 </xs:complexType>
-
 <xs:complexType name="getMessagesOld">
 <xs:sequence>
 <xs:element minOccurs="0" name="user" type="xs:string" />
@@ -50,12 +48,12 @@
 <xs:complexType name="messageSummary">
 <xs:sequence>
 <xs:element minOccurs="0" name="creationDate" type="xs:dateTime" />
-
 <xs:element name="messageId" type="xs:long" />
 <xs:element minOccurs="0" name="messageStatus" type="tns:messageStatus" />
 <xs:element minOccurs="0" name="messageType" type="tns:folderType" />
 <xs:element maxOccurs="unbounded" minOccurs="0" name="recipientUserInfos" nillable="true" type="ns1:user" />
 <xs:element maxOccurs="unbounded" minOccurs="0" name="recipients" nillable="true" type="xs:string" />
+<xs:element minOccurs="0" name="replyDisabled" type="xs:boolean" />
 <xs:element minOccurs="0" name="sender" type="xs:string" />
 <xs:element minOccurs="0" name="senderUserInfo" type="ns1:user" />
 <xs:element minOccurs="0" name="subject" type="xs:string" />
@@ -68,7 +66,6 @@
 </xs:complexType>
 <xs:complexType name="deleteMessagesResponse">
 <xs:sequence />
-
 </xs:complexType>
 <xs:complexType name="getMessageById">
 <xs:sequence>
@@ -85,9 +82,8 @@
 <xs:extension base="tns:messageSummary">
 <xs:sequence>
 <xs:element minOccurs="0" name="content" type="xs:string" />
-<xs:element minOccurs="0" name="originalContent" type="xs:string" />
 <xs:element maxOccurs="unbounded" minOccurs="0" name="deliveryFailedTo" nillable="true" type="ns1:user" />
-
+<xs:element minOccurs="0" name="originalContent" type="xs:string" />
 </xs:sequence>
 </xs:extension>
 </xs:complexContent>
@@ -105,7 +101,6 @@
 <xs:sequence>
 <xs:element minOccurs="0" name="user" type="xs:string" />
 <xs:element minOccurs="0" name="folderType" type="tns:folderType" />
-
 <xs:element minOccurs="0" name="subQuery" type="xs:string" />
 </xs:sequence>
 </xs:complexType>
@@ -123,7 +118,6 @@
 </xs:complexType>
 <xs:complexType name="criteria">
 <xs:sequence>
-
 <xs:element maxOccurs="unbounded" minOccurs="0" name="fields" nillable="true" type="tns:fields" />
 <xs:element maxOccurs="unbounded" minOccurs="0" name="keywords" nillable="true" type="xs:string" />
 </xs:sequence>
@@ -141,7 +135,6 @@
 </xs:complexType>
 <xs:complexType name="getUnreadMessagesResponse">
 <xs:sequence>
-
 <xs:element name="return" type="xs:int" />
 </xs:sequence>
 </xs:complexType>
@@ -159,7 +152,6 @@
 <xs:element name="startNum" type="xs:int" />
 <xs:element name="maxNum" type="xs:int" />
 </xs:sequence>
-
 </xs:complexType>
 <xs:complexType name="orderBy">
 <xs:sequence>
@@ -177,7 +169,6 @@
 <xs:element maxOccurs="unbounded" minOccurs="0" name="messageId" type="xs:long" />
 </xs:sequence>
 </xs:complexType>
-
 <xs:complexType name="archiveMessagesResponse">
 <xs:sequence />
 </xs:complexType>
@@ -195,7 +186,6 @@
 <xs:enumeration value="Unread" />
 </xs:restriction>
 </xs:simpleType>
-
 <xs:simpleType name="fields">
 <xs:restriction base="xs:string">
 <xs:enumeration value="Sender" />
@@ -213,7 +203,6 @@
 </xs:simpleType>
 </xs:schema>
 <xs:schema targetNamespace="http://soa.common.koku.arcusys.fi/" version="1.0" xmlns:tns="http://soa.common.koku.arcusys.fi/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-
 <xs:element name="perform" type="tns:perform" />
 <xs:element name="performResponse" type="tns:performResponse" />
 <xs:complexType name="user">
@@ -231,7 +220,6 @@
 </xs:complexType>
 <xs:complexType name="perform">
 <xs:sequence />
-
 </xs:complexType>
 </xs:schema>
   </wsdl:types>
@@ -242,7 +230,6 @@
   <wsdl:message name="getMessagesResponse">
     <wsdl:part element="tns:getMessagesResponse" name="parameters">
     </wsdl:part>
-
   </wsdl:message>
   <wsdl:message name="deleteMessages">
     <wsdl:part element="tns:deleteMessages" name="parameters">
@@ -252,7 +239,6 @@
     <wsdl:part element="tns:archiveMessages" name="parameters">
     </wsdl:part>
   </wsdl:message>
-
   <wsdl:message name="getTotalMessagesOld">
     <wsdl:part element="tns:getTotalMessagesOld" name="parameters">
     </wsdl:part>
@@ -262,7 +248,6 @@
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="deleteMessagesResponse">
-
     <wsdl:part element="tns:deleteMessagesResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
@@ -272,7 +257,6 @@
   </wsdl:message>
   <wsdl:message name="getMessageByIdResponse">
     <wsdl:part element="tns:getMessageByIdResponse" name="parameters">
-
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="getTotalMessages">
@@ -282,7 +266,6 @@
   <wsdl:message name="setMessagesStatus">
     <wsdl:part element="tns:setMessagesStatus" name="parameters">
     </wsdl:part>
-
   </wsdl:message>
   <wsdl:message name="getUnreadMessagesResponse">
     <wsdl:part element="tns:getUnreadMessagesResponse" name="parameters">
@@ -292,7 +275,6 @@
     <wsdl:part element="tns:archiveOldMessagesResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
-
   <wsdl:message name="getTotalMessagesOldResponse">
     <wsdl:part element="tns:getTotalMessagesOldResponse" name="parameters">
     </wsdl:part>
@@ -302,7 +284,6 @@
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="getTotalMessagesResponse">
-
     <wsdl:part element="tns:getTotalMessagesResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
@@ -312,7 +293,6 @@
   </wsdl:message>
   <wsdl:message name="getMessageById">
     <wsdl:part element="tns:getMessageById" name="parameters">
-
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="archiveMessagesResponse">
@@ -322,7 +302,6 @@
   <wsdl:message name="getMessages">
     <wsdl:part element="tns:getMessages" name="parameters">
     </wsdl:part>
-
   </wsdl:message>
   <wsdl:portType name="KokuMessageService">
     <wsdl:operation name="archiveOldMessages">
@@ -332,7 +311,6 @@
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getMessagesOld">
-
       <wsdl:input message="tns:getMessagesOld" name="getMessagesOld">
     </wsdl:input>
       <wsdl:output message="tns:getMessagesOldResponse" name="getMessagesOldResponse">
@@ -342,7 +320,6 @@
       <wsdl:input message="tns:deleteMessages" name="deleteMessages">
     </wsdl:input>
       <wsdl:output message="tns:deleteMessagesResponse" name="deleteMessagesResponse">
-
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getMessageById">
@@ -352,7 +329,6 @@
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="setMessagesStatus">
-
       <wsdl:input message="tns:setMessagesStatus" name="setMessagesStatus">
     </wsdl:input>
       <wsdl:output message="tns:setMessagesStatusResponse" name="setMessagesStatusResponse">
@@ -362,7 +338,6 @@
       <wsdl:input message="tns:getTotalMessagesOld" name="getTotalMessagesOld">
     </wsdl:input>
       <wsdl:output message="tns:getTotalMessagesOldResponse" name="getTotalMessagesOldResponse">
-
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getTotalMessages">
@@ -372,7 +347,6 @@
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getUnreadMessages">
-
       <wsdl:input message="tns:getUnreadMessages" name="getUnreadMessages">
     </wsdl:input>
       <wsdl:output message="tns:getUnreadMessagesResponse" name="getUnreadMessagesResponse">
@@ -382,7 +356,6 @@
       <wsdl:input message="tns:getMessages" name="getMessages">
     </wsdl:input>
       <wsdl:output message="tns:getMessagesResponse" name="getMessagesResponse">
-
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="archiveMessages">
@@ -392,7 +365,6 @@
     </wsdl:output>
     </wsdl:operation>
   </wsdl:portType>
-
   <wsdl:binding name="KokuMessageServiceSoapBinding" type="tns:KokuMessageService">
     <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
     <wsdl:operation name="archiveOldMessages">
@@ -402,7 +374,6 @@
       </wsdl:input>
       <wsdl:output name="archiveOldMessagesResponse">
         <soap:body use="literal" />
-
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getMessagesOld">
@@ -412,7 +383,6 @@
       </wsdl:input>
       <wsdl:output name="getMessagesOldResponse">
         <soap:body use="literal" />
-
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="deleteMessages">
@@ -422,7 +392,6 @@
       </wsdl:input>
       <wsdl:output name="deleteMessagesResponse">
         <soap:body use="literal" />
-
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getMessageById">
@@ -432,7 +401,6 @@
       </wsdl:input>
       <wsdl:output name="getMessageByIdResponse">
         <soap:body use="literal" />
-
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="setMessagesStatus">
@@ -442,7 +410,6 @@
       </wsdl:input>
       <wsdl:output name="setMessagesStatusResponse">
         <soap:body use="literal" />
-
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getTotalMessagesOld">
@@ -452,7 +419,6 @@
       </wsdl:input>
       <wsdl:output name="getTotalMessagesOldResponse">
         <soap:body use="literal" />
-
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getTotalMessages">
@@ -462,7 +428,6 @@
       </wsdl:input>
       <wsdl:output name="getTotalMessagesResponse">
         <soap:body use="literal" />
-
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getUnreadMessages">
@@ -472,7 +437,6 @@
       </wsdl:input>
       <wsdl:output name="getUnreadMessagesResponse">
         <soap:body use="literal" />
-
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="archiveMessages">
@@ -482,7 +446,6 @@
       </wsdl:input>
       <wsdl:output name="archiveMessagesResponse">
         <soap:body use="literal" />
-
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getMessages">
@@ -492,7 +455,6 @@
       </wsdl:input>
       <wsdl:output name="getMessagesResponse">
         <soap:body use="literal" />
-
       </wsdl:output>
     </wsdl:operation>
   </wsdl:binding>

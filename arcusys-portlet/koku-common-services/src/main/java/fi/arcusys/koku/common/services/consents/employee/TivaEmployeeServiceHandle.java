@@ -241,6 +241,8 @@ public class TivaEmployeeServiceHandle extends AbstractHandle implements Employe
 			return getMessageSource().getMessage("ConsentReplyStatus.DECLINED", null, locale);
 		case GIVEN:
 			return getMessageSource().getMessage("ConsentReplyStatus.GIVEN", null, locale);
+		case UNDECIDED:
+			return getMessageSource().getMessage("ConsentReplyStatus.UNDECIDED", null, locale);
 		default:
 			return getMessageSource().getMessage("unknown", null, locale);
 		}
