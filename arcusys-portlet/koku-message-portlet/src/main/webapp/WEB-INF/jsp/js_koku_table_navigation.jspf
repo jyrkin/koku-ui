@@ -42,13 +42,12 @@ function KokuTableNavigation(ajax) {
 	 		removeButton : '<input id="kokuRemoveButton" disabled="disabled" type="button" title="<spring:message code="page.removeSelected.tooltip"/>" value="<spring:message code="page.removeSelected"/>"  onclick="kokuTableNavigation.deleteMessages()" />',
 	 		revokeButton : '<input id="kokuRevokeButton" disabled="disabled" type="button" value="<spring:message code="consent.revokeSelected"/>"  onclick="kokuTableNavigation.revokeConsents()" />',
 	 		archiveButton  : '<input id="kokuMsgArchiveButton" disabled="disabled" type="button" value="<spring:message code="page.archive"/>"  onclick="kokuTableNavigation.archiveMessages()" />',
-	 		archiveOldButton : '<input id="kokuMsgArchiveOldButton" disabled="disable" type="button"  title="<spring:message code="page.archiveOld.tooltip"/>" value="<spring:message code="page.archiveOld"/>"  onclick="kokuTableNavigation.archiveOldMessages()" />'
+	 		archiveOldButton : '<input id="kokuMsgArchiveOldButton" type="button"  title="<spring:message code="page.archiveOld.tooltip"/>" value="<spring:message code="page.archiveOld"/>"  onclick="kokuTableNavigation.archiveOldMessages()" />'
 	 	}
 	 }
 
 	function disableActionButtons() {
 		jQuery('input[id=kokuMsgArchiveButton]').attr('disabled', 'disabled');
-		jQuery('input[id=kokuMsgArchiveOldButton]').attr('disabled', 'disabled');
 		jQuery('input[id=kokuRevokeButton]').attr('disabled', 'disabled');
 		jQuery('input[id=kokuRemoveButton]').attr('disabled', 'disabled');
 		jQuery('input[id=kokuCancelButton]').attr('disabled', 'disabled');
@@ -56,7 +55,6 @@ function KokuTableNavigation(ajax) {
 		
 	function enableActionButtons() {				
 		jQuery('input[id=kokuMsgArchiveButton]').removeAttr('disabled');
-		jQuery('input[id=kokuMsgArchiveOldButton]').removeAttr('disabled');
 		jQuery('input[id=kokuRevokeButton]').removeAttr('disabled');
 		jQuery('input[id=kokuRemoveButton]').removeAttr('disabled');
 		jQuery('input[id=kokuCancelButton]').removeAttr('disabled');
