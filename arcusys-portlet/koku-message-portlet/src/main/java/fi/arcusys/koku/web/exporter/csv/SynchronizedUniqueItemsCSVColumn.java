@@ -72,6 +72,12 @@ class SynchronizedUniqueItemsCSVColumn implements CSVColumn {
 	}
 
 	private int getWidth() {
-		return this.columnAnswerMap.size();
+		if (this.columnAnswerMap.size() > 0) {
+			return this.columnAnswerMap.size();
+		} else {
+			/* Even without answers, the datastructure takes at least one CSV column of space */
+			return 1;
+		}
+
 	}
 }

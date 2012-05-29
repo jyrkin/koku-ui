@@ -14,7 +14,8 @@ import java.util.Map;
 class ListItemsCSVColumn implements CSVColumn {
 
 	private String header;
-	private int maxWidth = 0;
+	/* Even without answers, the datastructure takes at least one CSV column of space */
+	private int maxWidth = 1;
 
 	/* Mapping of people to the answers they've given */
 	private Map<CSVPerson, String[]> columnAnswers = new HashMap<CSVPerson, String[]>();
