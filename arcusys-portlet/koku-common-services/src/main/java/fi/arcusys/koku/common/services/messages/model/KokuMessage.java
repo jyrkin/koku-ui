@@ -114,8 +114,13 @@ public class KokuMessage {
 		return replyDisabled;
 	}
 
-	public void setReplyDisabled(boolean replyDisabled) {
-		this.replyDisabled = replyDisabled;
+	public void setReplyDisabled(Boolean replyDisabled) {
+		if (replyDisabled != null) {
+			this.replyDisabled = replyDisabled;
+		} else {
+			this.replyDisabled = true;
+		}
+
 	}
 
 	public final List<KokuUser> getDeliveryFailedTo() {
