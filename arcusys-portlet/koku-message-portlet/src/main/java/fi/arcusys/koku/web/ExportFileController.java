@@ -66,7 +66,9 @@ public class ExportFileController {
 			requestSubject = "vastaus";
 		} else {
 			requestSubject = requestSubject.replaceAll(FILENAME_REGEX_FILTER, "");
-			requestSubject = requestSubject.substring(0, MAX_FILENAME_SIZE);
+			if (requestSubject.length() > MAX_FILENAME_SIZE) {
+				requestSubject = requestSubject.substring(0, MAX_FILENAME_SIZE);
+			}
 
 			/* Firefox doesn't seem to handle spaces for some reason, the filename after
 			 * a space is truncated and the .csv file extension is lost, this fixes it. */
