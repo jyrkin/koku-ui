@@ -18,6 +18,10 @@
 	<c:if test="${ sessionScope.municipal_employee }">
 		<portlet:param name="action" value="showEmployee" />
 		<portlet:param name="childs" value="${child.pic}" />
+		
+		<c:if test="${ not empty selected }">
+		   <portlet:param name="selected" value="${selected}" />
+		</c:if>
 	</c:if>
 </portlet:renderURL>
 <portlet:actionURL var="creationActionUrl">

@@ -56,6 +56,7 @@ public class MainController {
       return "childs";
     } else {
       model.addAttribute("child", new Person());
+      model.addAttribute("groups", kksService.getGroups(Utils.getPicFromSession(session)));
       return "search";
     }
   }

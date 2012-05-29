@@ -54,18 +54,24 @@ public class ChildController {
   private static final Logger LOG = LoggerFactory.getLogger(ChildController.class);
 
   @ActionMapping(params = "action=toChildInfo")
-  public void toChildInfo(@ModelAttribute(value = "child") Person child, BindingResult bindingResult,
+  public void toChildInfo(@RequestParam(value = "selected", required = false) String selected, @ModelAttribute(value = "child") Person child, BindingResult bindingResult,
       ActionResponse response, SessionStatus sessionStatus) {
     LOG.debug("toChildInfo");
     response.setRenderParameter("action", "showChild");
     response.setRenderParameter("pic", child.getPic());
+    
+    if ( StringUtils.isNotEmpty(selected) ) {
+      response.setRenderParameter("selected", selected );
+    }
+    
     sessionStatus.setComplete();
   }
 
   @RenderMapping(params = "action=showChild")
   public String show(PortletSession session, @ModelAttribute(value = "child") Person child,
       @RequestParam(value = "error", required = false) String error,
-      @RequestParam(value = "message", required = false) String message, RenderResponse response, Model model) {
+      @RequestParam(value = "message", required = false) String message, @RequestParam(value = "selected", required = false) String selected,
+      RenderResponse response, Model model) {
     LOG.debug("show child");
 
     try {
@@ -91,6 +97,10 @@ public class ChildController {
 
       if (StringUtils.isNotEmpty(message)) {
         model.addAttribute("message", message);
+      }
+      
+      if ( StringUtils.isNotEmpty(selected) ) {
+        model.addAttribute("selected", selected );
       }
 
       return "child";

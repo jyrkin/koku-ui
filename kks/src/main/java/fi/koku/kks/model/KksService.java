@@ -61,6 +61,7 @@ import fi.koku.services.entity.kks.v1.KksType;
 import fi.koku.services.entity.kks.v1.ServiceFault;
 import fi.koku.services.entity.kv.v1.DeliverMessageResponse;
 import fi.koku.services.entity.kv.v1.KokuCommonMessagingService;
+import fi.koku.services.entity.person.v1.Group;
 import fi.koku.services.entity.person.v1.PersonConstants;
 import fi.koku.services.entity.person.v1.PersonService;
 import fi.koku.services.entity.tiva.v1.Consent;
@@ -698,5 +699,13 @@ public class KksService {
     } catch (Exception e) {
       return false;
     }
+  }
+  
+  public List<String> getGroups( String userId ) {
+    return personService.getGroupIds(PersonConstants.PERSON_SERVICE_DOMAIN_OFFICER, userId, Constants.COMPONENT_KKS);
+  }
+  
+  public Group getGroup( String userId, String groupId ) {
+    return personService.getGroup(PersonConstants.PERSON_SERVICE_DOMAIN_OFFICER, groupId, userId, Constants.COMPONENT_KKS);
   }
 }
