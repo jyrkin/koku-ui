@@ -88,7 +88,14 @@
 				</c:if>
 			</div>
 
-			<h3 class="portlet-section-subheader">RYHMÄT</h3>
+			<h3 class="portlet-section-subheader"><spring:message code="ui.kks.groups" /></h3>
+			
+			<c:if test="${empty groups}">
+				<div>
+					<spring:message code="ui.kks.no.groups" />
+				</div>
+			</c:if>
+			
 			<c:forEach var="group" items="${groups}">
 				<div>
 					<c:choose>
