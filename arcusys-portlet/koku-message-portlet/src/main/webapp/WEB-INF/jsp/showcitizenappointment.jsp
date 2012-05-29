@@ -118,7 +118,7 @@
 	    		<td class="head comment"><spring:message code="appointment.comment"/></td>
 	    	</tr>
 	        <tr class="evenRow">
-	          <td class="date"><c:out value="${appointment.model.slot.date}" /></td>
+	          <td class="date"><c:out value="${appointment.model.slot.appointmentDate}" /></td>
 	          <td class="startTime"><c:out value="${appointment.model.slot.startTime}" /></td>
 	          <td class="endTime"><c:out value="${appointment.model.slot.endTime}" /></td>
 	          <td class="location"><c:out value="${appointment.model.slot.location}" /></td>

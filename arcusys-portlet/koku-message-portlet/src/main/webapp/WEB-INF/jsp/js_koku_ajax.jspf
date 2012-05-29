@@ -152,32 +152,34 @@ KokuAjax.prototype.ajaxGetTasks = function(pageObj, presentTasks) {
 			
 			/* Popup titles */
 			jQuery('span.jQueryToolTip').qtip({  
-				show: {
-				 delay: 10,
-				 when : {
-				 	event : 'mouseover'
-				 	},
-				 effect : {
-				 	type: 'fade',
-				 	length: 100
-				 	}
-				},
+				show: kokuToolTipSettings.show,
 				hide: 'mouseout',
-				style: { 
-					width: 200,
-					padding: 5,
-					background: '#EFEFEF',
-					color: 'black',
-					textAlign: 'center',
-					border: {
-					   width: 1,
-					   radius: 5,
-					   color: '#CCC'
-					},
-					name: 'blue', 
-					tip: true 
+				style: kokuToolTipSettings.style
+			});
+			
+			/* Popup titles with HTML */
+			jQuery('span.jQueryToolTipHtml').qtip({ 
+				content: { text: '---' },
+				show: kokuToolTipSettings.show,
+				hide: 'mouseout',
+				style: kokuToolTipSettings.style,
+				api : {
+					beforeRender : function() {
+						var description = this.elements.target.children().html();
+						var content = { 
+							prerender : false,
+							text : description, 
+							title : {
+								button : false,
+								text : false							
+							},
+							url : false
+						 };
+						this.options.content = content;						
+					}
 				}
-			});			
+			});
+			
 				
 		} else {
 			var message = "<spring:message code="error.unLogin" />";

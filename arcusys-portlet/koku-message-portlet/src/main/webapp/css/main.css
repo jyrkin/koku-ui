@@ -848,4 +848,29 @@
 	table.task-manager-table.appoitmentsInboxCitizenTable td.status {
 		width: 80px;
 	}
+	
+	
+	/* jQueryToolTipHtml */
+	div.recipientGroup {
+		padding-bottom: 5px;
+	    padding-left: 5px;
+	    text-align: left;
+	    border-top: 1px dotted #CCCCCC;
+	}
+	
+	div.recipientGroup:first-child {
+		border-top: none;
+	}
+	
+	div.recipientGroup span.targetName {
+		display: block;
+		padding-left: 5px;
+		font-weight: bold;
+		
+	}
+	
+	div.recipientGroup span.parentName {
+		display: block;
+		padding-left: 15px;
+	}
 }

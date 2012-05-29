@@ -26,6 +26,34 @@ function Config(refDuration, msgType) {
 	this.messageType = msgType;
 	this.refreshTimer;
 };
+
+
+var kokuToolTipSettings = {
+	style: { 
+		width: 200,
+		padding: 5,
+		background: '#EFEFEF',
+		color: 'black',
+		textAlign: 'center',
+		border: {
+		   width: 1,
+		   radius: 5,
+		   color: '#CCC'
+		},
+		name: 'blue', 
+		tip: true 
+	},
+	show: {
+		delay: 10,
+		when : {
+			event : 'mouseover'
+		},
+		effect : {
+			type: 'fade',
+			length: 100
+		}
+	}
+};
  
 /**
  * Paging object to handle page operations

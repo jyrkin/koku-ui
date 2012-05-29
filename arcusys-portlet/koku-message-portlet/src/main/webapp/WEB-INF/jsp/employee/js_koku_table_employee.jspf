@@ -37,12 +37,41 @@ KokuTable.prototype.createAppoitmentsTable = function() {
 	 
 	 
 	function flattenReciviers(tasks) {
-	
-		for (var i = 0; i < tasks.length; i++)  {
-			if (tasks[i].recipients) {
-				for (var j = 0; j < tasks[i].recipients.length; j++) {
-					tasks[i]["cleanHtmlReceviers"] += tasks[i].recipients[j].targetPerson.fullName + " ";
+		
+		function createPopupBox(recipients) {
+			var targetNames = "";
+			var description = "";
+
+			var i,j, targetName, parents;
+			
+			if (recipients) {
+				for (i = 0; i < recipients.length; i++ ) {
+					 targetName = recipients[i].targetPerson.fullName;
+					 targetNames +=  targetName + ", ";
+					 parents = recipients[i].recipients;
+					 description += "<div class='recipientGroup'><span class='targetName'> " + targetName +":</span>";
+					 for (j = 0; j < parents.length; j++ ) {
+					 	description += "<span class='parentName'>" + parents[j].fullName + "</span>";
+					 }
+					 description += "</div>"; 
 				}
+				targetNames = targetNames.substring(0, targetNames.length-2);
+				if (targetNames.length > KokuUtil.constants.fieldMaxLength) {
+					targetNames = targetNames.substring(0, KokuUtil.constants.fieldMaxLength);
+					targetNames += "..";
+				}
+				return KokuUtil.popup(targetNames, description);			
+			} else {
+				return "<spring:message code="unknown" />";
+			}
+		}
+	
+		var i,j;
+		var recipients;
+		
+		for (i = 0; i < tasks.length; i++)  {
+			if (tasks[i].recipients) {
+				tasks[i]["cleanHtmlReceviers"] = createPopupBox(tasks[i].recipients);
 			} else {
 				tasks[i]["cleanHtmlReceviers"] = "<spring:message code="unknown" />";
 			}
@@ -72,6 +101,7 @@ KokuTable.prototype.createAppoitmentsTable = function() {
 		var columnNames = [
 					   "<spring:message code="message.choose" />",
 	                   "<spring:message code="message.from" />",
+	                   "<spring:message code="message.to" />",	                   
 	                   "<spring:message code="message.subject" />",
 	                   "<spring:message code="message.description" />",
 	                   "<spring:message code="message.status" />"

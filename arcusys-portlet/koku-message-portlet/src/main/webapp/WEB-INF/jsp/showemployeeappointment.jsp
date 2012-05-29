@@ -118,7 +118,7 @@
 	    	</tr>
 	    	<c:forEach var="slot" items="${appointment.model.approvedSlots}" varStatus="loopStatus">
 	        <tr class="<c:out value="${loopStatus.index % 2 == 0 ? 'evenRow' : 'oddRow'}" />">
-	          <td class="date"><c:out value="${slot.date}" /></td>
+	          <td class="date"><c:out value="${slot.appointmentDate}" /></td>
 	          <td class="startTime"><c:out value="${slot.startTime}" /></td>
 	          <td class="endTime"><c:out value="${slot.endTime}" /></td> 
 	          <td class="location"><c:out value="${slot.location}" /></td>
