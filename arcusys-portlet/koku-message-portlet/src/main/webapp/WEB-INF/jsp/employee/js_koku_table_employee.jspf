@@ -259,9 +259,9 @@ KokuEmployeeTable.prototype.createInfoRequestsTable = function(tasks) {
 			if (tasks[i].recieverUser.displayname === undefined || tasks[i].recieverUser.displayname.length == 0) {
 				tasks[i]["recieverName"] = tasks[i].recieverRoleUid;
 			} else {
-				tasks[i]["recieverName"] = getName(tasks[i].recieverUser);		
+				tasks[i]["recieverName"] = getName(tasks[i].recieverUser);
 			}		
-			tasks[i]["senderName"] = getName(tasks[i].senderUserFullName);
+			tasks[i]["senderName"] = getName(tasks[i].senderUser);
 			tasks[i]["targetPersonName"] = getName(tasks[i].targetPersonUser);
 		}
 	}
@@ -365,7 +365,7 @@ KokuEmployeeTable.prototype.createBrowseUserWarrantsTable = function(tasks) {
 			} else {
 				tasks[i]["recieverName"] = getName(tasks[i].recieverUser);		
 			}		
-			tasks[i]["senderName"] = getName(tasks[i].senderUserFullName);
+			tasks[i]["senderName"] = getName(tasks[i].senderUser);
 			tasks[i]["targetPersonName"] = getName(tasks[i].targetPersonUser);
 		}
 	}
