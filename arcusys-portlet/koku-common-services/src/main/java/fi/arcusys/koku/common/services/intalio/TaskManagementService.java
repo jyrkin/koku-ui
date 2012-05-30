@@ -10,8 +10,6 @@ import org.apache.log4j.Logger;
 import fi.arcusys.intalio.tms.CountAvailableTasksRequest;
 import fi.arcusys.intalio.tms.GetAvailableTasksRequest;
 import fi.arcusys.intalio.tms.GetAvailableTasksResponse;
-import fi.arcusys.intalio.tms.GetPipaRequest;
-import fi.arcusys.intalio.tms.GetPipaResponse;
 import fi.arcusys.intalio.tms.GetTaskListRequest;
 import fi.arcusys.intalio.tms.GetTaskListResponse;
 import fi.arcusys.intalio.tms.GetTaskRequest;
@@ -22,7 +20,6 @@ import fi.arcusys.intalio.tms.Task;
 import fi.arcusys.intalio.tms.TaskManagementServices;
 import fi.arcusys.intalio.tms.TaskManagementServicesPortType;
 import fi.arcusys.intalio.tms.TaskMetadata;
-import fi.arcusys.intalio.tms.UnavailableTaskFault_Exception;
 import fi.arcusys.intalio.token.TokenService;
 import fi.arcusys.intalio.token.TokenServicePortType;
 import fi.arcusys.koku.common.exceptions.IntalioAuthException;
@@ -30,6 +27,8 @@ import fi.arcusys.koku.common.util.Properties;
 
 /**
  * Handles tasks processing via intalio web services
+ * 
+ * TODO: Should we throw KokuServiceException if something fails like we do in other services?
  * 
  * @author Jinhua Chen May 9, 2011
  */
@@ -75,8 +74,7 @@ public class TaskManagementService {
 			participantToken = tokenService
 					.authenticateUser(username, password);
 		} catch (Exception e) {
-			throw new IntalioAuthException(
-					"Trying to get intalio token failed: " + e.getMessage(), e);
+			throw new IntalioAuthException("Username: '"+username+"'Trying to get intalio token failed: " + e.getMessage(), e);
 		}
 		return participantToken;
 	}
@@ -98,7 +96,7 @@ public class TaskManagementService {
 	 * @return a list of intalio tasks
 	 */
 	public List<TaskMetadata> getAvailableTasks(String participantToken,
-			String taskType, String subQuery, String first, String max) {
+			String taskType, String subQuery, String first, String max)  {
 
 		List<TaskMetadata> taskList = new ArrayList<TaskMetadata>();
 		try {
@@ -112,15 +110,13 @@ public class TaskManagementService {
 			availTasksRes = taskMgrService.getAvailableTasks(getAvailTasksReq);
 			taskList = availTasksRes.getTask();
 		} catch (InvalidParticipantTokenFault_Exception e) {
-			LOG.error("getAvailableTasks - InvalidParticipantTokenFault_Exception: "
+			LOG.error("getAvailableTasks - TaskType: '"+taskType+"' Token: '"+participantToken+"' subQuery: '"+subQuery+"' InvalidParticipantTokenFault_Exception: "
 					+ e.getMessage());
 		} catch (InvalidInputMessageFault_Exception e2) {
-			LOG.error("getAvailableTasks - InvalidInputMessageFault_Exception: "
+			LOG.error("getAvailableTasks - TaskType: '"+taskType+"' Token: '"+participantToken+"' subQuery: '"+subQuery+"' InvalidInputMessageFault_Exception: "
 					+ e2.getMessage());
 		} catch (Exception e1) {
-			LOG.error(
-					"getAvailableTasks - Intalio exception: " + e1.getMessage(),
-					e1);
+			LOG.error("getAvailableTasks - TaskType: '"+taskType+"' Token: '"+participantToken+"' subQuery: '"+subQuery+"' Intalio exception: " + e1.getMessage(), e1);
 		}
 		return taskList;
 	}
@@ -146,15 +142,11 @@ public class TaskManagementService {
 			countAvailTasksReq.setSubQuery(subQuery);
 			totalNum = taskMgrService.countAvailableTasks(countAvailTasksReq);
 		} catch (InvalidParticipantTokenFault_Exception e) {
-			LOG.error(
-					"getTotalTasksNumber - InvalidParticipantTokenFault_Exception: ",
-					e);
+			LOG.error("getTotalTasksNumber - TaskType: '"+taskType+"' Token: '"+participantToken+"' subQuery: '"+subQuery+"'  InvalidParticipantTokenFault_Exception: ", e);
 		} catch (InvalidInputMessageFault_Exception e2) {
-			LOG.error(
-					"getTotalTasksNumber - InvalidInputMessageFault_Exception: ",
-					e2);
+			LOG.error("getTotalTasksNumber - TaskType: '"+taskType+"' Token: '"+participantToken+"' subQuery: '"+subQuery+"' InvalidInputMessageFault_Exception: ",	e2);
 		} catch (Exception e1) {
-			LOG.error("getTotalTasksNumber - Intalio exception: ", e1);
+			LOG.error("getTotalTasksNumber -TaskType: '"+taskType+"' Token: '"+participantToken+"' subQuery: '"+subQuery+"'  Intalio exception: ", e1);
 		}
 		return totalNum;
 	}
@@ -177,13 +169,13 @@ public class TaskManagementService {
 			GetTaskResponse res = taskMgrService.getTask(req);
 			task = res.getTask();
 		} catch (InvalidParticipantTokenFault_Exception e) {
-			LOG.error("getTask - InvalidParticipantTokenFault_Exception: "
+			LOG.error("getTask - Token: '"+participantToken+"' InvalidParticipantTokenFault_Exception: "
 					+ e.getMessage());
 		} catch (InvalidInputMessageFault_Exception e2) {
-			LOG.error("getTask - InvalidInputMessageFault_Exception: "
+			LOG.error("getTask - Token: '"+participantToken+"' InvalidInputMessageFault_Exception: "
 					+ e2.getMessage());
 		} catch (Exception e1) {
-			LOG.error("getTask - Intalio exception: " + e1.getMessage());
+			LOG.error("getTask - Token: '"+participantToken+"' Intalio exception: " + e1.getMessage());
 		}
 		return task;
 	}
@@ -196,10 +188,10 @@ public class TaskManagementService {
 			GetTaskListResponse res = taskMgrService.getTaskList(req);
 			taskList = res.getTask();
 		} catch (InvalidParticipantTokenFault_Exception e) {
-			LOG.error("getTaskList - InvalidParticipantTokenFault_Exception"
+			LOG.error("getTaskList - Token: '"+token+"' InvalidParticipantTokenFault_Exception"
 					+ e.getMessage());
 		} catch (InvalidInputMessageFault_Exception e) {
-			LOG.error("getTaskList - InvalidInputMessageFault_Exception"
+			LOG.error("getTaskList - Token: '"+token+"' InvalidInputMessageFault_Exception"
 					+ e.getMessage());
 		}
 

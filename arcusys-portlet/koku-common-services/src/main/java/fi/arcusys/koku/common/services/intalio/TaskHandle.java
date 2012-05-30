@@ -108,11 +108,6 @@ public class TaskHandle {
 		return createTasks(tasklist, participantToken);
 	}
 
-//	public List<Task> getTaskList(String token) {
-//		List<TaskMetadata> tasklist = taskMngServ.getTaskList(token);
-//		return createTasklistByMetadata(tasklist );
-//	}
-
 	public Task getTask(String taskId, String token) {
 		fi.arcusys.intalio.tms.Task task = taskMngServ.getTask(taskId, token);
 		return createTask(task.getMetadata(), task.getInput());
@@ -360,10 +355,6 @@ public class TaskHandle {
 
 	public int getRequestsTasksTotalNumber() {
 		return getTasksTotalNumber("");
-		// return
-		// Integer.valueOf(taskMngServ.getTotalTasksNumber(participantToken,
-		// TaskUtil.TASK_TYPE, createTotalNumSubQuery(TaskUtil.TASK,
-		// TASKMGR_REQUESTS_FILTER)));
 	}
 
 	/**
