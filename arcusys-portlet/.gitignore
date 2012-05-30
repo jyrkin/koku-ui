@@ -2,3 +2,7 @@ target
 .classpath
 .project
 .settings
+kunpo.sh
+loora.sh
+portlet_2_0.tld
+koku-layout-portlet/src/main/webapp/WEB-INF/theme/

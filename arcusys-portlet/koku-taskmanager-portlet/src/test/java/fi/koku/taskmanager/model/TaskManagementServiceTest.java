@@ -16,8 +16,8 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import fi.arcusys.intalio.tms.TaskMetadata;
-import fi.arcusys.koku.exceptions.IntalioAuthException;
-import fi.arcusys.koku.intalio.TaskManagementService;
+import fi.arcusys.koku.common.exceptions.IntalioAuthException;
+import fi.arcusys.koku.common.services.intalio.TaskManagementService;
 
 public class TaskManagementServiceTest {
 	

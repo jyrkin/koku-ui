@@ -1,15 +1,15 @@
 package fi.koku.taskmanager.controller;
 
-import static fi.arcusys.koku.util.Constants.ATTR_CURRENT_PAGE;
-import static fi.arcusys.koku.util.Constants.ATTR_KEYWORD;
-import static fi.arcusys.koku.util.Constants.ATTR_ORDER_TYPE;
-import static fi.arcusys.koku.util.Constants.ATTR_TASK_TYPE;
-import static fi.arcusys.koku.util.Constants.ATTR_TOKEN;
-import static fi.arcusys.koku.util.Constants.ATTR_USERNAME;
-import static fi.arcusys.koku.util.Constants.INTALIO_GROUP_PREFIX;
-import static fi.arcusys.koku.util.Constants.TOKEN_STATUS_INVALID;
-import static fi.arcusys.koku.util.Constants.TOKEN_STATUS_VALID;
-import static fi.arcusys.koku.util.Constants.VIEW_TASK_MANAGER;
+import static fi.arcusys.koku.common.util.Constants.ATTR_CURRENT_PAGE;
+import static fi.arcusys.koku.common.util.Constants.ATTR_KEYWORD;
+import static fi.arcusys.koku.common.util.Constants.ATTR_ORDER_TYPE;
+import static fi.arcusys.koku.common.util.Constants.ATTR_TASK_TYPE;
+import static fi.arcusys.koku.common.util.Constants.ATTR_TOKEN;
+import static fi.arcusys.koku.common.util.Constants.ATTR_USERNAME;
+import static fi.arcusys.koku.common.util.Constants.INTALIO_GROUP_PREFIX;
+import static fi.arcusys.koku.common.util.Constants.TOKEN_STATUS_INVALID;
+import static fi.arcusys.koku.common.util.Constants.TOKEN_STATUS_VALID;
+import static fi.arcusys.koku.common.util.Constants.VIEW_TASK_MANAGER;
 
 import javax.portlet.PortletSession;
 import javax.portlet.RenderRequest;
@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.portlet.bind.annotation.RenderMapping;
 
-import fi.arcusys.koku.intalio.TaskHandle;
+import fi.arcusys.koku.common.services.intalio.TaskHandle;
 
 
 /**

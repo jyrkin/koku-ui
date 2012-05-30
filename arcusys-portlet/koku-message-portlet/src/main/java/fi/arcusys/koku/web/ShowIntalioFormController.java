@@ -1,6 +1,6 @@
 package fi.arcusys.koku.web;
 
-import static fi.arcusys.koku.util.Constants.*;
+import static fi.arcusys.koku.common.util.Constants.*;
 
 import javax.annotation.Resource;
 import javax.portlet.PortletSession;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.portlet.bind.annotation.RenderMapping;
 
-import fi.arcusys.koku.tiva.KokuConsent;
+import fi.arcusys.koku.common.services.consents.model.KokuConsent;
 
 /**
  * Shows task form page and store the current query information on the jsp page

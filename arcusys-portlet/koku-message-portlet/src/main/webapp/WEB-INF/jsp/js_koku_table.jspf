@@ -219,7 +219,7 @@ KokuTable.prototype.createAppoitmentsTableUtils = {
 		for (var i = 0; i < tasks.length; i++)  {
 			
 			tasks[i]["receivingUser"] = (tasks[i]["receivingUser"]) ? KokuUtil.escapeHTML(tasks[i]["receivingUser"]["fullName"]) : "";
-			tasks[i]["senderUser"] = (tasks[i]["senderUser"]) ? KokuUtil.escapeHTML(tasks[i]["senderUser"]["fullName"]) : "";
+			tasks[i]["senderUserFullName"] = (tasks[i]["senderUser"]) ? KokuUtil.escapeHTML(tasks[i]["senderUser"]["fullName"]) : "";
 			tasks[i]["cleanHtmlsubject"] = KokuUtil.shorty(KokuUtil.escapeHTML(this.formatSubject(tasks[i]["subject"])), 35);
 			tasks[i]["cleanHtmldescription"] = KokuUtil.shorty(KokuUtil.escapeHTML(tasks[i]["description"]), 25);
 			tasks[i]["status"] = KokuUtil.escapeHTML(tasks[i]["status"])

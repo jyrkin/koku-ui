@@ -27,7 +27,7 @@ import org.apache.axis2.client.ServiceClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import fi.arcusys.koku.util.KokuWebServicesJS;
+import fi.arcusys.koku.common.util.KokuWebServicesJS;
 import fi.koku.settings.KoKuPropertiesUtil;
 
 public class WsProxyServletRestricted extends HttpServlet implements Servlet {

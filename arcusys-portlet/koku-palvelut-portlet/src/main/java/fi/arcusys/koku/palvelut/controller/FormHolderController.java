@@ -8,13 +8,13 @@ import javax.portlet.PortletRequest;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 //import org.intalio.tempo.workflow.task.Task;
-import fi.arcusys.koku.intalio.Task;
+import fi.arcusys.koku.common.services.intalio.Task;
 
 import fi.arcusys.koku.palvelut.model.client.FormHolder;
 import fi.arcusys.koku.palvelut.util.TaskUtil;
 import fi.arcusys.koku.palvelut.util.TokenResolver;
 import fi.arcusys.koku.palvelut.util.URLUtil;
-import fi.arcusys.koku.intalio.TaskHandle;
+import fi.arcusys.koku.common.services.intalio.TaskHandle;
 
 /**
  * @author Dmitry Kudinov (dmitry.kudinov@arcusys.fi)

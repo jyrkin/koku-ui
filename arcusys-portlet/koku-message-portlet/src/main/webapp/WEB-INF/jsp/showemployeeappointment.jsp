@@ -1,7 +1,7 @@
-<%@ page import="fi.arcusys.koku.av.EmployeeAppointment" %>
-<%@ page import="fi.arcusys.koku.users.KokuUser" %>
+<%@ page import="fi.arcusys.koku.common.services.appointments.model.EmployeeAppointment" %>
+<%@ page import="fi.arcusys.koku.common.services.users.KokuUser" %>
 <%@ page import="fi.arcusys.koku.web.util.ModelWrapper"%>
-<%@ page import="fi.arcusys.koku.util.Constants" %>
+<%@ page import="fi.arcusys.koku.common.util.Constants" %>
 <%@ page import="javax.portlet.PortletRequest" %>
 
 <%@ include file="init.jsp"%>
@@ -95,7 +95,7 @@
 		<span class="request-c-1"><spring:message code="message.from"/>: <c:out value="${appointment.model.senderUser.fullName}" /> </span><br />
 		</c:if>
 		<c:if test="${appointment.model.senderRole != null}">
-			<span class="request-c-1"><spring:message code="appointment.senderRole"/>: <c:out value="${appointment.model.senderRole}" /></span><br />
+			<span class="request-c-1"><spring:message code="appointment.senderRole"/>:</span> <c:out value="${appointment.model.senderRole}" /><br />
 		</c:if>
 		<span class="request-c-1"><spring:message code="message.subject"/>:</span> <c:out value="${appointment.model.subject}" /><br />
 		<span class="request-c-1"><spring:message code="message.description"/>:</span> <c:out value="${appointment.model.description}" /><br />
@@ -118,7 +118,7 @@
 	    	</tr>
 	    	<c:forEach var="slot" items="${appointment.model.approvedSlots}" varStatus="loopStatus">
 	        <tr class="<c:out value="${loopStatus.index % 2 == 0 ? 'evenRow' : 'oddRow'}" />">
-	          <td class="date"><c:out value="${slot.date}" /></td>
+	          <td class="date"><c:out value="${slot.appointmentDate}" /></td>
 	          <td class="startTime"><c:out value="${slot.startTime}" /></td>
 	          <td class="endTime"><c:out value="${slot.endTime}" /></td> 
 	          <td class="location"><c:out value="${slot.location}" /></td>
@@ -224,7 +224,7 @@
 	</div>
 	<div id="task-manager-operation" class="task-manager-operation-part">
 		<input type="button" value="<spring:message code="page.return"/>" onclick="kokuNavigationHelper.returnMainPage()" />
-		<c:if test="${appointment.model.status != 'Peruutettu' && currentUserUid == senderUserUid}">
+		<c:if test="<%= !appointment.getStatus().equals("Peruutettu") && currentUserId.equals(senderUserId)%>">
 			<input type="button" id="cancelButton" value="<spring:message code="appointment.cancel.button"/>" onclick="cancelAppointment()" />
 		</c:if>
 	</div>

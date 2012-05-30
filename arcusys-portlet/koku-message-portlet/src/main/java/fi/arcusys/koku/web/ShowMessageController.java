@@ -1,10 +1,10 @@
 package fi.arcusys.koku.web;
 
-import static fi.arcusys.koku.util.Constants.ATTR_CURRENT_PAGE;
-import static fi.arcusys.koku.util.Constants.ATTR_KEYWORD;
-import static fi.arcusys.koku.util.Constants.ATTR_ORDER_TYPE;
-import static fi.arcusys.koku.util.Constants.ATTR_TASK_TYPE;
-import static fi.arcusys.koku.util.Constants.VIEW_SHOW_MESSAGE;
+import static fi.arcusys.koku.common.util.Constants.ATTR_CURRENT_PAGE;
+import static fi.arcusys.koku.common.util.Constants.ATTR_KEYWORD;
+import static fi.arcusys.koku.common.util.Constants.ATTR_ORDER_TYPE;
+import static fi.arcusys.koku.common.util.Constants.ATTR_TASK_TYPE;
+import static fi.arcusys.koku.common.util.Constants.VIEW_SHOW_MESSAGE;
 
 import javax.annotation.Resource;
 import javax.portlet.PortletSession;
@@ -20,11 +20,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.portlet.bind.annotation.RenderMapping;
 
-import fi.arcusys.koku.exceptions.KokuServiceException;
-import fi.arcusys.koku.kv.message.MessageHandle;
-import fi.arcusys.koku.kv.model.KokuMessage;
+import fi.arcusys.koku.common.exceptions.KokuServiceException;
+import fi.arcusys.koku.common.services.facades.impl.ResponseStatus;
+import fi.arcusys.koku.common.services.messages.MessageHandle;
+import fi.arcusys.koku.common.services.messages.model.KokuMessage;
 import fi.arcusys.koku.web.util.ModelWrapper;
-import fi.arcusys.koku.web.util.ResponseStatus;
 import fi.arcusys.koku.web.util.impl.ModelWrapperImpl;
 
 /**
@@ -81,8 +81,7 @@ public class ShowMessageController {
 		ModelWrapper<KokuMessage> modelWrapper = null;
 		KokuMessage message = null;
 		try {
-			MessageHandle msghandle = new MessageHandle();
-			msghandle.setMessageSource(messageSource);
+			MessageHandle msghandle = new MessageHandle(messageSource);
 			message = msghandle.getMessageById(messageId);
 			modelWrapper = new ModelWrapperImpl<KokuMessage>(message, ResponseStatus.OK);
 		} catch (KokuServiceException kse) {

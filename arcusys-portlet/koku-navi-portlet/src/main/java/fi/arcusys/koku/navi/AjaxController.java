@@ -1,15 +1,18 @@
 package fi.arcusys.koku.navi;
 
-import static fi.arcusys.koku.util.Constants.ATTR_NAVI_TYPE;
-import static fi.arcusys.koku.util.Constants.ATTR_PORTAL_ROLE;
-import static fi.arcusys.koku.util.Constants.ATTR_TOKEN;
-import static fi.arcusys.koku.util.Constants.ATTR_USER_ID;
-import static fi.arcusys.koku.util.Constants.ATTR_NAVI_STATE;
-import static fi.arcusys.koku.util.Constants.INTALIO_GROUP_PREFIX;
-import static fi.arcusys.koku.util.Constants.PORTAL_MODE_KUNPO;
-import static fi.arcusys.koku.util.Constants.PORTAL_MODE_LOORA;
-import static fi.arcusys.koku.util.Constants.RESPONSE;
-import static fi.arcusys.koku.util.Constants.JSON_NAVI_STATE;
+import static fi.arcusys.koku.common.util.Constants.ATTR_NAVI_TYPE;
+import static fi.arcusys.koku.common.util.Constants.ATTR_PORTAL_ROLE;
+import static fi.arcusys.koku.common.util.Constants.ATTR_TOKEN;
+import static fi.arcusys.koku.common.util.Constants.ATTR_USER_ID;
+import static fi.arcusys.koku.common.util.Constants.ATTR_NAVI_STATE;
+import static fi.arcusys.koku.common.util.Constants.INTALIO_GROUP_PREFIX;
+import static fi.arcusys.koku.common.util.Constants.PORTAL_MODE_KUNPO;
+import static fi.arcusys.koku.common.util.Constants.PORTAL_MODE_LOORA;
+import static fi.arcusys.koku.common.util.Constants.RESPONSE;
+import static fi.arcusys.koku.common.util.Constants.JSON_NAVI_STATE;
+import static fi.arcusys.koku.common.util.Constants.TASK_TYPE_MESSAGE_INBOX;
+import static fi.arcusys.koku.common.util.Constants.ATTR_NAVI_POSITION;
+import static fi.arcusys.koku.common.util.Constants.JSON_NAVI_POSITION;
 
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
@@ -17,6 +20,7 @@ import javax.portlet.PortletSession;
 import javax.portlet.ResourceResponse;
 
 import net.sf.json.JSONObject;
+import static fi.arcusys.koku.common.util.Constants.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,16 +30,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.portlet.bind.annotation.ResourceMapping;
 
-import fi.arcusys.koku.exceptions.IntalioAuthException;
-import fi.arcusys.koku.exceptions.KokuServiceException;
-import fi.arcusys.koku.intalio.TaskHandle;
+import fi.arcusys.koku.common.exceptions.IntalioAuthException;
+import fi.arcusys.koku.common.exceptions.KokuServiceException;
+import fi.arcusys.koku.common.services.intalio.TaskHandle;
+import fi.arcusys.koku.common.services.users.UserIdResolver;
+import fi.arcusys.koku.common.util.PortalRole;
+import fi.arcusys.koku.common.util.Properties;
 import fi.arcusys.koku.navi.util.QueryProcess;
 import fi.arcusys.koku.navi.util.impl.QueryProcessCitizenImpl;
 import fi.arcusys.koku.navi.util.impl.QueryProcessDummyImpl;
 import fi.arcusys.koku.navi.util.impl.QueryProcessEmployeeImpl;
-import fi.arcusys.koku.users.UserIdResolver;
-import fi.arcusys.koku.util.PortalRole;
-import fi.arcusys.koku.util.Properties;
+import static fi.arcusys.koku.common.util.Properties.*;
+
 
 /**
  * Handles ajax request and return the response with json string
@@ -60,6 +66,7 @@ public class AjaxController {
 	@ResourceMapping(value = "update")
 	public String showAjax(ModelMap modelmap, PortletRequest request, PortletResponse response) {
 		
+		final long start = System.nanoTime();
 		final PortletSession session = request.getPortletSession();
 		final String username = request.getRemoteUser();
 		String userId = (String) session.getAttribute(ATTR_USER_ID);		
@@ -114,6 +121,7 @@ public class AjaxController {
 		JSONObject jsonModel = query.getJsonModel(username, userId, token, portalRole);
 		modelmap.addAttribute(RESPONSE, jsonModel);
 		modelmap.addAttribute(JSON_NAVI_STATE, naviState);
+		LOG.debug("NAVI update  - "+((System.nanoTime()-start)/1000/1000) + "ms");
 		return AjaxViewResolver.AJAX_PREFIX;
 	}
 	
@@ -130,12 +138,16 @@ public class AjaxController {
 	 */
 	@ResourceMapping(value="naviStatus")
 	public String updateNavigationStatus(
+			@RequestParam(value = "currentPosition", required=true) String currentPosition,
 			@RequestParam(value = "navigationState", required=true) String navigationState, 
 			ModelMap modelmap, PortletRequest request, PortletResponse response) {
+		final long start = System.nanoTime();
+
 		final PortletSession session = request.getPortletSession();
 
+		/* Save navigationState */
 		String naviState = null;
-		if (navigationState == null || navigationState.isEmpty()) {
+		if (navigationState == null || navigationState.trim().isEmpty()) {
 			naviState = (String) session.getAttribute(ATTR_NAVI_STATE, PortletSession.APPLICATION_SCOPE);
 		} else {
 			if (navigationState.length() > MAX_NAVI_STATE) {
@@ -147,10 +159,20 @@ public class AjaxController {
 				naviState = navigationState;
 			}
 		}
+		
+		/* Save current position */
+		if (currentPosition != null && !currentPosition.trim().isEmpty()) {
+			session.setAttribute(ATTR_NAVI_POSITION, currentPosition, PortletSession.APPLICATION_SCOPE);
+		} else {
+			session.setAttribute(ATTR_NAVI_POSITION, TASK_TYPE_MESSAGE_INBOX, PortletSession.APPLICATION_SCOPE);
+		}
+		
+		modelmap.addAttribute(JSON_NAVI_POSITION, currentPosition);
 		modelmap.addAttribute(JSON_NAVI_STATE, naviState);
+		LOG.debug("NAVI status  - "+((System.nanoTime()-start)/1000/1000) + "ms");
 		return AjaxViewResolver.AJAX_PREFIX;
 	}
-		
+	
 	private String resolveIntalioToken(String userId) throws IntalioAuthException {
 		TaskHandle handle = new TaskHandle();
 		// Magic password! Fix also TaskManagerController magic password when possible.

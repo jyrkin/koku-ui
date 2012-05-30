@@ -13,9 +13,7 @@ import net.sf.json.JSONObject;
  */
 public interface KokuTaskQueryProcess {
 	
-	JSONObject getJsonModel(String taskType, int page, String keyword, String field, String orderType, String userUid);
-		
-	void setMessageSource(MessageSource messages);
+	JSONObject getJsonModel(String taskType, int page, String keyword, String field, String userUid);		
 	MessageSource getMessageSource();
 
 }

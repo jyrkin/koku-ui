@@ -16,10 +16,10 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 import fi.arcusys.intalio.tms.TaskMetadata;
-import fi.arcusys.koku.exceptions.IntalioAuthException;
-import fi.arcusys.koku.intalio.Task;
-import fi.arcusys.koku.intalio.TaskHandle;
-import fi.arcusys.koku.intalio.TaskManagementService;
+import fi.arcusys.koku.common.exceptions.IntalioAuthException;
+import fi.arcusys.koku.common.services.intalio.Task;
+import fi.arcusys.koku.common.services.intalio.TaskHandle;
+import fi.arcusys.koku.common.services.intalio.TaskManagementService;
 
 
 public class TaskHandleTest{

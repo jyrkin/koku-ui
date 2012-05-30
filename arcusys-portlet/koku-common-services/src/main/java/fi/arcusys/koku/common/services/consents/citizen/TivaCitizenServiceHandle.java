@@ -1,0 +1,367 @@
+package fi.arcusys.koku.common.services.consents.citizen;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+
+import org.apache.log4j.Logger;
+import org.springframework.context.MessageSource;
+import org.springframework.context.NoSuchMessageException;
+
+import fi.arcusys.koku.common.exceptions.KokuServiceException;
+import fi.arcusys.koku.common.services.AbstractHandle;
+import fi.arcusys.koku.common.services.consents.model.ActionRequest;
+import fi.arcusys.koku.common.services.consents.model.KokuConsent;
+import fi.arcusys.koku.common.services.facades.Page;
+import fi.arcusys.koku.common.services.facades.ResultList;
+import fi.arcusys.koku.common.services.facades.citizen.CitizenConsentTasks;
+import fi.arcusys.koku.common.services.facades.impl.ResultListImpl;
+import fi.arcusys.koku.common.services.users.KokuUser;
+import fi.arcusys.koku.common.util.MessageUtil;
+import fi.arcusys.koku.tiva.citizenservice.ActionRequestStatus;
+import fi.arcusys.koku.tiva.citizenservice.ActionRequestSummary;
+import fi.arcusys.koku.tiva.citizenservice.ConsentApprovalStatus;
+import fi.arcusys.koku.tiva.citizenservice.ConsentCreateType;
+import fi.arcusys.koku.tiva.citizenservice.ConsentShortSummary;
+import fi.arcusys.koku.tiva.citizenservice.ConsentStatus;
+import fi.arcusys.koku.tiva.citizenservice.ConsentSummary;
+import fi.arcusys.koku.tiva.citizenservice.ConsentTO;
+import fi.arcusys.koku.tiva.citizenservice.User;
+
+/**
+ * Handles tiva consents related operations for citizen
+ * @author Jinhua Chen
+ * Aug 15, 2011
+ */
+public class TivaCitizenServiceHandle extends AbstractHandle implements CitizenConsentTasks {
+	
+	private static final Logger LOG = Logger.getLogger(TivaCitizenServiceHandle.class);
+	
+	private TivaCitizenService tcs;
+	private String userId;
+	
+	/**
+	 * Constructor and initialization
+	 */
+	public TivaCitizenServiceHandle(MessageSource messageSource) {
+		super(messageSource);
+		tcs = new TivaCitizenService();
+	}
+	
+	public TivaCitizenServiceHandle(MessageSource messageSource, String userId) {
+		super(messageSource);
+		if (userId == null) {
+			throw new IllegalArgumentException("userId is null!");
+		}
+		this.userId = userId;
+		tcs = new TivaCitizenService();
+	}
+	
+	@Override
+	public ResultList<KokuConsent> getNewConsents(String uid, Page page)
+			throws KokuServiceException {
+		final List<KokuConsent> consents = getAssignedConsents(uid, page);
+		final int total = getTotalAssignedConsents(uid);
+		return new ResultListImpl<KokuConsent>(consents, total, page);
+	}
+
+	@Override
+	public ResultList<KokuConsent> getRepliedConsents(String uid, Page page)
+			throws KokuServiceException {
+		final List<KokuConsent> consents = getOwnConsents(uid, page);
+		final int total = getTotalOwnConsents(uid);
+		return new ResultListImpl<KokuConsent>(consents, total, page);
+	}
+
+	@Override
+	public ResultList<KokuConsent> getOldConsents(String uid, Page page)
+			throws KokuServiceException {
+		final List<KokuConsent> consents = getOwnOldConsents(uid, page);
+		final int total = getTotalOwnOldConsents(uid);
+		return new ResultListImpl<KokuConsent>(consents, total, page);
+	}
+	
+	
+	/**
+	 * Gets assigned consents and generates koku consent data model for use
+	 * @param user user name
+	 * @param startNum start index of consent
+	 * @param maxNum maximum number of consents
+	 * @return a list of assigned consents
+	 */
+	private List<KokuConsent> getAssignedConsents(String userId, Page page) throws KokuServiceException {
+		final List<ConsentShortSummary> consentSummary = tcs.getAssignedConsents(userId, page.getFirst(), page.getLast());
+		final List<KokuConsent> consentList = new ArrayList<KokuConsent>();
+		
+		for (ConsentShortSummary consent : consentSummary) {
+			KokuConsent kokuConsent = new KokuConsent();
+			convertConsentShortSummaryToKokuConsent(kokuConsent, consent);
+			consentList.add(kokuConsent);
+		}
+		return consentList;
+	}
+	
+	/**
+	 * Gets consent in detail and generates koku consent data model for use
+	 * @param consentIdStr consent id string
+	 * @return detailed consent
+	 */
+	public KokuConsent getConsentById(String consentIdStr) throws KokuServiceException {
+		long  consentId = 0;
+		try {
+			consentId = (long) Long.parseLong(consentIdStr);			
+		} catch (NumberFormatException nfe) {
+			throw new KokuServiceException("Invalid ConsentId. ConsentId: '"+consentIdStr+"'", nfe);
+		}
+		ConsentTO consent = tcs.getConsentById(consentId, this.userId);		
+		KokuConsent kokuConsent = new KokuConsent();
+		convertConsentTOToKokuConsent(kokuConsent, consent);
+		return kokuConsent;
+	}
+	
+	/**
+	 * Gets own consents and generates koku consent data model for use
+	 * @param user user name
+	 * @param startNum start index of consent
+	 * @param maxNum maximum number of consents
+	 * @return a list of consents
+	 */
+	private List<KokuConsent> getOwnConsents(String userId, Page page) throws KokuServiceException {
+		return convertConsentsToKokuConsents(tcs.getOwnConsents(userId, page.getFirst(), page.getLast()));
+	}
+	
+	/**
+	 * Gets own old consents and generates koku consent data model for use
+	 * @param user user name
+	 * @param startNum start index of consent
+	 * @param maxNum maximum number of consents
+	 * @return a list of consents
+	 */
+	private List<KokuConsent> getOwnOldConsents(String userId, Page page) throws KokuServiceException {
+		return convertConsentsToKokuConsents(tcs.getOldConsents(userId, page.getFirst(), page.getLast()));
+	}
+	
+	private List<KokuConsent> convertConsentsToKokuConsents(List<ConsentSummary> consentSummary) {
+		List<KokuConsent> consentList = new ArrayList<KokuConsent>();
+		Iterator<ConsentSummary> it = consentSummary.iterator();		
+		while(it.hasNext()) {
+			ConsentSummary consent = it.next();
+			KokuConsent kokuConsent = new KokuConsent();
+			convertConsentSummaryToKokuConsent(kokuConsent, consent);
+			consentList.add(kokuConsent);
+		}		
+		return consentList;
+	}
+	
+	private void convertConsentShortSummaryToKokuConsent(KokuConsent kokuConsent, ConsentShortSummary consent) {
+		kokuConsent.setConsentId(consent.getConsentId());
+		kokuConsent.setAnotherPermitterUser(new KokuUser(consent.getAnotherPermitterUserInfo()));
+		kokuConsent.setRequesterUser(new KokuUser(consent.getRequestorUserInfo()));
+		kokuConsent.setTemplateName(consent.getTemplateName());
+		kokuConsent.setTemplateTypeName(consent.getTemplateTypeName());
+		kokuConsent.setReplyTill(MessageUtil.formatTaskDateByDay(consent.getReplyTill()));		
+		kokuConsent.setCreateType(localizeConsentCreateType(consent.getCreateType()));		
+		kokuConsent.setReplyTill(MessageUtil.formatTaskDateByDay(consent.getReplyTill()));
+		kokuConsent.setTemplateTypeName(consent.getTemplateTypeName());
+		kokuConsent.setTargetPerson(new KokuUser(consent.getTargetPersonUserInfo()));
+	}	
+	
+	private void convertConsentSummaryToKokuConsent(KokuConsent kokuConsent, ConsentSummary consent) {
+		convertConsentShortSummaryToKokuConsent(kokuConsent, consent);
+		
+		if(consent.getStatus() != null) {
+			kokuConsent.setStatus(localizeConsentStatus(consent.getStatus()));
+		}
+		for (User receipient : consent.getReceipientUserInfos()) {
+			kokuConsent.getRecipientUsers().add(new KokuUser(receipient));			
+		}
+		kokuConsent.setApprovalStatus(localizeApprovalConsentStatus(consent.getApprovalStatus()));		
+		kokuConsent.setAssignedDate(MessageUtil.formatTaskDateByDay(consent.getGivenAt()));
+		kokuConsent.setValidDate(MessageUtil.formatTaskDateByDay(consent.getValidTill()));		
+	}
+	
+	private void convertConsentTOToKokuConsent(KokuConsent kokuConsent, ConsentTO consent) {
+		convertConsentSummaryToKokuConsent(kokuConsent, consent);
+		
+		kokuConsent.setActionRequests(convertActionRequests(consent.getActionRequests()));
+		kokuConsent.setComment(consent.getComment());		
+	}
+	
+	/**
+	 * Gets the total number of assigned consents
+	 * @param user user name
+	 * @return the total number of assigned consents
+	 */
+	public int getTotalAssignedConsents(String userId) throws KokuServiceException {
+		return tcs.getTotalAssignedConsents(userId);
+	}
+	
+	/**
+	 * Gets the total number of own consents
+	 * @param user user name
+	 * @return the total number of own consents
+	 */
+	private int getTotalOwnConsents(String userId) throws KokuServiceException {
+		return tcs.getTotalOwnConsents(userId);
+	}
+	
+	/**
+	 * Gets the total number of old own consents
+	 * @param user user name
+	 * @return the total number of old own consents
+	 */
+	private int getTotalOwnOldConsents(String userId) throws KokuServiceException {
+		return tcs.getTotalOldConsents(userId);
+	}
+	
+	/**
+	 * Revokes the consent
+	 * @param consentIdStr consent id string
+	 * @return operation response
+	 */
+	public void revokeOwnConsent(String consentIdStr) throws KokuServiceException {
+		long consentId = 0;		
+		try {
+			consentId = (long) Long.parseLong(consentIdStr);
+		} catch (NumberFormatException nfe) {
+			throw new KokuServiceException("Invalid consentId. ConsentId: '"+consentIdStr+"'", nfe);
+		}		
+		try {
+			tcs.revokeOwnConsent(consentId, this.userId);
+		} catch(RuntimeException e) {
+			throw new KokuServiceException("Failed to revoke consent. ConsentId: '"+consentIdStr+"'", e);
+		}
+	}
+	
+	/**
+	 * Converts the ActionRequestSummary object to ActionRequest
+	 * @param actionSummaryList a list of ActionRequestSummary objects
+	 * @return a list of ActionRequest objects
+	 */
+	private List<ActionRequest> convertActionRequests(List<ActionRequestSummary> actionSummaryList) {
+		List<ActionRequest> actionList = new ArrayList<ActionRequest>();
+		ActionRequest actionReq;
+		Iterator<ActionRequestSummary> it = actionSummaryList.iterator();
+		
+		while(it.hasNext()) {
+			ActionRequestSummary actionSummary = it.next();
+			actionReq = new ActionRequest();
+			actionReq.setDescription(actionSummary.getDescription());
+			actionReq.setStatus(localizeActionRequestStatus(actionSummary.getStatus()));
+			actionReq.setName(actionSummary.getName());
+			actionList.add(actionReq);
+		}
+		
+		return actionList;	
+	}
+	
+	private String localizeApprovalConsentStatus(ConsentApprovalStatus approvalStatus) {
+		Locale locale = MessageUtil.getLocale();
+		
+		if (getMessageSource() == null) {
+			LOG.warn(MESSAGE_SOURCE_MISSING);
+			return approvalStatus.toString().toLowerCase();
+		}
+		
+		try {			
+			switch(approvalStatus) {
+			case DECLINED:
+				return getMessageSource().getMessage("ApprovalConsentStatus.DECLINED", null, locale);
+			case APPROVED:
+				return getMessageSource().getMessage("ApprovalConsentStatus.APPROVED", null, locale);
+			case UNDECIDED:
+				return getMessageSource().getMessage("ApprovalConsentStatus.UNDECIDED", null, locale);	
+			default:
+				return getMessageSource().getMessage("unknown", null, locale);
+			}
+		} catch (NoSuchMessageException nsme) {
+			LOG.warn(MESSAGE_SOURCE_MISSING);
+			return approvalStatus.toString().toLowerCase();
+		}
+	}
+	
+	
+	private String localizeConsentStatus(ConsentStatus consentStatus) {
+		Locale locale = MessageUtil.getLocale();
+		
+		if (getMessageSource() == null) {
+			LOG.warn(MESSAGE_SOURCE_MISSING);
+			return consentStatus.toString().toLowerCase();
+		}
+		
+		try {			
+			switch(consentStatus) {
+			case DECLINED:
+				return getMessageSource().getMessage("ConsentStatus.DECLINED", null, locale);
+			case EXPIRED:
+				return getMessageSource().getMessage("ConsentStatus.EXPIRED", null, locale);
+			case OPEN:
+				return getMessageSource().getMessage("ConsentStatus.OPEN", null, locale);
+			case PARTIALLY_GIVEN:
+				return getMessageSource().getMessage("ConsentStatus.PARTIALLY_GIVEN", null, locale);
+			case REVOKED:
+				return getMessageSource().getMessage("ConsentStatus.REVOKED", null, locale);
+			case VALID:
+				return getMessageSource().getMessage("ConsentStatus.VALID", null, locale);
+			default:
+				return getMessageSource().getMessage("unknown", null, locale);
+			}
+		} catch (NoSuchMessageException nsme) {
+			LOG.warn(MESSAGE_SOURCE_MISSING);
+			return consentStatus.toString().toLowerCase();
+		}
+	}
+	
+	private String localizeActionRequestStatus(ActionRequestStatus actionRequestStatus) {
+		if (getMessageSource() == null) {
+			LOG.warn(MESSAGE_SOURCE_MISSING);
+			return actionRequestStatus.toString().toLowerCase();
+		}
+
+		Locale locale = MessageUtil.getLocale();
+		try {
+			switch(actionRequestStatus) {
+			case DECLINED:
+				return getMessageSource().getMessage("ConsentReplyStatus.DECLINED", null, locale);
+			case GIVEN:
+				return getMessageSource().getMessage("ConsentReplyStatus.GIVEN", null, locale);
+			default:
+				return getMessageSource().getMessage("unknown", null, locale);
+			}
+		} catch (NoSuchMessageException nsme) {
+			LOG.warn(MESSAGE_SOURCE_MISSING);
+			return actionRequestStatus.toString().toLowerCase();
+		}
+	}
+	
+	private String localizeConsentCreateType(ConsentCreateType type) {
+		if (getMessageSource() == null) {
+			LOG.warn(MESSAGE_SOURCE_MISSING);
+			return type.toString().toLowerCase();
+		}
+		Locale locale = MessageUtil.getLocale();
+		
+		try {
+			switch(type) {
+			case ELECTRONIC:
+				return getMessageSource().getMessage("ConsentType.Electronic", null, locale);
+			case EMAIL_BASED:
+				return getMessageSource().getMessage("ConsentType.EmailBased", null, locale);
+			case PAPER_BASED:
+				return getMessageSource().getMessage("ConsentType.PaperBased", null, locale);
+            case VERBAL:
+                return getMessageSource().getMessage("ConsentType.Verbal", null, locale);
+            case FAX:
+                return getMessageSource().getMessage("ConsentType.Fax", null, locale);
+			default:
+				return getMessageSource().getMessage("unknown", null, locale);
+			}
+		} catch (NoSuchMessageException nsme) {
+			LOG.warn(MESSAGE_SOURCE_MISSING);
+			return type.toString().toLowerCase();
+		}
+	}
+
+	
+}

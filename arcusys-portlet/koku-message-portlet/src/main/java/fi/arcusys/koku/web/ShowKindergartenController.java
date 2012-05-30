@@ -1,12 +1,12 @@
 package fi.arcusys.koku.web;
 
 
-import static fi.arcusys.koku.util.Constants.ATTR_CURRENT_PAGE;
-import static fi.arcusys.koku.util.Constants.ATTR_KEYWORD;
-import static fi.arcusys.koku.util.Constants.ATTR_ORDER_TYPE;
-import static fi.arcusys.koku.util.Constants.ATTR_TASK_TYPE;
-import static fi.arcusys.koku.util.Constants.TASK_TYPE_APPLICATION_KINDERGARTEN_BROWSE;
-import static fi.arcusys.koku.util.Constants.VIEW_SHOW_APPLICATION_KINDERGARTEN;
+import static fi.arcusys.koku.common.util.Constants.ATTR_CURRENT_PAGE;
+import static fi.arcusys.koku.common.util.Constants.ATTR_KEYWORD;
+import static fi.arcusys.koku.common.util.Constants.ATTR_ORDER_TYPE;
+import static fi.arcusys.koku.common.util.Constants.ATTR_TASK_TYPE;
+import static fi.arcusys.koku.common.util.Constants.TASK_TYPE_APPLICATION_KINDERGARTEN_BROWSE;
+import static fi.arcusys.koku.common.util.Constants.VIEW_SHOW_APPLICATION_KINDERGARTEN;
 
 import javax.annotation.Resource;
 import javax.portlet.PortletSession;
@@ -22,8 +22,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.portlet.bind.annotation.RenderMapping;
 
-import fi.arcusys.koku.hak.model.HakServiceHandle;
-import fi.arcusys.koku.hak.model.KokuApplicationSummary;
+import fi.arcusys.koku.common.services.hak.employee.HakServiceHandle;
+import fi.arcusys.koku.common.services.hak.model.KokuApplicationSummary;
 
 /**
  * Shows Tietopyyntö form page and store the current query information on the jsp page
@@ -76,8 +76,7 @@ public class ShowKindergartenController extends AbstractController {
 		
 		
 		if(taskType.equals(TASK_TYPE_APPLICATION_KINDERGARTEN_BROWSE)) {
-			HakServiceHandle handle = new HakServiceHandle();
-			handle.setMessageSource(messageSource);
+			HakServiceHandle handle = new HakServiceHandle(messageSource);
 			application = handle.getApplicantDetails(applicationId);
 		}
 		return application;

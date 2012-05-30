@@ -8,48 +8,60 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import fi.arcusys.koku.kv.model.KokuAnswer;
-import fi.arcusys.koku.kv.model.KokuQuestion;
-import fi.arcusys.koku.kv.model.KokuRequest;
-import fi.arcusys.koku.kv.model.KokuResponse;
+import fi.arcusys.koku.common.services.requests.models.*;
+
 import fi.arcusys.koku.kv.requestservice.Answer;
 import fi.arcusys.koku.kv.requestservice.Question;
 import fi.arcusys.koku.kv.requestservice.QuestionType;
-import fi.arcusys.koku.users.KokuUser;
-import fi.arcusys.koku.web.exporter.CSVExporter;
-//import fi.arcusys.koku.web.exporter.Exporter;
+import fi.arcusys.koku.common.services.users.KokuUser;
+import fi.arcusys.koku.web.exporter.csv.CSVExporter;
 
 public class ExportFileControllerTest {
 
-	public static final String CSV_EXPECTED_STRING_UNIQUE_SORTING = "\uFEFF\"Vastauksen yhteenveto\"\n"
+	public static final String CSV_EXPECTED_STRING_TEST_1 = "\"Vastauksen yhteenveto\"\n"
 			+ "\"Vastaaja\";\"Say five things which are not Jackie Chan\";;;\"Pick a date\";;;;;;;;\"Kommentti\"\n"
-			+ "\"Kalle Kuntalainen\";\"Carrot\";\"Car\";\"Jackie Chan\";;;\"23.5.2012\";\"24.5.2012\";\"25.5.2012\";\"26.5.2012\";\"27.5.2012\";\"28.5.2012\";\"Another comment foo bar baz lol olo lol\"\n"
-			+ "\"Kirsi Kuntalainen\";\"Jackie Chan\";\"Jackie Chan\";;\"21.5.2012\";\"22.5.2012\";\"23.5.2012\";\"24.5.2012\";\"25.5.2012\";;;;\"This is a comment string foo bar baz\"\n"
+			+ "\"Kalle Kuntalainen\";\"Car\";\"Carrot\";\"Jackie Chan\";;;\"23.5.2012\";\"24.5.2012\";\"25.5.2012\";\"26.5.2012\";\"27.5.2012\";\"28.5.2012\";\"Another comment foo bar baz lol olo lol\"\n"
+			+ "\"Kirsi Kuntalainen\";;;\"Jackie Chan\";\"21.5.2012\";\"22.5.2012\";\"23.5.2012\";\"24.5.2012\";\"25.5.2012\";;;;\"This is a comment string foo bar baz\"\n"
 			+ "\n"
 			+ "\"Vastaamattomat\"\n";
 
-
-	public static final String CSV_EXPECTED_STRING_NO_UNIQUE_SORTING = "\uFEFF\"Vastauksen yhteenveto\"\n"
+	public static final String CSV_EXPECTED_STRING_TEST_1_NO_SYNCHRONIZATION = "\"Vastauksen yhteenveto\"\n"
 			+ "\"Vastaaja\";\"Say five things which are not Jackie Chan\";;;\"Pick a date\";;;;;;\"Kommentti\"\n"
 			+ "\"Kalle Kuntalainen\";\"Carrot\";\"Car\";\"Jackie Chan\";\"23.5.2012\";\"24.5.2012\";\"25.5.2012\";\"26.5.2012\";\"27.5.2012\";\"28.5.2012\";\"Another comment foo bar baz lol olo lol\"\n"
 			+ "\"Kirsi Kuntalainen\";\"Jackie Chan\";\"Jackie Chan\";;\"21.5.2012\";\"22.5.2012\";\"23.5.2012\";\"24.5.2012\";\"25.5.2012\";;\"This is a comment string foo bar baz\"\n"
 			+ "\n"
 			+ "\"Vastaamattomat\"\n";
 
+	public static final String CSV_EXPECTED_STRING_TEST_2 = "\"Vastauksen yhteenveto\"\n"
+			+ "\"Vastaaja\";\"Kyllä - Ei kysymys\";\"Vapaavalintaiset vaihtoehdot\";;;;;\"Kalenteri\";;;;\"Numero\";\"Kysymys joka vaatii vastaajalta vapaamuotoisen tekstikenttävastauksen\";\"Kommentti\"\n"
+			+ "\"Kalle Kuntalainen\";\"Ei\";;\"Vaihtoehto 2\";\"Vaihtoehto 3\";\"Vaihtoehto 4\";\"Vaihtoehto 5\";;\"26.5.2012\";\"27.5.2012\";\"28.5.2012\";\"20\";\"Tässä toinen vapaamuotoinen vastaus\";\"Ei kommentoitavaa\"\n"
+			+ "\"Kirsi Kuntalainen\";\"Kyllä\";\"Vaihtoehto 1\";\"Vaihtoehto 2\";;\"Vaihtoehto 4\";;\"25.5.2012\";\"26.5.2012\";\"27.5.2012\";;\"10\";\"Tässä käyttäjän vapaamuotoinen vastaus\";\"Kommentti on myös vapaamuotoinen vastaus, mutta vastaaja voi antaa kommentin missä tahansa kyselyssä se on aina läsnä, eikä sille ole kyselijän määrittelemää kysymystä.\"\n"
+			+ "\n"
+			+ "\"Vastaamattomat\"\n";
 
-	public KokuRequest request = null;
+
+	public KokuRequest request1 = null;
+	public KokuRequest request2 = null;
 
 
 	@Before
 	public void setUp() {
-		request = createKokuRequestTest1();
+		request1 = createKokuRequestTest1();
+		request2 = createKokuRequestTest2();
 	}
 
 	@Test
-	public void exporterTest() {
-		CSVExporter exporter = new CSVExporter(request, null);
-		String csv = exporter.getContents("Vastauksen yhteenveto", "Vastaaja", "Kommentti", "Vastaamattomat");
-		assertEquals("CSV string doesn't match", CSV_EXPECTED_STRING_NO_UNIQUE_SORTING, csv);
+	public void exporterTest1() {
+		CSVExporter exp = new CSVExporter(request1, null);
+		String csv = exp.getContents("Vastauksen yhteenveto", "Vastaaja", "Kommentti", "Vastaamattomat");
+		assertEquals("CSV string doesn't match", CSV_EXPECTED_STRING_TEST_1, csv);
+	}
+
+	@Test
+	public void exporterTest2() {
+		CSVExporter exp = new CSVExporter(request2, null);
+		String csv = exp.getContents("Vastauksen yhteenveto", "Vastaaja", "Kommentti", "Vastaamattomat");
+		assertEquals("CSV string doesn't match", CSV_EXPECTED_STRING_TEST_2, csv);
 	}
 
 	private KokuRequest createKokuRequestTest1() {
@@ -90,6 +102,61 @@ public class ExportFileControllerTest {
 					"Say five things which are not Jackie Chan", 10, QuestionType.MULTIPLE_CHOICE, null));
 		questions.add(createKokuQuestion(
 					"Pick a date", 11, QuestionType.CALENDAR, null));
+
+		r.setQuestions(questions);
+
+		return r;
+	}
+
+	private KokuRequest createKokuRequestTest2() {
+		KokuRequest r = new KokuRequest();
+		r.setRequestId(415);
+		r.setSender("veeti.virkamies");
+		r.setSubject("csv export test 8");
+		r.setContent("");
+		r.setRespondedAmount(2);
+		r.setMissedAmount(0);
+		r.setCreationDate("25.5.2012");
+		r.setEndDate("31.5.2012");
+		r.setRequestType(null);
+		r.setUnrespondedList(null);
+
+		List<KokuResponse> respondedList = new ArrayList<KokuResponse>();
+
+		KokuUser kalle = createKokuUser("Kalle Kuntalainen",
+				"kalle.kuntalainen@kunpo.tpe.fi", "Kalle", "Kuntalainen", "0403333244", null);
+		List<KokuAnswer> kalle_answers = new ArrayList<KokuAnswer>();
+		kalle_answers.add(createKokuAnswer("Ei", "", 9));
+		kalle_answers.add(createKokuAnswer("Vaihtoehto 2, Vaihtoehto 3, Vaihtoehto 4, Vaihtoehto 5", "", 10));
+		kalle_answers.add(createKokuAnswer(
+					"26.5.2012, 27.5.2012, 28.5.2012", "", 11));
+		kalle_answers.add(createKokuAnswer("20", "", 12));
+		kalle_answers.add(createKokuAnswer("Tässä toinen vapaamuotoinen vastaus", "", 13));
+		respondedList.add(createKokuResponse(
+				kalle_answers, "kalle.kuntalainen", "Ei kommentoitavaa", kalle));
+
+		KokuUser kirsi = createKokuUser("Kirsi Kuntalainen", "kirsi.kuntalainen@kunpo.tpe.fi",
+				"Kirsi", "Kuntalainen", "0403333222", null);
+		List<KokuAnswer> kirsi_answers = new ArrayList<KokuAnswer>();
+		kirsi_answers.add(createKokuAnswer("Kyllä", "", 9));
+		kirsi_answers.add(createKokuAnswer("Vaihtoehto 1, Vaihtoehto 2, Vaihtoehto 4", "", 10));
+		kirsi_answers.add(createKokuAnswer("25.5.2012, 26.5.2012, 27.5.2012", "", 11));
+		kirsi_answers.add(createKokuAnswer("10", "", 12));
+		kirsi_answers.add(createKokuAnswer("Tässä käyttäjän vapaamuotoinen vastaus", "", 13));
+		respondedList.add(createKokuResponse(
+				kirsi_answers, "kirsi.kuntalainen", "Kommentti on myös vapaamuotoinen vastaus,"
+				+ " mutta vastaaja voi antaa kommentin missä tahansa kyselyssä;"
+				+ " se on aina läsnä, eikä sille ole kyselijän määrittelemää kysymystä.", kirsi));
+
+		r.setRespondedList(respondedList);
+
+		List<KokuQuestion> questions = new ArrayList<KokuQuestion>();
+		questions.add(createKokuQuestion( "Kyllä - Ei kysymys", 9, QuestionType.YES_NO, null));
+		questions.add(createKokuQuestion(
+					"Vapaavalintaiset vaihtoehdot", 10, QuestionType.MULTIPLE_CHOICE, null));
+		questions.add(createKokuQuestion( "Kalenteri", 11, QuestionType.CALENDAR, null));
+		questions.add(createKokuQuestion( "Numero", 12, QuestionType.NUMBER, null));
+		questions.add(createKokuQuestion( "Kysymys joka vaatii vastaajalta vapaamuotoisen tekstikenttävastauksen", 13, QuestionType.FREE_TEXT, null));
 
 		r.setQuestions(questions);
 

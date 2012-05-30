@@ -35,19 +35,65 @@ KokuTable.prototype.createAppoitmentsTable = function() {
 	 * Private methods
 	 */
 	 
+	 
+	function flattenReciviers(tasks) {
+		
+		function createPopupBox(recipients) {
+			var targetNames = "";
+			var description = "";
+
+			var i,j, targetName, parents;
+			
+			if (recipients) {
+				for (i = 0; i < recipients.length; i++ ) {
+					 targetName = recipients[i].targetPerson.fullName;
+					 targetNames +=  targetName + ", ";
+					 parents = recipients[i].recipients;
+					 description += "<div class='recipientGroup'><span class='targetName'> " + targetName +":</span>";
+					 for (j = 0; j < parents.length; j++ ) {
+					 	description += "<span class='parentName'>" + parents[j].fullName + "</span>";
+					 }
+					 description += "</div>"; 
+				}
+				targetNames = targetNames.substring(0, targetNames.length-2);
+				if (targetNames.length > KokuUtil.constants.fieldMaxLength) {
+					targetNames = targetNames.substring(0, KokuUtil.constants.fieldMaxLength);
+					targetNames += "..";
+				}
+				return KokuUtil.popup(targetNames, description);			
+			} else {
+				return "<spring:message code="unknown" />";
+			}
+		}
+	
+		var i,j;
+		var recipients;
+		
+		for (i = 0; i < tasks.length; i++)  {
+			if (tasks[i].recipients) {
+				tasks[i]["cleanHtmlReceviers"] = createPopupBox(tasks[i].recipients);
+			} else {
+				tasks[i]["cleanHtmlReceviers"] = "<spring:message code="unknown" />";
+			}
+		}	
+	}
+	 
 	function createOpenAppointmentsTable(tasks) {
 		var columnNames = [
 					   "<spring:message code="message.choose" />",
 	                   "<spring:message code="message.from" />",
+	                   "<spring:message code="message.to" />",
 	                   "<spring:message code="message.subject" />",
 	                   "<spring:message code="message.description" />"
 	                  ];
 	
 		var columnIds = [
-						 "receivingUser",
+						 "senderUserFullName",
+						 "cleanHtmlReceviers",
 		                 "cleanHtmlsubject",
 		                 "cleanHtmldescription"
 		                ];
+		flattenReciviers(tasks);
 		return createTable(tasks, columnNames, columnIds, "appointmentsTable", true);		                
 	};
 	
@@ -55,18 +101,20 @@ KokuTable.prototype.createAppoitmentsTable = function() {
 		var columnNames = [
 					   "<spring:message code="message.choose" />",
 	                   "<spring:message code="message.from" />",
+	                   "<spring:message code="message.to" />",	                   
 	                   "<spring:message code="message.subject" />",
 	                   "<spring:message code="message.description" />",
 	                   "<spring:message code="message.status" />"
 	                  ];
 	
 		var columnIds = [
-						 "receivingUser",
+						 "senderUserFullName",						 
+						 "cleanHtmlReceviers",
 		                 "cleanHtmlsubject",
 		                 "cleanHtmldescription",
 		                 "status"
 		                ];
-
+		flattenReciviers(tasks);
 		return createTable(tasks, columnNames, columnIds, "appointmentsTable", true);
 	};
 	
@@ -211,7 +259,7 @@ KokuEmployeeTable.prototype.createInfoRequestsTable = function(tasks) {
 			if (tasks[i].recieverUser.displayname === undefined || tasks[i].recieverUser.displayname.length == 0) {
 				tasks[i]["recieverName"] = tasks[i].recieverRoleUid;
 			} else {
-				tasks[i]["recieverName"] = getName(tasks[i].recieverUser);		
+				tasks[i]["recieverName"] = getName(tasks[i].recieverUser);
 			}		
 			tasks[i]["senderName"] = getName(tasks[i].senderUser);
 			tasks[i]["targetPersonName"] = getName(tasks[i].targetPersonUser);

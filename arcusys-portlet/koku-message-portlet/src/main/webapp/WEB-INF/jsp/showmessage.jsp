@@ -1,14 +1,14 @@
-<%@page import="fi.arcusys.koku.web.util.ResponseStatus"%>
+<%@page import="fi.arcusys.koku.common.services.facades.impl.ResponseStatus"%>
 <%@page import="fi.arcusys.koku.web.util.ModelWrapper"%>
 <%@page import="java.util.Collections"%>
 <%@ page import="net.sf.json.JSONArray"%>
 <%@ include file="init.jsp"%>
-<%@ page import="fi.arcusys.koku.kv.model.KokuMessage" %>
-<%@ page import="fi.arcusys.koku.users.KokuUser" %>
+<%@ page import="fi.arcusys.koku.common.services.messages.model.KokuMessage" %>
+<%@ page import="fi.arcusys.koku.common.services.users.KokuUser" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.Enumeration" %>
-<%@ page import="fi.arcusys.koku.util.Properties" %>
+<%@ page import="fi.arcusys.koku.common.util.Properties" %>
 
 <portlet:renderURL var="homeURL" windowState="<%= WindowState.NORMAL.toString() %>" >
 	<portlet:param name="myaction" value="home" />
@@ -205,7 +205,7 @@ public String htmlToCode(String s)
 	<div id="failedEmailDelivery"></div>
 	<div id="task-manager-operation" class="task-manager-operation-part">
 		<input type="button" value="<spring:message code="page.return"/>" onclick="kokuNavigationHelper.returnMainPage()" />
-		<% if (Properties.IS_KUNPO_PORTAL) { %>
+		<% if (Properties.IS_KUNPO_PORTAL && !messageModel.getModel().isReplyDisabled()) { %>
 		<input type="button" value="<spring:message code="message.replyMessage"/>" onclick="KokuMessage.citizen.replyToMessage()" />
 		<% } %>
 	</div>

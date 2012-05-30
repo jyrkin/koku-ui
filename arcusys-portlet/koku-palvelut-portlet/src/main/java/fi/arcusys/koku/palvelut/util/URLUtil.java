@@ -7,7 +7,7 @@ import java.text.MessageFormat;
 import javax.portlet.PortletRequest;
 
 //import org.intalio.tempo.workflow.task.Task;
-import fi.arcusys.koku.intalio.Task;
+import fi.arcusys.koku.common.services.intalio.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

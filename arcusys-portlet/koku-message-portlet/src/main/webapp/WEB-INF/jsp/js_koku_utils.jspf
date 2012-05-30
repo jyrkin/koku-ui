@@ -1,6 +1,10 @@
 
 /* Koku utils JS */
 var KokuUtil = {
+
+	constants : {
+		fieldMaxLength : 22
+	},
 	
 	timer : {
 		/**
@@ -40,6 +44,13 @@ var KokuUtil = {
 			// return "<abbr class='valueWithDesc' title='"+ value +"' >" + value.substring(0,maxLength) +"...</abbr>";
 			return "<span class='jQueryToolTip' title='" + value + "'>" + value.substring(0,maxLength) +"...</span>";
 		}
+	},
+	
+	popup : function(value, description) {
+		if (typeof value == 'undefined' || typeof value == 'undefined') {
+			return "<spring:message code="unknown"/>";
+		}
+		return "<span class='jQueryToolTipHtml'>" + value +"<span class='toolTipDescription' style='display: none'>"+description+"</span></span>";	
 	},
 	
 	escapeHTML : function(value) {

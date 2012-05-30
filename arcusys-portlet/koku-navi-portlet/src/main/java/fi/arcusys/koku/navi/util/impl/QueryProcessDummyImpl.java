@@ -1,12 +1,11 @@
 package fi.arcusys.koku.navi.util.impl;
 
-import static fi.arcusys.koku.util.Constants.JSON_LOGIN_STATUS;
-import static fi.arcusys.koku.util.Constants.TOKEN_STATUS_INVALID;
 import net.sf.json.JSONObject;
 
 import org.springframework.context.MessageSource;
+import static fi.arcusys.koku.common.util.Constants.*;
 
-import fi.arcusys.koku.util.PortalRole;
+import fi.arcusys.koku.common.util.PortalRole;
 
 public class QueryProcessDummyImpl extends AbstractQueryProcess {
 	

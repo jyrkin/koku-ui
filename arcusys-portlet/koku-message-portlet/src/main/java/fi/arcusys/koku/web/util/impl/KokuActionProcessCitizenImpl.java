@@ -1,13 +1,13 @@
 package fi.arcusys.koku.web.util.impl;
 
-import static fi.arcusys.koku.util.Constants.RESPONSE_FAIL;
+import static fi.arcusys.koku.common.util.Constants.RESPONSE_FAIL;
 
 import java.util.Arrays;
 
-import fi.arcusys.koku.av.AvCitizenServiceHandle;
-import fi.arcusys.koku.exceptions.KokuServiceException;
-import fi.arcusys.koku.tiva.TivaCitizenServiceHandle;
-import fi.arcusys.koku.tiva.warrant.citizens.KokuCitizenWarrantHandle;
+import fi.arcusys.koku.common.exceptions.KokuServiceException;
+import fi.arcusys.koku.common.services.appointments.citizen.AvCitizenServiceHandle;
+import fi.arcusys.koku.common.services.consents.citizen.TivaCitizenServiceHandle;
+import fi.arcusys.koku.common.services.warrants.citizens.KokuCitizenWarrantHandle;
 import fi.arcusys.koku.web.util.exception.KokuActionProcessException;
 
 public class KokuActionProcessCitizenImpl extends AbstractKokuActionProcess {
@@ -30,7 +30,7 @@ public class KokuActionProcessCitizenImpl extends AbstractKokuActionProcess {
 		
 		/* Lazy services loading */
 		if (avCitizenServiceHandle == null) {
-			avCitizenServiceHandle = new AvCitizenServiceHandle(getUserId());
+			avCitizenServiceHandle = new AvCitizenServiceHandle(DUMMY_MSG_SOURCE, getUserId());
 		}
 
 		final int appointments = appointmentIds.length;
@@ -69,7 +69,7 @@ public class KokuActionProcessCitizenImpl extends AbstractKokuActionProcess {
 		
 		/* Lazy initialization */
 		if (warrantHandle == null) {
-			warrantHandle = new KokuCitizenWarrantHandle();				
+			warrantHandle = new KokuCitizenWarrantHandle(DUMMY_MSG_SOURCE);				
 		}
 		
 		for(String authorizationId : warrantIds) {
@@ -92,15 +92,11 @@ public class KokuActionProcessCitizenImpl extends AbstractKokuActionProcess {
 			throw new KokuActionProcessException("consentIds parameter is null");
 		}
 		if (tivaHandle == null) {
-			tivaHandle = new TivaCitizenServiceHandle(getUserId());			
+			tivaHandle = new TivaCitizenServiceHandle(DUMMY_MSG_SOURCE, getUserId());			
 		}
 		try {
 			for(String consentId : consentIds) {
-				String revokingResult;
-					revokingResult = tivaHandle.revokeOwnConsent(consentId);
-				if (revokingResult.equals(RESPONSE_FAIL)) {
-					throw new KokuActionProcessException("Failed to revoke consent. consentId: '"+consentId+"'");
-				}
+				tivaHandle.revokeOwnConsent(consentId);
 			}
 		} catch (KokuServiceException e) {
 			throw new KokuActionProcessException("Failed to revoke consent(s). ConsentIds: '"+Arrays.toString(consentIds)+"'", e);

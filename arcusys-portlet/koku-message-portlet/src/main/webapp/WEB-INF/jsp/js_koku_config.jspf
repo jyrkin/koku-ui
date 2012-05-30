@@ -1,7 +1,20 @@
+<%@ page import="fi.arcusys.koku.common.util.Constants" %>
+<%@ page import="javax.portlet.PortletRequest" %>
+
 /*
  * Koku config JS
  * 
  */
+ 
+ /**
+  * KOKU user object. Contains information about the currently logged in user.
+  *
+  */
+ 
+var kokuUser = {
+ 	username: '<%= (String) renderRequest.getPortletSession().getAttribute(Constants.ATTR_USERNAME) %>',
+ 	uid: '<%= (String) renderRequest.getPortletSession().getAttribute(Constants.ATTR_USER_ID) %>'
+ };
 
 /**
  * Config object to handle parameters in configuration mode
@@ -12,6 +25,34 @@ function Config(refDuration, msgType) {
 	/* outbox, inbox, archive */
 	this.messageType = msgType;
 	this.refreshTimer;
+};
+
+
+var kokuToolTipSettings = {
+	style: { 
+		width: 200,
+		padding: 5,
+		background: '#EFEFEF',
+		color: 'black',
+		textAlign: 'center',
+		border: {
+		   width: 1,
+		   radius: 5,
+		   color: '#CCC'
+		},
+		name: 'blue', 
+		tip: true 
+	},
+	show: {
+		delay: 10,
+		when : {
+			event : 'mouseover'
+		},
+		effect : {
+			type: 'fade',
+			length: 100
+		}
+	}
 };
  
 /**

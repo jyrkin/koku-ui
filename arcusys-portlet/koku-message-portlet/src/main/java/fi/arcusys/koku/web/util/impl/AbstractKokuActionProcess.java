@@ -1,11 +1,13 @@
 package fi.arcusys.koku.web.util.impl;
 
-import static fi.arcusys.koku.util.Constants.RESPONSE_FAIL;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import fi.arcusys.koku.kv.message.MessageHandle;
+import org.springframework.context.MessageSource;
+
+import fi.arcusys.koku.common.exceptions.KokuServiceException;
+import fi.arcusys.koku.common.services.messages.MessageHandle;
+import fi.arcusys.koku.common.util.DummyMessageSource;
 import fi.arcusys.koku.kv.messageservice.FolderType;
 import fi.arcusys.koku.web.util.KokuActionProcess;
 import fi.arcusys.koku.web.util.exception.KokuActionProcessException;
@@ -13,31 +15,26 @@ import fi.arcusys.koku.web.util.exception.KokuActionProcessException;
 
 public abstract class AbstractKokuActionProcess implements KokuActionProcess  {
 		
+	protected final static MessageSource DUMMY_MSG_SOURCE = new DummyMessageSource();
+	
 	private MessageHandle msghandle = null;
 	private final String userId;
 	
 	public AbstractKokuActionProcess(String userId) {
 		this.userId = userId;
-	}	
+	}
 	
 	@Override
 	public void archiveOldMessages(String folderType) throws KokuActionProcessException {
 		
 		if (folderType == null) {
 			throw new KokuActionProcessException("FolderType is null!");
-		}
-		
-		if (msghandle == null) {
-			msghandle = new MessageHandle();
-		}
-		final String oldArchResult;
+		}		
+		instantiateService();
 		try {
-			oldArchResult = msghandle.archiveOldMessages(getUserId(), FolderType.fromValue(folderType));			
-		} catch (RuntimeException e) {
+			msghandle.archiveOldMessages(getUserId(), FolderType.fromValue(folderType));			
+		} catch (KokuServiceException e) {
 			throw new KokuActionProcessException("Archiving old messages failed.", e);
-		}
-		if (oldArchResult == null || oldArchResult.equals(RESPONSE_FAIL)) {
-			throw new KokuActionProcessException("Archiving old messages failed.");
 		}
 	}
 
@@ -47,49 +44,45 @@ public abstract class AbstractKokuActionProcess implements KokuActionProcess  {
 		if (messageIds == null) {
 			throw new KokuActionProcessException("Deleting message(s) failed. messageIds parameter is null");
 		}
-		
-		if (msghandle == null) {
-			msghandle = new MessageHandle();
-		}
-		
-		List<Long> msgIds = new ArrayList<Long>();		
-		for(String msgId : messageIds) {
-			try {
-				msgIds.add(Long.parseLong(msgId));
-			} catch (NumberFormatException nfe) {
-				throw new KokuActionProcessException("Couldn't delete message(s)! Invalid messageId. MessageId: '"+ msgId + "'", nfe);
-			}
-		}
-		
-		final String deleteResult = msghandle.deleteMessages(msgIds); // OK or FAIL
-		if (deleteResult == null || deleteResult.equals(RESPONSE_FAIL)) {
-			throw new KokuActionProcessException("Deleting one or more messages failed.");
+		instantiateService();		
+		List<Long> msgIds = getMessageIds(messageIds);		
+		try {
+			msghandle.deleteMessages(msgIds);
+		} catch (KokuServiceException kse) {
+			throw new KokuActionProcessException("Deleting one or more messages failed.");			
 		}		
 	}
 
 	@Override
-	public void archiveMessages(String[] messageIds)	throws KokuActionProcessException {
+	public void archiveMessages(String[] messageIds) throws KokuActionProcessException {
 		
 		if (messageIds == null) {
 			throw new KokuActionProcessException("Archiving message(s) failed. messageIds parameter is null");
 		}
-
-		if (msghandle == null) {
-			msghandle = new MessageHandle();
-		}		
-	
-		List<Long> formattedMsgIds = new ArrayList<Long>();		
-		for(String msgId : messageIds) {
-			try {
-				formattedMsgIds.add(Long.parseLong(msgId));				
-			} catch (NumberFormatException nfe) {
-				throw new KokuActionProcessException("Error while parsing messageIds. MessageId is not valid number: '"+msgId+"'", nfe);
-			}
-		}
-		
-		final String result = msghandle.archiveMessages(formattedMsgIds); // OK or FAIL
-		if (result == null || result.equals(RESPONSE_FAIL)) {
+		instantiateService();	
+		List<Long> formattedMsgIds = getMessageIds(messageIds);		
+		try {
+			msghandle.archiveMessages(formattedMsgIds);
+		} catch (KokuServiceException kse) {
 			throw new KokuActionProcessException("Archiving one or more messages failed.");
+		}
+	}
+	
+	private List<Long> getMessageIds(String[] messageIds) throws KokuActionProcessException {
+		List<Long> formattedMsgIds = new ArrayList<Long>();		
+		try {
+			for(String msgId : messageIds) {
+				formattedMsgIds.add(Long.parseLong(msgId));				
+			}
+		} catch (NumberFormatException nfe) {
+			throw new KokuActionProcessException("Error while parsing messageIds. MessageId is not valid number.", nfe);
+		}
+		return formattedMsgIds;
+	}
+	
+	private void instantiateService() {
+		if (msghandle == null) {
+			msghandle = new MessageHandle(DUMMY_MSG_SOURCE);
 		}
 	}
 

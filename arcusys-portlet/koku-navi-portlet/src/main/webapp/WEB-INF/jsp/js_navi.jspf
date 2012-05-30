@@ -1,52 +1,56 @@
 
-var koku_navi_type = readKokuCookie();
-if (!koku_navi_type) {
-	createKokuCookie('<%= Constants.TASK_TYPE_MESSAGE_INBOX %>');
-	koku_navi_type = readKokuCookie();
+<%@ include file="js_navigationState.jspf" %>
+var kokuNavigationState = new KokuNavigationState;
+
+function updateNavigationStatus(currentPosition, navigationState, callback) {
+	var url="<%= naviStatusURL %>";
+	url = formatUrl(url);
+	var naviState = JSON.stringify(navigationState.getStatus());
+	
+	jQuery.post(url, {currentPosition: currentPosition, navigationState: naviState}, function(data) {
+		var obj = jQuery.parseJSON(data);
+		var naviState = obj.navigationState;
+		koku_navi_type = obj.navigationPosition;
+		if (typeof callback != 'undefined' && callback != null) {
+			callback();
+		}
+	});
 }
+
+<% if (navigationPosition == null) { %> 
+var koku_navi_type = null; 
+<% } else { %> 
+var koku_navi_type = '<%= navigationPosition %>';
+<% } %>
+if (!koku_navi_type) {
+	updateNavigationStatus("", kokuNavigationState);
+}
+
 var defaultPath = "<%= defaultPath %>";
 var naviRefreshTimer;
 
-<%@ include file="js_navigationState.jspf" %>
 
-var kokuNavigationState = new KokuNavigationState;
 	
 jQuery(document).ready(function() {
+	
+	function openSavedNavigation() {
+		// Find and close all #child elements 
+		var data = '<%= navigationState %>';
+		openSavedTreeNodes(data);	
+	}
+	
 	jQuery('.child').hide();
-	focusCurrentItem();	
+	focusCurrentItem(koku_navi_type);	
 	openSavedNavigation();
 	ajaxUpdate();		
 	clearInterval(naviRefreshTimer);	
 });
 
-function openSavedNavigation() {
-	// Find and close all #child elements 
-	var data = '<%= navigationState %>';
-	openSavedTreeNodes(data);	
-}
 
 /**
  * Finds the current item in navigation list and decorates the item, e.g. bold font 
  */
-function focusCurrentItem() {
-
-	function getNaviType() {
-		var naviType = readKokuCookie();		
-		var global_url = document.URL;
-		var index = global_url.lastIndexOf("NAVI_TYPE=");
-
-		/* Quick fix for Salo. Findout why param is different kunpo/loora sides */
-		if (index < 0) {
-			index = global_url.lastIndexOf("naviType=");
-			index = index - 1;
-		}		
-		if(index > 0) {
-			naviType = global_url.substring(index+10);
-			koku_navi_type = naviType;
-		}		
-		return naviType;
-	}
-	
+function focusCurrentItem(naviType) {
 
 	function bold(elementId) {
 	
@@ -102,8 +106,8 @@ function focusCurrentItem() {
 	var currentPage = "<%= currentPage %>";	
 	switch(currentPage) {
 		case '<%= defaultPage %>':		
-			var naviType = readKokuCookie();
-			if(naviType != "") {
+			// var naviType = readKokuCookie();
+			if(typeof naviType != 'undefined' && naviType != null && naviType != null) {
 				bold("#"+naviType);				
 			} else {
 				bold('#msg_inbox'); 
@@ -213,17 +217,7 @@ function ajaxUpdate() {
 		});
 };
 
-function updateNavigationStatus() {
-	var url="<%= naviStatusURL %>";
-	url = formatUrl(url);
-	var naviState = JSON.stringify(kokuNavigationState.getStatus());
-	
-	jQuery.post(url, {navigationState: naviState}, function(data) {
-		var obj = jQuery.parseJSON(data);
-		var naviState = obj.navigationState;
-		
-	});
-}
+
 
 function toggleKokuNavi(toggleId, indicatorId, ajaxUpdate) {
 
@@ -237,7 +231,7 @@ function toggleKokuNavi(toggleId, indicatorId, ajaxUpdate) {
 		closeKokuNavi(toggleId, indicatorId);
 	}	
 	if (ajaxUpdate) {
-		updateNavigationStatus();
+		updateNavigationStatus(koku_navi_type, kokuNavigationState);
 	}
 }
 
@@ -257,51 +251,28 @@ function closeKokuNavi(toggleId, indicatorId) {
 
 function navigateToPage(naviType) {
 	if (typeof kokuNavigationHelper === "undefined" || kokuNavigationHelper === null) {
-		createKokuCookie(naviType);
-		window.location = "<%= defaultPath %>" + "?resetView=true&NAVI_TYPE=" + naviType;
-		return;
+		// createKokuCookie(naviType);
+		updateNavigationStatus(naviType, kokuNavigationState, function() {
+			window.location = "<%= defaultPath %>" + "?resetView=true&NAVI_TYPE=" + naviType;
+			return;
+		});		
 	}
 	if (typeof kokuNavigationHelper.getHelperIdentifier() === "undefined") {
 		/* console.error("Bug in code!! kokuNavigationHelper.getHelperIdentifier() is not defined!"); */
 		return;
 	}
 	/* If navi_type is missing we are not in Message-portlet page ->  */
-	createKokuCookie(naviType);
+	updateNavigationStatus(naviType, kokuNavigationState, function() {
+		// createKokuCookie(naviType);
 	
-	/* Update current position in navigation to server (session)  */
-	switch(kokuNavigationHelper.getHelperIdentifier()) {
-		case "MessagePortlet":
-			window.location = kokuNavigationHelper.getReturnMainPageLink() + "&NAVI_TYPE=" + naviType;
-			break;
-		default:
-			window.location = "<%= defaultPath %>" + "?resetView=true&NAVI_TYPE=" + naviType;
-			break;
-	}
+		/* Update current position in navigation to server (session)  */
+		switch(kokuNavigationHelper.getHelperIdentifier()) {
+			case "MessagePortlet":
+				window.location = kokuNavigationHelper.getReturnMainPageLink() + "&NAVI_TYPE=" + naviType;
+				break;
+			default:
+				window.location = "<%= defaultPath %>" + "?resetView=true&NAVI_TYPE=" + naviType;
+				break;
+			}
+	});
 }
-
-
-function createKokuCookie(value) {
-	if (!value) {
-		/* console.error("Bug in code! KokuCookie value missing."); */
-	}
-	var date = new Date();
-	date.setTime(date.getTime()+(2*60*60*1000));
-	var expires = "; expires="+date.toGMTString();
-	document.cookie = "kokuNavigationState="+value+expires+"; path=/";
-}
-
-function readKokuCookie() {
-	var nameEQ = "kokuNavigationState=";
-	var ca = document.cookie.split(';');
-	for(var i=0;i < ca.length;i++) {
-		var c = ca[i];
-		while (c.charAt(0)==' ') c = c.substring(1,c.length);
-		if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
-	}
-	return null;
-}
-
-function resetKokuCookie() {
-	document.cookie = "kokuNavigationState="+value+"; path=/";
-}
-
