@@ -376,6 +376,8 @@
 <fmt:message key="ui.kks.session.saving.title" var="sessionSaveTitle"/>
 <fmt:message key="ui.kks.session.saving" var="sessionSaveDesc"/>
 <fmt:message key="ui.kks.session.read.only" var="sessionStatus"/>
+<fmt:message key="ui.kks.minutes" var="minutes"/>
+<fmt:message key="ui.kks.seconds" var="seconds"/>
 
 <div class="kks-version">
 		<%@ include file="../common/page-footer.jsp"%>
@@ -393,6 +395,9 @@ var initialSessionTimeoutMessage = '${sessionExpire}';
 var initialSaveMessage = '${sessionSaveDesc}';
 var initialStatusMessage= '${sessionStatus}';
 var sessionTimeoutCountdownId = 'sessionTimeoutCountdown';
+var minutesMessage= '${minutes}';
+var secondsMessage= '${seconds}';
+var initialStatusMessage= '${sessionStatus}';
 var redirectAfter = ${redirectTime}; // number of seconds to wait before redirecting the user
 var redirectTo = '${logoutURL}'; // URL to relocate the user to once they have timed out
 var keepAliveURL = 'keepAlive.php'; // URL to call to keep the session alive
@@ -510,10 +515,14 @@ $(document).ready(function() {
 			if(idleTime === 0) {
 				clearInterval(dialogTimer);
 				var counter = redirectAfter;
+				var minVar = Math.floor(counter/60);  // The minutes
+				var secVar = counter % 60;
+				
 				running = true;
 				
 				// intialisze timer
-				$('#'+sessionTimeoutCountdownId).html(redirectAfter);
+				var tmp = minVar + minutesMessage + " " + secVar + secondsMessage;
+				$('#'+sessionTimeoutCountdownId).html(tmp);
 				// open dialog
 				$(sessionTimeoutWarningDialog).dialog('open');
 				
@@ -527,7 +536,12 @@ $(document).ready(function() {
 						$(sessionTimeoutWarningDialog).dialog('disable');
 						window.location = redirectTo;
 					} else {
-						$('#'+sessionTimeoutCountdownId).html(counter);
+						
+						minVar = Math.floor(counter/60);  // The minutes
+						secVar = counter % 60; 
+						var tmp = minVar + minutesMessage + " " + secVar + secondsMessage;
+						$('#'+sessionTimeoutCountdownId).html(tmp);
+						
 					};
 				}, 1000);
 			}
