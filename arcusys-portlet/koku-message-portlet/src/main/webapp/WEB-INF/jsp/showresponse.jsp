@@ -37,7 +37,7 @@
 			        <tr class="<c:out value="${loopStatus.index % 2 == 0 ? 'evenRow' : 'oddRow'}"/>">
 			          <td><c:out value="${question.number}"/></td>
 			          <td><c:out value="${question.description}"/></td>
-			          <td><c:out value="${question.answer.answer}"/></td>
+			          <td><script type="text/javascript">document.write(decodeURIComponent("<c:out value="${question.answer.answer}" />"));</script></td>
 			        </tr>
 		      	</c:forEach>
 		    </table>

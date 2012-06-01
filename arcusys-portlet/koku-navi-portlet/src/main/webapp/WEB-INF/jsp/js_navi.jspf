@@ -28,6 +28,7 @@ if (!koku_navi_type) {
 
 var defaultPath = "<%= defaultPath %>";
 var naviRefreshTimer;
+var kokuNaviSpeed = 150
 
 
 	
@@ -177,16 +178,20 @@ function ajaxUpdate() {
 			}
 		};
 		
+		updateMsgCounter('#inbox_num_super', inboxNum);
 		updateMsgCounter('#inbox_num', inboxNum);
+		updateMsgCounter('#archive_inbox_num_super', archiveInboxNum);
 		updateMsgCounter('#archive_inbox_num', archiveInboxNum);
-		updateMsgCounter('#consents_num', consentsTotal);
-		updateMsgCounter('#appointments_num', appointmentsTotal);
+		updateMsgCounter('#requests_num_super_super', requestsTotal);
+		updateMsgCounter('#requests_num_super', requestsTotal);
 		updateMsgCounter('#requests_num', requestsTotal);
+		updateMsgCounter('#appointments_num_super', appointmentsTotal);
+		updateMsgCounter('#appointments_num', appointmentsTotal);
+		updateMsgCounter('#consents_num_super', consentsTotal);
+		updateMsgCounter('#consents_num', consentsTotal);
+		updateMsgCounter('#infoRequests_num_super', infoRequestsTotal);
 		updateMsgCounter('#infoRequests_num', infoRequestsTotal);
 	};
-	
-	
-		
 	
 	var url="<%= ajaxURL %>";
 	url = formatUrl(url);
@@ -217,33 +222,62 @@ function ajaxUpdate() {
 		});
 };
 
-
-
-function toggleKokuNavi(toggleId, indicatorId, ajaxUpdate) {
-
-	if (typeof ajaxUpdate == 'undefined' || ajaxUpdate == null) {
-		ajaxUpdate = true;
+function getMessageAmountIndicator(toggleId) {
+	var receivedMessagesParentId;
+	switch(toggleId) {
+		case "#kokuNaviMessages":
+			receivedMessagesParentId = "#inbox_num_super";
+		break;
+		case "#archive-part":
+			receivedMessagesParentId = "#archive_inbox_num_super";
+		break;
+		case "#kokuNaviRequests":
+			receivedMessagesParentId = "#requests_num_super_super";
+		break;
+		case "#kokuNaviRequestsRecevied":
+			receivedMessagesParentId = "#requests_num_super";
+		break;
+		case "#kokuNaviInfoRequests":
+			receivedMessagesParentId = "#infoRequests_num_super";
+		break;
+		case "#kokuNaviAppointment":
+			receivedMessagesParentId = "#appointments_num_super";
+		break;
+		case "#kokuNaviConsents":
+			receivedMessagesParentId = "#consents_num_super";
+		break;
 	}
+	return receivedMessagesParentId;
+}
+
+function toggleKokuNavi(toggleId, indicatorId) {
+
 	var indicator = jQuery(indicatorId);
 	if (indicator.html() == "+") {
 		openKokuNavi(toggleId, indicatorId);
 	} else {
 		closeKokuNavi(toggleId, indicatorId);
 	}	
-	if (ajaxUpdate) {
-		updateNavigationStatus(koku_navi_type, kokuNavigationState);
-	}
+	updateNavigationStatus(koku_navi_type, kokuNavigationState);
 }
 
 function openKokuNavi(toggleId, indicatorId) {
-	jQuery(toggleId).show('fast');
+	jQuery(toggleId).show(kokuNaviSpeed);
+	var receivedMessagesParentId = getMessageAmountIndicator(toggleId);
+	if (typeof receivedMessagesParentId != 'undefined' && receivedMessagesParentId != null) {
+		jQuery(receivedMessagesParentId).hide(kokuNaviSpeed);
+	}
 	var indicator = jQuery(indicatorId);
 	indicator.html('-');
 	kokuNavigationState.add(toggleId, indicatorId);
 }
 
-function closeKokuNavi(toggleId, indicatorId) {
-	jQuery(toggleId).hide('fast');
+function closeKokuNavi(toggleId, indicatorId, receivedMessagesParentId) {
+	jQuery(toggleId).hide(kokuNaviSpeed);
+	var receivedMessagesParentId = getMessageAmountIndicator(toggleId);
+	if (typeof receivedMessagesParentId != 'undefined' && receivedMessagesParentId != null) {
+		jQuery(receivedMessagesParentId).show(kokuNaviSpeed);
+	}
 	var indicator = jQuery(indicatorId);	
 	indicator.html('+');
 	kokuNavigationState.remove(toggleId);

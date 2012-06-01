@@ -36,46 +36,77 @@
 
 <script type="text/javascript">
 	<%@ include file="js_koku_ajax.jspf" %>
+	
+	
+	KokuAppointmentDetails = function () {
+		
+		///////////////////////////
+		// Private variables
+		
+		var ajaxUrls = {
+				cancelUrl : "<%= cancelURL %>",
+				appointmentRenderUrl :  "<%= appointmentRenderURL %>"
+		};
+		var kokuAjax = new KokuAjax(ajaxUrls);
+		
+		
+		///////////////////////////
+		// Public methods
+		var publicMethods = {
+			cancelAppointment : cancelAppointment,
+			editAppointment : editAppointment
+		};
+		
+		
+		///////////////////////////
+		// Private methods
+		
+		function notify_appointment_cancelled() {
+			jQuery.jGrowl("<spring:message code="notification.canceled.appointment"/>");
+		};
+		
+		
+		function cancelAppointment() {
+			
+			function callback(result) {			
+				if (result == 'OK') {
+					$.jGrowl.defaults.position = 'top-left';
+					jQuery.jGrowl("<spring:message code="notification.canceled.appointment"/>", { theme: 'jGrowlThemeSuccess' }, '#show-message', '275');
+					setTimeout("kokuNavigationHelper.returnMainPage();", 3000);
+				} else if (result == 'FAIL') {
+					jQuery.jGrowl("<spring:message code="notification.canceled.appointment.failed"/>", { theme: 'jGrowlThemeFailure' }, '#show-message', '275');
+					$("#cancelButton").attr("disabled","enabled");
+				} else {
+					KokuUtil.errorMsg.showErrorMessage("<spring:message code="error.unLogin" />");
+					$("#cancelButton").attr("disabled","enabled");
+				}
+			}
+			
+			var appointments = [], targetPersons = [], comment, taskType, status;
+			appointments[0] = "<%= appointmentId %>";
+			targetPersons[0] = "<%= targetPerson %>";
+			comment = prompt('<spring:message code="appointment.cancel"/>',"");
+			if(comment == null)	{
+				return;
+			} else {
+				$("#cancelButton").attr("disabled","disabled");
+			}	
 
-	var ajaxUrls = {
-			cancelUrl : "<%= cancelURL %>",
-			appointmentRenderUrl :  "<%= appointmentRenderURL %>"
+			taskType = "<%= Constants.TASK_TYPE_APPOINTMENT_INBOX_CITIZEN %>";
+			kokuAjax.cancelAppointments(appointments, targetPersons, comment, taskType, callback);
+		};
+		
+		function editAppointment() {
+			window.location = "<%= portletPath %><%= NavigationPortletProperties.CONSENTS_ANSWER_TO_CONSENT %>?FormID=<%= appointmentId %>&arg1=<%= targetPerson %>";		
+		}
+		
+		return publicMethods;
 	};
 	
-	var kokuAjax = new KokuAjax(ajaxUrls);
-	
-	function notify_appointment_cancelled() {
-		jQuery.jGrowl("<spring:message code="notification.canceled.appointment"/>");
-	}
-	
-	function callback(result) {			
-		if (result == 'OK') {
-			$.jGrowl.defaults.position = 'top-left';
-			jQuery.jGrowl("<spring:message code="notification.canceled.appointment"/>", { theme: 'jGrowlThemeSuccess' }, '#show-message', '275');
-			setTimeout("kokuNavigationHelper.returnMainPage();", 3000);
-		} else if (result == 'FAIL') {
-			jQuery.jGrowl("<spring:message code="notification.canceled.appointment.failed"/>", { theme: 'jGrowlThemeFailure' }, '#show-message', '275');
-			$("#cancelButton").attr("disabled","enabled");
-		} else {
-			KokuUtil.errorMsg.showErrorMessage("<spring:message code="error.unLogin" />");
-			$("#cancelButton").attr("disabled","enabled");
-		}
-	}
-	
-	function cancelAppointment() {
-		var appointments = [], targetPersons = [], comment, taskType, status;
-		appointments[0] = "<%= appointmentId %>";
-		targetPersons[0] = "<%= targetPerson %>";
-		comment = prompt('<spring:message code="appointment.cancel"/>',"");
-		if(comment == null)	{
-			return;
-		} else {
-			$("#cancelButton").attr("disabled","disabled");
-		}	
+	var kokuAppointmentDetails = new KokuAppointmentDetails(); 
 
-		taskType = "<%= Constants.TASK_TYPE_APPOINTMENT_INBOX_CITIZEN %>";
-		kokuAjax.cancelAppointments(appointments, targetPersons, comment, taskType, callback);
-	}
+	
+	
 </script>
 
 <c:choose> 
@@ -132,7 +163,8 @@
 	<div id="task-manager-operation" class="task-manager-operation-part">
 		<input type="button" value="<spring:message code="page.return"/>" onclick="kokuNavigationHelper.returnMainPage()" />
 		<c:if test="${appointment.model.status != 'Peruutettu'}">
-			<input type="button" id="cancelButton" value="<spring:message code="appointment.cancel.button"/>" onclick="cancelAppointment()" />
+			<input type="button" id="cancelButton" value="<spring:message code="appointment.cancel.button"/>" onclick="kokuAppointmentDetails.cancelAppointment()" />
+			<input type="button" id="editButton" value="<spring:message code="appointment.edit.button"/>" onclick="kokuAppointmentDetails.editAppointment()" />			
 		</c:if>
 	</div>
 </div>
