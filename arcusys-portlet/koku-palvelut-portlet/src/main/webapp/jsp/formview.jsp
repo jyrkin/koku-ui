@@ -11,7 +11,7 @@
 
 <%-- Load jQuery --%>
 <%-- This just temporary fix, because jQuery should be made available from theme or by portal not in portlet. --%>
-<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-1.5.2.min.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-1.7.2.min.js"></script>
 <%@ include file="js_koku_navigation_helper.jspf" %>
 <script type="text/javascript">
 

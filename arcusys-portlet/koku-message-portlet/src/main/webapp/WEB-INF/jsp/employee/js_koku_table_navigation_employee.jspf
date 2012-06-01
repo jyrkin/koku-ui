@@ -60,7 +60,7 @@ KokuTableNavigationEmployee.prototype.showSearchUI = function() {
 		jQuery('#warrants-search-warrants').show();
 		jQuery('#message-search').hide();
 	} else if (pageObj.taskType == '<%= Constants.TASK_TYPE_APPOINTMENT_INBOX_EMPLOYEE %>'
-		    || pageObj.taskType == '<%= Constants.TASK_TYPE_APPOINTMENT_RESPONSE_EMPLOYEE %>') {
+		    || pageObj.taskType == '<%= Constants.TASK_TYPE_APPOINTMENT_RESPONSE_EMPLOYEE %>') {
 		jQuery('#employeeAppointment-search').show();
 		jQuery('#message-search').hide();
 	} else if (pageObj.taskType == '<%= Constants.TASK_TYPE_APPLICATION_KINDERGARTEN_BROWSE %>') {
@@ -259,8 +259,8 @@ KokuTableNavigationEmployee.prototype.switchSearchTimeMode = function() {
 };
 
 /**
-	 * Cancels a list of appointments selected by user
-	 */
+ * Cancels a list of appointments selected by user
+ */
 KokuTableNavigationEmployee.prototype.cancelAppointments = function() {		
 		var messageList = [];
 		var targetPersons = [];
@@ -287,30 +287,28 @@ KokuTableNavigationEmployee.prototype.cancelAppointments = function() {
 		
 		if (messageList.length == 0) {
 			if (privilidgesError) {
-				alert("<spring:message code="appointment.privilidgesNullError"/>");
+				KokuUtil.notifications().warn("<spring:message code="appointment.privilidgesNullError"/>");
 			}
 			return; // no message selected
 		}
 		
-		var comment = prompt('<spring:message code="appointment.cancel"/>',"");
-		if(comment == null)	{
-			return;
-		}		
-		
-		this.kokuAjax.cancelAppointments(messageList, targetPersons, comment, pageObj.taskType, function(result) {			
-			if (result == 'OK') {
-				jQuery.jGrowl("<spring:message code="notification.canceled.appointment"/>");
-				this.kokuAjax.ajaxGetTasks(pageObj, presentTasks);
-			} else if (result == 'FAIL') {
-				jQuery.jGrowl("<spring:message code="notification.canceled.appointment.failed"/>");
-				this.kokuAjax.ajaxGetTasks(pageObj, presentTasks);
-			} else {
-				KokuUtil.errorMsg.showErrorMessage("<spring:message code="error.unLogin" />");
+		KokuUtil.dialogs.cancelAppointment('#cancelAppointment', function() {
+			var comment = jQuery('#kokuCancelMessage').val();
+			this.kokuAjax.cancelAppointments(messageList, targetPersons, comment, function(result) {			
+				if (result == 'OK') {
+					KokuUtil.notifications().success("<spring:message code="notification.canceled.appointment"/>");
+					this.kokuAjax.ajaxGetTasks(pageObj, presentTasks);
+				} else if (result == 'FAIL') {
+					KokuUtil.notifications().error("<spring:message code="notification.canceled.appointment.failed"/>");
+					this.kokuAjax.ajaxGetTasks(pageObj, presentTasks);
+				} else {
+					KokuUtil.errorMsg.showErrorMessage("<spring:message code="error.unLogin" />");
+				}
+			});
+			
+			if (privilidgesError) {
+				KokuUtil.notifications().warn("<spring:message code="appointment.privilidgesError"/>");
 			}
-		});
-		
-		if (privilidgesError) {
-			alert("<spring:message code="appointment.privilidgesError"/>");
-		}
+		}, null);
 	}
 

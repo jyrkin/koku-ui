@@ -176,22 +176,20 @@ function KokuTableNavigation(ajax) {
 			return; // no message selected
 		}
 		
-		var comment = prompt('<spring:message code="appointment.cancel"/>',"");
-		if(comment == null)	{
-			return;
-		}		
-		
-		this.kokuAjax.cancelAppointments(messageList, targetPersons, comment, pageObj.taskType, function(result) {			
-			if (result == 'OK') {
-				jQuery.jGrowl("<spring:message code="notification.canceled.appointment"/>");
-				this.kokuAjax.ajaxGetTasks(pageObj, presentTasks);
-			} else if (result == 'FAIL') {
-				jQuery.jGrowl("<spring:message code="notification.canceled.appointment.failed"/>");
-				this.kokuAjax.ajaxGetTasks(pageObj, presentTasks);
-			} else {
-				KokuUtil.errorMsg.showErrorMessage("<spring:message code="error.unLogin" />");
-			}
-		});
+		KokuUtil.dialogs.cancelAppointment('#cancelAppointment', function() {
+			var comment = jQuery('#kokuCancelMessage').val();
+			this.kokuAjax.cancelAppointments(messageList, targetPersons, comment, function(result) {			
+				if (result == 'OK') {
+					KokuUtil.notifications().success("<spring:message code="notification.canceled.appointment"/>");
+					this.kokuAjax.ajaxGetTasks(pageObj, presentTasks);
+				} else if (result == 'FAIL') {
+					KokuUtil.notifications().error("<spring:message code="notification.canceled.appointment.failed"/>");
+					this.kokuAjax.ajaxGetTasks(pageObj, presentTasks);
+				} else {
+					KokuUtil.errorMsg.showErrorMessage("<spring:message code="error.unLogin" />");
+				}
+			});
+		}, null);
 	}
 		
 	/**
@@ -206,7 +204,7 @@ function KokuTableNavigation(ajax) {
 			
 			if(consentStatus != 'Mitätöity') { // not revoked yet
 				messageList.push(consentId);
-			}    	
+			}
 		});
 		
 		if(messageList.length == 0) {

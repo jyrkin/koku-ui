@@ -23,7 +23,7 @@
 	<javascript>
 		<param>
 			<js-module>jQuery</js-module>
-			<js-path>/js/jquery-1.5.2.min.js</js-path>
+			<js-path>/js/jquery-1.7.2.min.js</js-path>
 			<js-priority>10</js-priority>
 		</param>
 		<param>
@@ -49,6 +49,11 @@
 		<param>
 			<js-module>jquery.qtip</js-module>
 			<js-path>/js/jquery.qtip.min.js</js-path>
+			<js-priority>10</js-priority>
+		</param>
+		<param>
+			<js-module>jquery-ui-1.8.20.custom.min</js-module>
+			<js-path>/js/jquery-ui-1.8.20.custom.min.js</js-path>
 			<js-priority>10</js-priority>
 		</param>
 	</javascript>

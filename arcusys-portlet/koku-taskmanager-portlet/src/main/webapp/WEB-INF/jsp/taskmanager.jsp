@@ -43,7 +43,7 @@
 
 <%@ include file="js_koku_navigation_helper.jspf" %>
 
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/jquery-1.5.2.min.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/jquery-1.7.2.min.js"></script>
 <script type="text/javascript"> 
 /*
  * Handle action for task manager
