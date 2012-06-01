@@ -64,10 +64,10 @@
                 	<form:textarea maxlength="500" path="comment" class="portlet-form-input-field" title="${titleLabel}" />
             	</div>
             	
-			    <div > 
+			    <div class="portlet-form-field"> 
 			    	<fmt:message key="ui.kks.delete.send.message" var="messageLabel"/>
 			    	<fmt:message key="ui.kks.delete.send.description" var="messageTitleLabel"/>
-			    	<form:checkbox cssClass="portlet-form-field" path="sendMessage" label="${messageLabel}" title="${messageTitleLabel}"/>
+			    	<form:checkbox path="sendMessage" label="${messageLabel}" title="${messageTitleLabel}"/>
 			    	
 			    </div> 
 			<br/>
