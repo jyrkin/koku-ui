@@ -40,6 +40,10 @@
 		}		
 		setTimeout("resizeTimer()", 500 );
 	}
+	
+	function setCompletedIframeSize() {
+		resizeIFrame('<portlet:namespace />xforms_iframe', 300);
+	}
 			
 	function resizeIFrame(id, height) {
 		if (height < minHeight) {

@@ -30,6 +30,17 @@
 		loadingTimes += 1;
 	}
 	
+	
+	function setCompletedIframeSize() {
+		function resizeIFrame(id, height) {
+			if (height < minHeight) {
+				height = minHeight;
+			}		
+			document.getElementById(id).style.height = height+'px';
+		}
+		resizeIFrame('taskform', 300);
+	}
+	
 	function getKokuServicesEndpoints() {
 		var url="/palvelut-portlet/Services";
 		return jQuery.parseJSON(
