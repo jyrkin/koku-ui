@@ -10,5 +10,5 @@ interface CSVColumn {
 	String getFormattedColumnHeader();
 
 	/* Returns one person's CSV formatted answers for this column */
-	String getFormattedPersonColumnAnswer(CSVPerson person);
+	String getCSVFormattedAnswer(CSVPerson person);
 }

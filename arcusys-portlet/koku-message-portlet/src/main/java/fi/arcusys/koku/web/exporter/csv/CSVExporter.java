@@ -54,11 +54,11 @@ public class CSVExporter implements Exporter {
 		return person;
 	}
 
-	private void addAnswerColumn(String header, QuestionType type) {
-		if (type == QuestionType.CALENDAR || type == QuestionType.MULTIPLE_CHOICE) {
-			this.answerColumns.add(new SynchronizedUniqueItemsCSVColumn(header));
+	private void addAnswerColumn(KokuQuestion question) {
+		if (question.getType() == QuestionType.CALENDAR || question.getType() == QuestionType.MULTIPLE_CHOICE) {
+			this.answerColumns.add(new SynchronizedUniqueItemsCSVColumn(question.getDescription(), question.getPossibleAnswers()));
 		} else {
-			this.answerColumns.add(new ListItemsCSVColumn(header));
+			this.answerColumns.add(new ListItemsCSVColumn(question.getDescription()));
 		}
 	}
 
@@ -84,7 +84,7 @@ public class CSVExporter implements Exporter {
 
 			/* Column answers */
 			for (CSVColumn answerColumn : this.answerColumns) {
-				answers.append(answerColumn.getFormattedPersonColumnAnswer(person));
+				answers.append(answerColumn.getCSVFormattedAnswer(person));
 			}
 
 			/* Comment field */
@@ -112,8 +112,8 @@ public class CSVExporter implements Exporter {
 	public String getContents(String responseSummary, String respondent, String comment, String missed) {
 
 		/* Iterate over all the data in kokuRequest and input it into the data structures */
-		for (KokuQuestion q : kokuRequest.getQuestions()) {
-			this.addAnswerColumn(q.getDescription(), q.getType());
+		for (KokuQuestion question : kokuRequest.getQuestions()) {
+			this.addAnswerColumn(question);
 		}
 		for (KokuResponse res : kokuRequest.getRespondedList()) {
 			CSVPerson person = this.addPerson(res.getReplierUser().getFullName(), res.getComment());

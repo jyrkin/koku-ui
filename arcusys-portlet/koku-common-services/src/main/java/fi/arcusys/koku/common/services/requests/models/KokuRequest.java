@@ -63,7 +63,7 @@ public class KokuRequest {
 		}
 		if (req.getQuestions() != null) {
 			for (fi.arcusys.koku.kv.requestservice.Question question : req.getQuestions()) {
-				getQuestions().add(new KokuQuestion(question));							
+				getQuestions().add(new KokuQuestion(question, req.getPossibleAnswers()));							
 			}
 		}
 	}
