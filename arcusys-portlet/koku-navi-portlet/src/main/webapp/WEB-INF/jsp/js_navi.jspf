@@ -183,7 +183,7 @@ function ajaxUpdate() {
 			}
 		};
 		
-		updateMsgCounter('#inbox_num_super', inboxNum);
+		updateMsgCounter('#inbox_num_super', parseInt(inboxNum, 10) + parseInt(archiveInboxNum, 10));
 		updateMsgCounter('#inbox_num', inboxNum);
 		updateMsgCounter('#archive_inbox_num_super', archiveInboxNum);
 		updateMsgCounter('#archive_inbox_num', archiveInboxNum);
@@ -289,7 +289,7 @@ function closeKokuNavi(toggleId, indicatorId, receivedMessagesParentId) {
 }
 
 function navigateToPage(naviType) {
-	if (typeof kokuNavigationHelper === "undefined" || kokuNavigationHelper === null) {
+	if (typeof kokuNavigationHelper === "undefined" || kokuNavigationHelper === null) {
 		// createKokuCookie(naviType);
 		updateNavigationStatus(naviType, kokuNavigationState, function() {
 			window.location = "<%= defaultPath %>" + "?resetView=true&NAVI_TYPE=" + naviType;
