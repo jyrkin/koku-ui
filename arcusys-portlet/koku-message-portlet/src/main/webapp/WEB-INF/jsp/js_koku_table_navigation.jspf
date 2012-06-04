@@ -176,6 +176,7 @@ function KokuTableNavigation(ajax) {
 			return; // no message selected
 		}
 		
+		jQuery('#kokuCancelMessage').val("");
 		KokuUtil.dialogs.cancelAppointment('#cancelAppointment', function() {
 			var comment = jQuery('#kokuCancelMessage').val();
 			this.kokuAjax.cancelAppointments(messageList, targetPersons, comment, function(result) {			

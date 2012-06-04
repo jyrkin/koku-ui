@@ -875,6 +875,10 @@
 		padding-left: 15px;
 	}
 	
+	div#cancelAppointment {
+		overflow: hidden !important;
+	}
+	
 	div#cancelAppointment div.cancelMessage {
 		padding-bottom: 10px;
 	}

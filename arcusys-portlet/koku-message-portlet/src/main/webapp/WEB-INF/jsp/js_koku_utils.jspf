@@ -26,20 +26,29 @@ var KokuUtil = {
 				height:290,
 				width: 500,
 				modal: true,
-				buttons: {
-					'Lähetä peruutus' : function() {
-						$( this ).dialog( "close" );
-						if (typeof acceptCallback !== 'undefined' && acceptCallback !== null) {
-							acceptCallback();
+				buttons:  
+					[
+						{
+							text : 'Lähetä peruutus',
+							click : function() {
+								$( this ).dialog( "close" );
+								if (typeof acceptCallback !== 'undefined' && jQuery.isFunction(acceptCallback) && acceptCallback !== null) {
+									acceptCallback();
+								}
+							},
+							width: 150
+						},
+						{ 
+							text : 'Peruuta',
+							click : function() {
+								$( this ).dialog( "close" );
+								if (typeof acceptCallback !== 'undefined' && jQuery.isFunction(refuseCallback)) {
+									refuseCallback();
+								}
+							}
 						}
-					},
-					'Peruuta' : function() {
-						$( this ).dialog( "close" );
-						if (typeof acceptCallback !== 'undefined' && jQuery.isFunction(refuseCallback)) {
-							refuseCallback();
-						}
-					}
-				}
+					]
+				
 			});
 		}
 	},
