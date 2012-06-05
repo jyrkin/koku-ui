@@ -14,7 +14,7 @@
          	<preference>
 				<name>taskFilter</name>
 				<value>Uusi tietopyyntö:</value>
-			</preference>			
+			</preference>
 			<preference>
 				<name>notifFilter</name>
 				<value></value>
@@ -41,14 +41,55 @@
       </instance>
    </deployment>
    
-   <deployment>
+    <deployment>
       <instance>
-         <instance-id>TaskMgrTietopyyntoAvoimet</instance-id>
+         <instance-id>TaskMgrPyynnotSaapuneet</instance-id>
+         <portlet-ref>taskManager</portlet-ref>
+         <preferences>
+         
+          	<preference>
+				<name>taskFilter</name>
+				<value>Uusi pyyntö:</value>
+			</preference>			
+			<preference>
+				<name>notifFilter</name>
+				<value></value>
+			</preference>
+           <preference>
+				<name>refreshDuration</name>
+				<value>60</value>
+			</preference>
+			<preference>
+				<name>defaultTaskType</name>
+				<value>task</value>
+			</preference>
+			<preference>
+				<name>openForm</name>
+				<value>1</value>
+			</preference>
+			<preference>
+				<name>editable</name>
+				<value>false</value>
+			</preference>
+		</preferences>
+         <security-constraint>
+            <policy-permission>
+               <action-name>view</action-name>
+               <unchecked/>
+            </policy-permission>
+         </security-constraint>
+      </instance>
+   </deployment>
+   
+   
+    <deployment>
+      <instance>
+         <instance-id>TaskMgrPaivahoitoAsiakasmaksut</instance-id>
          <portlet-ref>taskManager</portlet-ref>
          <preferences>
           	<preference>
 				<name>taskFilter</name>
-				<value></value>
+				<value>Paivahoidon asiakasmaksulomakkeet:</value>
 			</preference>
 			<preference>
 				<name>notifFilter</name>
@@ -60,11 +101,15 @@
 			</preference>
 			<preference>
 				<name>defaultTaskType</name>
-				<value>notification</value>
+				<value>task</value>
 			</preference>
 			<preference>
 				<name>openForm</name>
 				<value>1</value>
+			</preference>
+			<preference>
+				<name>editable</name>
+				<value>false</value>
 			</preference>
 		</preferences>
          <security-constraint>
@@ -78,14 +123,91 @@
    
     <deployment>
       <instance>
-         <instance-id>TaskMgrPyynnotSaapuneet</instance-id>
+         <instance-id>TaskMgrPaivahoitoAsiakasmaksuMuutokset</instance-id>
          <portlet-ref>taskManager</portlet-ref>
          <preferences>
-         
           	<preference>
 				<name>taskFilter</name>
-				<value>Uusi pyyntö:</value>
-			</preference>			
+				<value>Paivahoidon asiakasmaksun muutoslomakkeet:</value>
+			</preference>
+			<preference>
+				<name>notifFilter</name>
+				<value></value>
+			</preference>
+           <preference>
+				<name>refreshDuration</name>
+				<value>60</value>
+			</preference>
+			<preference>
+				<name>defaultTaskType</name>
+				<value>task</value>
+			</preference>
+			<preference>
+				<name>openForm</name>
+				<value>1</value>
+			</preference>
+			<preference>
+				<name>editable</name>
+				<value>false</value>
+			</preference>
+		</preferences>
+         <security-constraint>
+            <policy-permission>
+               <action-name>view</action-name>
+               <unchecked/>
+            </policy-permission>
+         </security-constraint>
+      </instance>
+   </deployment>
+   
+    <deployment>
+      <instance>
+         <instance-id>TaskMgrPaivahoitoAsiakasmaksuAlennukset</instance-id>
+         <portlet-ref>taskManager</portlet-ref>
+         <preferences>
+          	<preference>
+				<name>taskFilter</name>
+				<value>Paivahoidon asiakasmaksunalentamiset:</value>
+			</preference>
+			<preference>
+				<name>notifFilter</name>
+				<value></value>
+			</preference>
+           <preference>
+				<name>refreshDuration</name>
+				<value>60</value>
+			</preference>
+			<preference>
+				<name>defaultTaskType</name>
+				<value>task</value>
+			</preference>
+			<preference>
+				<name>openForm</name>
+				<value>1</value>
+			</preference>
+			<preference>
+				<name>editable</name>
+				<value>false</value>
+			</preference>
+		</preferences>
+         <security-constraint>
+            <policy-permission>
+               <action-name>view</action-name>
+               <unchecked/>
+            </policy-permission>
+         </security-constraint>
+      </instance>
+   </deployment>
+   
+    <deployment>
+      <instance>
+         <instance-id>TaskMgrPaivahoitoIrtisanomiset</instance-id>
+         <portlet-ref>taskManager</portlet-ref>
+         <preferences>
+          	<preference>
+				<name>taskFilter</name>
+				<value>Irtisanoutumiset paivahoitopaikasta:</value>
+			</preference>
 			<preference>
 				<name>notifFilter</name>
 				<value></value>

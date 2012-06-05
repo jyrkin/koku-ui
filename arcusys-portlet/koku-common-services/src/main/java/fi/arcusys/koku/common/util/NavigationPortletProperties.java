@@ -31,10 +31,23 @@ public final class NavigationPortletProperties {
 		public static final String WARRANTS_BROWSE_WARRANTS			= "navigationPortlet.link.warrants.browseWarrants";
 		public static final String WARRANTS_NEW_WARRANT				= "navigationPortlet.link.warrants.newWarrant";
 		public static final String REQUESTS_RECIEVED_REQUESTS		= "navigationPortlet.link.requests.recievedRequests";
-		public static final String APPLICATIONS_NEW_KINDERGARTEN	= "navigationPortlet.link.applications.newKindergartenApplication";
 		public static final String APPLICATIONS_NEED_TO_CONFIRM		= "navigationPortlet.link.applications.needToConfirm";
 		public static final String CONSENTS_ANSWER_TO_CONSENT		= "navigationPortlet.link.consents.answerToConsent";
 		
+		/* Kunpo */
+		public static final String APPLICATIONS_NEW_KINDERGARTEN					= "navigationPortlet.link.applications.newKindergartenApplication.form";
+		public static final String APPLICATIONS_DAYCARE_PAYMENT_FORM				= "navigationPortlet.link.applications.daycare.payment.form";
+		public static final String APPLICATIONS_DAYCARE_PAYMENT_MODIFY_FORM			= "navigationPortlet.link.applications.daycare.payment.modify.form";
+		public static final String APPLICATIONS_DAYCARE_PAYMENT_DISCOUNT_FORM		= "navigationPortlet.link.applications.daycare.payment.discount.form";
+		public static final String APPLICATIONS_DAYCARE_TERMINATION_FORM			= "navigationPortlet.link.applications.daycare.termination.form";
+		public static final String APPLICATIONS_DAYCARE_HOLIDAYS_LIST				= "navigationPortlet.link.applications.daycare.holidays.list";
+		
+		/* Loora */
+		public static final String APPLICATIONS_DAYCARE_PAYMENT_BROWSE				= "navigationPortlet.link.applications.daycare.payment.list";
+	    public static final String APPLICATIONS_DAYCARE_PAYMENT_MODIFY_BROWSE	   	= "navigationPortlet.link.applications.daycare.payment.modify.list";
+	    public static final String APPLICATIONS_DAYCARE_PAYMENT_DISCOUNT_BROWSE    	= "navigationPortlet.link.applications.daycare.payment.discount.list";
+	    public static final String APPLICATIONS_DAYCARE_TERMINATION_BROWSE		    = "navigationPortlet.link.applications.daycare.terminations.list";
+	    public static final String APPLICATIONS_DAYCARE_HOLIDAYS_FORM			    = "navigationPortlet.link.applications.daycare.holidays.form";
 	}
 	
 	
@@ -57,6 +70,18 @@ public final class NavigationPortletProperties {
     		    public static final String WARRANTS_BROWSE_WARRANTS		            = KoKuPropertiesUtil.get(Property.WARRANTS_BROWSE_WARRANTS);    public static final String WARRANTS_NEW_WARRANT			            = KoKuPropertiesUtil.get(Property.WARRANTS_NEW_WARRANT);    public static final String REQUESTS_RECIEVED_REQUESTS	            = KoKuPropertiesUtil.get(Property.REQUESTS_RECIEVED_REQUESTS);    public static final String APPLICATIONS_NEW_KINDERGARTEN            = KoKuPropertiesUtil.get(Property.APPLICATIONS_NEW_KINDERGARTEN);    public static final String APPLICATIONS_NEED_TO_CONFIRM	            = KoKuPropertiesUtil.get(Property.APPLICATIONS_NEED_TO_CONFIRM);
     public static final String CONSENTS_ANSWER_TO_CONSENT				= KoKuPropertiesUtil.get(Property.CONSENTS_ANSWER_TO_CONSENT);
     
-}
+    /* Kunpo Daycare */
+    public static final String APPLICATIONS_DAYCARE_PAYMENT_FORM				= KoKuPropertiesUtil.get(Property.APPLICATIONS_DAYCARE_PAYMENT_FORM);   
+    public static final String APPLICATIONS_DAYCARE_PAYMENT_MODIFY_FORM	    	= KoKuPropertiesUtil.get(Property.APPLICATIONS_DAYCARE_PAYMENT_MODIFY_FORM);       
+    public static final String APPLICATIONS_DAYCARE_PAYMENT_DISCOUNT_FORM    	= KoKuPropertiesUtil.get(Property.APPLICATIONS_DAYCARE_PAYMENT_DISCOUNT_FORM); 
+    public static final String APPLICATIONS_DAYCARE_TERMINATION_FORM		    = KoKuPropertiesUtil.get(Property.APPLICATIONS_DAYCARE_TERMINATION_FORM);
+    public static final String APPLICATIONS_DAYCARE_HOLIDAYS_LIST				= KoKuPropertiesUtil.get(Property.APPLICATIONS_DAYCARE_HOLIDAYS_LIST);
     
-    
+    /* Loora Daycare */
+    public static final String APPLICATIONS_DAYCARE_PAYMENT_BROWSE				= KoKuPropertiesUtil.get(Property.APPLICATIONS_DAYCARE_PAYMENT_BROWSE);   
+    public static final String APPLICATIONS_DAYCARE_PAYMENT_MODIFY_BROWSE	   	= KoKuPropertiesUtil.get(Property.APPLICATIONS_DAYCARE_PAYMENT_MODIFY_BROWSE);       
+    public static final String APPLICATIONS_DAYCARE_PAYMENT_DISCOUNT_BROWSE    	= KoKuPropertiesUtil.get(Property.APPLICATIONS_DAYCARE_PAYMENT_DISCOUNT_BROWSE); 
+    public static final String APPLICATIONS_DAYCARE_TERMINATION_BROWSE		    = KoKuPropertiesUtil.get(Property.APPLICATIONS_DAYCARE_TERMINATION_BROWSE);
+    public static final String APPLICATIONS_DAYCARE_HOLIDAYS_FORM				= KoKuPropertiesUtil.get(Property.APPLICATIONS_DAYCARE_HOLIDAYS_FORM);
+    
+}

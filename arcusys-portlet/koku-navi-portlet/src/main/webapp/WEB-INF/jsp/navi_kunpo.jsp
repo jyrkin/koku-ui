@@ -142,6 +142,11 @@
 					</span>
 					<ul id="kokuNaviApplicationsDayCare" class="child" style="display:none;">
 						<li id="kid_new"><a href="<%= defaultPath %><%= NavigationPortletProperties.APPLICATIONS_NEW_KINDERGARTEN %>">Päivähoitohakemus</a></li>
+						<li id="daycareCustomerPayment"><a href="<%= defaultPath %><%= NavigationPortletProperties.APPLICATIONS_DAYCARE_PAYMENT_FORM %>">Päivähoidon asiakasmaksulomake</a></li>
+						<li id="daycareCustomerPaymentModification"><a href="<%= defaultPath %><%= NavigationPortletProperties.APPLICATIONS_DAYCARE_PAYMENT_MODIFY_FORM %>">Päivähoidon asiakasmaksun muutoslomake</a></li>
+						<li id="daycareCustomerTermination"><a href="<%= defaultPath %><%= NavigationPortletProperties.APPLICATIONS_DAYCARE_TERMINATION_FORM %>">Irtisanoutuminen päivähoitopaikasta</a></li>
+						<li id="daycareCustomerDiscount"><a href="<%= defaultPath %><%= NavigationPortletProperties.APPLICATIONS_DAYCARE_PAYMENT_DISCOUNT_FORM %>">Päivähoidon asiakasmaksun alentaminen</a></li>
+						<li id="daycareCustomerHolidays"><a href="<%= defaultPath %><%= NavigationPortletProperties.APPLICATIONS_DAYCARE_HOLIDAYS_LIST %>">Loma-aikojen hoitotarvekyselyt</a></li>						
 						<li id="applicationsConfirm"><a href="<%= defaultPath %><%= NavigationPortletProperties.APPLICATIONS_NEED_TO_CONFIRM %>">Hakemusten vahvistuspyynnöt</a></li>
 					</ul>
 				</li>

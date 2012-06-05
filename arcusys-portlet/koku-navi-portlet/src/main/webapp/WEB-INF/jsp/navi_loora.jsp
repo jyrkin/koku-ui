@@ -181,8 +181,12 @@
 						<span class="kokuNaviTreeNodeIndicator" id="kokuNaviTreeNodeIndicatorApplicationsService">+</span>Palveluhakemukset
 					</span>
 					<ul id="kokuNavikokurApplicationsService" class="child">
-						<!--  show only employees -->						
 						<li id="<%= Constants.TASK_TYPE_APPLICATION_KINDERGARTEN_BROWSE%>"><a href="javascript:void(0)" onclick="navigateToPage('<%= Constants.TASK_TYPE_APPLICATION_KINDERGARTEN_BROWSE%>')">Päivähoitohakemukset</a></li>
+						<li id="<%= Constants.TASK_TYPE_APPLICATION_DAYCARE_PAYMENT_BROWSE%>"><a href="<%= defaultPath %><%= NavigationPortletProperties.APPLICATIONS_DAYCARE_PAYMENT_BROWSE %>">Päivähoidon asiakasmaksulomakkeet</a></li>
+						<li id="<%= Constants.TASK_TYPE_APPLICATION_DAYCARE_PAYMENT_MODIFY_BROWSE%>"><a href="<%= defaultPath %><%= NavigationPortletProperties.APPLICATIONS_DAYCARE_PAYMENT_MODIFY_BROWSE %>">Päivähoidon asiakasmaksun muutoslomakkeet</a></li>
+						<li id="<%= Constants.TASK_TYPE_APPLICATION_DAYCARE_PAYMENT_DISCOUNT_BROWSE%>"><a href="<%= defaultPath %><%= NavigationPortletProperties.APPLICATIONS_DAYCARE_PAYMENT_DISCOUNT_BROWSE %>">Päivähoidon asiakasmaksunalentamiset</a></li>						
+						<li id="<%= Constants.TASK_TYPE_APPLICATION_DAYCARE_TERMINATION_BROWSE%>"><a href="<%= defaultPath %><%= NavigationPortletProperties.APPLICATIONS_DAYCARE_TERMINATION_BROWSE %>">Irtisanoutumiset päivähoitopaikasta</a></li>
+						<li id="daycareHolidays"><a href="<%= defaultPath %><%= NavigationPortletProperties.APPLICATIONS_DAYCARE_HOLIDAYS_FORM %>">Loma-aikojen hoitotarvekysely</a></li>
 					</ul>
 				</li>
 			</ul>
