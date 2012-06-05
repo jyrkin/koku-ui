@@ -74,7 +74,7 @@
 			</ul>
 		</li>
 			
-		<!--  PYYNNöT -->
+		<!--  PYYNNÖT -->
 		<li>
 			<span class="naviLinkHeaderNonLink" onclick="toggleKokuNavi('#kokuNaviRequests', '#kokuNaviTreeNodeIndicatorConstants');">
 				<span class="kokuNaviTreeNodeIndicator" id="kokuNaviTreeNodeIndicatorConstants">+</span>Pyynnöt<span id="requests_num_super_super" class="message_num"></span>
