@@ -39,7 +39,7 @@ class ListItemsCSVColumn implements CSVColumn {
 	}
 
 	/* Returns one person's CSV formatted answer for this column */
-	public String getFormattedPersonColumnAnswer(CSVPerson person) {
+	public String getCSVFormattedAnswer(CSVPerson person) {
 		StringBuilder csv_string = new StringBuilder();
 		String[] columnAnswer = this.columnAnswers.get(person);
 		for (String answer : columnAnswer) {

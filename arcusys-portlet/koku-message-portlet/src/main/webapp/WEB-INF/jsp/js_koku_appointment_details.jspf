@@ -1,0 +1,49 @@
+
+function KokuAppointmentDetails(renderUrls) {
+
+	if (typeof renderUrls === 'undefined') {
+		renderUrls = {
+				cancelUrl : "<%= cancelURL %>",
+				appointmentRenderUrl :  "<%= appointmentRenderURL %>"
+		};	
+	}
+	this.renderUrls = renderUrls;
+};
+
+KokuAppointmentDetails.prototype.cancelAppointment = function(appointment, targetPerson) {
+		
+	function callback(result) {	
+		if (result == 'OK') {
+			$.jGrowl.defaults.position = 'top-left';
+			// jQuery.jGrowl("<spring:message code="notification.canceled.appointment"/>", { theme: 'jGrowlThemeSuccess'}, '#show-message', '275');
+			KokuUtil.notifications().success("<spring:message code="notification.canceled.appointment"/>");
+			setTimeout("kokuNavigationHelper.returnMainPage();", 3000);
+		} else if (result == 'FAIL') {
+			('#jGrowl').css('background-color', '#FF0000');
+			//jQuery.jGrowl("<spring:message code="notification.canceled.appointment.failed"/>", { theme: 'jGrowlThemeFailure'}, '#show-message', '275');
+			KokuUtil.notifications().error("<spring:message code="notification.canceled.appointment.failed"/>");
+			$("#cancelButton").attr("disabled","enabled");
+		} else {
+			KokuUtil.errorMsg.showErrorMessage("<spring:message code="error.unLogin" />");
+			$("#cancelButton").attr("disabled","enabled");
+		}
+	};
+	
+	var kokuAjax = new KokuAjax(this.renderUrls);
+	
+	var appointments = [], targetPersons = [], comment, taskType, status;
+	// appointments[0] = "<%= appointmentId %>";
+	appointments[0] = appointment;
+	targetPersons[0] = targetPerson;
+	
+	KokuUtil.dialogs.cancelAppointment('#cancelAppointment', 
+			function() {
+				$("#cancelButton").attr("disabled","disabled");
+				var comment = jQuery('#kokuCancelMessage').val();
+				kokuAjax.cancelAppointments(appointments, targetPersons, comment, callback);				
+		 }, function() {
+			
+		 }
+	);
+};
+	

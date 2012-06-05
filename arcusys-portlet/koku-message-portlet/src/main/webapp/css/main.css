@@ -1,6 +1,7 @@
 @import url('jquery.datepick.css');
 @import url('jquery.jgrowl.css');
 @import url('jquery.jgrowl.koku.css');
+@import url('flick/jquery-ui-1.8.20.custom.css');
 
 /*
  * css file for task manager portlet
@@ -233,8 +234,8 @@
 		border: 0px solid; /* cell spacing */
 		border-color: #CCCCCC; /* table background color */
 		text-align: left;
-		word-wrap: break-word;
-		word-break: break-all;
+		/* word-wrap: break-word; */
+		/* word-break: break-all; */
 		overflow: hidden;
 	}
 	
@@ -872,5 +873,18 @@
 	div.recipientGroup span.parentName {
 		display: block;
 		padding-left: 15px;
+	}
+	
+	div#cancelAppointment {
+		overflow: hidden !important;
+	}
+	
+	div#cancelAppointment div.cancelMessage {
+		padding-bottom: 10px;
+	}
+	
+	div#cancelAppointment textarea {
+		width: 100%;
+		height: 100px;
 	}
 }

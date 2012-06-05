@@ -32,5 +32,38 @@ div.jGrowl div.serverErrorWarningMsg span.failureUuid {
 
 #jGrowl {
 	position: absolute;
-	top: 20%;
+	top: 50%;
+	left: 40%;
+}
+
+/*  Quick bug fix. jQuery-ui seems to be causing somekind interference with
+	jGrowl */
+div.jGrowl > .ui-state-highlight {
+    background: inherit;
+    color: inherit;
+    border: inherit;
+}
+
+
+/* Koku Utils - errorMsgPopup */
+
+
+div.jGrowl div.errorTheme {
+	background-color: #F00 !important;
+	color: #fff;
+}
+
+div.jGrowl div.warnTheme {
+	background-color: #FFFF00 !important;
+	color: #000;
+}
+
+div.jGrowl div.successTheme {
+	background-color: #00AA00 !important;
+	color: #fff;
+}
+
+div.jGrowl div.notificationTheme {
+	background-color: #000000 !important;
+	color: #fff;
 }

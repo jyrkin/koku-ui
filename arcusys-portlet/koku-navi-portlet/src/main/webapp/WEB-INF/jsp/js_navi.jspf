@@ -72,6 +72,11 @@ function focusCurrentItem(naviType) {
 			}
 			
 			var indicatorElements = getIndicatorElement(element);
+			// FIXME! Does not work properly
+			if (indicatorElements.length == 0 ) {
+				// alert('BUG!');
+				return;
+			}
 			var indicatorId = indicatorElements.get(0).attributes.id.value;
 			var elemId = element.attr('id');		
 			openKokuNavi('#'+elemId, '#'+indicatorId);
@@ -108,8 +113,8 @@ function focusCurrentItem(naviType) {
 	switch(currentPage) {
 		case '<%= defaultPage %>':		
 			// var naviType = readKokuCookie();
-			if(typeof naviType != 'undefined' && naviType != null && naviType != null) {
-				bold("#"+naviType);				
+			if(typeof naviType != 'undefined' && naviType != null && naviType != "") {
+				bold("#"+naviType);
 			} else {
 				bold('#msg_inbox'); 
 			}
@@ -178,7 +183,7 @@ function ajaxUpdate() {
 			}
 		};
 		
-		updateMsgCounter('#inbox_num_super', inboxNum);
+		updateMsgCounter('#inbox_num_super', parseInt(inboxNum, 10) + parseInt(archiveInboxNum, 10));
 		updateMsgCounter('#inbox_num', inboxNum);
 		updateMsgCounter('#archive_inbox_num_super', archiveInboxNum);
 		updateMsgCounter('#archive_inbox_num', archiveInboxNum);
@@ -284,7 +289,7 @@ function closeKokuNavi(toggleId, indicatorId, receivedMessagesParentId) {
 }
 
 function navigateToPage(naviType) {
-	if (typeof kokuNavigationHelper === "undefined" || kokuNavigationHelper === null) {
+	if (typeof kokuNavigationHelper === "undefined" || kokuNavigationHelper === null) {
 		// createKokuCookie(naviType);
 		updateNavigationStatus(naviType, kokuNavigationState, function() {
 			window.location = "<%= defaultPath %>" + "?resetView=true&NAVI_TYPE=" + naviType;

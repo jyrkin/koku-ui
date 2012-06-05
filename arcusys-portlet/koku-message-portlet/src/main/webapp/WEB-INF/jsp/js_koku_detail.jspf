@@ -1,4 +1,6 @@
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.jgrowl_minimized.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-ui-1.8.20.custom.min.js"></script>
+
 <script type="text/javascript">
 
 	var kokuDetails = {			

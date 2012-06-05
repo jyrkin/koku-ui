@@ -133,10 +133,10 @@
 						<c:forEach begin="0" end="${fn:length(request.model.questions) - 1}" varStatus="loop">
     						<tr class="<c:out value="${loop.index % 2 == 0 ? 'evenRow' : 'oddRow'}"/>">
 								<td class="question">
-									<c:out value="${request.model.questions[loop.index].description}" />
+										<c:out value="${request.model.questions[loop.index].description}" />
 								</td>
 								<td class="answer">
-									<c:out value="${response.answers[loop.index].answer}" />
+									<script type="text/javascript">document.write(decodeURIComponent("<c:out value="${response.answers[loop.index].answer}" />"));</script>
 								</td>
 							</tr>
 						</c:forEach>

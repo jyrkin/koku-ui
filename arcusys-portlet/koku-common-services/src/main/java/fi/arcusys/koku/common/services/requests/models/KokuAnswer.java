@@ -12,8 +12,14 @@ public class KokuAnswer {
 		this.answer = answer.getAnswer();
 		this.comment = answer.getComment();
 		this.questionNumber = answer.getQuestionNumber();
-	}	
-	
+	}
+
+	public KokuAnswer(String answer, String comment, int questionNumber) {
+		this.answer = answer;
+		this.comment = comment;
+		this.questionNumber = questionNumber;
+	}
+
 	public String getAnswer() {
 		return answer;
 	}

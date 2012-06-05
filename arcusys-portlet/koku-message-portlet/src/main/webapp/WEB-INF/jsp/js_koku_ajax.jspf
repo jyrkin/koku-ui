@@ -79,7 +79,7 @@ KokuAjax.prototype.revokeConsents = function(messageList, callback) {
 /**
  * Cancels a list of appointments selected by user
  */	
-KokuAjax.prototype.cancelAppointments = function(messageList, targetPersons, comment, taskType, callback) {
+KokuAjax.prototype.cancelAppointments = function(messageList, targetPersons, comment, callback) {
 	if (messageList.length == 0) {
 		callback("FAIL");
 		return;
@@ -88,7 +88,7 @@ KokuAjax.prototype.cancelAppointments = function(messageList, targetPersons, com
 	var url = this.renderUrls.cancelUrl;
 	url = this.formatUrl(url);
 	
-	jQuery.post(url, {'messageList':messageList, 'targetPersons':targetPersons, 'comment':comment, 'taskType':taskType}, function(data) {
+	jQuery.post(url, {'messageList':messageList, 'targetPersons':targetPersons, 'comment':comment}, function(data) {
 		var obj = jQuery.parseJSON(data);
 		var json = obj.response;
 		var result = json["result"];

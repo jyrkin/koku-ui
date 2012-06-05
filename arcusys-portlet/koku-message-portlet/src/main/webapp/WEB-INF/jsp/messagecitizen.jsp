@@ -115,6 +115,8 @@
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.datepick-fi.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.jgrowl_minimized.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.qtip.min.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-ui-1.8.20.custom.min.js"></script>
+
 
 	<%@ include file="js_koku_main.jspf" %>
 
@@ -162,4 +164,9 @@
 			</div>
 		</div>
 	</div>
+</div>
+
+<div id="cancelAppointment" title="<spring:message code="appointmnet.dialog.caption"/>" style="display: none">
+	<div class="cancelMessage"><spring:message code="appointmnet.dialog.description"/></div>
+	<textarea id="kokuCancelMessage"></textarea>
 </div>
