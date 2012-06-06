@@ -133,11 +133,11 @@ function focusCurrentItem(naviType) {
 		case 'DaycarePayments' : bold('#<%= Constants.TASK_TYPE_APPLICATION_DAYCARE_PAYMENT_BROWSE%>'); break;
 		case 'DaycarePaymentsModify' : bold('#<%= Constants.TASK_TYPE_APPLICATION_DAYCARE_PAYMENT_MODIFY_BROWSE%>'); break;
 		case 'DaycarePaymentsDiscounts' : bold('#<%= Constants.TASK_TYPE_APPLICATION_DAYCARE_PAYMENT_DISCOUNT_BROWSE%>'); break;
-		case 'DaycareTermination' : bold('#<%= Constants.TASK_TYPE_APPLICATION_DAYCARE_TERMINATION_BROWSE%>'); break;
+		case 'DaycareTerminations' : bold('#<%= Constants.TASK_TYPE_APPLICATION_DAYCARE_TERMINATION_BROWSE%>'); break;
 		case 'DaycareHolidays' : bold('#daycareHolidays'); break;
 		case 'DaycarePayment' : bold('#daycareCustomerPayment'); break;
 		case 'DaycarePaymentModify' : bold('#daycareCustomerPaymentModification'); break;
-		case 'DaycarePaymentDiscounts' : bold('#daycareCustomerDiscount'); break;
+		case 'DaycarePaymentDiscount' : bold('#daycareCustomerDiscount'); break;
 		case 'DaycareTermination' : bold('#daycareCustomerTermination'); break;
 		default: bold("#" + currentPage.toLowerCase()); break;
 	}
