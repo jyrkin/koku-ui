@@ -297,6 +297,16 @@ function closeKokuNavi(toggleId, indicatorId, receivedMessagesParentId) {
 	kokuNavigationState.remove(toggleId);
 }
 
+function navigateToTaskMgrPage(page) {
+	var currentPage = '/' + '<%= currentPage %>';
+	if (page === currentPage) {
+		kokuNavigationHelper.returnMainPage();
+	} else {
+		window.location = "<%= defaultPath %>"+page;
+	}
+}
+
+
 function navigateToPage(naviType) {
 	if (typeof kokuNavigationHelper === "undefined" || kokuNavigationHelper === null) {
 		updateNavigationStatus(naviType, kokuNavigationState, function() {
