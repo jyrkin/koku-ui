@@ -30,8 +30,13 @@
 
 
 <!-- For gatein Portal -->
-<portlet:resourceURL var="messageRenderURL" id="createMessageRenderUrl">
-</portlet:resourceURL>
+
+<portlet:actionURL var="messageActionURL">
+	<portlet:param name="action" value="toMessage" />
+</portlet:actionURL>
+
+<%-- <portlet:resourceURL var="messageRenderURL" id="createMessageRenderUrl"> --%>
+<%-- </portlet:resourceURL> --%>
 
 <portlet:resourceURL var="requestRenderURL" id="createRequestRenderUrl">
 </portlet:resourceURL> 
@@ -79,7 +84,7 @@
 		cancelUrl : "<%= cancelURL %>", 
 	 	
 	 	/* RenderUrls GateIn Kunpo (portlet:renderURL) */
-	 	messageRenderUrl : "<%= messageRenderURL %>",
+	 	messageUrl : "<%= messageActionURL %>",
 	 	requestRenderUrl : "<%= requestRenderURL %>",
 	 	responseRenderUrl :  "<%= responseRenderURL %>",
 	 	appointmentRenderUrl :  "<%= appointmentRenderURL %>",

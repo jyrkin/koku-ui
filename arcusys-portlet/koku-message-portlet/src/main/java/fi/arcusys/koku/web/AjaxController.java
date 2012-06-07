@@ -150,7 +150,7 @@ public class AjaxController extends AbstractController {
 		LOG.warn("getTasks  - "+((System.nanoTime()-start)/1000/1000) + "ms");
 		return AjaxViewResolver.AJAX_PREFIX;
 	}
-	
+		
 	/**
 	 * KOKU-805
 	 * 
@@ -473,35 +473,6 @@ public class AjaxController extends AbstractController {
 		final JSONObject jsonModel = new JSONObject();
 		jsonModel.put(JSON_RENDER_URL, renderUrlString);
 		modelmap.addAttribute(RESPONSE, jsonModel);		
-	}
-	
-	/**
-	 * Creates message render url mainly for gatein portal, and keeps the page
-	 * parameters such as page id, task type, keyword
-	 * @param messageId message id
-	 * @param currentPage current page
-	 * @param taskType request task type
-	 * @param keyword keyword
-	 * @param orderType order type
-	 * @param modelmap ModelMap
-	 * @param request PortletRequest
-	 * @param response ResourceResponse
-	 * @return Message render url in Json format
-	 */
-	@ResourceMapping(value = "createMessageRenderUrl")
-	public String createMessageRenderUrl(
-			@RequestParam(value = "messageId") String messageId,
-			@RequestParam(value = "currentPage") String currentPage,
-			@RequestParam(value = "taskType") String taskType,
-			@RequestParam(value = "keyword") String keyword,
-			@RequestParam(value = "orderType") String orderType,
-			final ModelMap modelmap, final PortletRequest request, final ResourceResponse response) {
-				
-		final PortletURL renderUrlObj = getPortletUrl(response, currentPage, taskType, keyword, orderType);
-		renderUrlObj.setParameter( ATTR_MY_ACTION, MY_ACTION_SHOW_MESSAGE);
-		renderUrlObj.setParameter( ATTR_MESSAGE_ID, messageId);
-		generateRenderUrl(renderUrlObj, modelmap);
-		return AjaxViewResolver.AJAX_PREFIX;
 	}
 	
 	/**

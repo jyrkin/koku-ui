@@ -56,9 +56,9 @@
 	<portlet:param name="myaction" value="showApplicationKindergarten" />
 </portlet:renderURL>
 
-
-<portlet:resourceURL var="messageRenderURL" id="createMessageRenderUrl">
-</portlet:resourceURL>
+<portlet:actionURL var="messageActionURL">
+	<portlet:param name="action" value="toMessage" />
+</portlet:actionURL>
 
 <portlet:resourceURL var="requestRenderURL" id="createRequestRenderUrl">
 </portlet:resourceURL> 
@@ -118,7 +118,7 @@
 		cancelUrl : "<%= cancelURL %>", 
 	 		 	
 	 	/* Urls JBoss Loora  (portlet:resourceURL) */
-	 	messageUrl : "<%= messageURL %>",
+	 	messageUrl : "<%= messageActionURL %>",
 	 	requestUrl :"<%= requestURL %>",
 	 	appointmentUrl : "<%= appointmentURL %>",
 	 	responseRenderUrl :  "<%= responseRenderURL %>",
@@ -126,16 +126,6 @@
 		citizenWarrantUrl : "<%= citizenWarrantURL %>",
 		tipyUrl : "<%= tipyURL %>",
 		applicationKindergartenUrl : "<%= applicationKindergartenURL %>",
-				
-		/* RenderUrls GateIn (portlet:renderURL) */
-	 	messageRenderUrl : "<%= messageRenderURL %>",
-	 	requestRenderUrl : "<%= requestRenderURL %>",
-	 	responseRenderUrl :  "<%= responseRenderURL %>",
-	 	appointmentRenderUrl :  "<%= appointmentRenderURL %>",
-	 	consentRenderUrl : 	"<%= consentRenderURL %>",
-	 	warrantRenderUrl : "<%= warrantRenderURL %>",
-		tipyRenderUrl : "<%= tipyRenderURL %>",
-		kindergartenRenderUrl : "<%= kindergartenRenderURL %>"
 	};
 	
 	<%-- Loading JS from separate jspf files. --%>

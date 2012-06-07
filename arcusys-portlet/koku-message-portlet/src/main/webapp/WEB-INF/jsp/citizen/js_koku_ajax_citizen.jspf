@@ -14,16 +14,10 @@ function KokuAjaxCitizen(renderUrls) {
 
 // Creates a renderURL by ajax, to show the detailed message page 
 KokuAjaxCitizen.prototype.showMessage = function(messageId) {
-	var url = this.renderUrls.messageRenderUrl;
+	var url = this.renderUrls.messageUrl;
 	url = this.formatUrl(url);
-	
-	jQuery.post(url, {messageId:messageId, currentPage:pageObj.currentPage, taskType:pageObj.taskType, 
-		keyword:pageObj.keyword+'|'+pageObj.field, orderType:pageObj.orderType}, function(data) {
-		var obj = jQuery.parseJSON(data);
-		var json = obj.response;
-		var renderUrl = json["renderUrl"];
-		window.location = renderUrl;
-	});
+	url += "&messageId="+messageId;
+	window.location = url;	
 };
 	
 //Creates a renderURL by ajax, to show the detailed request page
@@ -94,7 +88,7 @@ KokuAjaxCitizen.prototype.showConsent = function(index) {
 	var url="";
 	var task = pageObj.tasks[index];	
 	var consentId = task['consentId'];	
-	if (pageObj.taskType == "<%= Constants.TASK_TYPE_CONSENT_CITIZEN_CONSENTS%>" && task['approvalStatus'] == 'Hyv‰ksytty' && task['status'] != 'Mit‰tˆity') { // edit mode
+	if (pageObj.taskType == "<%= Constants.TASK_TYPE_CONSENT_CITIZEN_CONSENTS%>" && task['approvalStatus'] == 'Hyv√§ksytty' && task['status'] != 'Mit√§t√∂ity') { // edit mode
 		url = "<%= portletPath %><%= NavigationPortletProperties.CONSENTS_NEW_CONSENT_TEMPLATE %>" + "?FormID=" + consentId;	
 		window.location = url;
 	} else if(pageObj.taskType == "<%= Constants.TASK_TYPE_CONSENT_CITIZEN_CONSENTS%>"
