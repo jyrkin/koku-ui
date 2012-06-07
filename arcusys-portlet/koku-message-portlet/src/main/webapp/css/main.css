@@ -493,6 +493,9 @@
 	#show-message .request-table td.location {
 		width: 100px;
 	}
+
+	#show-message .request-table td.delete {
+	}
 	
 	.request-table td {
 		padding: 6px; /* cell padding */
