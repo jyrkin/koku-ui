@@ -40,7 +40,7 @@
 // 	System.out.println("------------------------------------------------------------------------------------------------------");
 			
 %>
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/jquery-1.5.2.min.js"></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/jquery-1.7.2.min.js"></script>
 <script type="text/javascript">
 	<%@ include file="js_navi.jspf" %>
 </script>
@@ -64,7 +64,7 @@
 		<!--  VIESTIT -->
 		<li>
 			<span class="naviLinkHeaderNonLink" onclick="toggleKokuNavi('#kokuNaviMessages', '#kokuNaviTreeNodeIndicatorMessage');">
-				<span class="kokuNaviTreeNodeIndicator" id="kokuNaviTreeNodeIndicatorMessage">+</span>Viestit
+				<span class="kokuNaviTreeNodeIndicator" id="kokuNaviTreeNodeIndicatorMessage">+</span>Viestit<span id="inbox_num_super" class="message_num"></span>
 			</span>
 			<ul id="kokuNaviMessages" class="child" style="display:none;">
 				<!-- Show "New message" only for employee in Jboss portal -->
@@ -73,7 +73,7 @@
 				<li id="msg_outbox"><a href="javascript:void(0)" onclick="navigateToPage('msg_outbox')">Lähetetyt</a></li>
 				<li>
 					<span class="naviLinkHeaderNonLink" onclick="toggleKokuNavi('#archive-part', '#kokuNaviTreeNodeIndicatorMessageArchived');">
-						<span class="kokuNaviTreeNodeIndicator" id="kokuNaviTreeNodeIndicatorMessageArchived">+</span>Arkistoidut
+						<span class="kokuNaviTreeNodeIndicator" id="kokuNaviTreeNodeIndicatorMessageArchived">+</span>Arkistoidut<span id="archive_inbox_num_super" class="message_num"></span>
 					</span>
 					<ul id="archive-part" class="child" style="display:none;">
 						<li id="msg_archive_inbox"><a href="javascript:void(0)" onclick="navigateToPage('msg_archive_inbox')">Saapuneet</span></a><span id="archive_inbox_num" class="message_num"></span></li>
@@ -86,17 +86,17 @@
 		<!--  PYYNNÖT -->
 		<li>
 			<span class="naviLinkHeaderNonLink" onclick="toggleKokuNavi('#kokuNaviRequests', '#kokuNaviTreeNodeIndicatorConstants');">
-				<span class="kokuNaviTreeNodeIndicator" id="kokuNaviTreeNodeIndicatorConstants">+</span>Pyynnöt
+				<span class="kokuNaviTreeNodeIndicator" id="kokuNaviTreeNodeIndicatorConstants">+</span>Pyynnöt<span id="requests_num_super_super" class="message_num"></span>
 			</span>
 			<ul id="kokuNaviRequests" class="child" style="display:none;">
 				<li id="req_new"><a href="<%= defaultPath %><%= NavigationPortletProperties.REQUESTS_NEW_REQUEST %>">Uusi pyyntö</a></li>
 				<li id="luopohja"><a href="<%= defaultPath %><%= NavigationPortletProperties.REQUESTS_NEW_TEMPLATE%>">Luo uusi pohja</a></li>
 				<li>
 					<span class="naviLinkHeaderNonLink" onclick="toggleKokuNavi('#kokuNaviRequestsRecevied', '#kokuNaviTreeNodeIndicatorRequestsRecevied');">
-						<span class="kokuNaviTreeNodeIndicator" id="kokuNaviTreeNodeIndicatorRequestsRecevied">+</span>Saapuneet
+						<span class="kokuNaviTreeNodeIndicator" id="kokuNaviTreeNodeIndicatorRequestsRecevied">+</span>Saapuneet<span id="requests_num_super" class="message_num"></span>
 					</span>
 					<ul id="kokuNaviRequestsRecevied" class="child"  style="display:none;">
-						<li id="req_valid_request"><a href="<%= defaultPath %><%= NavigationPortletProperties.REQUESTS_RECIEVED_REQUESTS %>">Saapuneet</a><span id="requests_num" class="message_num"></span></li>
+						<li id="req_valid_request"><a href="javascript:void(0)" onclick="navigateToTaskMgrPage('<%= NavigationPortletProperties.REQUESTS_RECIEVED_REQUESTS %>')">Saapuneet</a><span id="requests_num" class="message_num"></span></li>
 						<li id="<%=Constants.TASK_TYPE_REQUEST_REPLIED %>"><a href="javascript:void(0)" onclick="navigateToPage('<%=Constants.TASK_TYPE_REQUEST_REPLIED %>')">Vastatut</a></li>
 						<li id="<%=Constants.TASK_TYPE_REQUEST_OLD %>"><a href="javascript:void(0)" onclick="navigateToPage('<%=Constants.TASK_TYPE_REQUEST_OLD %>')">Vanhat</a></li>
 					</ul>
@@ -152,11 +152,11 @@
 		<!--  TIETOPYYNNÖT -->
 		<li>
 			<span class="naviLinkHeaderNonLink" onclick="toggleKokuNavi('#kokuNaviInfoRequests', '#kokuNaviTreeNodeIndicatorInfoRequests');">
-				<span class="kokuNaviTreeNodeIndicator" id="kokuNaviTreeNodeIndicatorInfoRequests">+</span>Tietopyynnöt
+				<span class="kokuNaviTreeNodeIndicator" id="kokuNaviTreeNodeIndicatorInfoRequests">+</span>Tietopyynnöt<span id="infoRequests_num_super" class="message_num"></span>
 			</span>
 			<ul id="kokuNaviInfoRequests" class="child" style="display:none;">
 				<li id="newinformation"><a href="<%= defaultPath %><%= NavigationPortletProperties.INFO_REQ_NEW_INFORMATION_REQ %>">Uusi tietopyyntö</a></li>
-				<li id="informationbox"><a href="<%= defaultPath %><%= NavigationPortletProperties.INFO_REQ_RECIEVED_INFO_REQS %>">Saapuneet</a><span id="infoRequests_num" class="message_num"></span></li>
+				<li id="informationbox"><a href="javascript:void(0)" onclick="navigateToTaskMgrPage('<%= NavigationPortletProperties.INFO_REQ_RECIEVED_INFO_REQS %>')">Saapuneet</a><span id="infoRequests_num" class="message_num"></span></li>
 				<li>
 					<span class="naviLinkHeaderNonLink" onclick="toggleKokuNavi('#kokuNaviInfoRequestsSent', '#kokuNaviTreeNodeIndicatorInfoRequestsSent');">
 						<span class="kokuNaviTreeNodeIndicator" id="kokuNaviTreeNodeIndicatorInfoRequestsSent">+</span>Lähetetyt
@@ -181,8 +181,12 @@
 						<span class="kokuNaviTreeNodeIndicator" id="kokuNaviTreeNodeIndicatorApplicationsService">+</span>Palveluhakemukset
 					</span>
 					<ul id="kokuNavikokurApplicationsService" class="child">
-						<!--  show only employees -->						
 						<li id="<%= Constants.TASK_TYPE_APPLICATION_KINDERGARTEN_BROWSE%>"><a href="javascript:void(0)" onclick="navigateToPage('<%= Constants.TASK_TYPE_APPLICATION_KINDERGARTEN_BROWSE%>')">Päivähoitohakemukset</a></li>
+						<li id="<%= Constants.TASK_TYPE_APPLICATION_DAYCARE_PAYMENT_BROWSE%>"><a href="javascript:void(0)" onclick="navigateToTaskMgrPage('<%= NavigationPortletProperties.APPLICATIONS_DAYCARE_PAYMENT_BROWSE %>')">Päivähoidon asiakasmaksulomakkeet</a></li>
+						<li id="<%= Constants.TASK_TYPE_APPLICATION_DAYCARE_PAYMENT_MODIFY_BROWSE%>"><a href="javascript:void(0)" onclick="navigateToTaskMgrPage('<%= NavigationPortletProperties.APPLICATIONS_DAYCARE_PAYMENT_MODIFY_BROWSE %>')">Päivähoidon asiakasmaksun muutoslomakkeet</a></li>
+						<li id="<%= Constants.TASK_TYPE_APPLICATION_DAYCARE_PAYMENT_DISCOUNT_BROWSE%>"><a href="javascript:void(0)" onclick="navigateToTaskMgrPage('<%= NavigationPortletProperties.APPLICATIONS_DAYCARE_PAYMENT_DISCOUNT_BROWSE %>')">Päivähoidon asiakasmaksunalentamiset</a></li>						
+						<li id="<%= Constants.TASK_TYPE_APPLICATION_DAYCARE_TERMINATION_BROWSE%>"><a href="javascript:void(0)" onclick="navigateToTaskMgrPage('<%= NavigationPortletProperties.APPLICATIONS_DAYCARE_TERMINATION_BROWSE %>')">Irtisanoutumiset päivähoitopaikasta</a></li>
+						<li id="daycareHolidays"><a href="<%= defaultPath %><%= NavigationPortletProperties.APPLICATIONS_DAYCARE_HOLIDAYS_FORM %>">Loma-aikojen hoitotarvekysely</a></li>
 					</ul>
 				</li>
 			</ul>

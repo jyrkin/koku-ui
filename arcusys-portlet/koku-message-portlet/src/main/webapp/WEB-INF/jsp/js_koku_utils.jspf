@@ -2,8 +2,55 @@
 /* Koku utils JS */
 var KokuUtil = {
 
+	/**
+	 * Various constants.. 
+	 */
 	constants : {
+		/** Table max field lenght (characters) */
 		fieldMaxLength : 22
+	},
+	
+	dialogs : {
+	
+		/**
+		 * Creates cancel appointment dialog
+		 * 
+		 * @param {string} elementId 
+		 * @param {function} callback function. Will be run when user accepts cancellation
+		 * @param {function} callback function. Will be run when user rejects cancellation
+		 * @return void
+		 */
+		cancelAppointment : function(elementId, acceptCallback, refuseCallback ) {
+			jQuery(elementId).dialog({
+				resizable: false,
+				height:290,
+				width: 500,
+				modal: true,
+				buttons:  
+					[
+						{
+							text : 'Lähetä peruutus',
+							click : function() {
+								$( this ).dialog( "close" );
+								if (typeof acceptCallback !== 'undefined' && jQuery.isFunction(acceptCallback) && acceptCallback !== null) {
+									acceptCallback();
+								}
+							},
+							width: 150
+						},
+						{ 
+							text : 'Peruuta',
+							click : function() {
+								$( this ).dialog( "close" );
+								if (typeof acceptCallback !== 'undefined' && jQuery.isFunction(refuseCallback)) {
+									refuseCallback();
+								}
+							}
+						}
+					]
+				
+			});
+		}
 	},
 	
 	timer : {
@@ -35,10 +82,10 @@ var KokuUtil = {
 	},
 	
 	shorty : function(value, maxLength) {
-		if (maxLength === undefined || maxLength === null || isNaN(maxLength)) {
+		if (maxLength === undefined || maxLength === null || isNaN(maxLength)) {
 			maxLength = 22;		
 		}
-		if (value === undefined || value === null || !isNaN(value) || value.length <= maxLength ) {
+		if (value === undefined || value === null || !isNaN(value) || value.length <= maxLength ) {
 			return value;
 		} else {
 			// return "<abbr class='valueWithDesc' title='"+ value +"' >" + value.substring(0,maxLength) +"...</abbr>";
@@ -47,7 +94,7 @@ var KokuUtil = {
 	},
 	
 	popup : function(value, description) {
-		if (typeof value == 'undefined' || typeof value == 'undefined') {
+		if (typeof value == 'undefined' || typeof value == 'undefined') {
 			return "<spring:message code="unknown"/>";
 		}
 		return "<span class='jQueryToolTipHtml'>" + value +"<span class='toolTipDescription' style='display: none'>"+description+"</span></span>";	
@@ -81,6 +128,97 @@ var KokuUtil = {
 		showErrorMsgYouDontHaveAnyTipys : function() {
 			return "<div class='errorMsg noConsents'><spring:message code="tipy.errorMsg.noData"/></div>";
 		}
-	}		
+	},
+	
+	/**
+	 * jGrowl messages. Throws popup message center to browser window. 
+	 */
+	notifications : function () {
+	
+		////////////////////////////////
+		// Public methods
+		
+		var publicMethods = {
+			error : error,
+			warn : warning,
+			notif : notification,
+			success: success
+		};
+		
+		////////////////////////////////
+		// Private variables
+		
+		var errorOptions = {
+			sticky: true,
+			theme : 'errorTheme',
+			position : 'center'
+		};
+		
+		var warnOptions = {
+			theme : 'warnTheme',
+			position : 'center'
+		};
+		
+		var notificationOptions = {
+			theme : 'notificationTheme',
+			position : 'center'
+		};
+		
+		var successOptions = {
+			theme : 'successTheme',
+			position : 'center'
+		};
+		
+		/* If jGrowl missing for some reason then use normal alertboxes */
+		if (typeof jQuery.jGrowl === 'undefined' ) {
+			jQuery.jGrowl = alert;
+		}
+		
+		////////////////////////////////
+		// Private methods
+		
+		/**
+		 * Error message (red box with white text). 
+		 * Note: This is (should) sticky (requires user action to close)
+		 * 
+		 * @param {string} message to display
+		 * @return {void} Will show errorMsg
+		 */
+		function error(message) {
+			jQuery.jGrowl(message, errorOptions);
+		};
+		
+		/**
+		 * Warning message (yellow box with black text)
+		 * 
+		 * @param {string} message to display
+		 * @return {void} Will show warnMsg
+		 */
+		function warning(message) {
+			jQuery.jGrowl(message, warnOptions);
+		};
+		
+		/**
+		 * Success message (green box with white text)
+		 * 
+		 * @param {string} message to display
+		 * @return {void} Will show success
+		 */		
+		function success(message) {
+			jQuery.jGrowl(message, successOptions);
+		};
+		
+		/**
+		 * General use notification message (black box with white text)
+		 * 
+		 * @param {string} message to display
+		 * @return {void} Will show notification
+		 */
+		function notification(message) {
+			jQuery.jGrowl(message, notificationOptions);
+		};
+		
+		return publicMethods;
+	}
 };
 		

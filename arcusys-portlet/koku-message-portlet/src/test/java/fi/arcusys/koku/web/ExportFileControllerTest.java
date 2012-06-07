@@ -10,7 +10,6 @@ import org.junit.Test;
 
 import fi.arcusys.koku.common.services.requests.models.*;
 
-import fi.arcusys.koku.kv.requestservice.Answer;
 import fi.arcusys.koku.kv.requestservice.Question;
 import fi.arcusys.koku.kv.requestservice.QuestionType;
 import fi.arcusys.koku.common.services.users.KokuUser;
@@ -20,15 +19,8 @@ public class ExportFileControllerTest {
 
 	public static final String CSV_EXPECTED_STRING_TEST_1 = "\"Vastauksen yhteenveto\"\n"
 			+ "\"Vastaaja\";\"Say five things which are not Jackie Chan\";;;\"Pick a date\";;;;;;;;\"Kommentti\"\n"
-			+ "\"Kalle Kuntalainen\";\"Car\";\"Carrot\";\"Jackie Chan\";;;\"23.5.2012\";\"24.5.2012\";\"25.5.2012\";\"26.5.2012\";\"27.5.2012\";\"28.5.2012\";\"Another comment foo bar baz lol olo lol\"\n"
+			+ "\"Kalle Kuntalainen\";\"Carrot\";\"Car\";\"Jackie Chan\";;;\"23.5.2012\";\"24.5.2012\";\"25.5.2012\";\"26.5.2012\";\"27.5.2012\";\"28.5.2012\";\"Another comment foo bar baz lol olo lol\"\n"
 			+ "\"Kirsi Kuntalainen\";;;\"Jackie Chan\";\"21.5.2012\";\"22.5.2012\";\"23.5.2012\";\"24.5.2012\";\"25.5.2012\";;;;\"This is a comment string foo bar baz\"\n"
-			+ "\n"
-			+ "\"Vastaamattomat\"\n";
-
-	public static final String CSV_EXPECTED_STRING_TEST_1_NO_SYNCHRONIZATION = "\"Vastauksen yhteenveto\"\n"
-			+ "\"Vastaaja\";\"Say five things which are not Jackie Chan\";;;\"Pick a date\";;;;;;\"Kommentti\"\n"
-			+ "\"Kalle Kuntalainen\";\"Carrot\";\"Car\";\"Jackie Chan\";\"23.5.2012\";\"24.5.2012\";\"25.5.2012\";\"26.5.2012\";\"27.5.2012\";\"28.5.2012\";\"Another comment foo bar baz lol olo lol\"\n"
-			+ "\"Kirsi Kuntalainen\";\"Jackie Chan\";\"Jackie Chan\";;\"21.5.2012\";\"22.5.2012\";\"23.5.2012\";\"24.5.2012\";\"25.5.2012\";;\"This is a comment string foo bar baz\"\n"
 			+ "\n"
 			+ "\"Vastaamattomat\"\n";
 
@@ -79,19 +71,17 @@ public class ExportFileControllerTest {
 
 		List<KokuResponse> respondedList = new ArrayList<KokuResponse>();
 
-		KokuUser kalle = createKokuUser("Kalle Kuntalainen", "kalle.kuntalainen@kunpo.tpe.fi", "Kalle", "Kuntalainen", "0403333244", null);
-		List<KokuAnswer> kalle_answers = new ArrayList<KokuAnswer>();
-		kalle_answers.add(createKokuAnswer("Carrot, Car, Jackie Chan", "", 10));
-		kalle_answers.add(createKokuAnswer(
-					"23.5.2012, 24.5.2012, 25.5.2012, 26.5.2012, 27.5.2012, 28.5.2012", "", 11));
+		KokuUser kalle = createKokuUser("Kalle Kuntalainen", "kalle.kuntalainen@kunpo.tpe.fi",
+				"Kalle", "Kuntalainen", "0403333244", null);
+		List<KokuAnswer> kalle_answers = createKokuAnswers("Carrot, Car, Jackie Chan",
+				"23.5.2012, 24.5.2012, 25.5.2012, 26.5.2012, 27.5.2012, 28.5.2012");
 		respondedList.add(createKokuResponse(
 				kalle_answers, "kalle.kuntalainen", "Another comment foo bar baz lol olo lol", kalle));
 
-		KokuUser kirsi = createKokuUser("Kirsi Kuntalainen", "kirsi.kuntalainen@kunpo.tpe.fi", "Kirsi", "Kuntalainen", "0403333222", null);
-		List<KokuAnswer> kirsi_answers = new ArrayList<KokuAnswer>();
-		kirsi_answers.add(createKokuAnswer("Jackie Chan, Jackie Chan", "", 10));
-		kirsi_answers.add(createKokuAnswer(
-					"21.5.2012, 22.5.2012, 23.5.2012, 24.5.2012, 25.5.2012", "", 11));
+		KokuUser kirsi = createKokuUser("Kirsi Kuntalainen", "kirsi.kuntalainen@kunpo.tpe.fi",
+				"Kirsi", "Kuntalainen", "0403333222", null);
+		List<KokuAnswer> kirsi_answers = createKokuAnswers("Jackie Chan, Jackie Chan",
+				"21.5.2012, 22.5.2012, 23.5.2012, 24.5.2012, 25.5.2012");
 		respondedList.add(createKokuResponse(
 				kirsi_answers, "kirsi.kuntalainen", "This is a comment string foo bar baz", kirsi));
 
@@ -99,9 +89,12 @@ public class ExportFileControllerTest {
 
 		List<KokuQuestion> questions = new ArrayList<KokuQuestion>();
 		questions.add(createKokuQuestion(
-					"Say five things which are not Jackie Chan", 10, QuestionType.MULTIPLE_CHOICE, null));
+					"Say five things which are not Jackie Chan", 0, QuestionType.MULTIPLE_CHOICE, null,
+					createKokuPossibleAnswers("Potato", "Carrot", "Car", "Jackie Chan", "Jackie Chan")));
 		questions.add(createKokuQuestion(
-					"Pick a date", 11, QuestionType.CALENDAR, null));
+					"Pick a date", 1, QuestionType.CALENDAR, null,
+					createKokuPossibleAnswers("21.5.2012", "22.5.2012", "23.5.2012", "24.5.2012",
+							"25.5.2012", "26.5.2012", "27.5.2012", "28.5.2012")));
 
 		r.setQuestions(questions);
 
@@ -125,24 +118,14 @@ public class ExportFileControllerTest {
 
 		KokuUser kalle = createKokuUser("Kalle Kuntalainen",
 				"kalle.kuntalainen@kunpo.tpe.fi", "Kalle", "Kuntalainen", "0403333244", null);
-		List<KokuAnswer> kalle_answers = new ArrayList<KokuAnswer>();
-		kalle_answers.add(createKokuAnswer("Ei", "", 9));
-		kalle_answers.add(createKokuAnswer("Vaihtoehto 2, Vaihtoehto 3, Vaihtoehto 4, Vaihtoehto 5", "", 10));
-		kalle_answers.add(createKokuAnswer(
-					"26.5.2012, 27.5.2012, 28.5.2012", "", 11));
-		kalle_answers.add(createKokuAnswer("20", "", 12));
-		kalle_answers.add(createKokuAnswer("Tässä toinen vapaamuotoinen vastaus", "", 13));
-		respondedList.add(createKokuResponse(
-				kalle_answers, "kalle.kuntalainen", "Ei kommentoitavaa", kalle));
+		List<KokuAnswer> kalle_answers = createKokuAnswers("Ei", "Vaihtoehto 2, Vaihtoehto 3, Vaihtoehto 4, Vaihtoehto 5",
+				"26.5.2012, 27.5.2012, 28.5.2012", "20", "Tässä toinen vapaamuotoinen vastaus");
+		respondedList.add(createKokuResponse(kalle_answers, "kalle.kuntalainen", "Ei kommentoitavaa", kalle));
 
 		KokuUser kirsi = createKokuUser("Kirsi Kuntalainen", "kirsi.kuntalainen@kunpo.tpe.fi",
 				"Kirsi", "Kuntalainen", "0403333222", null);
-		List<KokuAnswer> kirsi_answers = new ArrayList<KokuAnswer>();
-		kirsi_answers.add(createKokuAnswer("Kyllä", "", 9));
-		kirsi_answers.add(createKokuAnswer("Vaihtoehto 1, Vaihtoehto 2, Vaihtoehto 4", "", 10));
-		kirsi_answers.add(createKokuAnswer("25.5.2012, 26.5.2012, 27.5.2012", "", 11));
-		kirsi_answers.add(createKokuAnswer("10", "", 12));
-		kirsi_answers.add(createKokuAnswer("Tässä käyttäjän vapaamuotoinen vastaus", "", 13));
+		List<KokuAnswer> kirsi_answers = createKokuAnswers("Kyllä", "Vaihtoehto 1, Vaihtoehto 2, Vaihtoehto 4",
+				"25.5.2012, 26.5.2012, 27.5.2012", "10", "Tässä käyttäjän vapaamuotoinen vastaus");
 		respondedList.add(createKokuResponse(
 				kirsi_answers, "kirsi.kuntalainen", "Kommentti on myös vapaamuotoinen vastaus,"
 				+ " mutta vastaaja voi antaa kommentin missä tahansa kyselyssä;"
@@ -151,24 +134,30 @@ public class ExportFileControllerTest {
 		r.setRespondedList(respondedList);
 
 		List<KokuQuestion> questions = new ArrayList<KokuQuestion>();
-		questions.add(createKokuQuestion( "Kyllä - Ei kysymys", 9, QuestionType.YES_NO, null));
+		questions.add(createKokuQuestion( "Kyllä - Ei kysymys", 0, QuestionType.YES_NO, null, createKokuPossibleAnswers()));
 		questions.add(createKokuQuestion(
-					"Vapaavalintaiset vaihtoehdot", 10, QuestionType.MULTIPLE_CHOICE, null));
-		questions.add(createKokuQuestion( "Kalenteri", 11, QuestionType.CALENDAR, null));
-		questions.add(createKokuQuestion( "Numero", 12, QuestionType.NUMBER, null));
-		questions.add(createKokuQuestion( "Kysymys joka vaatii vastaajalta vapaamuotoisen tekstikenttävastauksen", 13, QuestionType.FREE_TEXT, null));
+				"Vapaavalintaiset vaihtoehdot", 1, QuestionType.MULTIPLE_CHOICE, null,
+				createKokuPossibleAnswers("Vaihtoehto 1", "Vaihtoehto 2", "Vaihtoehto 3", "Vaihtoehto 4", "Vaihtoehto 5")));
+		questions.add(createKokuQuestion( "Kalenteri", 2, QuestionType.CALENDAR, null,
+				createKokuPossibleAnswers("25.5.2012", "26.5.2012", "27.5.2012", "28.5.2012")));
+		questions.add(createKokuQuestion( "Numero", 3, QuestionType.NUMBER, null, createKokuPossibleAnswers()));
+		questions.add(createKokuQuestion( "Kysymys joka vaatii vastaajalta vapaamuotoisen tekstikenttävastauksen", 4,
+				QuestionType.FREE_TEXT, null, createKokuPossibleAnswers()));
 
 		r.setQuestions(questions);
 
 		return r;
 	}
 
-	private KokuAnswer createKokuAnswer(String answer, String comment, int questionNumber) {
-		Answer a = new Answer();
-		a.setAnswer(answer);
-		a.setComment(comment);
-		a.setQuestionNumber(questionNumber);
-		return new KokuAnswer(a);
+	private List<KokuAnswer> createKokuAnswers(String... answers) {
+		String comment = "";
+		int answerNumber = 0;
+		List<KokuAnswer> kokuAnswers = new ArrayList<KokuAnswer>();
+		for (String answer : answers) {
+			kokuAnswers.add(new KokuAnswer(answer, comment, answerNumber));
+			answerNumber++;
+		}
+		return kokuAnswers;
 	}
 
 	private KokuUser createKokuUser(String displayname, String email, String firstname, String lastname, String phoneNumber, String uid) {
@@ -193,136 +182,24 @@ public class ExportFileControllerTest {
 	}
 
 	private KokuQuestion createKokuQuestion(
-			String description, int number, QuestionType type, KokuAnswer answer) {
+			String description, int number, QuestionType type, KokuAnswer answer, List<KokuPossibleAnswer> possibleAnswers) {
 		Question q = new Question();
 		q.setDescription(description);
 		q.setNumber(number);
 		q.setType(type);
 		KokuQuestion kq = new KokuQuestion(q);
 		kq.setAnswer(answer);
+		kq.setPossibleAnswers(possibleAnswers);
 		return kq;
 	}
-
+	
+	private List<KokuPossibleAnswer> createKokuPossibleAnswers(String... parameter_answers) {
+		List<KokuPossibleAnswer> return_answers = new ArrayList<KokuPossibleAnswer>();
+		int i = 0;
+		for (String answer : parameter_answers) {
+			return_answers.add(new KokuPossibleAnswer(answer, i));
+			i++;
+		}
+		return return_answers;
+	}
 }
-
-/*
- * KokuRequest [
- *     requestId=403,
- *     sender=veeti.virkamies,
- *     subject=CSV Export Test 3; Multiple Recipients and Multiple Questions,
- *     content=,
- *     respondedAmount=2,
- *     missedAmount=0,
- *     creationDate=21.5.2012,
- *     endDate=31.5.2012,
- *     requestType=null,
- *     respondedList=[
- *         KokuResponse [
- *             answers=[
- *                 KokuAnswer [
- *                     answer=Carrot, Car, Jackie Chan,
- *                     comment=,
- *                     questionNumber=10
- *                 ],
- *                 KokuAnswer [
- *                     answer=23.5.2012, 24.5.2012, 25.5.2012, 26.5.2012, 27.5.2012, 28.5.2012,
- *                     comment=,
- *                     questionNumber=11
- *                 ]
- *             ],
- *             name=kalle.kuntalainen,
- *             comment=Another comment foo bar baz lol olo lol
- *         ],
- *         KokuResponse [
- *             answers=[
- *                 KokuAnswer [
- *                     answer=Jackie Chan, Jackie Chan,
- *                     comment=,
- *                     questionNumber=10
- *                 ],
- *                 KokuAnswer [
- *                     answer=21.5.2012, 22.5.2012, 23.5.2012, 24.5.2012, 25.5.2012,
- *                     comment=,
- *                     questionNumber=11
- *                 ]
- *             ],
- *             name=kirsi.kuntalainen,
- *             comment=This is a comment string foo bar baz
- *         ]
- *     ],
- *     unrespondedList=null,
- *     questions=[
- *         KokuQuestion [
- *             description=Say five things which are not Jackie Chan,
- *             number=10,
- *             type=MULTIPLE_CHOICE,
- *             answer=null
- *         ],
- *         KokuQuestion [
- *             description=Pick a date,
- *             number=11,
- *             type=CALENDAR,
- *             answer=null
- *         ]
- *
- * KokuRequest [
- *     requestId=403,
- *     sender=veeti.virkamies,
- *     subject=CSV Export Test 3; Multiple Recipients and Multiple Questions,
- *     content=,
- *     respondedAmount=2,
- *     missedAmount=0,
- *     creationDate=21.5.2012,
- *     endDate=31.5.2012,
- *     requestType=null,
- *     respondedList=[
- *         KokuResponse [
- *             answers=[
- *                 KokuAnswer [
- *                     answer=Carrot, Car, Jackie Chan,
- *                     comment=,
- *                     questionNumber=10
- *                 ],
- *                 KokuAnswer [
- *                     answer=23.5.2012, 24.5.2012, 25.5.2012, 26.5.2012, 27.5.2012, 28.5.2012,
- *                     comment=,
- *                     questionNumber=11
- *                 ]
- *             ],
- *             name=kalle.kuntalainen,
- *             comment=Another comment foo bar baz lol olo lol
- *         ],
- *         KokuResponse [
- *             answers=[
- *                 KokuAnswer [
- *                     answer=Jackie Chan, Jackie Chan,
- *                     comment=,
- *                     questionNumber=10
- *                 ],
- *                 KokuAnswer [
- *                     answer=21.5.2012, 22.5.2012, 23.5.2012, 24.5.2012, 25.5.2012,
- *                     comment=,
- *                     questionNumber=11
- *                 ]
- *             ],
- *             name=kirsi.kuntalainen,
- *             comment=This is a comment string foo bar baz
- *         ]
- *     ],
- *     unrespondedList=null,
- *     questions=[
- *         KokuQuestion [
- *             description=Say five things which are not Jackie Chan,
- *             number=10,
- *             type=MULTIPLE_CHOICE,
- *             answer=null
- *         ],
- *         KokuQuestion [
- *             description=Pick a date,
- *             number=11,
- *             type=CALENDAR,
- *             answer=null
- *         ]
- *     ]
- * ]
- */

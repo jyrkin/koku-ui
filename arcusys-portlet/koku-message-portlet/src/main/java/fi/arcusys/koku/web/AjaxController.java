@@ -202,6 +202,13 @@ public class AjaxController extends AbstractController {
     	portletSession.setAttribute(ATTR_KOKU_USER, user);	    	
 	}
 	
+	/**
+	 * Returns citizen or employee actionProcess (depends portal settings)
+	 * 
+	 * @param request
+	 * @return
+	 * @throws KokuServiceException
+	 */
 	private KokuActionProcess getActionProcess(PortletRequest request) throws KokuServiceException {
 		final PortletSession portletSession = request.getPortletSession();		
 		final String username = (String) portletSession.getAttribute(ATTR_USERNAME);
@@ -382,40 +389,25 @@ public class AjaxController extends AbstractController {
 	public String cancelAppointment(@RequestParam(value = "messageList[]") String[] messageList,
 			@RequestParam(value = "targetPersons[]", required=false) String[] targetPersons,
 			@RequestParam(value = "comment") String comment,
-			@RequestParam(value = "taskType") String taskType,
-			ModelMap modelmap, PortletRequest request, PortletResponse response) {
-		
+			ModelMap modelmap, PortletRequest request, PortletResponse response) {		
 		
 		final PortletSession portletSession = request.getPortletSession();				
 		final String username = (String) portletSession.getAttribute(ATTR_USERNAME);
 		final JSONObject jsonModel = new JSONObject();
 		String userId = (String) portletSession.getAttribute(ATTR_USER_ID);
 		
-		KokuActionProcess actionProcess = null;
-		if (taskType == null || taskType.isEmpty()) {
-			jsonModel.put(JSON_RESULT, RESPONSE_FAIL);
-		} else {			
-			try {
-				if (userId == null) {
-					final UserIdResolver resolver = new UserIdResolver();
-					userId = resolver.getUserId(username, getPortalRole());					
-				}
-				/* Looks scary. We shouldn't trust client side parameters. */
-				if (taskType.endsWith("citizen")) {
-					actionProcess = new KokuActionProcessCitizenImpl(userId);
-				} else if (taskType.endsWith("employee")) {
-					actionProcess = new KokuActionProcessEmployeeImpl(null);
-				} else {
-					actionProcess = new KokuActionProcessDummyImpl(null);
-				}
-				actionProcess.cancelAppointments(messageList, targetPersons, comment);
-				jsonModel.put(JSON_RESULT, RESPONSE_OK);
-			} catch (KokuServiceException e) {
-				LOG.error("Failed to get UserUid username: '"+username+"' portalRole: '"+getPortalRole()+"'", e);
-			} catch (KokuActionProcessException kape) {
-				LOG.error("Failed to cancelAppointment", kape);
-				jsonModel.put(JSON_RESULT, RESPONSE_FAIL);
+		try {
+			if (userId == null) {
+				final UserIdResolver resolver = new UserIdResolver();
+				userId = resolver.getUserId(username, getPortalRole());					
 			}
+			getActionProcess(request).cancelAppointments(messageList, targetPersons, comment);
+			jsonModel.put(JSON_RESULT, RESPONSE_OK);
+		} catch (KokuServiceException e) {
+			LOG.error("Failed to get UserUid username: '"+username+"' portalRole: '"+getPortalRole()+"'", e);
+		} catch (KokuActionProcessException kape) {
+			LOG.error("Failed to cancelAppointment", kape);
+			jsonModel.put(JSON_RESULT, RESPONSE_FAIL);
 		}
 		
 		modelmap.addAttribute(RESPONSE, jsonModel);		

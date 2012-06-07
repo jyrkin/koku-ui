@@ -28,6 +28,7 @@ if (!koku_navi_type) {
 
 var defaultPath = "<%= defaultPath %>";
 var naviRefreshTimer;
+var kokuNaviSpeed = 150
 
 
 	
@@ -71,6 +72,11 @@ function focusCurrentItem(naviType) {
 			}
 			
 			var indicatorElements = getIndicatorElement(element);
+			// FIXME! Does not work properly
+			if (indicatorElements.length == 0 ) {
+				// alert('BUG!');
+				return;
+			}
 			var indicatorId = indicatorElements.get(0).attributes.id.value;
 			var elemId = element.attr('id');		
 			openKokuNavi('#'+elemId, '#'+indicatorId);
@@ -107,8 +113,8 @@ function focusCurrentItem(naviType) {
 	switch(currentPage) {
 		case '<%= defaultPage %>':		
 			// var naviType = readKokuCookie();
-			if(typeof naviType != 'undefined' && naviType != null && naviType != null) {
-				bold("#"+naviType);				
+			if(typeof naviType != 'undefined' && naviType != null && naviType != "") {
+				bold("#"+naviType);
 			} else {
 				bold('#msg_inbox'); 
 			}
@@ -124,6 +130,15 @@ function focusCurrentItem(naviType) {
 		case 'SendConsent' : bold('#sendconsent'); break;	
 		case 'SelaaValtakirjoja' : bold('#selaaOmiaValtakirjoja'); break;
 		case 'Ilmoitukset' : bold('#info_request_open'); break;
+		case 'DaycarePayments' : bold('#<%= Constants.TASK_TYPE_APPLICATION_DAYCARE_PAYMENT_BROWSE%>'); break;
+		case 'DaycarePaymentsModify' : bold('#<%= Constants.TASK_TYPE_APPLICATION_DAYCARE_PAYMENT_MODIFY_BROWSE%>'); break;
+		case 'DaycarePaymentsDiscounts' : bold('#<%= Constants.TASK_TYPE_APPLICATION_DAYCARE_PAYMENT_DISCOUNT_BROWSE%>'); break;
+		case 'DaycareTerminations' : bold('#<%= Constants.TASK_TYPE_APPLICATION_DAYCARE_TERMINATION_BROWSE%>'); break;
+		case 'DaycareHolidays' : bold('#daycareHolidays'); break;
+		case 'DaycarePayment' : bold('#daycareCustomerPayment'); break;
+		case 'DaycarePaymentModify' : bold('#daycareCustomerPaymentModification'); break;
+		case 'DaycarePaymentDiscount' : bold('#daycareCustomerDiscount'); break;
+		case 'DaycareTermination' : bold('#daycareCustomerTermination'); break;
 		default: bold("#" + currentPage.toLowerCase()); break;
 	}
 };
@@ -177,16 +192,20 @@ function ajaxUpdate() {
 			}
 		};
 		
+		updateMsgCounter('#inbox_num_super', parseInt(inboxNum, 10) + parseInt(archiveInboxNum, 10));
 		updateMsgCounter('#inbox_num', inboxNum);
+		updateMsgCounter('#archive_inbox_num_super', archiveInboxNum);
 		updateMsgCounter('#archive_inbox_num', archiveInboxNum);
-		updateMsgCounter('#consents_num', consentsTotal);
-		updateMsgCounter('#appointments_num', appointmentsTotal);
+		updateMsgCounter('#requests_num_super_super', requestsTotal);
+		updateMsgCounter('#requests_num_super', requestsTotal);
 		updateMsgCounter('#requests_num', requestsTotal);
+		updateMsgCounter('#appointments_num_super', appointmentsTotal);
+		updateMsgCounter('#appointments_num', appointmentsTotal);
+		updateMsgCounter('#consents_num_super', consentsTotal);
+		updateMsgCounter('#consents_num', consentsTotal);
+		updateMsgCounter('#infoRequests_num_super', infoRequestsTotal);
 		updateMsgCounter('#infoRequests_num', infoRequestsTotal);
 	};
-	
-	
-		
 	
 	var url="<%= ajaxURL %>";
 	url = formatUrl(url);
@@ -217,41 +236,79 @@ function ajaxUpdate() {
 		});
 };
 
-
-
-function toggleKokuNavi(toggleId, indicatorId, ajaxUpdate) {
-
-	if (typeof ajaxUpdate == 'undefined' || ajaxUpdate == null) {
-		ajaxUpdate = true;
+function getMessageAmountIndicator(toggleId) {
+	var receivedMessagesParentId;
+	switch(toggleId) {
+		case "#kokuNaviMessages":
+			receivedMessagesParentId = "#inbox_num_super";
+		break;
+		case "#archive-part":
+			receivedMessagesParentId = "#archive_inbox_num_super";
+		break;
+		case "#kokuNaviRequests":
+			receivedMessagesParentId = "#requests_num_super_super";
+		break;
+		case "#kokuNaviRequestsRecevied":
+			receivedMessagesParentId = "#requests_num_super";
+		break;
+		case "#kokuNaviInfoRequests":
+			receivedMessagesParentId = "#infoRequests_num_super";
+		break;
+		case "#kokuNaviAppointment":
+			receivedMessagesParentId = "#appointments_num_super";
+		break;
+		case "#kokuNaviConsents":
+			receivedMessagesParentId = "#consents_num_super";
+		break;
 	}
+	return receivedMessagesParentId;
+}
+
+function toggleKokuNavi(toggleId, indicatorId) {
+
 	var indicator = jQuery(indicatorId);
 	if (indicator.html() == "+") {
 		openKokuNavi(toggleId, indicatorId);
 	} else {
 		closeKokuNavi(toggleId, indicatorId);
 	}	
-	if (ajaxUpdate) {
-		updateNavigationStatus(koku_navi_type, kokuNavigationState);
-	}
+	updateNavigationStatus(koku_navi_type, kokuNavigationState);
 }
 
 function openKokuNavi(toggleId, indicatorId) {
-	jQuery(toggleId).show('fast');
+	jQuery(toggleId).show(kokuNaviSpeed);
+	var receivedMessagesParentId = getMessageAmountIndicator(toggleId);
+	if (typeof receivedMessagesParentId != 'undefined' && receivedMessagesParentId != null) {
+		jQuery(receivedMessagesParentId).hide(kokuNaviSpeed);
+	}
 	var indicator = jQuery(indicatorId);
 	indicator.html('-');
 	kokuNavigationState.add(toggleId, indicatorId);
 }
 
-function closeKokuNavi(toggleId, indicatorId) {
-	jQuery(toggleId).hide('fast');
+function closeKokuNavi(toggleId, indicatorId, receivedMessagesParentId) {
+	jQuery(toggleId).hide(kokuNaviSpeed);
+	var receivedMessagesParentId = getMessageAmountIndicator(toggleId);
+	if (typeof receivedMessagesParentId != 'undefined' && receivedMessagesParentId != null) {
+		jQuery(receivedMessagesParentId).show(kokuNaviSpeed);
+	}
 	var indicator = jQuery(indicatorId);	
 	indicator.html('+');
 	kokuNavigationState.remove(toggleId);
 }
 
+function navigateToTaskMgrPage(page) {
+	var currentPage = '/' + '<%= currentPage %>';
+	if (page === currentPage) {
+		kokuNavigationHelper.returnMainPage();
+	} else {
+		window.location = "<%= defaultPath %>"+page;
+	}
+}
+
+
 function navigateToPage(naviType) {
-	if (typeof kokuNavigationHelper === "undefined" || kokuNavigationHelper === null) {
-		// createKokuCookie(naviType);
+	if (typeof kokuNavigationHelper === "undefined" || kokuNavigationHelper === null) {
 		updateNavigationStatus(naviType, kokuNavigationState, function() {
 			window.location = "<%= defaultPath %>" + "?resetView=true&NAVI_TYPE=" + naviType;
 			return;
@@ -262,9 +319,7 @@ function navigateToPage(naviType) {
 		return;
 	}
 	/* If navi_type is missing we are not in Message-portlet page ->  */
-	updateNavigationStatus(naviType, kokuNavigationState, function() {
-		// createKokuCookie(naviType);
-	
+	updateNavigationStatus(naviType, kokuNavigationState, function() {	
 		/* Update current position in navigation to server (session)  */
 		switch(kokuNavigationHelper.getHelperIdentifier()) {
 			case "MessagePortlet":

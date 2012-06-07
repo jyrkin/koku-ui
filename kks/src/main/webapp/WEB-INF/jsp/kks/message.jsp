@@ -53,7 +53,9 @@
 				<div>  
 			    	<form:errors path="title" cssClass="error" />
 			    </div>	
-				<form:input maxlength="100" path="title" size="100"/>
+			    <div class="portlet-form-field">
+					<form:input maxlength="100" path="title" size="100"/>
+				</div>
 				
 				<div class="portlet-form-field-label">				
 					<spring:message code="ui.kks.send.message"/>				

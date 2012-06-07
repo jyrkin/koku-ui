@@ -8,7 +8,7 @@
 
 <portlet:resourceURL var="ajaxURL" id="getState">
 </portlet:resourceURL>
-<script type="text/javascript" src="<%= request.getContextPath() %>/js/jquery-1.5.2.min.js" ></script>
+<script type="text/javascript" src="<%= request.getContextPath() %>/js/jquery-1.7.2.min.js" ></script>
 <script type="text/javascript"> 
 /* the times that iframe loads different srcs */
 var loadingTimes = 0;

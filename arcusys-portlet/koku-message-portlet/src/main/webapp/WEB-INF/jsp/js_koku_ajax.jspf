@@ -79,17 +79,16 @@ KokuAjax.prototype.revokeConsents = function(messageList, callback) {
 /**
  * Cancels a list of appointments selected by user
  */	
-KokuAjax.prototype.cancelAppointments = function(messageList, targetPersons, comment, taskType, callback) {
+KokuAjax.prototype.cancelAppointments = function(messageList, targetPersons, comment, callback) {
 	if (messageList.length == 0) {
 		callback("FAIL");
 		return;
 	}
 
-	// var url="<%= cancelURL %>";
 	var url = this.renderUrls.cancelUrl;
 	url = this.formatUrl(url);
 	
-	jQuery.post(url, {'messageList':messageList, 'targetPersons':targetPersons, 'comment':comment, 'taskType':taskType}, function(data) {
+	jQuery.post(url, {'messageList':messageList, 'targetPersons':targetPersons, 'comment':comment}, function(data) {
 		var obj = jQuery.parseJSON(data);
 		var json = obj.response;
 		var result = json["result"];
@@ -103,12 +102,12 @@ KokuAjax.prototype.cancelAppointments = function(messageList, targetPersons, com
  */
 KokuAjax.prototype.ajaxGetTasks = function(pageObj, presentTasks) {
 
-	if (pageObj === undefined || pageObj === null) {		
+	if (pageObj === undefined || pageObj === null) {		
 		/* console.error("Bug in code!! pageObj undefined or null"); */
 		return;
 	}
 	
-	if (presentTasks === undefined || presentTasks === null) {
+	if (presentTasks === undefined || presentTasks === null) {
 		/* console.error("Bug in code!! presentTasks undefined or null"); */
 		return;
 	}

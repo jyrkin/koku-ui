@@ -109,8 +109,14 @@ public final class Constants {
 	public static final String TASK_TYPE_INFO_REQUEST_BROWSE_REPLIED		= "info_req_browse_replied";			// Tietopyynnöt - Virkailija: Selaa vastattuja tietopyyntöjä
 	public static final String TASK_TYPE_INFO_REQUEST_BROWSE_SENT			= "info_req_browse_sent";				// Tietopyynnöt - Virkailija: Selaa lähetettyjä tietopyyntöjä
 	public static final String TASK_TYPE_INFO_REQUEST_BROWSE				= "info_req_browse";					// Tietopyynnöt - ADMIN: Selaa tietopyyntöjä
-	public static final String TASK_TYPE_APPLICATION_KINDERGARTEN_BROWSE	= "application_kindergarten_browse";	// Asiointipalvelut - Selaa hakemuksia (päivähoito) 
-                                                                        	
+	public static final String TASK_TYPE_APPLICATION_KINDERGARTEN_BROWSE	= "application_kindergarten_browse";	// Asiointipalvelut - Selaa hakemuksia (päivähoito)
+	
+	public static final String TASK_TYPE_APPLICATION_DAYCARE_PAYMENT_BROWSE				= "application_daycare_payment_browse";			// Virkam.: Asiointipalvelut - Päivähoidon asiakasmaksulomakkeet
+	public static final String TASK_TYPE_APPLICATION_DAYCARE_PAYMENT_MODIFY_BROWSE		= "application_daycare_payment_modify_browse";	// Virkam.: Asiointipalvelut - Päivähoidon asiakasmaksun muutoslomakkeet
+	public static final String TASK_TYPE_APPLICATION_DAYCARE_PAYMENT_DISCOUNT_BROWSE	= "application_daycare_discount_browse";		// Virkam.: Asiointipalvelut - Päivähoidon asiakasmaksunalentamiset
+	public static final String TASK_TYPE_APPLICATION_DAYCARE_TERMINATION_BROWSE			= "application_daycare_terminations_browse";	// Virkam.: Asiointipalvelut - Irtisanoutumiset päivähoitopaikasta
+	public static final String TASK_TYPE_APPLICATION_DAYCARE_HOLIDAYS_BROWSE			= "application_daycare_holidays_browse";		// Kuntalainen: Asiointipalvelut - Loma-aikojen hoitotarvekyselyt
+
 	                                                                    	
 	/* ATTR_PORTAL_INFO possible values */                              	
 	public static final String PORTAL_LIFERAY								= "Liferay";
