@@ -2,11 +2,9 @@
 <%@ page import="fi.arcusys.koku.common.services.requests.models.KokuRequest"%>
 <%@ page import="fi.arcusys.koku.web.util.ModelWrapper"%>
 
-
-<portlet:renderURL var="homeURL"
-	windowState="<%= WindowState.NORMAL.toString() %>">
-	<portlet:param name="myaction" value="home" />
-</portlet:renderURL>
+<portlet:actionURL var="homeURL">
+	<portlet:param name="action" value="toHome" />
+</portlet:actionURL>
 
 <%!public String htmlToCode(String s) {
 		if (s == null) {

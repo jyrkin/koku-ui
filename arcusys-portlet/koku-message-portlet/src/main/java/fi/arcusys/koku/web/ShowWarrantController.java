@@ -1,11 +1,21 @@
 package fi.arcusys.koku.web;
 
 
-import static fi.arcusys.koku.common.util.Constants.*;
+import static fi.arcusys.koku.common.util.Constants.ATTR_AUTHORIZATION_ID;
+import static fi.arcusys.koku.common.util.Constants.ATTR_MY_ACTION;
+import static fi.arcusys.koku.common.util.Constants.ATTR_TASK_TYPE;
+import static fi.arcusys.koku.common.util.Constants.ATTR_USERNAME;
+import static fi.arcusys.koku.common.util.Constants.ATTR_USER_ID;
+import static fi.arcusys.koku.common.util.Constants.MY_ACTION_SHOW_WARRANT;
+import static fi.arcusys.koku.common.util.Constants.TASK_TYPE_WARRANT_BROWSE_RECEIEVED;
+import static fi.arcusys.koku.common.util.Constants.TASK_TYPE_WARRANT_BROWSE_SENT;
+import static fi.arcusys.koku.common.util.Constants.TASK_TYPE_WARRANT_LIST_CITIZEN_CONSENTS;
+import static fi.arcusys.koku.common.util.Constants.TASK_TYPE_WARRANT_LIST_SUBJECT_CONSENTS;
+import static fi.arcusys.koku.common.util.Constants.VIEW_SHOW_WARRANT;
 
 import javax.annotation.Resource;
+import javax.portlet.ActionResponse;
 import javax.portlet.PortletSession;
-import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
 import org.slf4j.Logger;
@@ -15,6 +25,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.portlet.bind.annotation.ActionMapping;
 import org.springframework.web.portlet.bind.annotation.RenderMapping;
 
 import fi.arcusys.koku.common.exceptions.KokuServiceException;
@@ -39,6 +50,18 @@ public class ShowWarrantController extends AbstractController {
 	@Resource
 	private ResourceBundleMessageSource messageSource;
 	
+	@ActionMapping(params = "action=toWarrant")
+	public void actionPageView(
+			PortletSession session,
+			@ModelAttribute(value = "warrant") ModelWrapper<KokuAuthorizationSummary> warrant,
+			@RequestParam(value = "authorizationId") String authorizationId,
+			@RequestParam(value = "taskType") String taskType,
+			ActionResponse actionResponse) {
+		actionResponse.setRenderParameter(ATTR_MY_ACTION, MY_ACTION_SHOW_WARRANT);
+		actionResponse.setRenderParameter(ATTR_TASK_TYPE, taskType);
+		actionResponse.setRenderParameter(ATTR_AUTHORIZATION_ID, authorizationId);
+	}
+	
 	/**
 	 * Shows warrant page
 	 * @param response RenderResponse
@@ -62,21 +85,10 @@ public class ShowWarrantController extends AbstractController {
 	@ModelAttribute(value = "warrant")
 	public ModelWrapper<KokuAuthorizationSummary> model(
 			@RequestParam String authorizationId,
-			@RequestParam String currentPage,
 			@RequestParam String taskType, 
-			@RequestParam String keyword,
-			@RequestParam String orderType,
-			RenderRequest request) {
-
-		// store parameters in session for returning page from form page	
-		request.getPortletSession().setAttribute(ATTR_CURRENT_PAGE, currentPage, PortletSession.APPLICATION_SCOPE);
-		request.getPortletSession().setAttribute(ATTR_TASK_TYPE, taskType, PortletSession.APPLICATION_SCOPE);
-		request.getPortletSession().setAttribute(ATTR_KEYWORD, keyword, PortletSession.APPLICATION_SCOPE);
-		request.getPortletSession().setAttribute(ATTR_ORDER_TYPE, orderType, PortletSession.APPLICATION_SCOPE);
+			PortletSession portletSession) {
 		
-		ModelWrapper<KokuAuthorizationSummary> model = null;
-		
-		final PortletSession portletSession = request.getPortletSession();
+		ModelWrapper<KokuAuthorizationSummary> model = null;		
 		final String username = (String) portletSession.getAttribute(ATTR_USERNAME);
 		String userId = (String) portletSession.getAttribute(ATTR_USER_ID);
 		if (userId == null) {			
@@ -87,8 +99,7 @@ public class ShowWarrantController extends AbstractController {
 			} catch (KokuServiceException e) {
 				LOG.error("Failed to get UserUid username: '"+username+"' portalRole: '"+getPortalRole()+"'", e);
 			}
-		}
-		
+		}		
 		
 		KokuAuthorizationSummary warrant = null;
 		try {			
@@ -115,8 +126,7 @@ public class ShowWarrantController extends AbstractController {
 			model = new ModelWrapperImpl<KokuAuthorizationSummary>(warrant);
 		} catch (KokuServiceException kse) {
 			LOG.error("Failed to show warrant details. authorizationId: '"+authorizationId + 
-					"' username: '"+request.getUserPrincipal().getName()+" taskType: '"+taskType + 
-					"' keyword: '" + keyword + "'", kse);
+					"' username: '"+username+" taskType: '"+taskType + "'", kse);
 			model = new ModelWrapperImpl<KokuAuthorizationSummary>(null, ResponseStatus.FAIL, kse.getErrorcode());
 		}
 		return model;

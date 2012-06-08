@@ -1,31 +1,9 @@
 package fi.arcusys.koku.web;
 
-import static fi.arcusys.koku.common.util.Constants.ATTR_APPLICATION_ID;
-import static fi.arcusys.koku.common.util.Constants.ATTR_APPOIMENT_ID;
-import static fi.arcusys.koku.common.util.Constants.ATTR_AUTHORIZATION_ID;
-import static fi.arcusys.koku.common.util.Constants.ATTR_CONSENT_ID;
-import static fi.arcusys.koku.common.util.Constants.ATTR_CURRENT_PAGE;
-import static fi.arcusys.koku.common.util.Constants.ATTR_KEYWORD;
 import static fi.arcusys.koku.common.util.Constants.ATTR_KOKU_USER;
-import static fi.arcusys.koku.common.util.Constants.ATTR_MESSAGE_ID;
-import static fi.arcusys.koku.common.util.Constants.ATTR_MY_ACTION;
-import static fi.arcusys.koku.common.util.Constants.ATTR_ORDER_TYPE;
-import static fi.arcusys.koku.common.util.Constants.ATTR_REQUEST_ID;
-import static fi.arcusys.koku.common.util.Constants.ATTR_RESPONSE_ID;
-import static fi.arcusys.koku.common.util.Constants.ATTR_TARGET_PERSON;
-import static fi.arcusys.koku.common.util.Constants.ATTR_TASK_TYPE;
 import static fi.arcusys.koku.common.util.Constants.ATTR_USERNAME;
 import static fi.arcusys.koku.common.util.Constants.ATTR_USER_ID;
-import static fi.arcusys.koku.common.util.Constants.JSON_RENDER_URL;
 import static fi.arcusys.koku.common.util.Constants.JSON_RESULT;
-import static fi.arcusys.koku.common.util.Constants.MY_ACTION_SHOW_APPLICATION_KINDERGARTEN;
-import static fi.arcusys.koku.common.util.Constants.MY_ACTION_SHOW_APPOINTMENT;
-import static fi.arcusys.koku.common.util.Constants.MY_ACTION_SHOW_CONSENT;
-import static fi.arcusys.koku.common.util.Constants.MY_ACTION_SHOW_MESSAGE;
-import static fi.arcusys.koku.common.util.Constants.MY_ACTION_SHOW_REQUEST;
-import static fi.arcusys.koku.common.util.Constants.MY_ACTION_SHOW_REQUEST_RESPONSE;
-import static fi.arcusys.koku.common.util.Constants.MY_ACTION_SHOW_TIPY;
-import static fi.arcusys.koku.common.util.Constants.MY_ACTION_SHOW_WARRANT;
 import static fi.arcusys.koku.common.util.Constants.RESPONSE;
 import static fi.arcusys.koku.common.util.Constants.RESPONSE_FAIL;
 import static fi.arcusys.koku.common.util.Constants.RESPONSE_OK;
@@ -41,11 +19,6 @@ import javax.annotation.Resource;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 import javax.portlet.PortletSession;
-import javax.portlet.PortletURL;
-import javax.portlet.ResourceResponse;
-import javax.portlet.WindowState;
-import javax.portlet.WindowStateException;
-
 import net.sf.json.JSONObject;
 
 import org.slf4j.Logger;
@@ -117,6 +90,8 @@ public class AjaxController extends AbstractController {
 			ModelMap modelmap, PortletRequest request, PortletResponse response) {
 		
 		final long start = System.nanoTime();
+		taskType = filterDuplicates(taskType);
+		
 		final PortletSession portletSession = request.getPortletSession();		
 		final String username = (String) portletSession.getAttribute(ATTR_USERNAME);
 		String userId = (String) portletSession.getAttribute(ATTR_USER_ID);;
@@ -151,6 +126,15 @@ public class AjaxController extends AbstractController {
 		return AjaxViewResolver.AJAX_PREFIX;
 	}
 	
+	private String filterDuplicates(String parameter) {
+		if (parameter != null && !parameter.isEmpty()) {
+			return parameter.split(",")[0];
+		} else {
+			return parameter;
+		}
+		
+	}
+		
 	/**
 	 * KOKU-805
 	 * 
@@ -452,265 +436,4 @@ public class AjaxController extends AbstractController {
 		return AjaxViewResolver.AJAX_PREFIX;
 	}
 	
-	
-	private PortletURL getPortletUrl(final ResourceResponse response, final String currentPage, final String taskType,
-			final String keyword, final String orderType) {
-		final PortletURL renderUrlObj = response.createRenderURL();
-		renderUrlObj.setParameter( ATTR_CURRENT_PAGE, currentPage);
-		renderUrlObj.setParameter( ATTR_TASK_TYPE, taskType);
-		renderUrlObj.setParameter( ATTR_KEYWORD, keyword);
-		renderUrlObj.setParameter( ATTR_ORDER_TYPE, orderType);
-		try {
-			renderUrlObj.setWindowState(WindowState.NORMAL);
-		} catch (WindowStateException e) {
-			LOG.error("Create message render url failed");
-		}
-		return renderUrlObj;
-	}
-	
-	private void generateRenderUrl(final PortletURL renderUrlObj, final ModelMap modelmap) {
-		final String renderUrlString = renderUrlObj.toString();		
-		final JSONObject jsonModel = new JSONObject();
-		jsonModel.put(JSON_RENDER_URL, renderUrlString);
-		modelmap.addAttribute(RESPONSE, jsonModel);		
-	}
-	
-	/**
-	 * Creates message render url mainly for gatein portal, and keeps the page
-	 * parameters such as page id, task type, keyword
-	 * @param messageId message id
-	 * @param currentPage current page
-	 * @param taskType request task type
-	 * @param keyword keyword
-	 * @param orderType order type
-	 * @param modelmap ModelMap
-	 * @param request PortletRequest
-	 * @param response ResourceResponse
-	 * @return Message render url in Json format
-	 */
-	@ResourceMapping(value = "createMessageRenderUrl")
-	public String createMessageRenderUrl(
-			@RequestParam(value = "messageId") String messageId,
-			@RequestParam(value = "currentPage") String currentPage,
-			@RequestParam(value = "taskType") String taskType,
-			@RequestParam(value = "keyword") String keyword,
-			@RequestParam(value = "orderType") String orderType,
-			final ModelMap modelmap, final PortletRequest request, final ResourceResponse response) {
-				
-		final PortletURL renderUrlObj = getPortletUrl(response, currentPage, taskType, keyword, orderType);
-		renderUrlObj.setParameter( ATTR_MY_ACTION, MY_ACTION_SHOW_MESSAGE);
-		renderUrlObj.setParameter( ATTR_MESSAGE_ID, messageId);
-		generateRenderUrl(renderUrlObj, modelmap);
-		return AjaxViewResolver.AJAX_PREFIX;
-	}
-	
-	/**
-	 * Creates request render url mainly for gatein portal, and keeps the page
-	 * parameters such as page id, task type, keyword
-	 * @param requestId request id
-	 * @param currentPage current page
-	 * @param taskType request task type
-	 * @param keyword keyword
-	 * @param orderType order type
-	 * @param modelmap ModelMap
-	 * @param request PortletRequest
-	 * @param response ResourceResponse
-	 * @return Request render url in Json format
-	 */
-	@ResourceMapping(value = "createRequestRenderUrl")
-	public String createRequestRenderUrl(
-			@RequestParam(value = "requestId") String requestId,
-			@RequestParam(value = "currentPage") String currentPage,
-			@RequestParam(value = "taskType") String taskType,
-			@RequestParam(value = "keyword") String keyword,
-			@RequestParam(value = "orderType") String orderType,
-			ModelMap modelmap, PortletRequest request, ResourceResponse response) {
-		
-		final PortletURL renderUrlObj = getPortletUrl(response, currentPage, taskType, keyword, orderType);
-		renderUrlObj.setParameter( ATTR_MY_ACTION, MY_ACTION_SHOW_REQUEST);
-		renderUrlObj.setParameter( ATTR_REQUEST_ID, requestId);
-		generateRenderUrl(renderUrlObj, modelmap);
-		return AjaxViewResolver.AJAX_PREFIX;
-	}
-	
-	/**
-	 * Creates request response render url mainly for gatein portal, and keeps the page
-	 * parameters such as page id, task type, keyword
-	 * @param requestId request id
-	 * @param currentPage current page
-	 * @param taskType request task type
-	 * @param keyword keyword
-	 * @param orderType order type
-	 * @param modelmap ModelMap
-	 * @param request PortletRequest
-	 * @param response ResourceResponse
-	 * @return Request render url in Json format
-	 */
-	@ResourceMapping(value = "createResponseRenderUrl")
-	public String createResponseRenderUrl (
-			@RequestParam(value = "responseId") String responseId,
-			@RequestParam(value = "currentPage") String currentPage,
-			@RequestParam(value = "taskType") String taskType,
-			@RequestParam(value = "keyword") String keyword,
-			@RequestParam(value = "orderType") String orderType,
-			ModelMap modelmap, PortletRequest request, ResourceResponse response) {
-				
-		final PortletURL renderUrlObj = getPortletUrl(response, currentPage, taskType, keyword, orderType);
-		renderUrlObj.setParameter( ATTR_MY_ACTION, MY_ACTION_SHOW_REQUEST_RESPONSE);
-		renderUrlObj.setParameter( ATTR_RESPONSE_ID, responseId);
-		generateRenderUrl(renderUrlObj, modelmap);
-		return AjaxViewResolver.AJAX_PREFIX;
-	}
-	
-	/**
-	 * Creates appointment render url mainly for gatein portal, and keeps the page
-	 * parameters such as page id, task type, keyword
-	 * @param appointmentId appointment id
-	 * @param currentPage current page
-	 * @param taskType request task type
-	 * @param keyword keyword
-	 * @param orderType order type
-	 * @param modelmap ModelMap
-	 * @param request PortletRequest
-	 * @param response ResourceResponse
-	 * @return Appointment render url in Json format
-	 */
-	@ResourceMapping(value = "createAppointmentRenderUrl")
-	public String createAppointmentRenderUrl(
-			@RequestParam(value = "appointmentId") String appointmentId,
-			@RequestParam(value = "currentPage") String currentPage,
-			@RequestParam(value = "taskType") String taskType,
-			@RequestParam(value = "keyword") String keyword,
-			@RequestParam(value = "orderType") String orderType,
-			@RequestParam(value = "targetPerson", required=false) String targetPerson,
-			ModelMap modelmap, PortletRequest request, ResourceResponse response) {
-		
-		final PortletURL renderUrlObj = getPortletUrl(response, currentPage, taskType, keyword, orderType);
-		renderUrlObj.setParameter( ATTR_MY_ACTION, MY_ACTION_SHOW_APPOINTMENT);
-		renderUrlObj.setParameter( ATTR_APPOIMENT_ID, appointmentId);
-		renderUrlObj.setParameter( ATTR_TARGET_PERSON, targetPerson);
-		generateRenderUrl(renderUrlObj, modelmap);
-		return AjaxViewResolver.AJAX_PREFIX;
-	}
-	
-	/**
-	 * Creates consent render url mainly for gatein portal, and keeps the page
-	 * parameters such as page id, task type, keyword
-	 * 
-	 * @param consentId consent id
-	 * @param currentPage current page
-	 * @param taskType request task type
-	 * @param keyword keyword
-	 * @param orderType order type
-	 * @param modelmap ModelMap
-	 * @param request PortletRequest
-	 * @param response ResourceResponse
-	 * @return Consent render url in Json format
-	 */
-	@ResourceMapping(value = "createConsentRenderUrl")
-	public String createConsentRenderUrl(
-			@RequestParam(value = "consentId") String consentId,
-			@RequestParam(value = "currentPage") String currentPage,
-			@RequestParam(value = "taskType") String taskType,
-			@RequestParam(value = "keyword") String keyword,
-			@RequestParam(value = "orderType") String orderType,
-			ModelMap modelmap, PortletRequest request, ResourceResponse response) {
-		
-		final PortletURL renderUrlObj = getPortletUrl(response, currentPage, taskType, keyword, orderType);
-		renderUrlObj.setParameter( ATTR_MY_ACTION, MY_ACTION_SHOW_CONSENT);
-		renderUrlObj.setParameter( ATTR_CONSENT_ID, consentId);
-		generateRenderUrl(renderUrlObj, modelmap);
-		return AjaxViewResolver.AJAX_PREFIX;
-	}
-	
-	/**
-	 * Creates warrant render url mainly for gatein portal, and keeps the page
-	 * parameters such as page id, task type, keyword
-	 * 
-	 * @param authorizationId authorization id
-	 * @param currentPage current page
-	 * @param taskType request task type
-	 * @param keyword keyword
-	 * @param orderType order type
-	 * @param modelmap ModelMap
-	 * @param request PortletRequest
-	 * @param response ResourceResponse
-	 * @return Consent render url in Json format
-	 */
-	@ResourceMapping(value = "createWarrantRenderUrl")
-	public String createWarrantRenderUrl(
-			@RequestParam(value = "authorizationId") String authorizationId,
-			@RequestParam(value = "currentPage") String currentPage,
-			@RequestParam(value = "taskType") String taskType,
-			@RequestParam(value = "keyword") String keyword,
-			@RequestParam(value = "orderType") String orderType,
-			ModelMap modelmap, PortletRequest request, ResourceResponse response) {
-
-		final PortletURL renderUrlObj = getPortletUrl(response, currentPage, taskType, keyword, orderType);
-		renderUrlObj.setParameter( ATTR_MY_ACTION, MY_ACTION_SHOW_WARRANT);
-		renderUrlObj.setParameter( ATTR_AUTHORIZATION_ID, authorizationId);
-		generateRenderUrl(renderUrlObj, modelmap);
-		return AjaxViewResolver.AJAX_PREFIX;
-	}
-	
-	
-	/**
-	 * Creates info (tietopyyntö) render url mainly for gatein portal, and keeps the page
-	 * parameters such as page id, task type, keyword
-	 * 
-	 * @param authorizationId authorization id
-	 * @param currentPage current page
-	 * @param taskType request task type
-	 * @param keyword keyword
-	 * @param orderType order type
-	 * @param modelmap ModelMap
-	 * @param request PortletRequest
-	 * @param response ResourceResponse
-	 * @return Consent render url in Json format
-	 */
-	@ResourceMapping(value = "createTipyRenderUrl")
-	public String createTipyRenderUrl(
-			@RequestParam(value = "requestId") String requestId,
-			@RequestParam(value = "currentPage") String currentPage,
-			@RequestParam(value = "taskType") String taskType,
-			@RequestParam(value = "keyword") String keyword,
-			@RequestParam(value = "orderType") String orderType,
-			ModelMap modelmap, PortletRequest request, ResourceResponse response) {
-		
-		final PortletURL renderUrlObj = getPortletUrl(response, currentPage, taskType, keyword, orderType);
-		renderUrlObj.setParameter( ATTR_MY_ACTION, MY_ACTION_SHOW_TIPY);
-		renderUrlObj.setParameter( ATTR_REQUEST_ID, requestId);
-		generateRenderUrl(renderUrlObj, modelmap);
-		return AjaxViewResolver.AJAX_PREFIX;
-	}
-	
-	/**
-	 * Creates info (tietopyyntö) render url mainly for gatein portal, and keeps the page
-	 * parameters such as page id, task type, keyword
-	 * 
-	 * @param authorizationId authorization id
-	 * @param currentPage current page
-	 * @param taskType request task type
-	 * @param keyword keyword
-	 * @param orderType order type
-	 * @param modelmap ModelMap
-	 * @param request PortletRequest
-	 * @param response ResourceResponse
-	 * @return Consent render url in Json format
-	 */
-	@ResourceMapping(value = "createApplicationKindergartenRenderUrl")
-	public String createApplicationKindergartenRenderUrl(
-			@RequestParam(value = "applicationId") String applicationId,
-			@RequestParam(value = "currentPage") String currentPage,
-			@RequestParam(value = "taskType") String taskType,
-			@RequestParam(value = "keyword") String keyword,
-			@RequestParam(value = "orderType") String orderType,
-			ModelMap modelmap, PortletRequest request, ResourceResponse response) {
-		
-		final PortletURL renderUrlObj = getPortletUrl(response, currentPage, taskType, keyword, orderType);
-		renderUrlObj.setParameter( ATTR_MY_ACTION, MY_ACTION_SHOW_APPLICATION_KINDERGARTEN);
-		renderUrlObj.setParameter( ATTR_APPLICATION_ID, applicationId);
-		generateRenderUrl(renderUrlObj, modelmap);
-		return AjaxViewResolver.AJAX_PREFIX;
-	}
 }

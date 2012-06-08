@@ -1,13 +1,13 @@
 package fi.arcusys.koku.web;
 
-import static fi.arcusys.koku.common.util.Constants.ATTR_CURRENT_PAGE;
-import static fi.arcusys.koku.common.util.Constants.ATTR_KEYWORD;
-import static fi.arcusys.koku.common.util.Constants.ATTR_ORDER_TYPE;
+import static fi.arcusys.koku.common.util.Constants.ATTR_MY_ACTION;
+import static fi.arcusys.koku.common.util.Constants.ATTR_REQUEST_ID;
 import static fi.arcusys.koku.common.util.Constants.ATTR_TASK_TYPE;
+import static fi.arcusys.koku.common.util.Constants.MY_ACTION_SHOW_REQUEST;
 import static fi.arcusys.koku.common.util.Constants.VIEW_SHOW_REQUEST;
 
+import javax.portlet.ActionResponse;
 import javax.portlet.PortletSession;
-import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
 import org.slf4j.Logger;
@@ -16,6 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.portlet.bind.annotation.ActionMapping;
 import org.springframework.web.portlet.bind.annotation.RenderMapping;
 
 import fi.arcusys.koku.common.exceptions.KokuServiceException;
@@ -41,6 +42,18 @@ public class ShowRequestController {
 	private static final Logger LOG = LoggerFactory.getLogger(ShowRequestController.class);
 
 	
+	@ActionMapping(params = "action=toRequest")
+	public void actionPageView(
+			PortletSession session,
+			@ModelAttribute(value = "request") ModelWrapper<KokuRequest> request,
+			@RequestParam(value = "requestId") String requestId,
+			@RequestParam(value = "taskType") String taskType,
+			ActionResponse response) {
+		response.setRenderParameter(ATTR_MY_ACTION, MY_ACTION_SHOW_REQUEST);
+		response.setRenderParameter(ATTR_TASK_TYPE, taskType);
+		response.setRenderParameter(ATTR_REQUEST_ID, requestId);
+	}		
+	
 	/**
 	 * Shows request page
 	 * @param response RenderResponse
@@ -48,7 +61,6 @@ public class ShowRequestController {
 	 */
 	@RenderMapping(params = "myaction=showRequest")
 	public String showPageView(RenderResponse response) {
-
 		return VIEW_SHOW_REQUEST;
 	}
 		
@@ -63,16 +75,10 @@ public class ShowRequestController {
 	 * @return request data model
 	 */
 	@ModelAttribute(value = "request")
-	public ModelWrapper<KokuRequest> model(@RequestParam String requestId,
-			@RequestParam String currentPage,@RequestParam String taskType, 
-			@RequestParam String keyword, @RequestParam String orderType,
-			RenderRequest request) {
-
-		// store parameters in session for returning page from form page	
-		request.getPortletSession().setAttribute(ATTR_CURRENT_PAGE, currentPage, PortletSession.APPLICATION_SCOPE);
-		request.getPortletSession().setAttribute(ATTR_TASK_TYPE, taskType, PortletSession.APPLICATION_SCOPE);
-		request.getPortletSession().setAttribute(ATTR_KEYWORD, keyword, PortletSession.APPLICATION_SCOPE);
-		request.getPortletSession().setAttribute(ATTR_ORDER_TYPE, orderType, PortletSession.APPLICATION_SCOPE);
+	public ModelWrapper<KokuRequest> model(
+			@RequestParam String requestId,
+			@RequestParam String taskType,
+			PortletSession portletSession) {
 		
 		ModelWrapper<KokuRequest> model = null;
 		KokuRequest kokuRequest = null;
@@ -81,18 +87,15 @@ public class ShowRequestController {
 				EmployeeRequestHandle reqhandle = new EmployeeRequestHandle(new DummyMessageSource());
 				kokuRequest = reqhandle.getKokuRequestById(requestId);			
 			} else {
-				throw new KokuServiceException("No operation for taskType: '"+taskType+"' username: '" + request.getUserPrincipal().getName() + "'");
+				throw new KokuServiceException("No operation for taskType: '"+taskType+"' username: '" + (String)portletSession.getAttribute(Constants.ATTR_USERNAME)  + "'");
 			}
 			model = new ModelWrapperImpl<KokuRequest>(kokuRequest);
 		} catch (KokuServiceException kse) {
 			LOG.error("Failed to show request details. requestId: '"+requestId + 
-					"' username: '"+request.getUserPrincipal().getName()+" taskType: '"+taskType + 
-					"' keyword: '" + keyword + "'", kse);
+					"' username: '"+ (String)portletSession.getAttribute(Constants.ATTR_USERNAME) +" taskType: '"+taskType + 
+					"'", kse);
 			model = new ModelWrapperImpl<KokuRequest>(null, ResponseStatus.FAIL, kse.getErrorcode());
-		}
-		
+		}		
 		return model;
 	}
-	
-
 }

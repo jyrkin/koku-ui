@@ -130,6 +130,15 @@ function focusCurrentItem(naviType) {
 		case 'SendConsent' : bold('#sendconsent'); break;	
 		case 'SelaaValtakirjoja' : bold('#selaaOmiaValtakirjoja'); break;
 		case 'Ilmoitukset' : bold('#info_request_open'); break;
+		case 'DaycarePayments' : bold('#<%= Constants.TASK_TYPE_APPLICATION_DAYCARE_PAYMENT_BROWSE%>'); break;
+		case 'DaycarePaymentsModify' : bold('#<%= Constants.TASK_TYPE_APPLICATION_DAYCARE_PAYMENT_MODIFY_BROWSE%>'); break;
+		case 'DaycarePaymentsDiscounts' : bold('#<%= Constants.TASK_TYPE_APPLICATION_DAYCARE_PAYMENT_DISCOUNT_BROWSE%>'); break;
+		case 'DaycareTerminations' : bold('#<%= Constants.TASK_TYPE_APPLICATION_DAYCARE_TERMINATION_BROWSE%>'); break;
+		case 'DaycareHolidays' : bold('#daycareHolidays'); break;
+		case 'DaycarePayment' : bold('#daycareCustomerPayment'); break;
+		case 'DaycarePaymentModify' : bold('#daycareCustomerPaymentModification'); break;
+		case 'DaycarePaymentDiscount' : bold('#daycareCustomerDiscount'); break;
+		case 'DaycareTermination' : bold('#daycareCustomerTermination'); break;
 		default: bold("#" + currentPage.toLowerCase()); break;
 	}
 };
@@ -288,9 +297,18 @@ function closeKokuNavi(toggleId, indicatorId, receivedMessagesParentId) {
 	kokuNavigationState.remove(toggleId);
 }
 
+function navigateToTaskMgrPage(page) {
+	var currentPage = '/' + '<%= currentPage %>';
+	if (page === currentPage) {
+		kokuNavigationHelper.returnMainPage();
+	} else {
+		window.location = "<%= defaultPath %>"+page;
+	}
+}
+
+
 function navigateToPage(naviType) {
 	if (typeof kokuNavigationHelper === "undefined" || kokuNavigationHelper === null) {
-		// createKokuCookie(naviType);
 		updateNavigationStatus(naviType, kokuNavigationState, function() {
 			window.location = "<%= defaultPath %>" + "?resetView=true&NAVI_TYPE=" + naviType;
 			return;
@@ -301,9 +319,7 @@ function navigateToPage(naviType) {
 		return;
 	}
 	/* If navi_type is missing we are not in Message-portlet page ->  */
-	updateNavigationStatus(naviType, kokuNavigationState, function() {
-		// createKokuCookie(naviType);
-	
+	updateNavigationStatus(naviType, kokuNavigationState, function() {	
 		/* Update current position in navigation to server (session)  */
 		switch(kokuNavigationHelper.getHelperIdentifier()) {
 			case "MessagePortlet":

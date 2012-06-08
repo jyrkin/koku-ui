@@ -1,11 +1,8 @@
 package fi.arcusys.koku.web;
 
-import static fi.arcusys.koku.common.util.Constants.ATTR_CURRENT_PAGE;
-import static fi.arcusys.koku.common.util.Constants.ATTR_KEYWORD;
-import static fi.arcusys.koku.common.util.Constants.ATTR_ORDER_TYPE;
-import static fi.arcusys.koku.common.util.Constants.ATTR_TASK_TYPE;
-import static fi.arcusys.koku.common.util.Constants.VIEW_SHOW_RESPONSE;
+import static fi.arcusys.koku.common.util.Constants.*;
 
+import javax.portlet.ActionResponse;
 import javax.portlet.PortletSession;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
@@ -16,11 +13,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.portlet.bind.annotation.ActionMapping;
 import org.springframework.web.portlet.bind.annotation.RenderMapping;
 
 import fi.arcusys.koku.common.exceptions.KokuServiceException;
 import fi.arcusys.koku.common.services.facades.impl.ResponseStatus;
 import fi.arcusys.koku.common.services.requests.citizen.CitizenRequestHandle;
+import fi.arcusys.koku.common.services.requests.models.KokuRequest;
 import fi.arcusys.koku.common.services.requests.models.KokuResponseDetail;
 import fi.arcusys.koku.common.util.Constants;
 import fi.arcusys.koku.common.util.DummyMessageSource;
@@ -38,6 +37,20 @@ import fi.arcusys.koku.web.util.impl.ModelWrapperImpl;
 public class ShowResponseController {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(ShowResponseController.class);
+	
+	
+
+	@ActionMapping(params = "action=toResponse")
+	public void actionPageView(
+			PortletSession session,
+			@ModelAttribute(value = "response") ModelWrapper<KokuRequest> response,
+			@RequestParam(value = "responseId") String responseId,
+			@RequestParam(value = "taskType") String taskType,
+			ActionResponse actionResponse) {
+		actionResponse.setRenderParameter(ATTR_MY_ACTION, MY_ACTION_SHOW_REQUEST_RESPONSE);
+		actionResponse.setRenderParameter(ATTR_TASK_TYPE, taskType);
+		actionResponse.setRenderParameter(ATTR_RESPONSE_ID, responseId);
+	}		
 	
 	/**
 	 * Shows request page
@@ -62,17 +75,8 @@ public class ShowResponseController {
 	@ModelAttribute(value = "response")
 	public ModelWrapper<KokuResponseDetail> model(
 			@RequestParam String responseId,
-			@RequestParam String currentPage,
 			@RequestParam String taskType, 
-			@RequestParam String keyword, 
-			@RequestParam String orderType,
-			RenderRequest request) {
-
-		// store parameters in session for returning page from form page	
-		request.getPortletSession().setAttribute(ATTR_CURRENT_PAGE, currentPage, PortletSession.APPLICATION_SCOPE);
-		request.getPortletSession().setAttribute(ATTR_TASK_TYPE, taskType, PortletSession.APPLICATION_SCOPE);
-		request.getPortletSession().setAttribute(ATTR_KEYWORD, keyword, PortletSession.APPLICATION_SCOPE);
-		request.getPortletSession().setAttribute(ATTR_ORDER_TYPE, orderType, PortletSession.APPLICATION_SCOPE);
+			PortletSession portletSession) {
 		
 		ModelWrapper<KokuResponseDetail> model = null;
 		KokuResponseDetail details = null;
@@ -84,8 +88,8 @@ public class ShowResponseController {
 			model = new ModelWrapperImpl<KokuResponseDetail>(details);
 		} catch (KokuServiceException kse) {
 			LOG.error("Failed to show response details. responseId: '"+responseId + 
-					"' username: '"+request.getUserPrincipal().getName()+" taskType: '"+taskType + 
-					"' keyword: '" + keyword + "'", kse);
+					"' username: '"+ (String)portletSession.getAttribute(Constants.ATTR_USERNAME) +" taskType: '"+taskType + 
+					"'", kse);
 			model = new ModelWrapperImpl<KokuResponseDetail>(null, ResponseStatus.FAIL, kse.getErrorcode());
 		}
 		return model;

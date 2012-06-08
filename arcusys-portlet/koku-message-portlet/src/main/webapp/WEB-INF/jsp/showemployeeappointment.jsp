@@ -6,9 +6,9 @@
 
 <%@ include file="init.jsp"%>
 
-<portlet:renderURL var="homeURL" windowState="<%= WindowState.NORMAL.toString() %>" >
-	<portlet:param name="myaction" value="home" />
-</portlet:renderURL>
+<portlet:actionURL var="homeURL">
+	<portlet:param name="action" value="toHome" />
+</portlet:actionURL>
 
 <portlet:resourceURL var="cancelURL" id="cancelAppointment"></portlet:resourceURL>
 
@@ -85,6 +85,7 @@
 	    		<td class="head comment"><spring:message code="appointment.comment"/></td>
 	    		<td class="head targetPersonName"><spring:message code="appointment.targetPerson"/></td>
 	    		<td class="head recipients"><spring:message code="appointment.recipients"/></td>
+				<td class="head remove"><spring:message code="appointment.cancel.button"/></td>
 	    	</tr>
 	    	<c:forEach var="slot" items="${appointment.model.approvedSlots}" varStatus="loopStatus">
 	        <tr class="<c:out value="${loopStatus.index % 2 == 0 ? 'evenRow' : 'oddRow'}" />">
@@ -98,6 +99,7 @@
 	          <c:forEach var="recipient" items="${slot.recipientUsers}" varStatus="loopStatus">
 	          	<c:out value="${recipient.fullName}" />,
 	          </c:forEach>
+	          <td class="remove"><input type="button" value="<spring:message code="cancel"/>" onclick="" /></td>
 	          </td>
 	        </tr>
 	      	</c:forEach>
@@ -113,14 +115,16 @@
 	    		<td class="head endTime"><spring:message code="appointment.end"/></td>
 	    		<td class="head location"><spring:message code="appointment.location"/></td>
 	    		<td class="head comment"><spring:message code="appointment.comment"/></td>
+				<td class="head remove"><spring:message code="appointment.deleteTimeSlot"/></td>
 	    	</tr>
 	    	<c:forEach var="slot" items="${appointment.model.unapprovedSlots}" varStatus="loopStatus">
 	        <tr class="<c:out value="${loopStatus.index % 2 == 0 ? 'evenRow' : 'oddRow'}" />">
 	          <td class="date"><c:out value="${slot.appointmentDate}" /></td>
 	          <td class="startTime"><c:out value="${slot.startTime}" /></td>
-	          <td class="endTime"><c:out value="${slot.endTime}" /></td>  
+	          <td class="endTime"><c:out value="${slot.endTime}" /></td>
 	          <td class="location"><c:out value="${slot.location}" /></td>
-	          <td class="comment"><c:out value="${slot.comment}" /></td>  
+	          <td class="comment"><c:out value="${slot.comment}" /></td>
+	          <td class="remove"><input type="button" value="<spring:message code="delete"/>" onclick="" /></td>
 	        </tr>
 	      	</c:forEach>
 	    </table>  

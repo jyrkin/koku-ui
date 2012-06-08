@@ -24,63 +24,41 @@
 <portlet:resourceURL var="cancelURL" id="cancelAppointment">
 </portlet:resourceURL>
 
-<portlet:renderURL var="homeURL" windowState="<%= WindowState.NORMAL.toString() %>" >
-	<portlet:param name="myaction" value="home" />
-</portlet:renderURL>
+<portlet:actionURL var="homeURL">
+	<portlet:param name="action" value="toHome" />
+</portlet:actionURL>
 
-<portlet:renderURL var="messageURL" windowState="<%= WindowState.NORMAL.toString() %>" >
-	<portlet:param name="myaction" value="showMessage" />
-</portlet:renderURL>
+<portlet:actionURL var="messageActionURL">
+	<portlet:param name="action" value="toMessage" />
+</portlet:actionURL>
 
-<portlet:renderURL var="requestURL" windowState="<%= WindowState.NORMAL.toString() %>" >
-	<portlet:param name="myaction" value="showRequest" />
-</portlet:renderURL>
+<portlet:actionURL var="requestActionURL">
+	<portlet:param name="action" value="toRequest" />
+</portlet:actionURL>
 
-<portlet:renderURL var="appointmentURL" windowState="<%= WindowState.NORMAL.toString() %>" >
-	<portlet:param name="myaction" value="showAppointment" />
-</portlet:renderURL>
+<portlet:actionURL var="responseActionURL">
+	<portlet:param name="action" value="toResponse" />
+</portlet:actionURL>
 
-<portlet:renderURL var="consentURL" windowState="<%= WindowState.NORMAL.toString() %>" >
-	<portlet:param name="myaction" value="showConsent" />
-</portlet:renderURL>
+<portlet:actionURL var="consentActionURL">
+	<portlet:param name="action" value="toConsent" />
+</portlet:actionURL>
 
-<portlet:renderURL var="citizenWarrantURL" windowState="<%= WindowState.NORMAL.toString() %>" >
-	<portlet:param name="myaction" value="showWarrant" />
-</portlet:renderURL>
+<portlet:actionURL var="appointmentActionURL">
+	<portlet:param name="action" value="toAppointment" />
+</portlet:actionURL>
 
-<portlet:renderURL var="tipyURL" windowState="<%= WindowState.NORMAL.toString() %>" >
-	<portlet:param name="myaction" value="showTipy" />
-</portlet:renderURL>
+<portlet:actionURL var="tipyActionURL">
+	<portlet:param name="action" value="toTipy" />
+</portlet:actionURL>
 
-<portlet:renderURL var="applicationKindergartenURL" windowState="<%= WindowState.NORMAL.toString() %>" >
-	<portlet:param name="myaction" value="showApplicationKindergarten" />
-</portlet:renderURL>
+<portlet:actionURL var="warrantActionURL">
+	<portlet:param name="action" value="toWarrant" />
+</portlet:actionURL>
 
-
-<portlet:resourceURL var="messageRenderURL" id="createMessageRenderUrl">
-</portlet:resourceURL>
-
-<portlet:resourceURL var="requestRenderURL" id="createRequestRenderUrl">
-</portlet:resourceURL> 
-
-<portlet:resourceURL var="responseRenderURL" id="createResponseRenderUrl">
-</portlet:resourceURL> 
-
-<portlet:resourceURL var="appointmentRenderURL" id="createAppointmentRenderUrl">
-</portlet:resourceURL> 
-
-<portlet:resourceURL var="consentRenderURL" id="createConsentRenderUrl">
-</portlet:resourceURL>
-
-<portlet:resourceURL var="warrantRenderURL" id="createWarrantRenderUrl">
-</portlet:resourceURL>
-
-<portlet:resourceURL var="tipyRenderURL" id="createTipyRenderUrl">
-</portlet:resourceURL>
-
-<portlet:resourceURL var="kindergartenRenderURL" id="createApplicationKindergartenRenderUrl">
-</portlet:resourceURL>
-
+<portlet:actionURL var="applicationDaycareActionURL">
+	<portlet:param name="action" value="toApplications" />
+</portlet:actionURL>
 
 <%-- Do not move navigation helper inside <script> tags --%>
 <%@ include file="js_koku_navigation_helper.jspf" %>
@@ -106,7 +84,6 @@
 	 	
 	 	defaultUrl : "<%= portletPath %>",
 
-		/* Actions or somethings? (portlet:resourceURL)*/
 	 	ajaxTaskUrl : "<%= ajaxURL %>",
 	 	homeUrl : "<%= homeURL %>",
 		suggestUrl : "<%= suggestURL %>",
@@ -117,25 +94,14 @@
 		revokeWarrantUrl : "<%= revokeWarrantURL %>", 
 		cancelUrl : "<%= cancelURL %>", 
 	 		 	
-	 	/* Urls JBoss Loora  (portlet:resourceURL) */
-	 	messageUrl : "<%= messageURL %>",
-	 	requestUrl :"<%= requestURL %>",
-	 	appointmentUrl : "<%= appointmentURL %>",
-	 	responseRenderUrl :  "<%= responseRenderURL %>",
-	 	consentUrl : "<%= consentURL %>",
-		citizenWarrantUrl : "<%= citizenWarrantURL %>",
-		tipyUrl : "<%= tipyURL %>",
-		applicationKindergartenUrl : "<%= applicationKindergartenURL %>",
-				
-		/* RenderUrls GateIn (portlet:renderURL) */
-	 	messageRenderUrl : "<%= messageRenderURL %>",
-	 	requestRenderUrl : "<%= requestRenderURL %>",
-	 	responseRenderUrl :  "<%= responseRenderURL %>",
-	 	appointmentRenderUrl :  "<%= appointmentRenderURL %>",
-	 	consentRenderUrl : 	"<%= consentRenderURL %>",
-	 	warrantRenderUrl : "<%= warrantRenderURL %>",
-		tipyRenderUrl : "<%= tipyRenderURL %>",
-		kindergartenRenderUrl : "<%= kindergartenRenderURL %>"
+	 	messageUrl : "<%= messageActionURL %>",
+	 	requestUrl :"<%= requestActionURL %>",
+	 	consentUrl : "<%= consentActionURL %>",
+	 	appointmentUrl : "<%= appointmentActionURL %>",
+	 	responseUrl :  "<%= responseActionURL %>",
+		tipyUrl : "<%= tipyActionURL %>",
+		warrantUrl : "<%= warrantActionURL %>",
+		applicationDaycareUrl : "<%= applicationDaycareActionURL %>"
 	};
 	
 	<%-- Loading JS from separate jspf files. --%>

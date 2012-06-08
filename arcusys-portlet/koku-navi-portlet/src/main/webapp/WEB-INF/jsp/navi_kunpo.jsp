@@ -80,7 +80,7 @@
 				<span class="kokuNaviTreeNodeIndicator" id="kokuNaviTreeNodeIndicatorConstants">+</span>Pyynnöt<span id="requests_num_super_super" class="message_num"></span>
 			</span>
 			<ul id="kokuNaviRequests" class="child" style="display:none;">
-				<li id="req_valid_request"><a href="<%= defaultPath %><%= NavigationPortletProperties.REQUESTS_RECIEVED_REQUESTS %>">Saapuneet</a><span id="requests_num" class="message_num"></span></li>
+				<li id="req_valid_request"><a href="javascript:void(0)" onclick="navigateToTaskMgrPage('<%= NavigationPortletProperties.REQUESTS_RECIEVED_REQUESTS %>')">Saapuneet</a><span id="requests_num" class="message_num"></span></li>
 				<li id="<%=Constants.TASK_TYPE_REQUEST_REPLIED %>"><a href="javascript:void(0)" onclick="navigateToPage('<%=Constants.TASK_TYPE_REQUEST_REPLIED %>')">Vastatut</a></li>
 				<li id="<%=Constants.TASK_TYPE_REQUEST_OLD %>"><a href="javascript:void(0)" onclick="navigateToPage('<%=Constants.TASK_TYPE_REQUEST_OLD %>')">Vanhat</a></li>
 			</ul>
@@ -124,7 +124,7 @@
 					</span>
 					<ul id="kokuNaviWarrantsOwn" class="child" style="display:none;">
 						<li id="<%= Constants.TASK_TYPE_WARRANT_BROWSE_SENT%>"><a href="javascript:void(0)" onclick="navigateToPage('<%= Constants.TASK_TYPE_WARRANT_BROWSE_SENT%>')">Valtuuttajana</a></li>
-						<li id="selaaOmiaValtakirjoja"><a href="<%= defaultPath %><%= NavigationPortletProperties.WARRANTS_BROWSE_WARRANTS %>">Valtuutettuna</a></li>
+						<li id="selaaOmiaValtakirjoja"><a href="javascript:void(0)" onclick="navigateToTaskMgrPage('<%= NavigationPortletProperties.WARRANTS_BROWSE_WARRANTS %>')">Valtuutettuna</a></li>
 					</ul>
 				</li>
 			</ul>
@@ -142,7 +142,12 @@
 					</span>
 					<ul id="kokuNaviApplicationsDayCare" class="child" style="display:none;">
 						<li id="kid_new"><a href="<%= defaultPath %><%= NavigationPortletProperties.APPLICATIONS_NEW_KINDERGARTEN %>">Päivähoitohakemus</a></li>
-						<li id="applicationsConfirm"><a href="<%= defaultPath %><%= NavigationPortletProperties.APPLICATIONS_NEED_TO_CONFIRM %>">Hakemusten vahvistuspyynnöt</a></li>
+						<li id="daycareCustomerPayment"><a href="<%= defaultPath %><%= NavigationPortletProperties.APPLICATIONS_DAYCARE_PAYMENT_FORM %>">Päivähoidon asiakasmaksulomake</a></li>
+						<li id="daycareCustomerPaymentModification"><a href="<%= defaultPath %><%= NavigationPortletProperties.APPLICATIONS_DAYCARE_PAYMENT_MODIFY_FORM %>">Päivähoidon asiakasmaksun muutoslomake</a></li>
+						<li id="daycareCustomerTermination"><a href="<%= defaultPath %><%= NavigationPortletProperties.APPLICATIONS_DAYCARE_TERMINATION_FORM %>">Irtisanoutuminen päivähoitopaikasta</a></li>
+						<li id="daycareCustomerDiscount"><a href="<%= defaultPath %><%= NavigationPortletProperties.APPLICATIONS_DAYCARE_PAYMENT_DISCOUNT_FORM %>">Päivähoidon asiakasmaksun alentaminen</a></li>
+						<li id="daycareHolidays"><a href="<%= defaultPath %><%= NavigationPortletProperties.APPLICATIONS_DAYCARE_HOLIDAYS_LIST %>">Loma-aikojen hoitotarvekyselyt</a></li>						
+						<li id="applicationsConfirm"><a href="javascript:void(0)" onclick="navigateToTaskMgrPage('<%= NavigationPortletProperties.APPLICATIONS_NEED_TO_CONFIRM %>')">Hakemusten vahvistuspyynnöt</a></li>
 					</ul>
 				</li>
 				<li><a href="#">Voimassaolevat palvelut</a></li>
