@@ -28,18 +28,6 @@
 	<portlet:param name="myaction" value="home" />
 </portlet:renderURL>
 
-<portlet:renderURL var="messageURL" windowState="<%= WindowState.NORMAL.toString() %>" >
-	<portlet:param name="myaction" value="showMessage" />
-</portlet:renderURL>
-
-<portlet:renderURL var="appointmentURL" windowState="<%= WindowState.NORMAL.toString() %>" >
-	<portlet:param name="myaction" value="showAppointment" />
-</portlet:renderURL>
-
-<portlet:renderURL var="consentURL" windowState="<%= WindowState.NORMAL.toString() %>" >
-	<portlet:param name="myaction" value="showConsent" />
-</portlet:renderURL>
-
 <portlet:renderURL var="citizenWarrantURL" windowState="<%= WindowState.NORMAL.toString() %>" >
 	<portlet:param name="myaction" value="showWarrant" />
 </portlet:renderURL>
@@ -68,8 +56,9 @@
 	<portlet:param name="action" value="toConsent" />
 </portlet:actionURL>
 
-<portlet:resourceURL var="appointmentRenderURL" id="createAppointmentRenderUrl">
-</portlet:resourceURL> 
+<portlet:actionURL var="appointmentActionURL">
+	<portlet:param name="action" value="toAppointment" />
+</portlet:actionURL>
 
 <portlet:resourceURL var="warrantRenderURL" id="createWarrantRenderUrl">
 </portlet:resourceURL>
@@ -120,7 +109,7 @@
 	 	messageUrl : "<%= messageActionURL %>",
 	 	requestUrl :"<%= requestActionURL %>",
 	 	consentUrl : "<%= consentActionURL %>",
-	 	appointmentUrl : "<%= appointmentURL %>",
+	 	appointmentUrl : "<%= appointmentActionURL %>",
 	 	responseUrl :  "<%= responseActionURL %>",
 		citizenWarrantUrl : "<%= citizenWarrantURL %>",
 		tipyUrl : "<%= tipyURL %>",

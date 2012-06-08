@@ -40,16 +40,13 @@ KokuAjaxEmployee.prototype.showAppointment = function(index) {
 	var url="";
 	
 	if(pageObj.taskType == "app_response_employee" || pageObj.taskType == "app_response_citizen") {		
-		url = this.renderUrls.appointmentRenderUrl;
+		url = this.renderUrls.appointmentUrl;
 		url = this.formatUrl(url);
+		url += "&appointmentId="+appointmentId;
+		url += "&taskType="+pageObj.taskType;
+		url += "&targetPerson="+targetPerson;
+		window.location = url;
 		
-		jQuery.post(url, {appointmentId:appointmentId, currentPage:pageObj.currentPage, taskType:pageObj.taskType, 
-			keyword:pageObj.keyword+'|'+pageObj.field, orderType:pageObj.orderType, targetPerson:targetPerson}, function(data) {
-			var obj = jQuery.parseJSON(data);
-			var json = obj.response;
-			var renderUrl = json["renderUrl"];
-			window.location = renderUrl;
-		});
 	} else if(pageObj.taskType == "app_inbox_employee"){
 		url = "<%= portletPath %><%= NavigationPortletProperties.APPOINTMENTS_NEW_APPOINTMENT %>" + "?FormID=" + appointmentId;
 		window.location = url;			

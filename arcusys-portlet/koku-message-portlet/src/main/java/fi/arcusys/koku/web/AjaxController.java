@@ -1,29 +1,19 @@
 package fi.arcusys.koku.web;
 
 import static fi.arcusys.koku.common.util.Constants.ATTR_APPLICATION_ID;
-import static fi.arcusys.koku.common.util.Constants.ATTR_APPOIMENT_ID;
 import static fi.arcusys.koku.common.util.Constants.ATTR_AUTHORIZATION_ID;
-import static fi.arcusys.koku.common.util.Constants.ATTR_CONSENT_ID;
 import static fi.arcusys.koku.common.util.Constants.ATTR_CURRENT_PAGE;
 import static fi.arcusys.koku.common.util.Constants.ATTR_KEYWORD;
 import static fi.arcusys.koku.common.util.Constants.ATTR_KOKU_USER;
-import static fi.arcusys.koku.common.util.Constants.ATTR_MESSAGE_ID;
 import static fi.arcusys.koku.common.util.Constants.ATTR_MY_ACTION;
 import static fi.arcusys.koku.common.util.Constants.ATTR_ORDER_TYPE;
 import static fi.arcusys.koku.common.util.Constants.ATTR_REQUEST_ID;
-import static fi.arcusys.koku.common.util.Constants.ATTR_RESPONSE_ID;
-import static fi.arcusys.koku.common.util.Constants.ATTR_TARGET_PERSON;
 import static fi.arcusys.koku.common.util.Constants.ATTR_TASK_TYPE;
 import static fi.arcusys.koku.common.util.Constants.ATTR_USERNAME;
 import static fi.arcusys.koku.common.util.Constants.ATTR_USER_ID;
 import static fi.arcusys.koku.common.util.Constants.JSON_RENDER_URL;
 import static fi.arcusys.koku.common.util.Constants.JSON_RESULT;
 import static fi.arcusys.koku.common.util.Constants.MY_ACTION_SHOW_APPLICATION_KINDERGARTEN;
-import static fi.arcusys.koku.common.util.Constants.MY_ACTION_SHOW_APPOINTMENT;
-import static fi.arcusys.koku.common.util.Constants.MY_ACTION_SHOW_CONSENT;
-import static fi.arcusys.koku.common.util.Constants.MY_ACTION_SHOW_MESSAGE;
-import static fi.arcusys.koku.common.util.Constants.MY_ACTION_SHOW_REQUEST;
-import static fi.arcusys.koku.common.util.Constants.MY_ACTION_SHOW_REQUEST_RESPONSE;
 import static fi.arcusys.koku.common.util.Constants.MY_ACTION_SHOW_TIPY;
 import static fi.arcusys.koku.common.util.Constants.MY_ACTION_SHOW_WARRANT;
 import static fi.arcusys.koku.common.util.Constants.RESPONSE;
@@ -484,38 +474,6 @@ public class AjaxController extends AbstractController {
 		final JSONObject jsonModel = new JSONObject();
 		jsonModel.put(JSON_RENDER_URL, renderUrlString);
 		modelmap.addAttribute(RESPONSE, jsonModel);		
-	}
-	
-	
-	/**
-	 * Creates appointment render url mainly for gatein portal, and keeps the page
-	 * parameters such as page id, task type, keyword
-	 * @param appointmentId appointment id
-	 * @param currentPage current page
-	 * @param taskType request task type
-	 * @param keyword keyword
-	 * @param orderType order type
-	 * @param modelmap ModelMap
-	 * @param request PortletRequest
-	 * @param response ResourceResponse
-	 * @return Appointment render url in Json format
-	 */
-	@ResourceMapping(value = "createAppointmentRenderUrl")
-	public String createAppointmentRenderUrl(
-			@RequestParam(value = "appointmentId") String appointmentId,
-			@RequestParam(value = "currentPage") String currentPage,
-			@RequestParam(value = "taskType") String taskType,
-			@RequestParam(value = "keyword") String keyword,
-			@RequestParam(value = "orderType") String orderType,
-			@RequestParam(value = "targetPerson", required=false) String targetPerson,
-			ModelMap modelmap, PortletRequest request, ResourceResponse response) {
-		
-		final PortletURL renderUrlObj = getPortletUrl(response, currentPage, taskType, keyword, orderType);
-		renderUrlObj.setParameter( ATTR_MY_ACTION, MY_ACTION_SHOW_APPOINTMENT);
-		renderUrlObj.setParameter( ATTR_APPOIMENT_ID, appointmentId);
-		renderUrlObj.setParameter( ATTR_TARGET_PERSON, targetPerson);
-		generateRenderUrl(renderUrlObj, modelmap);
-		return AjaxViewResolver.AJAX_PREFIX;
 	}
 	
 	/**

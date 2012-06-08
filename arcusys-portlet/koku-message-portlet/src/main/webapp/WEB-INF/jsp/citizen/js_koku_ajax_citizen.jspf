@@ -41,19 +41,15 @@ KokuAjaxCitizen.prototype.showAppointment = function(index) {
 	var url="";
 	
 	if (pageObj.taskType == "<%= Constants.TASK_TYPE_APPOINTMENT_RESPONSE_EMPLOYEE%>" 
-		|| pageObj.taskType == "<%= Constants.TASK_TYPE_APPOINTMENT_RESPONSE_CITIZEN%>"
-		|| pageObj.taskType == "<%= Constants.TASK_TYPE_APPOINTMENT_RESPONSE_CITIZEN_OLD%>") {
+	 || pageObj.taskType == "<%= Constants.TASK_TYPE_APPOINTMENT_RESPONSE_CITIZEN%>"
+	 || pageObj.taskType == "<%= Constants.TASK_TYPE_APPOINTMENT_RESPONSE_CITIZEN_OLD%>") {
 		
-		url = this.renderUrls.appointmentRenderUrl;
+		url = this.renderUrls.appointmentUrl;
 		url = this.formatUrl(url);
-		
-		jQuery.post(url, {appointmentId:appointmentId, currentPage:pageObj.currentPage, taskType:pageObj.taskType, 
-			keyword:pageObj.keyword+'|'+pageObj.field, orderType:pageObj.orderType, targetPerson:targetPerson}, function(data) {
-			var obj = jQuery.parseJSON(data);
-			var json = obj.response;
-			var renderUrl = json["renderUrl"];
-			window.location = renderUrl;
-		});
+		url += "&appointmentId=" + appointmentId;
+		url += "&taskType=" + pageObj.taskType;
+		url += "&targetPerson=" + targetPerson;
+		window.location = url;
 	} else if(pageObj.taskType == "app_inbox_employee") {
 		url = "<%= portletPath %><%= NavigationPortletProperties.APPOINTMENTS_NEW_APPOINTMENT %>" + "?FormID=" + appointmentId;
 		window.location = url;

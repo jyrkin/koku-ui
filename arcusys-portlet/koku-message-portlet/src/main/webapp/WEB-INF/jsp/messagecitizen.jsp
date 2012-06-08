@@ -47,8 +47,9 @@
 	<portlet:param name="action" value="toConsent" />
 </portlet:actionURL>
 
-<portlet:resourceURL var="appointmentRenderURL" id="createAppointmentRenderUrl">
-</portlet:resourceURL> 
+<portlet:actionURL var="appointmentActionURL">
+	<portlet:param name="action" value="toAppointment" />
+</portlet:actionURL>
 
 <portlet:resourceURL var="warrantRenderURL" id="createWarrantRenderUrl">
 </portlet:resourceURL>
@@ -87,7 +88,7 @@
 	 	messageUrl : "<%= messageActionURL %>",
 	 	responseUrl :  "<%= responseActionURL %>",
 	 	consentUrl : 	"<%= consentActionURL %>",
-	 	appointmentRenderUrl :  "<%= appointmentRenderURL %>",
+	 	appointmentUrl :  "<%= appointmentActionURL %>",
 	 	warrantRenderUrl : "<%= warrantRenderURL %>"
 	};
 
