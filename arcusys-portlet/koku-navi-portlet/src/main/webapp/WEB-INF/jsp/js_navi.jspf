@@ -193,8 +193,8 @@ function ajaxUpdate() {
 				element.html("");
 			}
 		};
-		var looraServiceApplicationsTotal = parseInt(daycareApplicationTotal) + parseInt(daycarePaymentTotal) + parseInt(daycarePaymentModTotal) + parseInt(daycarePaymentDiscountTotal) + parseInt(daycareTerminationTotal)
-		updateMsgCounter('#inbox_num_super', parseInt(inboxNum, 10) + parseInt(archiveInboxNum, 10));
+		var looraServiceApplicationsTotal = daycareApplicationTotal + daycarePaymentTotal + daycarePaymentModTotal + daycarePaymentDiscountTotal + daycareTerminationTotal
+		updateMsgCounter('#inbox_num_super', inboxNum + archiveInboxNum);
 		updateMsgCounter('#inbox_num', inboxNum);
 		updateMsgCounter('#archive_inbox_num_super', archiveInboxNum);
 		updateMsgCounter('#archive_inbox_num', archiveInboxNum);
@@ -241,7 +241,7 @@ function ajaxUpdate() {
 							json["<%=Constants.JSON_APPOINTMENT_TOTAL %>"],
 							json["<%=Constants.JSON_REQUESTS_TOTAL %>"],
 							json["<%=Constants.JSON_INFO_REQUESTS_TOTAL %>"],
-							"10", "10", "10", "10", "10", "10"
+							10, 10, 10, 10, 10, 10
 						);
 				}
 				naviRefreshTimer = setTimeout('ajaxUpdate()', 30000);		

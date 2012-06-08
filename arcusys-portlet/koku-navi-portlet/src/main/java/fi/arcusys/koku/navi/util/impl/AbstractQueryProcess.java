@@ -41,7 +41,7 @@ public abstract class AbstractQueryProcess implements QueryProcess {
 		return messageHandle.getUnreadMessages(userId, folderType);
 	}
 	
-	/*
+	/**
 	 * Returns total amount of tasks 
 	 * 
 	 * @param userId

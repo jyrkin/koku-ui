@@ -6,6 +6,7 @@ import static fi.arcusys.koku.common.util.Constants.JSON_CONSENTS_TOTAL;
 import static fi.arcusys.koku.common.util.Constants.JSON_INBOX;
 import static fi.arcusys.koku.common.util.Constants.JSON_LOGIN_STATUS;
 import static fi.arcusys.koku.common.util.Constants.JSON_REQUESTS_TOTAL;
+import static fi.arcusys.koku.common.util.Constants.JSON_DAYCARE_HOLIDAYS_TOTAL;
 import static fi.arcusys.koku.common.util.Constants.TOKEN_STATUS_INVALID;
 import static fi.arcusys.koku.common.util.Constants.TOKEN_STATUS_VALID;
 import static fi.arcusys.koku.common.util.Properties.RECEIVED_REQUESTS_FILTER;
@@ -38,21 +39,23 @@ public class QueryProcessCitizenImpl extends AbstractQueryProcess {
 		} else {			
 			try {
 				jsonModel.put(JSON_LOGIN_STATUS, TOKEN_STATUS_VALID);			
-				jsonModel.put(JSON_INBOX, String.valueOf(getNewMessageNum(userId, KokuFolderType.INBOX)));
-				jsonModel.put(JSON_ARCHIVE_INBOX, String.valueOf(getNewMessageNum(userId, KokuFolderType.ARCHIVE_INBOX)));
-				jsonModel.put(JSON_CONSENTS_TOTAL, String.valueOf(getTotalAssignedConsents(userId)));
-				jsonModel.put(JSON_APPOINTMENT_TOTAL, String.valueOf(getTotalAssignedAppointments(userId)));
+				jsonModel.put(JSON_INBOX, getNewMessageNum(userId, KokuFolderType.INBOX));
+				jsonModel.put(JSON_ARCHIVE_INBOX, getNewMessageNum(userId, KokuFolderType.ARCHIVE_INBOX));
+				jsonModel.put(JSON_CONSENTS_TOTAL, getTotalAssignedConsents(userId));
+				jsonModel.put(JSON_APPOINTMENT_TOTAL, getTotalAssignedAppointments(userId));
+				//jsonModel.put(JSON_DAYCARE_HOLIDAYS_TOTAL, getTotalTasks(userId, token, TODO_DAYCARE_FILTER))
+				//etc. work in progress, blocked until actually implemented in forms, KOKULT-291
 				try {
-					jsonModel.put(JSON_REQUESTS_TOTAL, String.valueOf(getTotalTasks(userId, token, RECEIVED_REQUESTS_FILTER)));
+					jsonModel.put(JSON_REQUESTS_TOTAL, getTotalTasks(userId, token, RECEIVED_REQUESTS_FILTER));
 				} catch (Exception e) {
 					LOG.error("Coulnd't get TotalRequests (Valtakirja yht.). See following errorMsg: "+e.getMessage(), e);
 				}
 			} catch (KokuServiceException kse) {
 				LOG.error("Failed to get count(s) (message/archive/consensts/appointments. ", kse);
-				jsonModel.put(JSON_INBOX, "0");
-				jsonModel.put(JSON_ARCHIVE_INBOX, "0");
-				jsonModel.put(JSON_CONSENTS_TOTAL, "0");
-				jsonModel.put(JSON_APPOINTMENT_TOTAL, "0");
+				jsonModel.put(JSON_INBOX, 0);
+				jsonModel.put(JSON_ARCHIVE_INBOX, 0);
+				jsonModel.put(JSON_CONSENTS_TOTAL, 0);
+				jsonModel.put(JSON_APPOINTMENT_TOTAL, 0);
 			}			
 		}
 		return jsonModel;

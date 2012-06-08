@@ -164,6 +164,7 @@ public final class Constants {
 	public static final String JSON_ARCHIVE_INBOX							= "archive_inbox";
 	public static final String JSON_CONSENTS_TOTAL							= "consentsTotal";
 	public static final String JSON_APPOINTMENT_TOTAL						= "appointmentsTotal";
+	public static final String JSON_DAYCARE_HOLIDAYS_TOTAL					= "daycareHolidaysTotal";
 	public static final String JSON_REQUESTS_TOTAL							= "requestsTotal";
 	public static final String JSON_INFO_REQUESTS_TOTAL						= "infoRequestsTotal";
 	public static final String JSON_NAVI_STATE								= "navigationState";
