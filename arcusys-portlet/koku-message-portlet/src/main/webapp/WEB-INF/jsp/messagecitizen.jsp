@@ -28,9 +28,6 @@
 	<portlet:param name="myaction" value="home" />
 </portlet:renderURL>
 
-
-<!-- For gatein Portal -->
-
 <portlet:actionURL var="messageActionURL">
 	<portlet:param name="action" value="toMessage" />
 </portlet:actionURL>
@@ -51,8 +48,9 @@
 	<portlet:param name="action" value="toAppointment" />
 </portlet:actionURL>
 
-<portlet:resourceURL var="warrantRenderURL" id="createWarrantRenderUrl">
-</portlet:resourceURL>
+<portlet:actionURL var="warrantActionURL">
+	<portlet:param name="action" value="toWarrant" />
+</portlet:actionURL>
 
 
 <%-- Do not move navigation helper inside <script> tags --%>
@@ -89,7 +87,7 @@
 	 	responseUrl :  "<%= responseActionURL %>",
 	 	consentUrl : 	"<%= consentActionURL %>",
 	 	appointmentUrl :  "<%= appointmentActionURL %>",
-	 	warrantRenderUrl : "<%= warrantRenderURL %>"
+	 	warrantUrl : "<%= warrantActionURL %>"
 	};
 
 	<%-- Loading JS from separate jspf files instead of .js files. Thanks to "ugly" Gatein portal. --%>

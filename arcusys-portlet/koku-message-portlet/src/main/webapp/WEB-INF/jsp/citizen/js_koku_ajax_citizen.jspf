@@ -90,13 +90,9 @@ KokuAjaxCitizen.prototype.showConsent = function(index) {
 
 KokuAjaxCitizen.prototype.showWarrant = function(index) {
 	var authorizationId = pageObj.tasks[index]['authorizationId'];	
-	url = this.renderUrls.warrantRenderUrl;
+	url = this.renderUrls.warrantUrl;
 	url = this.formatUrl(url);
-	jQuery.post(url, {authorizationId:authorizationId, currentPage:pageObj.currentPage, taskType:pageObj.taskType, 
-		keyword:pageObj.keyword+'|'+pageObj.field, orderType:pageObj.orderType}, function(data) {
-		var obj = jQuery.parseJSON(data);
-		var json = obj.response;
-		var renderUrl = json["renderUrl"];
-		window.location = renderUrl;
-	});
+	url += "&authorizationId="+authorizationId;
+	url += "&taskType="+pageObj.taskType;
+	window.location = url;
 };

@@ -477,36 +477,6 @@ public class AjaxController extends AbstractController {
 	}
 	
 	/**
-	 * Creates warrant render url mainly for gatein portal, and keeps the page
-	 * parameters such as page id, task type, keyword
-	 * 
-	 * @param authorizationId authorization id
-	 * @param currentPage current page
-	 * @param taskType request task type
-	 * @param keyword keyword
-	 * @param orderType order type
-	 * @param modelmap ModelMap
-	 * @param request PortletRequest
-	 * @param response ResourceResponse
-	 * @return Consent render url in Json format
-	 */
-	@ResourceMapping(value = "createWarrantRenderUrl")
-	public String createWarrantRenderUrl(
-			@RequestParam(value = "authorizationId") String authorizationId,
-			@RequestParam(value = "currentPage") String currentPage,
-			@RequestParam(value = "taskType") String taskType,
-			@RequestParam(value = "keyword") String keyword,
-			@RequestParam(value = "orderType") String orderType,
-			ModelMap modelmap, PortletRequest request, ResourceResponse response) {
-
-		final PortletURL renderUrlObj = getPortletUrl(response, currentPage, taskType, keyword, orderType);
-		renderUrlObj.setParameter( ATTR_MY_ACTION, MY_ACTION_SHOW_WARRANT);
-		renderUrlObj.setParameter( ATTR_AUTHORIZATION_ID, authorizationId);
-		generateRenderUrl(renderUrlObj, modelmap);
-		return AjaxViewResolver.AJAX_PREFIX;
-	}
-	
-	/**
 	 * Creates info (tietopyyntö) render url mainly for gatein portal, and keeps the page
 	 * parameters such as page id, task type, keyword
 	 * 

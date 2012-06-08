@@ -28,14 +28,6 @@
 	<portlet:param name="myaction" value="home" />
 </portlet:renderURL>
 
-<portlet:renderURL var="citizenWarrantURL" windowState="<%= WindowState.NORMAL.toString() %>" >
-	<portlet:param name="myaction" value="showWarrant" />
-</portlet:renderURL>
-
-<portlet:renderURL var="tipyURL" windowState="<%= WindowState.NORMAL.toString() %>" >
-	<portlet:param name="myaction" value="showTipy" />
-</portlet:renderURL>
-
 <portlet:renderURL var="applicationKindergartenURL" windowState="<%= WindowState.NORMAL.toString() %>" >
 	<portlet:param name="myaction" value="showApplicationKindergarten" />
 </portlet:renderURL>
@@ -64,8 +56,9 @@
 	<portlet:param name="action" value="toTipy" />
 </portlet:actionURL>
 
-<portlet:resourceURL var="warrantRenderURL" id="createWarrantRenderUrl">
-</portlet:resourceURL>
+<portlet:actionURL var="warrantActionURL">
+	<portlet:param name="action" value="toWarrant" />
+</portlet:actionURL>
 
 <portlet:resourceURL var="kindergartenRenderURL" id="createApplicationKindergartenRenderUrl">
 </portlet:resourceURL>
@@ -113,7 +106,7 @@
 	 	appointmentUrl : "<%= appointmentActionURL %>",
 	 	responseUrl :  "<%= responseActionURL %>",
 		tipyUrl : "<%= tipyActionURL %>",
-		citizenWarrantUrl : "<%= citizenWarrantURL %>",
+		warrantUrl : "<%= warrantActionURL %>",
 		applicationKindergartenUrl : "<%= applicationKindergartenURL %>"
 	};
 	
