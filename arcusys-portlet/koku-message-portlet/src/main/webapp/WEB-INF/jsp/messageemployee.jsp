@@ -28,10 +28,6 @@
 	<portlet:param name="myaction" value="home" />
 </portlet:renderURL>
 
-<portlet:renderURL var="applicationKindergartenURL" windowState="<%= WindowState.NORMAL.toString() %>" >
-	<portlet:param name="myaction" value="showApplicationKindergarten" />
-</portlet:renderURL>
-
 <portlet:actionURL var="messageActionURL">
 	<portlet:param name="action" value="toMessage" />
 </portlet:actionURL>
@@ -60,9 +56,9 @@
 	<portlet:param name="action" value="toWarrant" />
 </portlet:actionURL>
 
-<portlet:resourceURL var="kindergartenRenderURL" id="createApplicationKindergartenRenderUrl">
-</portlet:resourceURL>
-
+<portlet:actionURL var="applicationDaycareURL">
+	<portlet:param name="action" value="toApplications" />
+</portlet:actionURL>
 
 <%-- Do not move navigation helper inside <script> tags --%>
 <%@ include file="js_koku_navigation_helper.jspf" %>
@@ -107,7 +103,7 @@
 	 	responseUrl :  "<%= responseActionURL %>",
 		tipyUrl : "<%= tipyActionURL %>",
 		warrantUrl : "<%= warrantActionURL %>",
-		applicationKindergartenUrl : "<%= applicationKindergartenURL %>"
+		applicationDaycareUrl : "<%= applicationDaycareURL %>"
 	};
 	
 	<%-- Loading JS from separate jspf files. --%>

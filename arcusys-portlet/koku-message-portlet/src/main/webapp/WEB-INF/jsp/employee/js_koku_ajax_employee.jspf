@@ -106,17 +106,13 @@ KokuAjaxEmployee.prototype.showTipy = function(index) {
 	window.location = url;
 };
 
-KokuAjaxEmployee.prototype.showApplicationKindergarten = function(index) {		
+KokuAjaxEmployee.prototype.showApplicationKindergarten = function(index) {
 	var applicationId = pageObj.tasks[index]['applicationId'];
-	var url = this.renderUrls.kindergartenRenderUrl;
+	url = this.renderUrls.applicationDaycareUrl;
 	url = this.formatUrl(url);
-	jQuery.post(url, {applicationId:applicationId, currentPage:pageObj.currentPage, taskType:pageObj.taskType, 
-		keyword:pageObj.keyword+'|'+pageObj.field, orderType:pageObj.orderType}, function(data) {
-		var obj = jQuery.parseJSON(data);
-		var json = obj.response;
-		var renderUrl = json["renderUrl"];
-		window.location = renderUrl;
-	});
+	url += "&applicationId="+applicationId;
+	url += "&taskType="+pageObj.taskType;
+	window.location = url;
 };
 
 	
