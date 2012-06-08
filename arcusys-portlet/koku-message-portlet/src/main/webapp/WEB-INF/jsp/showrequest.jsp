@@ -140,6 +140,12 @@
 								</td>
 							</tr>
 						</c:forEach>
+						<tr class="comment">
+							<td colspan="2"><span class="request-c-1"><spring:message code="response.comment" /></span>:</td>
+						</tr>
+						<tr>
+							<td colspan="2"><c:out value="${response.comment}" /></td>
+						</tr>
 					</table>
 				</c:forEach>
 
