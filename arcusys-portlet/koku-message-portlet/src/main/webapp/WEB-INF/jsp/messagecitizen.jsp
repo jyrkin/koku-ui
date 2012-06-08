@@ -32,10 +32,6 @@
 	<portlet:param name="action" value="toMessage" />
 </portlet:actionURL>
 
-<portlet:actionURL var="requestActionURL">
-	<portlet:param name="action" value="toRequest" />
-</portlet:actionURL>
-
 <portlet:actionURL var="responseActionURL">
 	<portlet:param name="action" value="toResponse" />
 </portlet:actionURL>

@@ -11,54 +11,6 @@ function KokuAjaxCitizen(renderUrls) {
 	KokuAjax.call(this, renderUrls);
 };
 
-
-// Creates a renderURL by ajax, to show the detailed message page 
-KokuAjaxCitizen.prototype.showMessage = function(messageId) {
-	var url = this.renderUrls.messageUrl;
-	url = this.formatUrl(url);
-	url += "&messageId="+messageId;
-	window.location = url;	
-};
-	
-//Creates a renderURL by ajax, to show the detailed request page
-KokuAjaxCitizen.prototype.showResponse = function(index) {
-	
-	var task = pageObj.tasks[index];
-	var responseId = task["responseId"];	
-	var url = this.renderUrls.responseUrl;	
-	url = this.formatUrl(url);
-	url += "&responseId="+responseId;
-	url += "&taskType="+pageObj.taskType;
-	window.location = url;
-};
-
-//Creates a renderURL by ajax,to show the detailed appointment page
-KokuAjaxCitizen.prototype.showAppointment = function(index) {
-
-	var task = pageObj.tasks[index];
-	var appointmentId = task["appointmentId"];
-	var targetPerson = task["targetPersonUser"]["uid"];
-	var url="";
-	
-	if (pageObj.taskType == "<%= Constants.TASK_TYPE_APPOINTMENT_RESPONSE_EMPLOYEE%>" 
-	 || pageObj.taskType == "<%= Constants.TASK_TYPE_APPOINTMENT_RESPONSE_CITIZEN%>"
-	 || pageObj.taskType == "<%= Constants.TASK_TYPE_APPOINTMENT_RESPONSE_CITIZEN_OLD%>") {
-		
-		url = this.renderUrls.appointmentUrl;
-		url = this.formatUrl(url);
-		url += "&appointmentId=" + appointmentId;
-		url += "&taskType=" + pageObj.taskType;
-		url += "&targetPerson=" + targetPerson;
-		window.location = url;
-	} else if(pageObj.taskType == "app_inbox_employee") {
-		url = "<%= portletPath %><%= NavigationPortletProperties.APPOINTMENTS_NEW_APPOINTMENT %>" + "?FormID=" + appointmentId;
-		window.location = url;
-	} else if(pageObj.taskType == "app_inbox_citizen") {
-		url = "<%= portletPath %><%= NavigationPortletProperties.CONSENTS_ANSWER_TO_CONSENT %>" + "?FormID=" + appointmentId + "&arg1=" + targetPerson;	
-		window.location = url;
-	}
-};
-
 //Creates a renderURL by ajax,to show the detailed consent page
 KokuAjaxCitizen.prototype.showConsent = function(index) {
 
@@ -86,13 +38,4 @@ KokuAjaxCitizen.prototype.showConsent = function(index) {
 		url = "<%= portletPath %><%= NavigationPortletProperties.CONSENTS_NEW_CONSENT %>" + "?FormID=" + consentId;
 		window.location = url;			
 	}
-};
-
-KokuAjaxCitizen.prototype.showWarrant = function(index) {
-	var authorizationId = pageObj.tasks[index]['authorizationId'];	
-	url = this.renderUrls.warrantUrl;
-	url = this.formatUrl(url);
-	url += "&authorizationId="+authorizationId;
-	url += "&taskType="+pageObj.taskType;
-	window.location = url;
 };
