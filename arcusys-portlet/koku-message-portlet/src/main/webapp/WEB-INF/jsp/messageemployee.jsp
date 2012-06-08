@@ -60,10 +60,11 @@
 	<portlet:param name="action" value="toAppointment" />
 </portlet:actionURL>
 
-<portlet:resourceURL var="warrantRenderURL" id="createWarrantRenderUrl">
-</portlet:resourceURL>
+<portlet:actionURL var="tipyActionURL">
+	<portlet:param name="action" value="toTipy" />
+</portlet:actionURL>
 
-<portlet:resourceURL var="tipyRenderURL" id="createTipyRenderUrl">
+<portlet:resourceURL var="warrantRenderURL" id="createWarrantRenderUrl">
 </portlet:resourceURL>
 
 <portlet:resourceURL var="kindergartenRenderURL" id="createApplicationKindergartenRenderUrl">
@@ -111,8 +112,8 @@
 	 	consentUrl : "<%= consentActionURL %>",
 	 	appointmentUrl : "<%= appointmentActionURL %>",
 	 	responseUrl :  "<%= responseActionURL %>",
+		tipyUrl : "<%= tipyActionURL %>",
 		citizenWarrantUrl : "<%= citizenWarrantURL %>",
-		tipyUrl : "<%= tipyURL %>",
 		applicationKindergartenUrl : "<%= applicationKindergartenURL %>"
 	};
 	

@@ -506,37 +506,6 @@ public class AjaxController extends AbstractController {
 		return AjaxViewResolver.AJAX_PREFIX;
 	}
 	
-	
-	/**
-	 * Creates info (tietopyyntö) render url mainly for gatein portal, and keeps the page
-	 * parameters such as page id, task type, keyword
-	 * 
-	 * @param authorizationId authorization id
-	 * @param currentPage current page
-	 * @param taskType request task type
-	 * @param keyword keyword
-	 * @param orderType order type
-	 * @param modelmap ModelMap
-	 * @param request PortletRequest
-	 * @param response ResourceResponse
-	 * @return Consent render url in Json format
-	 */
-	@ResourceMapping(value = "createTipyRenderUrl")
-	public String createTipyRenderUrl(
-			@RequestParam(value = "requestId") String requestId,
-			@RequestParam(value = "currentPage") String currentPage,
-			@RequestParam(value = "taskType") String taskType,
-			@RequestParam(value = "keyword") String keyword,
-			@RequestParam(value = "orderType") String orderType,
-			ModelMap modelmap, PortletRequest request, ResourceResponse response) {
-		
-		final PortletURL renderUrlObj = getPortletUrl(response, currentPage, taskType, keyword, orderType);
-		renderUrlObj.setParameter( ATTR_MY_ACTION, MY_ACTION_SHOW_TIPY);
-		renderUrlObj.setParameter( ATTR_REQUEST_ID, requestId);
-		generateRenderUrl(renderUrlObj, modelmap);
-		return AjaxViewResolver.AJAX_PREFIX;
-	}
-	
 	/**
 	 * Creates info (tietopyyntö) render url mainly for gatein portal, and keeps the page
 	 * parameters such as page id, task type, keyword

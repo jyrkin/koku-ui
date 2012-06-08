@@ -103,15 +103,11 @@ KokuAjaxEmployee.prototype.showWarrant = function(index) {
 
 KokuAjaxEmployee.prototype.showTipy = function(index) {	
 	var requestId = pageObj.tasks[index]['requestId'];
-	var url = this.renderUrls.tipyRenderUrl;
+	url = this.renderUrls.tipyUrl;
 	url = this.formatUrl(url);
-	jQuery.post(url, {requestId:requestId, currentPage:pageObj.currentPage, taskType:pageObj.taskType, 
-		keyword:pageObj.keyword+'|'+pageObj.field, orderType:pageObj.orderType}, function(data) {
-		var obj = jQuery.parseJSON(data);
-		var json = obj.response;
-		var renderUrl = json["renderUrl"];
-		window.location = renderUrl;
-	});
+	url += "&requestId="+requestId;
+	url += "&taskType="+pageObj.taskType;
+	window.location = url;	
 };
 
 KokuAjaxEmployee.prototype.showApplicationKindergarten = function(index) {		
