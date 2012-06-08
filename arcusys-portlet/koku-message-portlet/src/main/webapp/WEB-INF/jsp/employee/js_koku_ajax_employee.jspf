@@ -76,16 +76,11 @@ KokuAjaxEmployee.prototype.showConsent = function(index) {
 	var url="";
 	
 	if (pageObj.taskType == "<%= Constants.TASK_TYPE_CONSENT_CITIZEN_CONSENTS%>" || pageObj.taskType == "<%= Constants.TASK_TYPE_CONSENT_EMPLOYEE_CONSENTS%>") {		 	
-		url = this.renderUrls.consentRenderUrl;
+		url = this.renderUrls.consentUrl;
 		url = this.formatUrl(url);
-		
-		jQuery.post(url, {consentId:consentId, currentPage:pageObj.currentPage, taskType:pageObj.taskType, 
-			keyword:pageObj.keyword+'|'+pageObj.field, orderType:pageObj.orderType}, function(data) {
-			var obj = jQuery.parseJSON(data);
-			var json = obj.response;
-			var renderUrl = json["renderUrl"];
-			window.location = renderUrl;
-		});
+		url += "&consentId="+consentId;
+		url += "&taskType="+pageObj.taskType;
+		window.location = url;
 			
 	} else if (pageObj.taskType == "<%= Constants.TASK_TYPE_CONSENT_ASSIGNED_CITIZEN%>") {
 		url = "<%= portletPath %><%= NavigationPortletProperties.CONSENTS_NEW_CONSENT %>" + "?FormID=" + consentId;

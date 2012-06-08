@@ -64,11 +64,12 @@
 	<portlet:param name="action" value="toResponse" />
 </portlet:actionURL>
 
+<portlet:actionURL var="consentActionURL">
+	<portlet:param name="action" value="toConsent" />
+</portlet:actionURL>
+
 <portlet:resourceURL var="appointmentRenderURL" id="createAppointmentRenderUrl">
 </portlet:resourceURL> 
-
-<portlet:resourceURL var="consentRenderURL" id="createConsentRenderUrl">
-</portlet:resourceURL>
 
 <portlet:resourceURL var="warrantRenderURL" id="createWarrantRenderUrl">
 </portlet:resourceURL>
@@ -118,12 +119,12 @@
 	 	/* Urls JBoss Loora  (portlet:resourceURL) */
 	 	messageUrl : "<%= messageActionURL %>",
 	 	requestUrl :"<%= requestActionURL %>",
+	 	consentUrl : "<%= consentActionURL %>",
 	 	appointmentUrl : "<%= appointmentURL %>",
 	 	responseUrl :  "<%= responseActionURL %>",
-	 	consentUrl : "<%= consentURL %>",
 		citizenWarrantUrl : "<%= citizenWarrantURL %>",
 		tipyUrl : "<%= tipyURL %>",
-		applicationKindergartenUrl : "<%= applicationKindergartenURL %>",
+		applicationKindergartenUrl : "<%= applicationKindergartenURL %>"
 	};
 	
 	<%-- Loading JS from separate jspf files. --%>

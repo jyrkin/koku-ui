@@ -1,9 +1,20 @@
 package fi.arcusys.koku.web;
 
 
+import static fi.arcusys.koku.common.util.Constants.ATTR_CONSENT_ID;
+import static fi.arcusys.koku.common.util.Constants.ATTR_MY_ACTION;
+import static fi.arcusys.koku.common.util.Constants.ATTR_TASK_TYPE;
+import static fi.arcusys.koku.common.util.Constants.ATTR_USERNAME;
+import static fi.arcusys.koku.common.util.Constants.ATTR_USER_ID;
+import static fi.arcusys.koku.common.util.Constants.MY_ACTION_SHOW_CONSENT;
+import static fi.arcusys.koku.common.util.Constants.TASK_TYPE_CONSENT_CITIZEN_CONSENTS;
+import static fi.arcusys.koku.common.util.Constants.TASK_TYPE_CONSENT_CITIZEN_CONSENTS_OLD;
+import static fi.arcusys.koku.common.util.Constants.TASK_TYPE_CONSENT_EMPLOYEE_CONSENTS;
+import static fi.arcusys.koku.common.util.Constants.VIEW_SHOW_CONSENT;
+
 import javax.annotation.Resource;
+import javax.portlet.ActionResponse;
 import javax.portlet.PortletSession;
-import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
 import org.slf4j.Logger;
@@ -13,6 +24,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.portlet.bind.annotation.ActionMapping;
 import org.springframework.web.portlet.bind.annotation.RenderMapping;
 
 import fi.arcusys.koku.common.exceptions.KokuServiceException;
@@ -21,9 +33,9 @@ import fi.arcusys.koku.common.services.consents.employee.TivaEmployeeServiceHand
 import fi.arcusys.koku.common.services.consents.model.KokuConsent;
 import fi.arcusys.koku.common.services.facades.impl.ResponseStatus;
 import fi.arcusys.koku.common.services.users.UserIdResolver;
+import fi.arcusys.koku.common.util.Constants;
 import fi.arcusys.koku.web.util.ModelWrapper;
 import fi.arcusys.koku.web.util.impl.ModelWrapperImpl;
-import static fi.arcusys.koku.common.util.Constants.*;
 
 /**
  * Shows task form page and store the current query information on the jsp page
@@ -38,6 +50,18 @@ public class ShowConsentController extends AbstractController {
 	
 	@Resource
 	private ResourceBundleMessageSource messageSource;
+	
+	@ActionMapping(params = "action=toConsent")
+	public void actionPageView(
+			PortletSession session,
+			@ModelAttribute(value = "consent") ModelWrapper<KokuConsent> response,
+			@RequestParam(value = "consentId") String consentId,
+			@RequestParam(value = "taskType") String taskType,
+			ActionResponse actionResponse) {
+		actionResponse.setRenderParameter(ATTR_MY_ACTION, MY_ACTION_SHOW_CONSENT);
+		actionResponse.setRenderParameter(ATTR_TASK_TYPE, taskType);
+		actionResponse.setRenderParameter(ATTR_CONSENT_ID, consentId);
+	}
 	
 	/**
 	 * Shows consent page
@@ -62,22 +86,12 @@ public class ShowConsentController extends AbstractController {
 	@ModelAttribute(value = "consent")
 	public ModelWrapper<KokuConsent> model(
 			@RequestParam(value="consentId", required=false) String consentId,
-			@RequestParam String currentPage,
 			@RequestParam String taskType, 
-			@RequestParam String keyword, 
-			@RequestParam String orderType,
-			RenderRequest request) {
-
-		// store parameters in session for returning page from form page	
-		request.getPortletSession().setAttribute(ATTR_CURRENT_PAGE, currentPage, PortletSession.APPLICATION_SCOPE);
-		request.getPortletSession().setAttribute(ATTR_TASK_TYPE, taskType, PortletSession.APPLICATION_SCOPE);
-		request.getPortletSession().setAttribute(ATTR_KEYWORD, keyword, PortletSession.APPLICATION_SCOPE);
-		request.getPortletSession().setAttribute(ATTR_ORDER_TYPE, orderType, PortletSession.APPLICATION_SCOPE);
+			PortletSession portletSession) {
 		
 		ModelWrapper<KokuConsent> model = null;
 		KokuConsent consent = null;
 		
-		final PortletSession portletSession = request.getPortletSession();
 		final String username = (String) portletSession.getAttribute(ATTR_USERNAME);
 		String userId = (String) portletSession.getAttribute(ATTR_USER_ID);
 		if (userId == null) {
@@ -108,8 +122,8 @@ public class ShowConsentController extends AbstractController {
 			model = new ModelWrapperImpl<KokuConsent>(consent);
 		} catch (KokuServiceException kse) {
 			LOG.error("Failed to show consent details. consentId: '"+consentId + 
-					"' username: '"+request.getUserPrincipal().getName()+"' taskType: '"+taskType + 
-					"' keyword: '" + keyword + "'", kse);
+					"' username: '"+(String)portletSession.getAttribute(Constants.ATTR_USERNAME)+"' taskType: '"+taskType + 
+					"'", kse);
 			model = new ModelWrapperImpl<KokuConsent>(null, ResponseStatus.FAIL, kse.getErrorcode());
 		}
 		return model;

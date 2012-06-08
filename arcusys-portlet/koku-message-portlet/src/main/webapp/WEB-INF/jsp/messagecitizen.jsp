@@ -43,15 +43,12 @@
 	<portlet:param name="action" value="toResponse" />
 </portlet:actionURL>
 
-
-<portlet:resourceURL var="responseRenderURL" id="createResponseRenderUrl">
-</portlet:resourceURL> 
+<portlet:actionURL var="consentActionURL">
+	<portlet:param name="action" value="toConsent" />
+</portlet:actionURL>
 
 <portlet:resourceURL var="appointmentRenderURL" id="createAppointmentRenderUrl">
 </portlet:resourceURL> 
-
-<portlet:resourceURL var="consentRenderURL" id="createConsentRenderUrl">
-</portlet:resourceURL>
 
 <portlet:resourceURL var="warrantRenderURL" id="createWarrantRenderUrl">
 </portlet:resourceURL>
@@ -89,8 +86,8 @@
 	 	/* RenderUrls GateIn Kunpo (portlet:renderURL) */
 	 	messageUrl : "<%= messageActionURL %>",
 	 	responseUrl :  "<%= responseActionURL %>",
+	 	consentUrl : 	"<%= consentActionURL %>",
 	 	appointmentRenderUrl :  "<%= appointmentRenderURL %>",
-	 	consentRenderUrl : 	"<%= consentRenderURL %>",
 	 	warrantRenderUrl : "<%= warrantRenderURL %>"
 	};
 
