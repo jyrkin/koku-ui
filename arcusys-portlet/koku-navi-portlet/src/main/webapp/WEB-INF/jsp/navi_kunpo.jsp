@@ -132,13 +132,13 @@
 		
 		<!--  ASIOINTIPALVELUT -->
 		<li>
-			<span class="naviLinkHeaderNonLink" onclick="toggleKokuNavi('#kokuNaviApplications', '#kokuNaviTreeNodeIndicatorApplications');">
-				<span class="kokuNaviTreeNodeIndicator" id="kokuNaviTreeNodeIndicatorApplications">+</span>Asiointipalvelut
+			<span class="naviLinkHeaderNonLink" onclick="toggleKokuNavi('#kunpoKokuNaviApplications', '#kokuNaviTreeNodeIndicatorApplications');">
+				<span class="kokuNaviTreeNodeIndicator" id="kokuNaviTreeNodeIndicatorApplications">+</span>Asiointipalvelut<span id="kunpo_service_application_num_super" class="message_num"></span>
 			</span>
-			<ul id="kokuNaviApplications" class="child" style="display:none;">
+			<ul id="kunpoKokuNaviApplications" class="child" style="display:none;">
 				<li>
 					<span onclick="toggleKokuNavi('#kokuNaviApplicationsDayCare', '#kokuNaviTreeNodeIndicatorApplicationsDayCare');" class="naviLinkHeaderNonLink">
-						<span class="kokuNaviTreeNodeIndicator" id="kokuNaviTreeNodeIndicatorApplicationsDayCare">+</span>Palveluhakemukset
+						<span class="kokuNaviTreeNodeIndicator" id="kokuNaviTreeNodeIndicatorApplicationsDayCare">+</span>Palveluhakemukset<span id="kunpo_service_application_num" class="message_num"></span>
 					</span>
 					<ul id="kokuNaviApplicationsDayCare" class="child" style="display:none;">
 						<li id="kid_new"><a href="<%= defaultPath %><%= NavigationPortletProperties.APPLICATIONS_NEW_KINDERGARTEN %>">Päivähoitohakemus</a></li>
@@ -146,7 +146,7 @@
 						<li id="daycareCustomerPaymentModification"><a href="<%= defaultPath %><%= NavigationPortletProperties.APPLICATIONS_DAYCARE_PAYMENT_MODIFY_FORM %>">Päivähoidon asiakasmaksun muutoslomake</a></li>
 						<li id="daycareCustomerTermination"><a href="<%= defaultPath %><%= NavigationPortletProperties.APPLICATIONS_DAYCARE_TERMINATION_FORM %>">Irtisanoutuminen päivähoitopaikasta</a></li>
 						<li id="daycareCustomerDiscount"><a href="<%= defaultPath %><%= NavigationPortletProperties.APPLICATIONS_DAYCARE_PAYMENT_DISCOUNT_FORM %>">Päivähoidon asiakasmaksun alentaminen</a></li>
-						<li id="daycareHolidays"><a href="<%= defaultPath %><%= NavigationPortletProperties.APPLICATIONS_DAYCARE_HOLIDAYS_LIST %>">Loma-aikojen hoitotarvekyselyt</a></li>						
+						<li id="daycareHolidays"><a href="<%= defaultPath %><%= NavigationPortletProperties.APPLICATIONS_DAYCARE_HOLIDAYS_LIST %>">Loma-aikojen hoitotarvekyselyt<span id="daycare_holidays_num" class="message_num"></span></a></li>						
 						<li id="applicationsConfirm"><a href="javascript:void(0)" onclick="navigateToTaskMgrPage('<%= NavigationPortletProperties.APPLICATIONS_NEED_TO_CONFIRM %>')">Hakemusten vahvistuspyynnöt</a></li>
 					</ul>
 				</li>

@@ -172,21 +172,21 @@
 		
 		<!--  ASIOINTIPALVELUT -->
 		<li>
-			<span class="naviLinkHeaderNonLink" onclick="toggleKokuNavi('#kokuNaviApplications', '#kokuNaviTreeNodeIndicatorApplications');">
-				<span class="kokuNaviTreeNodeIndicator" id="kokuNaviTreeNodeIndicatorApplications">+</span>Asiointipalvelut
+			<span class="naviLinkHeaderNonLink" onclick="toggleKokuNavi('#looraKokuNaviApplications', '#kokuNaviTreeNodeIndicatorApplications');">
+				<span class="kokuNaviTreeNodeIndicator" id="kokuNaviTreeNodeIndicatorApplications">+</span>Asiointipalvelut<span id="loora_service_application_num_super" class="message_num"></span>
 			</span>
-			<ul id="kokuNaviApplications" class="child" style="display:none;">
+			<ul id="looraKokuNaviApplications" class="child" style="display:none;">
 				<li>
 					<span class="naviLinkHeaderNonLink" onclick="toggleKokuNavi('#kokuNavikokurApplicationsService', '#kokuNaviTreeNodeIndicatorApplicationsService');">
-						<span class="kokuNaviTreeNodeIndicator" id="kokuNaviTreeNodeIndicatorApplicationsService">+</span>Palveluhakemukset
+						<span class="kokuNaviTreeNodeIndicator" id="kokuNaviTreeNodeIndicatorApplicationsService">+</span>Palveluhakemukset<span id="loora_service_application_num" class="message_num"></span>
 					</span>
 					<ul id="kokuNavikokurApplicationsService" class="child">
 					<li id="<%= Constants.TASK_TYPE_APPLICATION_PROSESSED_BROWSE%>"><a href="javascript:void(0)" onclick="navigateToTaskMgrPage('<%= NavigationPortletProperties.APPLICATIONS_PROCESSED_LIST %>')">Käsitellyt hakemukset</a></li>	
 						<li id="<%= Constants.TASK_TYPE_APPLICATION_KINDERGARTEN_BROWSE%>"><a href="javascript:void(0)" onclick="navigateToPage('<%= Constants.TASK_TYPE_APPLICATION_KINDERGARTEN_BROWSE%>')">Päivähoitohakemukset</a></li>
-						<li id="<%= Constants.TASK_TYPE_APPLICATION_DAYCARE_PAYMENT_BROWSE%>"><a href="javascript:void(0)" onclick="navigateToTaskMgrPage('<%= NavigationPortletProperties.APPLICATIONS_DAYCARE_PAYMENT_BROWSE %>')">Päivähoidon asiakasmaksulomakkeet</a></li>
-						<li id="<%= Constants.TASK_TYPE_APPLICATION_DAYCARE_PAYMENT_MODIFY_BROWSE%>"><a href="javascript:void(0)" onclick="navigateToTaskMgrPage('<%= NavigationPortletProperties.APPLICATIONS_DAYCARE_PAYMENT_MODIFY_BROWSE %>')">Päivähoidon asiakasmaksun muutoslomakkeet</a></li>
-						<li id="<%= Constants.TASK_TYPE_APPLICATION_DAYCARE_PAYMENT_DISCOUNT_BROWSE%>"><a href="javascript:void(0)" onclick="navigateToTaskMgrPage('<%= NavigationPortletProperties.APPLICATIONS_DAYCARE_PAYMENT_DISCOUNT_BROWSE %>')">Päivähoidon asiakasmaksunalentamiset</a></li>						
-						<li id="<%= Constants.TASK_TYPE_APPLICATION_DAYCARE_TERMINATION_BROWSE%>"><a href="javascript:void(0)" onclick="navigateToTaskMgrPage('<%= NavigationPortletProperties.APPLICATIONS_DAYCARE_TERMINATION_BROWSE %>')">Irtisanoutumiset päivähoitopaikasta</a></li>
+						<li id="<%= Constants.TASK_TYPE_APPLICATION_DAYCARE_PAYMENT_BROWSE%>"><a href="javascript:void(0)" onclick="navigateToTaskMgrPage('<%= NavigationPortletProperties.APPLICATIONS_DAYCARE_PAYMENT_BROWSE %>')">Päivähoidon asiakasmaksulomakkeet<span id="daycare_payment_num" class="message_num"></span></a></li>
+						<li id="<%= Constants.TASK_TYPE_APPLICATION_DAYCARE_PAYMENT_MODIFY_BROWSE%>"><a href="javascript:void(0)" onclick="navigateToTaskMgrPage('<%= NavigationPortletProperties.APPLICATIONS_DAYCARE_PAYMENT_MODIFY_BROWSE %>')">Päivähoidon asiakasmaksun muutoslomakkeet<span id="daycare_payment_modify_num" class="message_num"></span></a></li>
+						<li id="<%= Constants.TASK_TYPE_APPLICATION_DAYCARE_PAYMENT_DISCOUNT_BROWSE%>"><a href="javascript:void(0)" onclick="navigateToTaskMgrPage('<%= NavigationPortletProperties.APPLICATIONS_DAYCARE_PAYMENT_DISCOUNT_BROWSE %>')">Päivähoidon asiakasmaksunalentamiset<span id="daycare_payment_discount_num" class="message_num"></span></a></li>						
+						<li id="<%= Constants.TASK_TYPE_APPLICATION_DAYCARE_TERMINATION_BROWSE%>"><a href="javascript:void(0)" onclick="navigateToTaskMgrPage('<%= NavigationPortletProperties.APPLICATIONS_DAYCARE_TERMINATION_BROWSE %>')">Irtisanoutumiset päivähoitopaikasta<span id="daycare_termination_num" class="message_num"></span></a></li>
 						
 						<span class="naviLinkHeaderNonLink" onclick="toggleKokuNavi('#kokuNavikokurApplicationsDaycare', '#kokuNaviTreeNodeIndicatorDaycare');">
 							<span class="kokuNaviTreeNodeIndicator" id="kokuNaviTreeNodeIndicatorDaycare">+</span>Loma-aikojen hoitotarvekysely

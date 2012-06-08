@@ -181,7 +181,7 @@ function ajaxUpdate() {
 	/**
 	 * Updates the new message number to indicate user
 	 */
-	function updateMessageNum(inboxNum, archiveInboxNum, consentsTotal, appointmentsTotal, requestsTotal, infoRequestsTotal) {	
+	function updateMessageNum(inboxNum, archiveInboxNum, consentsTotal, appointmentsTotal, requestsTotal, infoRequestsTotal, daycareApplicationTotal, daycarePaymentTotal, daycarePaymentModTotal, daycarePaymentDiscountTotal, daycareTerminationTotal, daycareHolidaysTotal) {	
 		
 		function updateMsgCounter(elementId, count) {
 			element = jQuery(elementId);
@@ -193,7 +193,7 @@ function ajaxUpdate() {
 				element.html("");
 			}
 		};
-		
+		var looraServiceApplicationsTotal = parseInt(daycareApplicationTotal) + parseInt(daycarePaymentTotal) + parseInt(daycarePaymentModTotal) + parseInt(daycarePaymentDiscountTotal) + parseInt(daycareTerminationTotal)
 		updateMsgCounter('#inbox_num_super', parseInt(inboxNum, 10) + parseInt(archiveInboxNum, 10));
 		updateMsgCounter('#inbox_num', inboxNum);
 		updateMsgCounter('#archive_inbox_num_super', archiveInboxNum);
@@ -207,6 +207,16 @@ function ajaxUpdate() {
 		updateMsgCounter('#consents_num', consentsTotal);
 		updateMsgCounter('#infoRequests_num_super', infoRequestsTotal);
 		updateMsgCounter('#infoRequests_num', infoRequestsTotal);
+		updateMsgCounter('#loora_service_application_num_super', looraServiceApplicationsTotal);
+		updateMsgCounter('#loora_service_application_num', looraServiceApplicationsTotal);
+		updateMsgCounter('#kunpo_service_application_num_super', daycareHolidaysTotal);
+		updateMsgCounter('#kunpo_service_application_num', daycareHolidaysTotal);
+		updateMsgCounter('#daycare_application_num', daycareApplicationTotal);
+		updateMsgCounter('#daycare_payment_num', daycarePaymentTotal);
+		updateMsgCounter('#daycare_payment_modify_num', daycarePaymentModTotal);
+		updateMsgCounter('#daycare_payment_discount_num', daycarePaymentDiscountTotal);
+		updateMsgCounter('#daycare_termination_num', daycareTerminationTotal);
+		updateMsgCounter('#daycare_holidays_num', daycareHolidaysTotal);
 	};
 	
 	var url="<%= ajaxURL %>";
@@ -230,7 +240,8 @@ function ajaxUpdate() {
 							json["<%=Constants.JSON_CONSENTS_TOTAL %>"],
 							json["<%=Constants.JSON_APPOINTMENT_TOTAL %>"],
 							json["<%=Constants.JSON_REQUESTS_TOTAL %>"],
-							json["<%=Constants.JSON_INFO_REQUESTS_TOTAL %>"]
+							json["<%=Constants.JSON_INFO_REQUESTS_TOTAL %>"],
+							"10", "10", "10", "10", "10", "10"
 						);
 				}
 				naviRefreshTimer = setTimeout('ajaxUpdate()', 30000);		
@@ -262,6 +273,18 @@ function getMessageAmountIndicator(toggleId) {
 		case "#kokuNaviConsents":
 			receivedMessagesParentId = "#consents_num_super";
 		break;
+		case "#looraKokuNaviApplications":
+			receivedMessagesParentId = "#loora_service_application_num_super";
+		break;
+		case "#kokuNavikokurApplicationsService":
+			receivedMessagesParentId = "#loora_service_application_num";
+		break;
+		case "#kunpoKokuNaviApplications":
+			receivedMessagesParentId = "#kunpo_service_application_num_super";
+		break;
+		case "#kokuNaviApplicationsDayCare":
+			receivedMessagesParentId = "#kunpo_service_application_num";
+		break;
 	}
 	return receivedMessagesParentId;
 }
@@ -273,7 +296,7 @@ function toggleKokuNavi(toggleId, indicatorId) {
 		openKokuNavi(toggleId, indicatorId);
 	} else {
 		closeKokuNavi(toggleId, indicatorId);
-	}	
+	}
 	updateNavigationStatus(koku_navi_type, kokuNavigationState);
 }
 
