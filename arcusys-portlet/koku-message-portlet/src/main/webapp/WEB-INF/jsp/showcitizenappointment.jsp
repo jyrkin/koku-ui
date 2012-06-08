@@ -7,9 +7,9 @@
 
 <%@ include file="init.jsp"%>
 
-<portlet:renderURL var="homeURL" windowState="<%= WindowState.NORMAL.toString() %>" >
-	<portlet:param name="myaction" value="home" />
-</portlet:renderURL>
+<portlet:actionURL var="homeURL">
+	<portlet:param name="action" value="toHome" />
+</portlet:actionURL>
 
 <portlet:resourceURL var="cancelURL" id="cancelAppointment"></portlet:resourceURL>
 

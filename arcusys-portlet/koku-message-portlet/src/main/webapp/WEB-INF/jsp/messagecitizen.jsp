@@ -24,9 +24,9 @@
 <portlet:resourceURL var="cancelURL" id="cancelAppointment">
 </portlet:resourceURL>
 
-<portlet:renderURL var="homeURL" windowState="<%= WindowState.NORMAL.toString() %>" >
-	<portlet:param name="myaction" value="home" />
-</portlet:renderURL>
+<portlet:actionURL var="homeURL">
+	<portlet:param name="action" value="toHome" />
+</portlet:actionURL>
 
 <portlet:actionURL var="messageActionURL">
 	<portlet:param name="action" value="toMessage" />
@@ -71,7 +71,6 @@
 	 var ajaxUrls = {	 	
 	 	defaultUrl : "<%= portletPath %>",
 
-		/* Actions or somethings? (portlet:resourceURL)*/
 	 	ajaxTaskUrl : "<%= ajaxURL %>",
 	 	homeUrl : "<%= homeURL %>",
 		suggestUrl : "<%= suggestURL %>",
@@ -82,7 +81,6 @@
 		revokeWarrantUrl : "<%= revokeWarrantURL %>", 
 		cancelUrl : "<%= cancelURL %>", 
 	 	
-	 	/* RenderUrls GateIn Kunpo (portlet:renderURL) */
 	 	messageUrl : "<%= messageActionURL %>",
 	 	responseUrl :  "<%= responseActionURL %>",
 	 	consentUrl : 	"<%= consentActionURL %>",
@@ -90,7 +88,7 @@
 	 	warrantUrl : "<%= warrantActionURL %>"
 	};
 
-	<%-- Loading JS from separate jspf files instead of .js files. Thanks to "ugly" Gatein portal. --%>
+	<%-- Loading JS from separate jspf files instead of .js files. --%>
 	<%-- Note that loading order in here is important! --%>
 	<%@ include file="js_koku_config.jspf" %>
 	<%@ include file="js_koku_utils.jspf" %>

@@ -24,9 +24,9 @@
 <portlet:resourceURL var="cancelURL" id="cancelAppointment">
 </portlet:resourceURL>
 
-<portlet:renderURL var="homeURL" windowState="<%= WindowState.NORMAL.toString() %>" >
-	<portlet:param name="myaction" value="home" />
-</portlet:renderURL>
+<portlet:actionURL var="homeURL">
+	<portlet:param name="action" value="toHome" />
+</portlet:actionURL>
 
 <portlet:actionURL var="messageActionURL">
 	<portlet:param name="action" value="toMessage" />
@@ -56,7 +56,7 @@
 	<portlet:param name="action" value="toWarrant" />
 </portlet:actionURL>
 
-<portlet:actionURL var="applicationDaycareURL">
+<portlet:actionURL var="applicationDaycareActionURL">
 	<portlet:param name="action" value="toApplications" />
 </portlet:actionURL>
 
@@ -84,7 +84,6 @@
 	 	
 	 	defaultUrl : "<%= portletPath %>",
 
-		/* Actions or somethings? (portlet:resourceURL)*/
 	 	ajaxTaskUrl : "<%= ajaxURL %>",
 	 	homeUrl : "<%= homeURL %>",
 		suggestUrl : "<%= suggestURL %>",
@@ -95,7 +94,6 @@
 		revokeWarrantUrl : "<%= revokeWarrantURL %>", 
 		cancelUrl : "<%= cancelURL %>", 
 	 		 	
-	 	/* Urls JBoss Loora  (portlet:resourceURL) */
 	 	messageUrl : "<%= messageActionURL %>",
 	 	requestUrl :"<%= requestActionURL %>",
 	 	consentUrl : "<%= consentActionURL %>",
@@ -103,7 +101,7 @@
 	 	responseUrl :  "<%= responseActionURL %>",
 		tipyUrl : "<%= tipyActionURL %>",
 		warrantUrl : "<%= warrantActionURL %>",
-		applicationDaycareUrl : "<%= applicationDaycareURL %>"
+		applicationDaycareUrl : "<%= applicationDaycareActionURL %>"
 	};
 	
 	<%-- Loading JS from separate jspf files. --%>
