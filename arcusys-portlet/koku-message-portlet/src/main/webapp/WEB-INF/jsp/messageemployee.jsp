@@ -32,10 +32,6 @@
 	<portlet:param name="myaction" value="showMessage" />
 </portlet:renderURL>
 
-<portlet:renderURL var="requestURL" windowState="<%= WindowState.NORMAL.toString() %>" >
-	<portlet:param name="myaction" value="showRequest" />
-</portlet:renderURL>
-
 <portlet:renderURL var="appointmentURL" windowState="<%= WindowState.NORMAL.toString() %>" >
 	<portlet:param name="myaction" value="showAppointment" />
 </portlet:renderURL>
@@ -60,11 +56,13 @@
 	<portlet:param name="action" value="toMessage" />
 </portlet:actionURL>
 
-<portlet:resourceURL var="requestRenderURL" id="createRequestRenderUrl">
-</portlet:resourceURL> 
+<portlet:actionURL var="requestActionURL">
+	<portlet:param name="action" value="toRequest" />
+</portlet:actionURL>
 
-<portlet:resourceURL var="responseRenderURL" id="createResponseRenderUrl">
-</portlet:resourceURL> 
+<portlet:actionURL var="responseActionURL">
+	<portlet:param name="action" value="toResponse" />
+</portlet:actionURL>
 
 <portlet:resourceURL var="appointmentRenderURL" id="createAppointmentRenderUrl">
 </portlet:resourceURL> 
@@ -119,9 +117,9 @@
 	 		 	
 	 	/* Urls JBoss Loora  (portlet:resourceURL) */
 	 	messageUrl : "<%= messageActionURL %>",
-	 	requestUrl :"<%= requestURL %>",
+	 	requestUrl :"<%= requestActionURL %>",
 	 	appointmentUrl : "<%= appointmentURL %>",
-	 	responseRenderUrl :  "<%= responseRenderURL %>",
+	 	responseUrl :  "<%= responseActionURL %>",
 	 	consentUrl : "<%= consentURL %>",
 		citizenWarrantUrl : "<%= citizenWarrantURL %>",
 		tipyUrl : "<%= tipyURL %>",

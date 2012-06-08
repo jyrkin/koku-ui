@@ -35,11 +35,14 @@
 	<portlet:param name="action" value="toMessage" />
 </portlet:actionURL>
 
-<%-- <portlet:resourceURL var="messageRenderURL" id="createMessageRenderUrl"> --%>
-<%-- </portlet:resourceURL> --%>
+<portlet:actionURL var="requestActionURL">
+	<portlet:param name="action" value="toRequest" />
+</portlet:actionURL>
 
-<portlet:resourceURL var="requestRenderURL" id="createRequestRenderUrl">
-</portlet:resourceURL> 
+<portlet:actionURL var="responseActionURL">
+	<portlet:param name="action" value="toResponse" />
+</portlet:actionURL>
+
 
 <portlet:resourceURL var="responseRenderURL" id="createResponseRenderUrl">
 </portlet:resourceURL> 
@@ -85,8 +88,7 @@
 	 	
 	 	/* RenderUrls GateIn Kunpo (portlet:renderURL) */
 	 	messageUrl : "<%= messageActionURL %>",
-	 	requestRenderUrl : "<%= requestRenderURL %>",
-	 	responseRenderUrl :  "<%= responseRenderURL %>",
+	 	responseUrl :  "<%= responseActionURL %>",
 	 	appointmentRenderUrl :  "<%= appointmentRenderURL %>",
 	 	consentRenderUrl : 	"<%= consentRenderURL %>",
 	 	warrantRenderUrl : "<%= warrantRenderURL %>"

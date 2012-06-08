@@ -21,16 +21,11 @@ KokuAjaxEmployee.prototype.showMessage = function(messageId) {
 
 /* Shows detailed request page */
 KokuAjaxEmployee.prototype.showRequest = function(requestId) {
-	var url = this.renderUrls.requestRenderUrl;
+	var url = this.renderUrls.requestUrl;
 	url = this.formatUrl(url);
-	
-	jQuery.post(url, {requestId:requestId, currentPage:pageObj.currentPage, taskType:pageObj.taskType, 
-		keyword:pageObj.keyword+'|'+pageObj.field, orderType:pageObj.orderType}, function(data) {
-		var obj = jQuery.parseJSON(data);
-		var json = obj.response;
-		var renderUrl = json["renderUrl"];
-		window.location = renderUrl;
-	});
+	url += "&requestId="+requestId;
+	url += "&taskType="+pageObj.taskType;
+	window.location = url;
 };
 	
 /* Shows detailed appointment page */
@@ -67,17 +62,12 @@ KokuAjaxEmployee.prototype.showAppointment = function(index) {
 /* Creates a renderURL by ajax, to show the detailed request page */
 KokuAjaxEmployee.prototype.showResponse = function(index) {
 	var task = pageObj.tasks[index];
-	var responseId = task["responseId"];
-	var url = this.renderUrls.responseRenderUrl;	
+	var responseId = task["responseId"];	
+	var url = this.renderUrls.responseUrl;	
 	url = this.formatUrl(url);
-	
-	jQuery.post(url, {responseId:responseId, currentPage:pageObj.currentPage, taskType:pageObj.taskType, 
-		keyword:pageObj.keyword+'|'+pageObj.field, orderType:pageObj.orderType}, function(data) {
-		var obj = jQuery.parseJSON(data);
-		var json = obj.response;
-		var renderUrl = json["renderUrl"];
-		window.location = renderUrl;
-	});
+	url += "&responseId="+responseId;
+	url += "&taskType="+pageObj.taskType;
+	window.location = url;
 };
 	
 /* Shows detailed consent page */

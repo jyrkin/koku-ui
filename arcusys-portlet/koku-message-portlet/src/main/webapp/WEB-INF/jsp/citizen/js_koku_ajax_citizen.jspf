@@ -21,34 +21,15 @@ KokuAjaxCitizen.prototype.showMessage = function(messageId) {
 };
 	
 //Creates a renderURL by ajax, to show the detailed request page
-KokuAjaxCitizen.prototype.showRequest = function(requestId) {
-	var url = this.renderUrls.requestRenderUrl;
-	url = this.formatUrl(url);
-	
-	jQuery.post(url, {requestId:requestId, currentPage:pageObj.currentPage, taskType:pageObj.taskType, 
-		keyword:pageObj.keyword+'|'+pageObj.field, orderType:pageObj.orderType}, function(data) {
-		var obj = jQuery.parseJSON(data);
-		var json = obj.response;
-		var renderUrl = json["renderUrl"];
-		window.location = renderUrl;
-	});
-};
-
-//Creates a renderURL by ajax, to show the detailed request page
 KokuAjaxCitizen.prototype.showResponse = function(index) {
-	var task = pageObj.tasks[index];
-	var responseId = task["responseId"];
-
-	var url = this.renderUrls.responseRenderUrl;
-	url = this.formatUrl(url);
 	
-	jQuery.post(url, {responseId:responseId, currentPage:pageObj.currentPage, taskType:pageObj.taskType, 
-		keyword:pageObj.keyword+'|'+pageObj.field, orderType:pageObj.orderType}, function(data) {
-		var obj = jQuery.parseJSON(data);
-		var json = obj.response;
-		var renderUrl = json["renderUrl"];
-		window.location = renderUrl;
-	});
+	var task = pageObj.tasks[index];
+	var responseId = task["responseId"];	
+	var url = this.renderUrls.responseUrl;	
+	url = this.formatUrl(url);
+	url += "&responseId="+responseId;
+	url += "&taskType="+pageObj.taskType;
+	window.location = url;
 };
 
 //Creates a renderURL by ajax,to show the detailed appointment page
