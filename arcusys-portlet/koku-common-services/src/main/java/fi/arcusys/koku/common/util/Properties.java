@@ -1,9 +1,6 @@
 package fi.arcusys.koku.common.util;
 
-import static fi.arcusys.koku.common.util.Constants.PROPERTIES_FILTER_RECIEVED_APPLICATIONS;
-import static fi.arcusys.koku.common.util.Constants.PROPERTIES_FILTER_RECIEVED_INFO_REQUESTS;
-import static fi.arcusys.koku.common.util.Constants.PROPERTIES_FILTER_RECIEVED_REQUESTS;
-import static fi.arcusys.koku.common.util.Constants.PROPERTIES_FILTER_RECIEVED_WARRANTS;
+import static fi.arcusys.koku.common.util.Constants.*;
 
 import org.apache.log4j.Logger;
 
@@ -33,6 +30,11 @@ public final class Properties {
 	public static final String RECEIVED_INFO_REQUESTS_FILTER;
 	public static final String RECEIVED_KINDERGARTED_APPLICATION_FILTER;
 	public static final String RECEIVED_WARRANTS_FILTER;
+	public static final String RECEIVED_DAYCARE_PAYMENT_FILTER;
+	public static final String RECEIVED_DAYCARE_PAYMENT_MODIFY;
+	public static final String RECEIVED_DAYCARE_PAYMENT_DISCOUNT;
+	public static final String RECEIVED_DAYCARE_TERMINATION;
+	public static final String RECEIVED_DAYCARE_HOLIDAYS;
 	
 	/* WebServices */
 	public static final String USER_SERVICE;
@@ -75,6 +77,11 @@ public final class Properties {
 		RECEIVED_INFO_REQUESTS_FILTER =  loadProperty("Received inforequests filter (Tietopyynnöt - Saapuneet)", PROPERTIES_FILTER_RECIEVED_INFO_REQUESTS);
 		RECEIVED_KINDERGARTED_APPLICATION_FILTER = loadProperty("Received applications filter (Asiointipalvelut - Hakemusten vahvistuspyynnöt)", PROPERTIES_FILTER_RECIEVED_APPLICATIONS);		
 		RECEIVED_WARRANTS_FILTER = loadProperty("Received warrants filter (Valtakirjat - Valtuutettuna)", PROPERTIES_FILTER_RECIEVED_WARRANTS);
+		RECEIVED_DAYCARE_PAYMENT_FILTER = loadProperty("Received daycare payments filter (Palveluhakemukset  - Päivähoidon asiakasmaksulomakkeet)", PROPERTIES_FILTER_RECEIVED_DAYCARE_PAYMENT);  
+		RECEIVED_DAYCARE_PAYMENT_MODIFY = loadProperty("Received daycare payments modified filter (Palveluhakemukset  - Päivähoidon asiakasmaksun muutoslomakkeet)", PROPERTIES_FILTER_RECEIVED_DAYCARE_PAYMENT_MODIFY);
+		RECEIVED_DAYCARE_PAYMENT_DISCOUNT = loadProperty("Received daycare payments discount filter (Palveluhakemukset  - Päivähoidon asiakasmaksunalentamiset)", PROPERTIES_FILTER_RECEIVED_DAYCARE_PAYMENT_DISCOUNT);
+		RECEIVED_DAYCARE_TERMINATION = loadProperty("Received daycare termination filter (Palveluhakemukset  - Irtisanoutumiset päivähoitopaikasta)", PROPERTIES_FILTER_RECEIVED_DAYCARE_TERMINATION);
+		RECEIVED_DAYCARE_HOLIDAYS = loadProperty("Received daycare holidays filter (Palveluhakemukset  - Loma-aikojen hoitotarvekyselyt)", PROPERTIES_FILTER_RECEIVED_DAYCARE_HOLIDAYS);
 		
 		/* WebServices for portlets */
 		USER_SERVICE =  loadProperty("UsersAndGroupsService location:", "UsersAndGroupsService");

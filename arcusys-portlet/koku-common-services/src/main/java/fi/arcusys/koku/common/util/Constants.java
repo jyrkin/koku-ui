@@ -32,6 +32,13 @@ public final class Constants {
 	public static final String PROPERTIES_FILTER_RECIEVED_INFO_REQUESTS		= "intalioFilterReceivedInfoRequests";
 	public static final String PROPERTIES_FILTER_RECIEVED_APPLICATIONS		= "intalioFilterReceivedApplications";
 	public static final String PROPERTIES_FILTER_RECIEVED_WARRANTS			= "intalioFilterReceivedWarrants";
+	
+	public static final String PROPERTIES_FILTER_RECEIVED_DAYCARE_PAYMENT				= "intalioFilterReceivedDaycarePayments";
+	public static final String PROPERTIES_FILTER_RECEIVED_DAYCARE_PAYMENT_MODIFY		= "intalioFilterReceivedDaycarePaymentModifys";
+	public static final String PROPERTIES_FILTER_RECEIVED_DAYCARE_PAYMENT_DISCOUNT		= "intalioFilterReceivedDaycareDiscounts";
+	public static final String PROPERTIES_FILTER_RECEIVED_DAYCARE_TERMINATION			= "intalioFilterReceivedDaycareTerminations";
+	public static final String PROPERTIES_FILTER_RECEIVED_DAYCARE_HOLIDAYS				= "intalioFilterReceivedDaycareHolidays";
+
 
 	/* ModelMap attribute key */
 	public static final String RESPONSE										= "response";

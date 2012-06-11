@@ -43,6 +43,8 @@ public class TaskHandle {
 	private static final String START_TASK_SEARCH = "0";
 	private static final String MAX_TASKS = "50";
 	
+	private static final String UNKNOWN = "?";
+	
 	private final TaskManagementService taskMngServ = new TaskManagementService();
 
 	private String message;
@@ -233,42 +235,55 @@ public class TaskHandle {
 	private String getSenderNameFromTaskInput(TaskMetadata task, TaskData input) {
 		final String descriptionName = task.getDescription();
 		if (descriptionName == null || descriptionName.isEmpty()) {
-			return "Tuntematon";
+			return UNKNOWN;
 		}
 		if (descriptionName.startsWith(Properties.RECEIVED_REQUESTS_FILTER)) {
 			// Uusi pyyntö
 			return getSenderName(input, "User_SenderDisplay");
-		} else if (descriptionName
-				.contains(Properties.RECEIVED_INFO_REQUESTS_FILTER)) {
+		} else if (descriptionName.contains(Properties.RECEIVED_INFO_REQUESTS_FILTER)) {
 			// Uusi tietopyyntö
 			return getSenderName(input, "Perustiedot_Lahettaja");
-		} else if (descriptionName
-				.endsWith(Properties.RECEIVED_WARRANTS_FILTER)) {
+		} else if (descriptionName.endsWith(Properties.RECEIVED_WARRANTS_FILTER)) {
 			// Vastaanotetut valtakirjat
 			return getSenderName(input, "Tiedot_LahettajaDisplay");
+		} else if (descriptionName.startsWith(Properties.RECEIVED_DAYCARE_PAYMENT_FILTER)) {
+			// Päivähoidon asiakasmaksulomakkeet
+			return getSenderName(input, "Perustiedot_Lahettaja");
+		} else if (descriptionName.startsWith(Properties.RECEIVED_DAYCARE_PAYMENT_MODIFY)) {
+			// Päivähoidon asiakasmaksun muutoslomakkeet
+			return getSenderName(input, "Perustiedot_Lahettaja");
+		} else if (descriptionName.startsWith(Properties.RECEIVED_DAYCARE_PAYMENT_DISCOUNT)) {
+			// Päivähoidon asiakasmaksunalentamiset
+			return getSenderName(input, "Perustiedot_Lahettaja");
+		} else if (descriptionName.startsWith(Properties.RECEIVED_DAYCARE_TERMINATION)) {
+			// Irtisanoutumiset päivähoitopaikasta
+			return getSenderName(input, "Perustiedot_Lahettaja");
+		} else if (descriptionName.startsWith(Properties.RECEIVED_DAYCARE_HOLIDAYS)) {
+			// Loma-aikojen hoitotarvekyselyt
+			return getSenderName(input, "Perustiedot_Lahettaja");
 		} else {
 			// Hm?
-			return "Tuntematon";
+			return UNKNOWN;
 		}
 	}
 
 	private String getSenderName(final fi.arcusys.intalio.tms.TaskData input,
 			final String nodename) {
 		if (input == null || input.getAny() == null || input.getAny().isEmpty()) {
-			return null;
+			return UNKNOWN;
 		}
 		final Object object = input.getAny().get(0);
 		if (!(object instanceof Element)) {
-			return null;
+			return UNKNOWN;
 		}
 		final Element element = ((Element) object);
 		final NodeList senderNameList = element.getElementsByTagName(nodename);
 		if (senderNameList == null || senderNameList.getLength() == 0) {
-			return null;
+			return UNKNOWN;
 		}
 		final Node senderNameNode = senderNameList.item(0);
 		if (senderNameNode.getFirstChild() == null) {
-			return null;
+			return UNKNOWN;
 		}
 		return senderNameNode.getFirstChild().getNodeValue();
 	}
