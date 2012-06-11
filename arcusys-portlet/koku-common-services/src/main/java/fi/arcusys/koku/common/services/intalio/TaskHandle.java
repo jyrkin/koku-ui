@@ -246,21 +246,17 @@ public class TaskHandle {
 		} else if (descriptionName.endsWith(Properties.RECEIVED_WARRANTS_FILTER)) {
 			// Vastaanotetut valtakirjat
 			return getSenderName(input, "Tiedot_LahettajaDisplay");
-		} else if (descriptionName.startsWith(Properties.RECEIVED_DAYCARE_PAYMENT_FILTER)) {
+		} else if (descriptionName.startsWith(Properties.RECEIVED_DAYCARE_PAYMENT_FILTER) 
+				|| descriptionName.startsWith(Properties.RECEIVED_DAYCARE_PAYMENT_MODIFY)
+				|| descriptionName.startsWith(Properties.RECEIVED_DAYCARE_PAYMENT_DISCOUNT)
+				|| descriptionName.startsWith(Properties.RECEIVED_DAYCARE_TERMINATION)
+				|| descriptionName.startsWith(Properties.RECEIVED_DAYCARE_HOLIDAYS)) {
 			// Päivähoidon asiakasmaksulomakkeet
-			return getSenderName(input, "Perustiedot_Lahettaja");
-		} else if (descriptionName.startsWith(Properties.RECEIVED_DAYCARE_PAYMENT_MODIFY)) {
 			// Päivähoidon asiakasmaksun muutoslomakkeet
-			return getSenderName(input, "Perustiedot_Lahettaja");
-		} else if (descriptionName.startsWith(Properties.RECEIVED_DAYCARE_PAYMENT_DISCOUNT)) {
 			// Päivähoidon asiakasmaksunalentamiset
-			return getSenderName(input, "Perustiedot_Lahettaja");
-		} else if (descriptionName.startsWith(Properties.RECEIVED_DAYCARE_TERMINATION)) {
 			// Irtisanoutumiset päivähoitopaikasta
-			return getSenderName(input, "Perustiedot_Lahettaja");
-		} else if (descriptionName.startsWith(Properties.RECEIVED_DAYCARE_HOLIDAYS)) {
 			// Loma-aikojen hoitotarvekyselyt
-			return getSenderName(input, "Perustiedot_Lahettaja");
+			return getSenderName(input, "SenderFullname");
 		} else {
 			// Hm?
 			return UNKNOWN;
