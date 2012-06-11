@@ -1,10 +1,12 @@
 package fi.arcusys.koku.web;
 
-import static fi.arcusys.koku.common.util.Constants.*;
+import static fi.arcusys.koku.common.util.Constants.ATTR_MY_ACTION;
+import static fi.arcusys.koku.common.util.Constants.ATTR_RESPONSE_ID;
+import static fi.arcusys.koku.common.util.Constants.MY_ACTION_SHOW_REQUEST_RESPONSE;
+import static fi.arcusys.koku.common.util.Constants.VIEW_SHOW_RESPONSE;
 
 import javax.portlet.ActionResponse;
 import javax.portlet.PortletSession;
-import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
 import org.slf4j.Logger;
@@ -23,6 +25,7 @@ import fi.arcusys.koku.common.services.requests.models.KokuRequest;
 import fi.arcusys.koku.common.services.requests.models.KokuResponseDetail;
 import fi.arcusys.koku.common.util.Constants;
 import fi.arcusys.koku.common.util.DummyMessageSource;
+import fi.arcusys.koku.common.util.Properties;
 import fi.arcusys.koku.web.util.ModelWrapper;
 import fi.arcusys.koku.web.util.impl.ModelWrapperImpl;
 
@@ -36,19 +39,15 @@ import fi.arcusys.koku.web.util.impl.ModelWrapperImpl;
 @RequestMapping(value = "VIEW")
 public class ShowResponseController {
 	
-	private static final Logger LOG = LoggerFactory.getLogger(ShowResponseController.class);
-	
-	
+	private static final Logger LOG = LoggerFactory.getLogger(ShowResponseController.class);	
 
 	@ActionMapping(params = "action=toResponse")
 	public void actionPageView(
 			PortletSession session,
 			@ModelAttribute(value = "response") ModelWrapper<KokuRequest> response,
 			@RequestParam(value = "responseId") String responseId,
-			@RequestParam(value = "taskType") String taskType,
 			ActionResponse actionResponse) {
 		actionResponse.setRenderParameter(ATTR_MY_ACTION, MY_ACTION_SHOW_REQUEST_RESPONSE);
-		actionResponse.setRenderParameter(ATTR_TASK_TYPE, taskType);
 		actionResponse.setRenderParameter(ATTR_RESPONSE_ID, responseId);
 	}		
 	
@@ -75,21 +74,20 @@ public class ShowResponseController {
 	@ModelAttribute(value = "response")
 	public ModelWrapper<KokuResponseDetail> model(
 			@RequestParam String responseId,
-			@RequestParam String taskType, 
 			PortletSession portletSession) {
 		
 		ModelWrapper<KokuResponseDetail> model = null;
 		KokuResponseDetail details = null;
 		try {
-			if (taskType.equals(Constants.TASK_TYPE_REQUEST_REPLIED) || taskType.equals(Constants.TASK_TYPE_REQUEST_OLD)) {
+			// We are using citizen side service also in employee side??
+			if (Properties.IS_KUNPO_PORTAL || Properties.IS_LOORA_PORTAL) {
 				CitizenRequestHandle handle = new CitizenRequestHandle(new DummyMessageSource());
 				details = handle.getResponseById(responseId);
-			}
+			} 
 			model = new ModelWrapperImpl<KokuResponseDetail>(details);
 		} catch (KokuServiceException kse) {
 			LOG.error("Failed to show response details. responseId: '"+responseId + 
-					"' username: '"+ (String)portletSession.getAttribute(Constants.ATTR_USERNAME) +" taskType: '"+taskType + 
-					"'", kse);
+					"' username: '"+ (String)portletSession.getAttribute(Constants.ATTR_USERNAME) +"'", kse);
 			model = new ModelWrapperImpl<KokuResponseDetail>(null, ResponseStatus.FAIL, kse.getErrorcode());
 		}
 		return model;

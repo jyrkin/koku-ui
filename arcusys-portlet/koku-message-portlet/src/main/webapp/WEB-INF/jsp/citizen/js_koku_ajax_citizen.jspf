@@ -27,7 +27,6 @@ KokuAjaxCitizen.prototype.showConsent = function(index) {
 		url = this.renderUrls.consentUrl;
 		url = this.formatUrl(url);
 		url += "&consentId="+consentId;
-		url += "&taskType="+pageObj.taskType;
 		window.location = url;
 		
 	} else if(pageObj.taskType == "<%= Constants.TASK_TYPE_CONSENT_ASSIGNED_CITIZEN%>") {

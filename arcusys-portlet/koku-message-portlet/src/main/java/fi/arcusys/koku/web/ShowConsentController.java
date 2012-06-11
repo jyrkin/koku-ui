@@ -3,13 +3,9 @@ package fi.arcusys.koku.web;
 
 import static fi.arcusys.koku.common.util.Constants.ATTR_CONSENT_ID;
 import static fi.arcusys.koku.common.util.Constants.ATTR_MY_ACTION;
-import static fi.arcusys.koku.common.util.Constants.ATTR_TASK_TYPE;
 import static fi.arcusys.koku.common.util.Constants.ATTR_USERNAME;
 import static fi.arcusys.koku.common.util.Constants.ATTR_USER_ID;
 import static fi.arcusys.koku.common.util.Constants.MY_ACTION_SHOW_CONSENT;
-import static fi.arcusys.koku.common.util.Constants.TASK_TYPE_CONSENT_CITIZEN_CONSENTS;
-import static fi.arcusys.koku.common.util.Constants.TASK_TYPE_CONSENT_CITIZEN_CONSENTS_OLD;
-import static fi.arcusys.koku.common.util.Constants.TASK_TYPE_CONSENT_EMPLOYEE_CONSENTS;
 import static fi.arcusys.koku.common.util.Constants.VIEW_SHOW_CONSENT;
 
 import javax.annotation.Resource;
@@ -34,6 +30,7 @@ import fi.arcusys.koku.common.services.consents.model.KokuConsent;
 import fi.arcusys.koku.common.services.facades.impl.ResponseStatus;
 import fi.arcusys.koku.common.services.users.UserIdResolver;
 import fi.arcusys.koku.common.util.Constants;
+import fi.arcusys.koku.common.util.Properties;
 import fi.arcusys.koku.web.util.ModelWrapper;
 import fi.arcusys.koku.web.util.impl.ModelWrapperImpl;
 
@@ -56,10 +53,8 @@ public class ShowConsentController extends AbstractController {
 			PortletSession session,
 			@ModelAttribute(value = "consent") ModelWrapper<KokuConsent> response,
 			@RequestParam(value = "consentId") String consentId,
-			@RequestParam(value = "taskType") String taskType,
 			ActionResponse actionResponse) {
 		actionResponse.setRenderParameter(ATTR_MY_ACTION, MY_ACTION_SHOW_CONSENT);
-		actionResponse.setRenderParameter(ATTR_TASK_TYPE, taskType);
 		actionResponse.setRenderParameter(ATTR_CONSENT_ID, consentId);
 	}
 	
@@ -85,8 +80,7 @@ public class ShowConsentController extends AbstractController {
 	 */
 	@ModelAttribute(value = "consent")
 	public ModelWrapper<KokuConsent> model(
-			@RequestParam(value="consentId", required=false) String consentId,
-			@RequestParam String taskType, 
+			@RequestParam(value="consentId") String consentId,
 			PortletSession portletSession) {
 		
 		ModelWrapper<KokuConsent> model = null;
@@ -108,22 +102,19 @@ public class ShowConsentController extends AbstractController {
 			if (userId == null) {
 				throw new KokuServiceException("UserId is null. Can't show consent details! username: '"+username+"'");
 			}
-			if(taskType.equals(TASK_TYPE_CONSENT_CITIZEN_CONSENTS) || taskType.equals(TASK_TYPE_CONSENT_CITIZEN_CONSENTS_OLD)) {
+			if (Properties.IS_KUNPO_PORTAL) {
 				TivaCitizenServiceHandle handle = new TivaCitizenServiceHandle(messageSource, userId);
-				consent = handle.getConsentById(consentId);
-			} else if(taskType.equals(TASK_TYPE_CONSENT_EMPLOYEE_CONSENTS)) {
+				consent = handle.getConsentById(consentId);				
+			} else if (Properties.IS_LOORA_PORTAL) {
 				TivaEmployeeServiceHandle handle = new TivaEmployeeServiceHandle(messageSource);
 				consent = handle.getConsentDetails(consentId);
+			} else {
+				throw new KokuServiceException("PortalMode missing?");
 			}
-	//		else if (taskType.equals(TASK_TYPE_WARRANT_LIST_CITIZEN_CONSENTS)) {
-	//			// TODO: Need some logic here? 
-	//			// REMOVE ME?
-	//		}
 			model = new ModelWrapperImpl<KokuConsent>(consent);
 		} catch (KokuServiceException kse) {
 			LOG.error("Failed to show consent details. consentId: '"+consentId + 
-					"' username: '"+(String)portletSession.getAttribute(Constants.ATTR_USERNAME)+"' taskType: '"+taskType + 
-					"'", kse);
+					"' username: '"+(String)portletSession.getAttribute(Constants.ATTR_USERNAME)+"'", kse);
 			model = new ModelWrapperImpl<KokuConsent>(null, ResponseStatus.FAIL, kse.getErrorcode());
 		}
 		return model;

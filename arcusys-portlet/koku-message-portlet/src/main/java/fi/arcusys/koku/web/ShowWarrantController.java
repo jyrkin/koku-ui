@@ -3,14 +3,9 @@ package fi.arcusys.koku.web;
 
 import static fi.arcusys.koku.common.util.Constants.ATTR_AUTHORIZATION_ID;
 import static fi.arcusys.koku.common.util.Constants.ATTR_MY_ACTION;
-import static fi.arcusys.koku.common.util.Constants.ATTR_TASK_TYPE;
 import static fi.arcusys.koku.common.util.Constants.ATTR_USERNAME;
 import static fi.arcusys.koku.common.util.Constants.ATTR_USER_ID;
 import static fi.arcusys.koku.common.util.Constants.MY_ACTION_SHOW_WARRANT;
-import static fi.arcusys.koku.common.util.Constants.TASK_TYPE_WARRANT_BROWSE_RECEIEVED;
-import static fi.arcusys.koku.common.util.Constants.TASK_TYPE_WARRANT_BROWSE_SENT;
-import static fi.arcusys.koku.common.util.Constants.TASK_TYPE_WARRANT_LIST_CITIZEN_CONSENTS;
-import static fi.arcusys.koku.common.util.Constants.TASK_TYPE_WARRANT_LIST_SUBJECT_CONSENTS;
 import static fi.arcusys.koku.common.util.Constants.VIEW_SHOW_WARRANT;
 
 import javax.annotation.Resource;
@@ -34,6 +29,7 @@ import fi.arcusys.koku.common.services.users.UserIdResolver;
 import fi.arcusys.koku.common.services.warrants.citizens.KokuCitizenWarrantHandle;
 import fi.arcusys.koku.common.services.warrants.employee.KokuEmployeeWarrantHandle;
 import fi.arcusys.koku.common.services.warrants.model.KokuAuthorizationSummary;
+import fi.arcusys.koku.common.util.Properties;
 import fi.arcusys.koku.web.util.ModelWrapper;
 import fi.arcusys.koku.web.util.impl.ModelWrapperImpl;
 
@@ -55,10 +51,8 @@ public class ShowWarrantController extends AbstractController {
 			PortletSession session,
 			@ModelAttribute(value = "warrant") ModelWrapper<KokuAuthorizationSummary> warrant,
 			@RequestParam(value = "authorizationId") String authorizationId,
-			@RequestParam(value = "taskType") String taskType,
 			ActionResponse actionResponse) {
 		actionResponse.setRenderParameter(ATTR_MY_ACTION, MY_ACTION_SHOW_WARRANT);
-		actionResponse.setRenderParameter(ATTR_TASK_TYPE, taskType);
 		actionResponse.setRenderParameter(ATTR_AUTHORIZATION_ID, authorizationId);
 	}
 	
@@ -85,7 +79,6 @@ public class ShowWarrantController extends AbstractController {
 	@ModelAttribute(value = "warrant")
 	public ModelWrapper<KokuAuthorizationSummary> model(
 			@RequestParam String authorizationId,
-			@RequestParam String taskType, 
 			PortletSession portletSession) {
 		
 		ModelWrapper<KokuAuthorizationSummary> model = null;		
@@ -109,24 +102,23 @@ public class ShowWarrantController extends AbstractController {
 			} catch (NumberFormatException nfe) {
 				throw new KokuServiceException("AuthorizationID is not valid! Username: '" + username + "' UserId: '" + userId + "' AuthorizationId: '"+ authorizationId+"'", nfe);
 			}
-			if(taskType.equals(TASK_TYPE_WARRANT_BROWSE_RECEIEVED)) {
+			if (Properties.IS_KUNPO_PORTAL) {
 				KokuCitizenWarrantHandle handle = new KokuCitizenWarrantHandle(messageSource);
 				warrant = handle.getAuthorizationSummaryById(authId, userId);
-			} else if(taskType.equals(TASK_TYPE_WARRANT_BROWSE_SENT)) {
-				KokuCitizenWarrantHandle handle = new KokuCitizenWarrantHandle(messageSource);
-				warrant = handle.getAuthorizationSummaryById(authId, userId);
-			} else if (taskType.equals(TASK_TYPE_WARRANT_LIST_CITIZEN_CONSENTS) || taskType.equals(TASK_TYPE_WARRANT_LIST_SUBJECT_CONSENTS)) {
+			} else if (Properties.IS_LOORA_PORTAL) {
 				KokuEmployeeWarrantHandle handle = new KokuEmployeeWarrantHandle(messageSource);
 				try {
 					warrant = handle.getAuthorizationDetails(Integer.valueOf(authorizationId));					
 				} catch (NumberFormatException nfe) {
 					throw new KokuServiceException("AuthorizationID is not valid! Username: '" + username + "' UserId: '" + userId + "' AuthorizationId: '"+ authorizationId+"'", nfe);
 				}
+			} else {
+				throw new KokuServiceException("PortalMode missing?");
 			}
 			model = new ModelWrapperImpl<KokuAuthorizationSummary>(warrant);
 		} catch (KokuServiceException kse) {
 			LOG.error("Failed to show warrant details. authorizationId: '"+authorizationId + 
-					"' username: '"+username+" taskType: '"+taskType + "'", kse);
+					"' username: '"+username+"'", kse);
 			model = new ModelWrapperImpl<KokuAuthorizationSummary>(null, ResponseStatus.FAIL, kse.getErrorcode());
 		}
 		return model;
