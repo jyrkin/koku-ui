@@ -109,7 +109,7 @@
 					<td class="remove">
 						<c:choose>
 							<c:when test="${!slot.disabled}">
-								<input id="${"slotCancelButton" + slot.slotNumber}" type="button" value="<spring:message code="delete"/>" onclick="kokuAppointmentDetails.disableAppointmentSlot(<%= appointmentId %>, <c:out value="${slot.slotNumber}" />)" />
+								<input id="slotCancelButton${slot.slotNumber}" type="button" value="<spring:message code="delete"/>" onclick="kokuAppointmentDetails.disableAppointmentSlot(<%= appointmentId %>, <c:out value="${slot.slotNumber}" />)" />
 							</c:when>
 							<c:otherwise>
 								<spring:message code="deleted" />
