@@ -18,5 +18,21 @@
 			<title>Kohti kumppanuutta - Kirjautuminen</title>
 		</portlet-info>		
 	</portlet>
+  
+    <portlet>
+          <description>Kohti kumppanuutta - Rekisteroityminen</description>
+          <portlet-name>koku-registration</portlet-name>
+          <display-name>koku-registration-portlet</display-name>
+          <portlet-class>org.springframework.web.portlet.DispatcherPortlet</portlet-class>
+          <supports>
+            <mime-type>text/html</mime-type>
+            <portlet-mode>view</portlet-mode>
+            <portlet-mode>edit</portlet-mode>
+          </supports>
+          <resource-bundle>Language-ext</resource-bundle>
+          <portlet-info>
+            <title>Kohti kumppanuutta - Rekisteroityminen</title>
+          </portlet-info>   
+      </portlet>
 	
 </portlet-app>
