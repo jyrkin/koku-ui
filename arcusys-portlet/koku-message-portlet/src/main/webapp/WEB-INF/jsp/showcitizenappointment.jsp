@@ -109,7 +109,7 @@
 		<input type="button" value="<spring:message code="page.return"/>" onclick="kokuNavigationHelper.returnMainPage()" />
 		<c:if test="${appointment.model.status != 'Peruutettu'}">
 			<input type="button" id="cancelButton" value="<spring:message code="appointment.cancel.button"/>" onclick="kokuAppointmentDetails.cancelAppointment('<%= appointmentId %>', '<%= targetPerson %>')" />
-			<input type="button" id="editButton" value="<spring:message code="appointment.edit.button"/>" onclick="kokuAppointmentDetails.editAppointment()" />			
 		</c:if>
+		<input type="button" id="editButton" value="<spring:message code="appointment.edit.button"/>" onclick="kokuAppointmentDetails.editAppointment()" />			
 	</div>
 </div>
