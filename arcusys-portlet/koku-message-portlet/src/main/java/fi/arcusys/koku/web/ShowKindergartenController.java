@@ -23,6 +23,7 @@ import org.springframework.web.portlet.bind.annotation.RenderMapping;
 
 import fi.arcusys.koku.common.services.hak.employee.HakServiceHandle;
 import fi.arcusys.koku.common.services.hak.model.KokuApplicationSummary;
+import fi.arcusys.koku.common.util.Properties;
 import fi.arcusys.koku.web.util.ModelWrapper;
 
 /**
@@ -42,10 +43,8 @@ public class ShowKindergartenController extends AbstractController {
 			PortletSession session,
 			@ModelAttribute(value = "application") ModelWrapper<KokuApplicationSummary> application,
 			@RequestParam(value = "applicationId") String applicationId,
-			@RequestParam(value = "taskType") String taskType,
 			ActionResponse actionResponse) {
 		actionResponse.setRenderParameter(ATTR_MY_ACTION, MY_ACTION_SHOW_APPLICATION_KINDERGARTEN);
-		actionResponse.setRenderParameter(ATTR_TASK_TYPE, taskType);
 		actionResponse.setRenderParameter(ATTR_APPLICATION_ID, applicationId);
 	}	
 	
@@ -76,7 +75,7 @@ public class ShowKindergartenController extends AbstractController {
 			PortletSession portletSession) {
 		
 		KokuApplicationSummary application = null;		
-		if(taskType.equals(TASK_TYPE_APPLICATION_KINDERGARTEN_BROWSE)) {
+		if(Properties.IS_LOORA_PORTAL) {
 			HakServiceHandle handle = new HakServiceHandle(messageSource);
 			application = handle.getApplicantDetails(applicationId);
 		}

@@ -894,4 +894,8 @@
 		width: 100%;
 		height: 100px;
 	}
+	
+	input.hint {
+		color: #888;
+	}
 }

@@ -181,6 +181,7 @@
 						<span class="kokuNaviTreeNodeIndicator" id="kokuNaviTreeNodeIndicatorApplicationsService">+</span>Palveluhakemukset
 					</span>
 					<ul id="kokuNavikokurApplicationsService" class="child">
+					<li id="<%= Constants.TASK_TYPE_APPLICATION_PROSESSED_BROWSE%>"><a href="javascript:void(0)" onclick="navigateToTaskMgrPage('<%= NavigationPortletProperties.APPLICATIONS_PROCESSED_LIST %>')">Käsitellyt hakemukset</a></li>	
 						<li id="<%= Constants.TASK_TYPE_APPLICATION_KINDERGARTEN_BROWSE%>"><a href="javascript:void(0)" onclick="navigateToPage('<%= Constants.TASK_TYPE_APPLICATION_KINDERGARTEN_BROWSE%>')">Päivähoitohakemukset</a></li>
 						<li id="<%= Constants.TASK_TYPE_APPLICATION_DAYCARE_PAYMENT_BROWSE%>"><a href="javascript:void(0)" onclick="navigateToTaskMgrPage('<%= NavigationPortletProperties.APPLICATIONS_DAYCARE_PAYMENT_BROWSE %>')">Päivähoidon asiakasmaksulomakkeet</a></li>
 						<li id="<%= Constants.TASK_TYPE_APPLICATION_DAYCARE_PAYMENT_MODIFY_BROWSE%>"><a href="javascript:void(0)" onclick="navigateToTaskMgrPage('<%= NavigationPortletProperties.APPLICATIONS_DAYCARE_PAYMENT_MODIFY_BROWSE %>')">Päivähoidon asiakasmaksun muutoslomakkeet</a></li>

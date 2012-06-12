@@ -17,7 +17,6 @@ KokuAjaxEmployee.prototype.showRequest = function(requestId) {
 	var url = this.renderUrls.requestUrl;
 	url = this.formatUrl(url);
 	url += "&requestId="+requestId;
-	url += "&taskType="+pageObj.taskType;
 	window.location = url;
 };
 	
@@ -32,7 +31,6 @@ KokuAjaxEmployee.prototype.showConsent = function(index) {
 		url = this.renderUrls.consentUrl;
 		url = this.formatUrl(url);
 		url += "&consentId="+consentId;
-		url += "&taskType="+pageObj.taskType;
 		window.location = url;
 			
 	} else if (pageObj.taskType == "<%= Constants.TASK_TYPE_CONSENT_ASSIGNED_CITIZEN%>") {
@@ -50,7 +48,6 @@ KokuAjaxEmployee.prototype.showTipy = function(index) {
 	url = this.renderUrls.tipyUrl;
 	url = this.formatUrl(url);
 	url += "&requestId="+requestId;
-	url += "&taskType="+pageObj.taskType;
 	window.location = url;
 };
 
@@ -59,7 +56,6 @@ KokuAjaxEmployee.prototype.showApplicationKindergarten = function(index) {
 	url = this.renderUrls.applicationDaycareUrl;
 	url = this.formatUrl(url);
 	url += "&applicationId="+applicationId;
-	url += "&taskType="+pageObj.taskType;
 	window.location = url;
 };
 

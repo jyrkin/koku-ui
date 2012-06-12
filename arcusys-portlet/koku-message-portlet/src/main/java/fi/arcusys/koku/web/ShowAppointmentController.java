@@ -3,10 +3,8 @@ package fi.arcusys.koku.web;
 import static fi.arcusys.koku.common.util.Constants.ATTR_APPOIMENT_ID;
 import static fi.arcusys.koku.common.util.Constants.ATTR_MY_ACTION;
 import static fi.arcusys.koku.common.util.Constants.ATTR_TARGET_PERSON;
-import static fi.arcusys.koku.common.util.Constants.ATTR_TASK_TYPE;
 import static fi.arcusys.koku.common.util.Constants.MY_ACTION_SHOW_APPOINTMENT;
 import static fi.arcusys.koku.common.util.Constants.TASK_TYPE_APPOINTMENT_RESPONSE_CITIZEN;
-import static fi.arcusys.koku.common.util.Constants.TASK_TYPE_APPOINTMENT_RESPONSE_CITIZEN_OLD;
 import static fi.arcusys.koku.common.util.Constants.TASK_TYPE_APPOINTMENT_RESPONSE_EMPLOYEE;
 import static fi.arcusys.koku.common.util.Constants.VIEW_SHOW_CITIZEN_APPOINTMENT;
 import static fi.arcusys.koku.common.util.Constants.VIEW_SHOW_EMPLOYEE_APPOINTMENT;
@@ -32,6 +30,7 @@ import fi.arcusys.koku.common.services.appointments.employee.AvEmployeeServiceHa
 import fi.arcusys.koku.common.services.appointments.model.KokuAppointment;
 import fi.arcusys.koku.common.services.facades.impl.ResponseStatus;
 import fi.arcusys.koku.common.util.Constants;
+import fi.arcusys.koku.common.util.Properties;
 import fi.arcusys.koku.web.util.ModelWrapper;
 import fi.arcusys.koku.web.util.impl.ModelWrapperImpl;
 
@@ -55,11 +54,9 @@ public class ShowAppointmentController {
 			PortletSession session,
 			@ModelAttribute(value = "appointment") ModelWrapper<KokuAppointment> appointment,
 			@RequestParam(value = "appointmentId") String appointmentId,
-			@RequestParam(value = "taskType") String taskType,
 			@RequestParam(value = "targetPerson", required=false) String targetPerson,
 			ActionResponse actionResponse) {
 		actionResponse.setRenderParameter(ATTR_MY_ACTION, MY_ACTION_SHOW_APPOINTMENT);
-		actionResponse.setRenderParameter(ATTR_TASK_TYPE, taskType);
 		actionResponse.setRenderParameter(ATTR_APPOIMENT_ID, appointmentId);
 		actionResponse.setRenderParameter( ATTR_TARGET_PERSON, targetPerson);
 	}
@@ -72,15 +69,15 @@ public class ShowAppointmentController {
 	 * @return appointment page
 	 */
 	@RenderMapping(params = "myaction=showAppointment")
-	public String showPageView(@RequestParam String taskType, RenderResponse response) {
+	public String showPageView(RenderResponse response) {
 
 		String page = VIEW_SHOW_CITIZEN_APPOINTMENT;
 		
-		if(taskType.equals(TASK_TYPE_APPOINTMENT_RESPONSE_CITIZEN)) {
+		if(Properties.IS_KUNPO_PORTAL) {
 			page = VIEW_SHOW_CITIZEN_APPOINTMENT;
-		} else if(taskType.equals(TASK_TYPE_APPOINTMENT_RESPONSE_EMPLOYEE)) {
+		} else if(Properties.IS_LOORA_PORTAL) {
 			page = VIEW_SHOW_EMPLOYEE_APPOINTMENT;
-		}		
+		}
 		return page;
 	}
 		
@@ -98,26 +95,25 @@ public class ShowAppointmentController {
 	@ModelAttribute(value = "appointment")
 	public ModelWrapper<KokuAppointment> model(
 			@RequestParam String appointmentId,
-			@RequestParam String taskType, 
 			@RequestParam(value = "targetPerson", required = false) String targetPerson,
 			PortletSession portletSession) {	
 		
 		ModelWrapper<KokuAppointment> model = null;		
 		KokuAppointment app = null;
 		try {
-			if (taskType.equals(TASK_TYPE_APPOINTMENT_RESPONSE_CITIZEN)
-					|| taskType.equals(TASK_TYPE_APPOINTMENT_RESPONSE_CITIZEN_OLD)) {
+			if (Properties.IS_KUNPO_PORTAL) {
 				AvCitizenServiceHandle handle = new AvCitizenServiceHandle(messageSource);
 				app = handle.getAppointmentById(appointmentId, targetPerson);
-			} else if(taskType.equals(TASK_TYPE_APPOINTMENT_RESPONSE_EMPLOYEE)) {
+			} else if(Properties.IS_LOORA_PORTAL) {
 				AvEmployeeServiceHandle handle = new AvEmployeeServiceHandle(messageSource);
 				app = handle.getAppointmentById(appointmentId);
+			} else {
+				throw new KokuServiceException("PortalMode missing?");
 			}
 			model = new ModelWrapperImpl<KokuAppointment>(app);
 		} catch (KokuServiceException e) {
 			LOG.error("Failed to show appointment details. appointmentId: '"+appointmentId + 
-					"' username: '"+ (String)portletSession.getAttribute(Constants.ATTR_USERNAME) +"' taskType: '"+taskType + 
-					"'", e);
+					"' username: '"+ (String)portletSession.getAttribute(Constants.ATTR_USERNAME) +"'", e);
 			model = new ModelWrapperImpl<KokuAppointment>(null, ResponseStatus.FAIL, e.getErrorcode());
 		}
 		return model;

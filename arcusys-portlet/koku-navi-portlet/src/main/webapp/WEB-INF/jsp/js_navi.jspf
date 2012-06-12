@@ -139,6 +139,7 @@ function focusCurrentItem(naviType) {
 		case 'DaycarePaymentModify' : bold('#daycareCustomerPaymentModification'); break;
 		case 'DaycarePaymentDiscount' : bold('#daycareCustomerDiscount'); break;
 		case 'DaycareTermination' : bold('#daycareCustomerTermination'); break;
+		case 'ProcessedApplications' : bold('#<%= Constants.TASK_TYPE_APPLICATION_PROSESSED_BROWSE%>'); break;
 		default: bold("#" + currentPage.toLowerCase()); break;
 	}
 };

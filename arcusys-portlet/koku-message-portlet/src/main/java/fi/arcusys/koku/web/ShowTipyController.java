@@ -3,19 +3,14 @@ package fi.arcusys.koku.web;
 
 import static fi.arcusys.koku.common.util.Constants.ATTR_MY_ACTION;
 import static fi.arcusys.koku.common.util.Constants.ATTR_REQUEST_ID;
-import static fi.arcusys.koku.common.util.Constants.ATTR_TASK_TYPE;
 import static fi.arcusys.koku.common.util.Constants.ATTR_USERNAME;
 import static fi.arcusys.koku.common.util.Constants.ATTR_USER_ID;
 import static fi.arcusys.koku.common.util.Constants.MY_ACTION_SHOW_TIPY;
-import static fi.arcusys.koku.common.util.Constants.TASK_TYPE_INFO_REQUEST_BROWSE;
-import static fi.arcusys.koku.common.util.Constants.TASK_TYPE_INFO_REQUEST_BROWSE_REPLIED;
-import static fi.arcusys.koku.common.util.Constants.TASK_TYPE_INFO_REQUEST_BROWSE_SENT;
 import static fi.arcusys.koku.common.util.Constants.VIEW_SHOW_INFO_REQUEST;
 
 import javax.annotation.Resource;
 import javax.portlet.ActionResponse;
 import javax.portlet.PortletSession;
-import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
 import org.slf4j.Logger;
@@ -33,6 +28,7 @@ import fi.arcusys.koku.common.services.facades.impl.ResponseStatus;
 import fi.arcusys.koku.common.services.inforequest.employee.KokuEmployeeTietopyyntoServiceHandle;
 import fi.arcusys.koku.common.services.inforequest.model.KokuInformationRequestDetail;
 import fi.arcusys.koku.common.services.users.UserIdResolver;
+import fi.arcusys.koku.common.util.Properties;
 import fi.arcusys.koku.web.util.ModelWrapper;
 import fi.arcusys.koku.web.util.impl.ModelWrapperImpl;
 
@@ -54,10 +50,8 @@ public class ShowTipyController extends AbstractController {
 			PortletSession session,
 			@ModelAttribute(value = "tipy") ModelWrapper<KokuInformationRequestDetail> tipy,
 			@RequestParam(value = "requestId") String requestId,
-			@RequestParam(value = "taskType") String taskType,
 			ActionResponse actionResponse) {
 		actionResponse.setRenderParameter(ATTR_MY_ACTION, MY_ACTION_SHOW_TIPY);
-		actionResponse.setRenderParameter(ATTR_TASK_TYPE, taskType);
 		actionResponse.setRenderParameter(ATTR_REQUEST_ID, requestId);
 	}
 	
@@ -75,7 +69,6 @@ public class ShowTipyController extends AbstractController {
 	 * Creates data model integrated into the page and stores the page
 	 * @param authorizationId authorization id
 	 * @param currentPage current page id
-	 * @param taskType task type requested
 	 * @param keyword page parameter keyword
 	 * @param orderType page parameter order type
 	 * @param request RenderRequest
@@ -84,7 +77,6 @@ public class ShowTipyController extends AbstractController {
 	@ModelAttribute(value = "tipy")
 	public ModelWrapper<KokuInformationRequestDetail> model(
 			@RequestParam String requestId,
-			@RequestParam String taskType, 
 			PortletSession portletSession) {
 		
 		ModelWrapper<KokuInformationRequestDetail> modelWrapper = null;
@@ -110,17 +102,16 @@ public class ShowTipyController extends AbstractController {
 			}
 			
 			KokuInformationRequestDetail info = null;
-			if(taskType.equals(TASK_TYPE_INFO_REQUEST_BROWSE_REPLIED) 
-			   || taskType.equals(TASK_TYPE_INFO_REQUEST_BROWSE_SENT)
-			   || taskType.equals(TASK_TYPE_INFO_REQUEST_BROWSE)) {
+			if (Properties.IS_LOORA_PORTAL) {
 				KokuEmployeeTietopyyntoServiceHandle handle = new KokuEmployeeTietopyyntoServiceHandle(messageSource);
 				info = handle.getRequestDetails(reqId);
 				modelWrapper = new ModelWrapperImpl<KokuInformationRequestDetail>(info);
+			} else {
+				throw new KokuServiceException("PortalMode missing?");
 			}
 		} catch (KokuServiceException kse) {
 			LOG.error("Failed to show infoRequest details. infoRequestId: '"+requestId + 
-					"' username: '"+username+" taskType: '"+taskType + 
-					"'", kse);
+					"' username: '"+username+"'", kse);
 			modelWrapper = new ModelWrapperImpl<KokuInformationRequestDetail>(null, ResponseStatus.FAIL, kse.getErrorcode());
 		}
 		return modelWrapper;

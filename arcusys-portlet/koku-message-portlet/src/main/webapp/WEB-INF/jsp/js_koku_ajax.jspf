@@ -125,7 +125,6 @@ KokuAjax.prototype.showWarrant = function(index) {
 	url = this.renderUrls.warrantUrl;
 	url = this.formatUrl(url);
 	url += "&authorizationId="+authorizationId;
-	url += "&taskType="+pageObj.taskType;
 	window.location = url;
 };
 
@@ -136,7 +135,6 @@ KokuAjax.prototype.showResponse = function(index) {
 	var url = this.renderUrls.responseUrl;	
 	url = this.formatUrl(url);
 	url += "&responseId="+responseId;
-	url += "&taskType="+pageObj.taskType;
 	window.location = url;
 };
 
@@ -160,7 +158,6 @@ KokuAjax.prototype.showAppointment = function(index) {
 		url = this.renderUrls.appointmentUrl;
 		url = this.formatUrl(url);
 		url += "&appointmentId="+appointmentId;
-		url += "&taskType="+pageObj.taskType;
 		url += "&targetPerson="+targetPersonUid;
 		window.location = url;
 	} else if(pageObj.taskType == "<%= Constants.TASK_TYPE_APPOINTMENT_INBOX_EMPLOYEE %>"){

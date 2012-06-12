@@ -67,6 +67,8 @@
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.jgrowl_minimized.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.qtip.min.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-ui-1.8.20.custom.min.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.inputhints.min.js"></script>
+
 
 <script type="text/javascript">
 
@@ -158,7 +160,7 @@
 				<div id="consent-search" class="basic-search" style="display:none; position:relative;">
 					<form name="searchForm" onsubmit="kokuTableNavigation.searchConsents(); return false;">		
 						<span class="text-bold" ><spring:message code="consent.recipients" /></span>
-						<input type="text" name="recipient" id="recipient" style="width:100px;" />
+						<input type="text" title="123456-789A" name="recipient" id="recipient" style="width:100px;" />
 						<span class="text-bold" ><spring:message code="consent.templateName" /></span>
 						<input type="text" name="templateName" id="templateName" style="width:160px;" autocomplete="off" onkeydown="kokuSuggestionBox.beKeyDown(event)" onkeyup="kokuSuggestionBox.beKeyUp(event)" onclick="kokuSuggestionBox.createSuggestDiv('consent-search', 'templateName')" />
 						<input type="submit" value="<spring:message code="message.search"/>" />
@@ -170,7 +172,7 @@
 				<div id="employeeAppointment-search" class="basic-search" style="display:none; position:relative;">
 					<form name="searchForm" onsubmit="kokuTableNavigation.searchAppointmentsByTargetPersonSsn(); return false;">		
 						<span class="text-bold" ><spring:message code="appointment.targetPerson" /></span>
-						<input type="text" name="appointmentTargetPerson" id="appointmentTargetPerson" style="width:100px;" />
+						<input type="text" title="123456-789A" name="appointmentTargetPerson" id="appointmentTargetPerson" style="width:100px;" />
 						<input type="submit" value="<spring:message code="message.search"/>" />
 						<input type="button" value="<spring:message code="message.searchReset"/>" onclick="kokuTableNavigation.resetSearch()" />
 					</form>
@@ -180,11 +182,11 @@
 				<div id="warrants-search-citizens" class="basic-search" style="display:none; position:relative;">
 					<form name="searchForm" onsubmit="kokuTableNavigation.searchWarrantsByCitizen(); return false;">		
 						<span class="text-bold" ><spring:message code="warrant.recievedWarrants" /></span>
-						<input type="text" name="userIdRecieved" id="userIdRecieved" style="width:100px;" />
+						<input type="text" title="123456-789A" name="userIdRecieved" id="userIdRecieved" style="width:100px;" />
 						<span class="text-bold" ><spring:message code="warrant.sendedWarrants" /></span>
-						<input type="text" name="userIdSent" id="userIdSent" style="width:100px;" />
+						<input type="text" title="123456-789A" name="userIdSent" id="userIdSent" style="width:100px;" />
 						<span class="text-bold" ><spring:message code="warrant.targetPerson" /></span>
-						<input type="text" name="targetPersonUid" id="targetPersonUid" style="width:100px;" />
+						<input type="text" title="123456-789A" name="targetPersonUid" id="targetPersonUid" style="width:100px;" />
 		<%-- 				<span class="text-bold" ><spring:message code="warrant.templateName" /></span> --%>
 		<!-- 				<input type="text" name="warrantTemplateNameCitizen" id="warrantTemplateNameCitizen" style="width:160px;" autocomplete="off" onkeydown="createSuggestDiv.beKeyDown(event)" onkeyup="createSuggestDiv.beKeyUp(event)" onclick="createSuggestDiv.createSuggestDiv('warrants-search-citizens', 'warrantTemplateNameCitizen')" /> -->
 						<input type="submit" value="<spring:message code="message.search"/>" />
@@ -219,15 +221,15 @@
 						
 						<p class="searchMisc">
 							<span class="text-bold searchTitle"><spring:message code="tipy.search.targetPerson" /></span>
-							<input type="text" name="tipyTargetPerson" id="tipyTargetPerson" style="width:200px;" />
+							<input type="text" title="123456-789A" name="tipyTargetPerson" id="tipyTargetPerson" style="width:200px;" />
 							
 							<span class="text-bold searchTitle"><spring:message code="tipy.search.requester" /></span>
-							<input type="text" name="tipyRequester" id="tipyRequester" style="width:200px;" />
+							<input type="text" title="123456-789A" name="tipyRequester" id="tipyRequester" style="width:200px;" />
 						</p>
 		
 						<p class="searchMisc">					
 							<span class="text-bold searchTitle"><spring:message code="tipy.search.handOver" /></span>
-							<input type="text" name="tipyHandOver" id="tipyHandOver" style="width:200px;" />
+							<input type="text" title="123456-789A" name="tipyHandOver" id="tipyHandOver" style="width:200px;" />
 		
 							<span class="text-bold searchTitle"><spring:message code="tipy.search.information" /></span>
 							<input type="text" name="tipyInformation" id="tipyInformation" style="width:200px;" />

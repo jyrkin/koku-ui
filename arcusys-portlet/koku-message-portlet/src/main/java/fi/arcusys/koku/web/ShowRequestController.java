@@ -2,7 +2,6 @@ package fi.arcusys.koku.web;
 
 import static fi.arcusys.koku.common.util.Constants.ATTR_MY_ACTION;
 import static fi.arcusys.koku.common.util.Constants.ATTR_REQUEST_ID;
-import static fi.arcusys.koku.common.util.Constants.ATTR_TASK_TYPE;
 import static fi.arcusys.koku.common.util.Constants.MY_ACTION_SHOW_REQUEST;
 import static fi.arcusys.koku.common.util.Constants.VIEW_SHOW_REQUEST;
 
@@ -25,6 +24,7 @@ import fi.arcusys.koku.common.services.requests.employee.EmployeeRequestHandle;
 import fi.arcusys.koku.common.services.requests.models.KokuRequest;
 import fi.arcusys.koku.common.util.Constants;
 import fi.arcusys.koku.common.util.DummyMessageSource;
+import fi.arcusys.koku.common.util.Properties;
 import fi.arcusys.koku.web.util.ModelWrapper;
 import fi.arcusys.koku.web.util.impl.ModelWrapperImpl;
 
@@ -47,12 +47,10 @@ public class ShowRequestController {
 			PortletSession session,
 			@ModelAttribute(value = "request") ModelWrapper<KokuRequest> request,
 			@RequestParam(value = "requestId") String requestId,
-			@RequestParam(value = "taskType") String taskType,
 			ActionResponse response) {
 		response.setRenderParameter(ATTR_MY_ACTION, MY_ACTION_SHOW_REQUEST);
-		response.setRenderParameter(ATTR_TASK_TYPE, taskType);
 		response.setRenderParameter(ATTR_REQUEST_ID, requestId);
-	}		
+	}	
 	
 	/**
 	 * Shows request page
@@ -77,23 +75,21 @@ public class ShowRequestController {
 	@ModelAttribute(value = "request")
 	public ModelWrapper<KokuRequest> model(
 			@RequestParam String requestId,
-			@RequestParam String taskType,
 			PortletSession portletSession) {
 		
 		ModelWrapper<KokuRequest> model = null;
 		KokuRequest kokuRequest = null;
 		try {
-			if (taskType.equals(Constants.TASK_TYPE_REQUEST_VALID_EMPLOYEE) || taskType.equals(Constants.TASK_TYPE_REQUEST_DONE_EMPLOYEE)) {
+			if (Properties.IS_LOORA_PORTAL) {
 				EmployeeRequestHandle reqhandle = new EmployeeRequestHandle(new DummyMessageSource());
 				kokuRequest = reqhandle.getKokuRequestById(requestId);			
 			} else {
-				throw new KokuServiceException("No operation for taskType: '"+taskType+"' username: '" + (String)portletSession.getAttribute(Constants.ATTR_USERNAME)  + "'");
+				throw new KokuServiceException("No operation. username: '" + (String)portletSession.getAttribute(Constants.ATTR_USERNAME)  + "'");
 			}
 			model = new ModelWrapperImpl<KokuRequest>(kokuRequest);
 		} catch (KokuServiceException kse) {
 			LOG.error("Failed to show request details. requestId: '"+requestId + 
-					"' username: '"+ (String)portletSession.getAttribute(Constants.ATTR_USERNAME) +" taskType: '"+taskType + 
-					"'", kse);
+					"' username: '"+ (String)portletSession.getAttribute(Constants.ATTR_USERNAME) +"'", kse);
 			model = new ModelWrapperImpl<KokuRequest>(null, ResponseStatus.FAIL, kse.getErrorcode());
 		}		
 		return model;
