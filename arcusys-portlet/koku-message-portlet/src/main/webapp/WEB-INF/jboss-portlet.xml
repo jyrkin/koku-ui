@@ -12,7 +12,8 @@
 				
 			<!-- Removed because jquery will cause conflict with navi jquery (plugins won't work) -->
 			<script type="text/javascript" src="/js/jquery-1.7.2.min.js" />
-			<script type="text/javascript" src="/js/jquery-ui-1.8.20.custom.min.js" />			
+			<script type="text/javascript" src="/js/jquery-ui-1.8.20.custom.min.js" />
+			<script type="text/javascript" src="/js/jquery.inputhints.min.js" />	
 		</header-content>
 	</portlet>
 </portlet-app>

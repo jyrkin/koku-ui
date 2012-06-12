@@ -87,6 +87,10 @@ jQuery(document).ready(function() {
 	jQuery('#task-manager-wrap').click(function(){
 		KokuUtil.timer.resetRefreshTimer(kokuConfig);
     });
+	
+	/* Input hints for text boxes */
+	$('input[title]').inputHints();
+	
 });
 		
 /**

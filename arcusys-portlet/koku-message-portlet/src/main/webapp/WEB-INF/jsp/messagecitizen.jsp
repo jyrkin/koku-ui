@@ -113,7 +113,7 @@
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.jgrowl_minimized.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.qtip.min.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-ui-1.8.20.custom.min.js"></script>
-
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.inputhints.min.js"></script>
 
 	<%@ include file="js_koku_main.jspf" %>
 
@@ -145,7 +145,7 @@
 				<div id="consent-search" class="basic-search" style="display:none; position:relative;">
 					<form name="searchForm" onsubmit="kokuTableNavigation.searchConsents(); return false;">		
 						<span class="text-bold" ><spring:message code="consent.recipients" /></span>
-						<input type="text" name="recipient" id="recipient" style="width:100px;" />
+						<input type="text" title="123456-789A" name="recipient" id="recipient" style="width:100px;" />
 						<span class="text-bold" ><spring:message code="consent.templateName" /></span>
 						<input type="text" name="templateName" id="templateName" style="width:160px;" autocomplete="off" onkeydown="beKeyDown(event)" onkeyup="beKeyUp(event)" onclick="createSuggestDiv('consent-search', 'templateName')" />
 						<input type="submit" value="<spring:message code="message.search"/>" />
