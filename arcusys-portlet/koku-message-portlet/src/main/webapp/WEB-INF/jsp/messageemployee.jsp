@@ -205,7 +205,7 @@
 					</form>
 				</div>
 				
-				<!-- TIVA-18 Selaa tietopyyntöjä -->
+				<!-- TIVA-18 Selaa tietopyyntï¿½jï¿½ -->
 				<div id="infoRequestsSearch" class="basic-search" style="display:none; position:relative;">
 					<form name="searchForm" onsubmit="kokuTableNavigation.searchInfoRequests(); return false;">		
 					
@@ -243,7 +243,7 @@
 					</form>
 				</div>
 				
-				<!-- HAK-2 Selaa päiväkotihakemuksia -->
+				<!-- HAK-2 Selaa pï¿½ivï¿½kotihakemuksia -->
 				<div id="applicationKindergartenBrowse" class="basic-search" style="display:none; position:relative;">
 					<form name="searchForm" onsubmit="kokuTableNavigation.searchKindergartenApplications(); return false;">		
 									
@@ -256,19 +256,19 @@
 							<span class="text-bold searchTitle"><spring:message code="application.kindergarten.search.guardianAccpeted" /></span>
 						  	<select class="yesNoSelect" name="applicationKindergartendGuardianAccepted" id="applicationKindergartendGuardianAccepted">
 						  	  <option selected="selected"></option>
-							  <option value="true">Kyllä</option>
+							  <option value="true">Kyllï¿½</option>
 							  <option value="false">Ei</option>
 							</select>
 							<span class="text-bold searchTitle"><spring:message code="application.kindergarten.search.placeAccepted" /></span>
 							<select class="yesNoSelect" name="applicationKindergartendPlaceCancelled" id="applicationKindergartendPlaceCancelled" >
 							  <option selected="selected"></option>
-							  <option value="true">Kyllä</option>
+							  <option value="true">Kyllï¿½</option>
 							  <option value="false">Ei</option>
 							</select>					
 							<span class="text-bold searchTitle"><spring:message code="application.kindergarten.search.guardianAcceptedHighestIncome" /></span>
 							<select class="yesNoSelect" name="applicationKindergartendHighestIncome" id="applicationKindergartendHighestIncome">
 							  <option selected="selected"></option>
-							  <option value="true">Kyllä</option>
+							  <option value="true">Kyllï¿½</option>
 							  <option value="false">Ei</option>
 							</select>				
 						</p>

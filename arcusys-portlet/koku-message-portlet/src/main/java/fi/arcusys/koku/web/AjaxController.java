@@ -60,14 +60,14 @@ import fi.koku.portlet.filter.userinfo.UserInfo;
 @Controller("ajaxController")
 @RequestMapping(value = "VIEW")
 public class AjaxController extends AbstractController {
-	
+
 	private static final int MAX_SUGGESTION_RESULTS = 5;
 	private static final Logger LOG = LoggerFactory.getLogger(AjaxController.class);
-		
+
 	@Resource
 	private ResourceBundleMessageSource messageSource;
 
-	
+
 	/**
 	 * Handles portlet ajax request of tasks such as messages, requests,
 	 * appointments, consents and so on, distinguished by task type
@@ -88,15 +88,15 @@ public class AjaxController extends AbstractController {
 			@RequestParam(value = "field") String field,
 			@RequestParam(value = "orderType") String orderType,
 			ModelMap modelmap, PortletRequest request, PortletResponse response) {
-		
+
 		final long start = System.nanoTime();
 		taskType = filterDuplicates(taskType);
-		
-		final PortletSession portletSession = request.getPortletSession();		
+
+		final PortletSession portletSession = request.getPortletSession();
 		final String username = (String) portletSession.getAttribute(ATTR_USERNAME);
 		String userId = (String) portletSession.getAttribute(ATTR_USER_ID);;
 		registerUserToWS(portletSession);
-		
+
 		if (userId == null) {
 			try {
 				long startUser = System.nanoTime();
@@ -110,8 +110,8 @@ public class AjaxController extends AbstractController {
 				LOG.error("Error while trying to resolve userId. See following error msg: "+ e);
 			}
 		}
-		
-		KokuTaskQueryProcess query = null;	
+
+		KokuTaskQueryProcess query = null;
 		if (Properties.IS_KUNPO_PORTAL) {
 			query = new QueryProcessCitizenImpl(messageSource);
 		} else if (Properties.IS_LOORA_PORTAL) {
@@ -125,22 +125,22 @@ public class AjaxController extends AbstractController {
 		LOG.warn("getTasks  - "+((System.nanoTime()-start)/1000/1000) + "ms");
 		return AjaxViewResolver.AJAX_PREFIX;
 	}
-	
+
 	private String filterDuplicates(String parameter) {
 		if (parameter != null && !parameter.isEmpty()) {
 			return parameter.split(",")[0];
 		} else {
 			return parameter;
 		}
-		
+
 	}
-		
+
 	/**
 	 * KOKU-805
-	 * 
+	 *
 	 * Pilot KunPo users register themselves one-by-one in KunPo, they're not registered a priori.
 	 * These users need to be added to Intalio LDAP also for HAK/TIVA/KV/AV to work.
-	 * 
+	 *
 	 * @param portletSession
 	 */
 	private void registerUserToWS(final PortletSession portletSession) {
@@ -148,19 +148,19 @@ public class AjaxController extends AbstractController {
 	    if (portletSession.getAttribute(ATTR_KOKU_USER) != null) {
 	    	return;
 	    }
-	    
+
 		final String username = (String) portletSession.getAttribute(ATTR_USERNAME);
-    	final UserInfo userInfo = (UserInfo) portletSession.getAttribute(UserInfo.KEY_USER_INFO);	    
+    	final UserInfo userInfo = (UserInfo) portletSession.getAttribute(UserInfo.KEY_USER_INFO);
     	LOG.info("Username: '"+username+"' Hetu: "+userInfo);
-    	
-    	if (userInfo == null) {	    		
+
+    	if (userInfo == null) {
     		LOG.error("UserInfo is null! Can't register user to WS. Username: '"+username+"'");
     		return;
     	}
-    	
+
 		final KokuUserService userService = new KokuUserService();
 		KokuUser user = null;
-		
+
 		try {
 	    	if (Properties.IS_KUNPO_PORTAL) {
 	    		// Kunpo
@@ -173,9 +173,9 @@ public class AjaxController extends AbstractController {
 	    		return;
 	    	}
     	} catch (KokuServiceException kse) {
-    		LOG.error("Failed register user to WS. Username: '"+username+"'", kse);    		
+    		LOG.error("Failed register user to WS. Username: '"+username+"'", kse);
     	}
-    	
+
     	if (user == null) {
     		// TODO: Remove if statement when Loora side implementation is ready, if ever..
     		if (Properties.IS_KUNPO_PORTAL) {
@@ -183,24 +183,24 @@ public class AjaxController extends AbstractController {
     		}
     		user = new KokuUser();
     	}
-    	portletSession.setAttribute(ATTR_KOKU_USER, user);	    	
+    	portletSession.setAttribute(ATTR_KOKU_USER, user);
 	}
-	
+
 	/**
 	 * Returns citizen or employee actionProcess (depends portal settings)
-	 * 
+	 *
 	 * @param request
 	 * @return
 	 * @throws KokuServiceException
 	 */
 	private KokuActionProcess getActionProcess(PortletRequest request) throws KokuServiceException {
-		final PortletSession portletSession = request.getPortletSession();		
+		final PortletSession portletSession = request.getPortletSession();
 		final String username = (String) portletSession.getAttribute(ATTR_USERNAME);
 		String userId = (String) portletSession.getAttribute(ATTR_USER_ID);
-			
+
 		if (userId == null) {
 			UserIdResolver resolver = new UserIdResolver();
-			resolver.getUserId(username, getPortalRole());				
+			resolver.getUserId(username, getPortalRole());
 		}
 		KokuActionProcess actionProcess = null;
 		switch (getPortalRole()) {
@@ -208,12 +208,12 @@ public class AjaxController extends AbstractController {
 			case EMPLOYEE: actionProcess = new KokuActionProcessEmployeeImpl(userId); break;
 			default: actionProcess = new KokuActionProcessDummyImpl(null); break;
 		}
-		return actionProcess;		
-	}	
-	
+		return actionProcess;
+	}
+
 	/**
 	 * Archive old messages (more than 3 month old)
-	 * 
+	 *
 	 * @param folderType folder which messages should archive
 	 * @param modelmap ModelMap
 	 * @param request PortletRequest
@@ -223,11 +223,11 @@ public class AjaxController extends AbstractController {
 	@ResourceMapping(value = "archiveMessageOld")
 	public String doArchiveOld(@RequestParam(value = "folderType") String folderType,
 			ModelMap modelmap, PortletRequest request, PortletResponse response) {
-		
-		final PortletSession portletSession = request.getPortletSession();		
-		final String username = (String) portletSession.getAttribute(ATTR_USERNAME);		
+
+		final PortletSession portletSession = request.getPortletSession();
+		final String username = (String) portletSession.getAttribute(ATTR_USERNAME);
 		final JSONObject jsonModel = new JSONObject();
-		
+
 		try {
 			getActionProcess(request).archiveOldMessages(folderType);
 			jsonModel.put(JSON_RESULT, RESPONSE_OK);
@@ -240,10 +240,10 @@ public class AjaxController extends AbstractController {
 		modelmap.addAttribute(RESPONSE, jsonModel);
 		return AjaxViewResolver.AJAX_PREFIX;
 	}
-	
+
 	/**
 	 * Archives the messages
-	 * 
+	 *
 	 * @param messageList a list of message ids to be archived
 	 * @param modelmap ModelMap
 	 * @param request PortletRequest
@@ -253,8 +253,8 @@ public class AjaxController extends AbstractController {
 	@ResourceMapping(value = "archiveMessage")
 	public String doArchive(@RequestParam(value = "messageList[]") String[] messageList,
 			ModelMap modelmap, PortletRequest request, PortletResponse response) {
-		
-		final PortletSession portletSession = request.getPortletSession();		
+
+		final PortletSession portletSession = request.getPortletSession();
 		final String username = (String) portletSession.getAttribute(ATTR_USERNAME);
 		final JSONObject jsonModel = new JSONObject();
 		try {
@@ -269,7 +269,7 @@ public class AjaxController extends AbstractController {
 		modelmap.addAttribute(RESPONSE, jsonModel);
 		return AjaxViewResolver.AJAX_PREFIX;
 	}
-	
+
 	/**
 	 * Deletes the messages
 	 * @param messageList a list of message ids to be deleted
@@ -281,8 +281,8 @@ public class AjaxController extends AbstractController {
 	@ResourceMapping(value = "deleteMessage")
 	public String doDelete(@RequestParam(value = "messageList[]") String[] messageList,
 			ModelMap modelmap, PortletRequest request, PortletResponse response) {
-		
-		final PortletSession portletSession = request.getPortletSession();		
+
+		final PortletSession portletSession = request.getPortletSession();
 		final String username = (String) portletSession.getAttribute(ATTR_USERNAME);
 		final JSONObject jsonModel = new JSONObject();
 
@@ -298,7 +298,7 @@ public class AjaxController extends AbstractController {
 		modelmap.addAttribute(RESPONSE, jsonModel);
 		return AjaxViewResolver.AJAX_PREFIX;
 	}
-	
+
 	/**
 	 * Revokes the consents
 	 * @param messageList a list of message/consent ids to be deleted
@@ -310,9 +310,9 @@ public class AjaxController extends AbstractController {
 	@ResourceMapping(value = "revokeConsent")
 	public String revokeConsent(@RequestParam(value = "messageList[]") String[] messageList,
 			ModelMap modelmap, PortletRequest request, PortletResponse response) {
-		
+
 		final PortletSession portletSession = request.getPortletSession();
-		final String username = (String) portletSession.getAttribute(ATTR_USERNAME);		
+		final String username = (String) portletSession.getAttribute(ATTR_USERNAME);
 		final JSONObject jsonModel = new JSONObject();
 		try {
 			getActionProcess(request).revokeConsents(messageList);
@@ -326,7 +326,7 @@ public class AjaxController extends AbstractController {
 		modelmap.addAttribute(RESPONSE, jsonModel);
 		return AjaxViewResolver.AJAX_PREFIX;
 	}
-	
+
 	/**
 	 * Revokes the warrants
 	 * @param messageList a list of message/consent ids to be deleted
@@ -339,12 +339,12 @@ public class AjaxController extends AbstractController {
 	public String revokeWarrant(
 			@RequestParam(value = "messageList[]") String[] messageList,
 			@RequestParam(value = "comment") String comment,
-			ModelMap modelmap, 
+			ModelMap modelmap,
 			PortletRequest request,
 			PortletResponse response) {
-		final PortletSession portletSession = request.getPortletSession();				
+		final PortletSession portletSession = request.getPortletSession();
 		final String username = (String) portletSession.getAttribute(ATTR_USERNAME);
-		final JSONObject jsonModel = new JSONObject();		
+		final JSONObject jsonModel = new JSONObject();
 
 		try {
 			getActionProcess(request).revokeWarrants(messageList, comment);
@@ -354,11 +354,11 @@ public class AjaxController extends AbstractController {
 		} catch (KokuActionProcessException kape) {
 			LOG.error("Failed to revoke warrant. Username: '"+ username+"'", kape);
 			jsonModel.put(JSON_RESULT, RESPONSE_FAIL);
-		}			
-		modelmap.addAttribute(RESPONSE, jsonModel);		
+		}
+		modelmap.addAttribute(RESPONSE, jsonModel);
 		return AjaxViewResolver.AJAX_PREFIX;
-	}	
-	
+	}
+
 	/**
 	 * Cancels appointments
 	 * @param messageList
@@ -373,17 +373,17 @@ public class AjaxController extends AbstractController {
 	public String cancelAppointment(@RequestParam(value = "messageList[]") String[] messageList,
 			@RequestParam(value = "targetPersons[]", required=false) String[] targetPersons,
 			@RequestParam(value = "comment") String comment,
-			ModelMap modelmap, PortletRequest request, PortletResponse response) {		
-		
-		final PortletSession portletSession = request.getPortletSession();				
+			ModelMap modelmap, PortletRequest request, PortletResponse response) {
+
+		final PortletSession portletSession = request.getPortletSession();
 		final String username = (String) portletSession.getAttribute(ATTR_USERNAME);
 		final JSONObject jsonModel = new JSONObject();
 		String userId = (String) portletSession.getAttribute(ATTR_USER_ID);
-		
+
 		try {
 			if (userId == null) {
 				final UserIdResolver resolver = new UserIdResolver();
-				userId = resolver.getUserId(username, getPortalRole());					
+				userId = resolver.getUserId(username, getPortalRole());
 			}
 			getActionProcess(request).cancelAppointments(messageList, targetPersons, comment);
 			jsonModel.put(JSON_RESULT, RESPONSE_OK);
@@ -393,28 +393,67 @@ public class AjaxController extends AbstractController {
 			LOG.error("Failed to cancelAppointment", kape);
 			jsonModel.put(JSON_RESULT, RESPONSE_FAIL);
 		}
-		
-		modelmap.addAttribute(RESPONSE, jsonModel);		
+
+		modelmap.addAttribute(RESPONSE, jsonModel);
 		return AjaxViewResolver.AJAX_PREFIX;
 	}
-	
+
+	/**
+	 * Cancels appointments
+	 * @param messageList
+	 * @param targetPersons
+	 * @param comment
+	 * @param modelmap
+	 * @param request
+	 * @param response
+	 * @return action response 'OK' or 'FAIL'
+	 */
+	@ResourceMapping(value = "disableAppointmentSlot")
+	public String disableAppointmentSlot(@RequestParam(value = "appId") long appointmentId,
+			@RequestParam(value = "slotNumber") int slotNumber,
+			ModelMap modelmap, PortletRequest request, PortletResponse response) {
+
+		final PortletSession portletSession = request.getPortletSession();
+		final String username = (String) portletSession.getAttribute(ATTR_USERNAME);
+		final JSONObject jsonModel = new JSONObject();
+		String userId = (String) portletSession.getAttribute(ATTR_USER_ID);
+
+		try {
+			if (userId == null) {
+				final UserIdResolver resolver = new UserIdResolver();
+				userId = resolver.getUserId(username, getPortalRole());
+			}
+			getActionProcess(request).disableAppointmentSlot(appointmentId, slotNumber);
+			jsonModel.put(JSON_RESULT, RESPONSE_OK);
+		} catch (KokuServiceException e) {
+			LOG.error("Failed to get UserUid username: '"+username+"' portalRole: '"+getPortalRole()+"'", e);
+		} catch (KokuActionProcessException kape) {
+			LOG.error("Failed to cancelAppointment", kape);
+			jsonModel.put(JSON_RESULT, RESPONSE_FAIL);
+		}
+
+		modelmap.addAttribute(RESPONSE, jsonModel);
+		return AjaxViewResolver.AJAX_PREFIX;
+	}
+
+
 	@ResourceMapping(value = "getSuggestion")
 	public String getSuggestion(
 			@RequestParam(value = "keyword") String keyword,
 			@RequestParam(value = "suggestType") String suggestionType,
-			ModelMap modelmap, 
-			PortletRequest request, 
+			ModelMap modelmap,
+			PortletRequest request,
 			PortletResponse response) {
-		
-		final PortletSession portletSession = request.getPortletSession();				
+
+		final PortletSession portletSession = request.getPortletSession();
 		final String username = (String) portletSession.getAttribute(ATTR_USERNAME);
 		final JSONObject jsonModel = new JSONObject();
-		
+
 		@SuppressWarnings("rawtypes")
 		List resultList = null;
 		try {
 			if (suggestionType.equals(SUGGESTION_CONSENT)) {
-				TivaEmployeeServiceHandle tivaHandle = new TivaEmployeeServiceHandle(new DummyMessageSource());					
+				TivaEmployeeServiceHandle tivaHandle = new TivaEmployeeServiceHandle(new DummyMessageSource());
 				resultList = tivaHandle.searchConsentTemplates(keyword, MAX_SUGGESTION_RESULTS);
 			} else if (suggestionType.equals(SUGGESTION_WARRANT)) {
 				KokuEmployeeWarrantHandle handle = new KokuEmployeeWarrantHandle(new DummyMessageSource());
@@ -430,10 +469,10 @@ public class AjaxController extends AbstractController {
 			LOG.error("Failed to get suggestion. keyword: '"+keyword+"' suggestionType: '"+suggestionType+"'", kse);
 			resultList = new ArrayList<String>();
 		}
-		
+
 		jsonModel.put(JSON_RESULT, resultList);
 		modelmap.addAttribute(RESPONSE, jsonModel);
 		return AjaxViewResolver.AJAX_PREFIX;
 	}
-	
+
 }

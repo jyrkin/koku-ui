@@ -20,16 +20,16 @@ var KokuUtil = {
 		 * @param {function} callback function. Will be run when user rejects cancellation
 		 * @return void
 		 */
-		cancelAppointment : function(elementId, acceptCallback, refuseCallback ) {
+		cancelAppointment : function(elementId, acceptCallback, refuseCallback, acceptButtonText, refuseButtonText, width, height) {
 			jQuery(elementId).dialog({
 				resizable: false,
-				height:290,
-				width: 500,
+				width: width,
+				height: height,
 				modal: true,
 				buttons:  
 					[
 						{
-							text : 'Lähetä peruutus',
+							text : acceptButtonText,
 							click : function() {
 								$( this ).dialog( "close" );
 								if (typeof acceptCallback !== 'undefined' && jQuery.isFunction(acceptCallback) && acceptCallback !== null) {
@@ -39,7 +39,7 @@ var KokuUtil = {
 							width: 150
 						},
 						{ 
-							text : 'Peruuta',
+							text : refuseButtonText,
 							click : function() {
 								$( this ).dialog( "close" );
 								if (typeof acceptCallback !== 'undefined' && jQuery.isFunction(refuseCallback)) {

@@ -96,6 +96,21 @@ KokuAjax.prototype.cancelAppointments = function(messageList, targetPersons, com
 	});
 };
 
+/**
+ * Disables an appointment slot selected by employee
+ */
+KokuAjax.prototype.disableAppointmentSlot = function(appointmentId, slotNumber, callback) {
+	var url = this.renderUrls.disableSlotUrl;
+	url = this.formatUrl(url);
+
+	jQuery.post(url, {'appId':appointmentId, 'slotNumber':slotNumber}, function(data) {
+		var obj = jQuery.parseJSON(data);
+		var json = obj.response;
+		var result = json["result"];
+		callback(result);
+	});
+};
+
 /* Shows detailed message page */
 KokuAjax.prototype.showMessage = function(messageId) {
 	var url = this.renderUrls.messageUrl;
@@ -134,7 +149,7 @@ KokuAjax.prototype.showAppointment = function(index) {
 	if (typeof task["targetPersonUser"] !== 'undefined') {
 		targetPersonUid = task["targetPersonUser"]["uid"];
 	}
-	if (typeof targetPersonUid === 'undefined' || targetPersonUid === null) {
+	if (typeof targetPersonUid === 'undefined' || targetPersonUid === null) {
 		targetPersonUid = "";
 	}
 	var url="";

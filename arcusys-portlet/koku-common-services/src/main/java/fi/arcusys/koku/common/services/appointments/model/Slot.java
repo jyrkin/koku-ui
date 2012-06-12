@@ -19,73 +19,74 @@ public class Slot {
     private String endTime;
     private String location;
     private String comment;
+    private boolean disabled;
     private boolean approved;
     private KokuUser targetPersonUser;
     private final List<KokuUser> recipientUsers = new ArrayList<KokuUser>();
-    
-    
+
+
     /* getters */
     public long getAppointmentId() {
     	return appointmentId;
     }
-    
+
     public long getSlotNumber() {
     	return slotNumber;
     }
-    
+
     public String getAppointmentDate() {
     	return appointmentDate;
     }
-    
+
     public String getStartTime() {
     	return startTime;
     }
-    
+
     public String getEndTime() {
     	return endTime;
     }
-    
+
     public String getLocation() {
     	return location;
     }
-    
+
     public String getComment() {
     	return comment;
     }
-    
+
     public boolean getApproved() {
     	return approved;
     }
-    
+
     /* setters */
     public void setAppointmentId(long appointmentId) {
     	this.appointmentId = appointmentId;
     }
-    
+
     public void setSlotNumber(int slotNumber) {
     	this.slotNumber = slotNumber;
     }
-    
+
     public void setAppointmentDate(String appointmentDate) {
     	this.appointmentDate = appointmentDate;
     }
-    
+
     public void setStartTime(String startTime) {
     	this.startTime = startTime;
     }
-    
+
     public void setEndTime(String endTime) {
     	this.endTime = endTime;
     }
-    
+
     public void setLocation(String location) {
     	this.location = location;
     }
-    
+
     public void setComment(String comment) {
     	this.comment = comment;
     }
-    
+
     public void setApproved(boolean approved) {
     	this.approved = approved;
     }
@@ -102,6 +103,14 @@ public class Slot {
 	 */
 	public final void setTargetPersonUser(KokuUser targetPersonUser) {
 		this.targetPersonUser = targetPersonUser;
+	}
+
+	public boolean isDisabled() {
+		return disabled;
+	}
+
+	public void setDisabled(boolean disabled) {
+		this.disabled = disabled;
 	}
 
 	/**
