@@ -288,7 +288,7 @@
 			</preference>
 			<preference>
 				<name>notifFilter</name>
-				<value></value>
+				<value>Loma-aikojen hoitotarvekysely</value>
 			</preference>
            <preference>
 				<name>refreshDuration</name>
