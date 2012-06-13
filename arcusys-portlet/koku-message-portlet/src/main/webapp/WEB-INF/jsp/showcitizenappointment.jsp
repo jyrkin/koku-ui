@@ -12,6 +12,7 @@
 </portlet:actionURL>
 
 <portlet:resourceURL var="cancelURL" id="cancelAppointment"></portlet:resourceURL>
+<portlet:resourceURL var="disableSlotURL" id="disableAppointmentSlot"></portlet:resourceURL>
 
 <portlet:resourceURL var="appointmentRenderURL" id="createAppointmentRenderUrl">
 </portlet:resourceURL>
