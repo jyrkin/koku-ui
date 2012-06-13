@@ -49,6 +49,7 @@ public final class NavigationPortletProperties {
 	    public static final String APPLICATIONS_DAYCARE_PAYMENT_DISCOUNT_BROWSE    	= "navigationPortlet.link.applications.daycare.payment.discount.list";
 	    public static final String APPLICATIONS_DAYCARE_TERMINATION_BROWSE		    = "navigationPortlet.link.applications.daycare.terminations.list";
 	    public static final String APPLICATIONS_DAYCARE_HOLIDAYS_FORM			    = "navigationPortlet.link.applications.daycare.holidays.form";
+	    public static final String APPLICATIONS_DAYCARE_HOLIDAYS_ANSWERED_BROWSE	= "navigationPortlet.link.applications.daycare.holidays.answered.list";
 	}
 
 
@@ -85,5 +86,6 @@ public final class NavigationPortletProperties {
     public static final String APPLICATIONS_DAYCARE_PAYMENT_DISCOUNT_BROWSE    	= KoKuPropertiesUtil.get(Property.APPLICATIONS_DAYCARE_PAYMENT_DISCOUNT_BROWSE);
     public static final String APPLICATIONS_DAYCARE_TERMINATION_BROWSE		    = KoKuPropertiesUtil.get(Property.APPLICATIONS_DAYCARE_TERMINATION_BROWSE);
     public static final String APPLICATIONS_DAYCARE_HOLIDAYS_FORM				= KoKuPropertiesUtil.get(Property.APPLICATIONS_DAYCARE_HOLIDAYS_FORM);
+    public static final String APPLICATIONS_DAYCARE_HOLIDAYS_ANSWERED_BROWSE	= KoKuPropertiesUtil.get(Property.APPLICATIONS_DAYCARE_HOLIDAYS_ANSWERED_BROWSE);
 
 }

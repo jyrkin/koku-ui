@@ -118,6 +118,7 @@ public final class Constants {
 	public static final String TASK_TYPE_APPLICATION_DAYCARE_PAYMENT_DISCOUNT_BROWSE	= "application_daycare_discount_browse";		// Virkam.: Asiointipalvelut - Päivähoidon asiakasmaksunalentamiset
 	public static final String TASK_TYPE_APPLICATION_DAYCARE_TERMINATION_BROWSE			= "application_daycare_terminations_browse";	// Virkam.: Asiointipalvelut - Irtisanoutumiset päivähoitopaikasta
 	public static final String TASK_TYPE_APPLICATION_DAYCARE_HOLIDAYS_BROWSE			= "application_daycare_holidays_browse";		// Kuntalainen: Asiointipalvelut - Loma-aikojen hoitotarvekyselyt
+	public static final String TASK_TYPE_APPLICATION_DAYCARE_HOLIDAYS_ANSWERED_BROWSE	= "application_daycare_holidays_answered_browse";		// Kuntalainen: Asiointipalvelut - vastatut kyselyt (hoitotarvekyselyt)
 
 
 	/* ATTR_PORTAL_INFO possible values */
