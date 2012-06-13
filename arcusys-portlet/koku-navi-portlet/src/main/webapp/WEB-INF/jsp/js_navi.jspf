@@ -181,7 +181,7 @@ function ajaxUpdate() {
 	/**
 	 * Updates the new message number to indicate user
 	 */
-	function updateMessageNum(inboxNum, archiveInboxNum, consentsTotal, appointmentsTotal, requestsTotal, infoRequestsTotal, daycareApplicationTotal, daycarePaymentTotal, daycarePaymentModTotal, daycarePaymentDiscountTotal, daycareTerminationTotal, daycareHolidaysTotal) {	
+	function updateMessageNum(inboxNum, archiveInboxNum, consentsTotal, appointmentsTotal, requestsTotal, infoRequestsTotal, daycarePaymentTotal, daycarePaymentModTotal, daycarePaymentDiscountTotal, daycareTerminationTotal, daycareHolidaysTotal) {	
 		
 		function updateMsgCounter(elementId, count) {
 			element = jQuery(elementId);
@@ -193,7 +193,7 @@ function ajaxUpdate() {
 				element.html("");
 			}
 		};
-		var looraServiceApplicationsTotal = daycareApplicationTotal + daycarePaymentTotal + daycarePaymentModTotal + daycarePaymentDiscountTotal + daycareTerminationTotal
+		var looraServiceApplicationsTotal = daycarePaymentTotal + daycarePaymentModTotal + daycarePaymentDiscountTotal + daycareTerminationTotal
 		updateMsgCounter('#inbox_num_super', inboxNum + archiveInboxNum);
 		updateMsgCounter('#inbox_num', inboxNum);
 		updateMsgCounter('#archive_inbox_num_super', archiveInboxNum);
@@ -207,11 +207,13 @@ function ajaxUpdate() {
 		updateMsgCounter('#consents_num', consentsTotal);
 		updateMsgCounter('#infoRequests_num_super', infoRequestsTotal);
 		updateMsgCounter('#infoRequests_num', infoRequestsTotal);
-		updateMsgCounter('#loora_service_application_num_super', looraServiceApplicationsTotal);
-		updateMsgCounter('#loora_service_application_num', looraServiceApplicationsTotal);
-		updateMsgCounter('#kunpo_service_application_num_super', daycareHolidaysTotal);
-		updateMsgCounter('#kunpo_service_application_num', daycareHolidaysTotal);
-		updateMsgCounter('#daycare_application_num', daycareApplicationTotal);
+		if (!isNaN(looraServiceApplicationsTotal)) {
+			updateMsgCounter('#loora_service_application_num_super', looraServiceApplicationsTotal);
+			updateMsgCounter('#loora_service_application_num', looraServiceApplicationsTotal);
+		} else {
+			updateMsgCounter('#kunpo_service_application_num_super', daycareHolidaysTotal);
+			updateMsgCounter('#kunpo_service_application_num', daycareHolidaysTotal);
+		}
 		updateMsgCounter('#daycare_payment_num', daycarePaymentTotal);
 		updateMsgCounter('#daycare_payment_modify_num', daycarePaymentModTotal);
 		updateMsgCounter('#daycare_payment_discount_num', daycarePaymentDiscountTotal);
@@ -241,7 +243,11 @@ function ajaxUpdate() {
 							json["<%=Constants.JSON_APPOINTMENT_TOTAL %>"],
 							json["<%=Constants.JSON_REQUESTS_TOTAL %>"],
 							json["<%=Constants.JSON_INFO_REQUESTS_TOTAL %>"],
-							10, 10, 10, 10, 10, 10
+							json["<%=Constants.JSON_DAYCARE_PAYMENT_TOTAL %>"], 
+							json["<%=Constants.JSON_DAYCARE_PAYMENT_MODIFY_TOTAL %>"], 
+							json["<%=Constants.JSON_DAYCARE_PAYMENT_DISCOUNT_TOTAL %>"], 
+							json["<%=Constants.JSON_DAYCARE_TERMINATION_TOTAL %>"],
+							json["<%=Constants.JSON_DAYCARE_HOLIDAYS_TOTAL %>"]
 						);
 				}
 				naviRefreshTimer = setTimeout('ajaxUpdate()', 30000);		

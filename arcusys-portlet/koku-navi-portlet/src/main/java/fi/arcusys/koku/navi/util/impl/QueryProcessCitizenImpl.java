@@ -10,6 +10,7 @@ import static fi.arcusys.koku.common.util.Constants.JSON_DAYCARE_HOLIDAYS_TOTAL;
 import static fi.arcusys.koku.common.util.Constants.TOKEN_STATUS_INVALID;
 import static fi.arcusys.koku.common.util.Constants.TOKEN_STATUS_VALID;
 import static fi.arcusys.koku.common.util.Properties.RECEIVED_REQUESTS_FILTER;
+import static fi.arcusys.koku.common.util.Properties.RECEIVED_DAYCARE_HOLIDAYS;
 import net.sf.json.JSONObject;
 
 import org.apache.log4j.Logger;
@@ -24,8 +25,8 @@ import fi.arcusys.koku.common.util.PortalRole;
 
 
 public class QueryProcessCitizenImpl extends AbstractQueryProcess {
-	
-	private static final Logger LOG = Logger.getLogger(QueryProcessCitizenImpl.class);	
+
+	private static final Logger LOG = Logger.getLogger(QueryProcessCitizenImpl.class);
 
 	public QueryProcessCitizenImpl(MessageSource messages) {
 		super(messages);
@@ -36,15 +37,14 @@ public class QueryProcessCitizenImpl extends AbstractQueryProcess {
 		JSONObject jsonModel = new JSONObject();
 		if (userId == null) {
 			jsonModel.put(JSON_LOGIN_STATUS, TOKEN_STATUS_INVALID);
-		} else {			
+		} else {
 			try {
-				jsonModel.put(JSON_LOGIN_STATUS, TOKEN_STATUS_VALID);			
+				jsonModel.put(JSON_LOGIN_STATUS, TOKEN_STATUS_VALID);
 				jsonModel.put(JSON_INBOX, getNewMessageNum(userId, KokuFolderType.INBOX));
 				jsonModel.put(JSON_ARCHIVE_INBOX, getNewMessageNum(userId, KokuFolderType.ARCHIVE_INBOX));
 				jsonModel.put(JSON_CONSENTS_TOTAL, getTotalAssignedConsents(userId));
 				jsonModel.put(JSON_APPOINTMENT_TOTAL, getTotalAssignedAppointments(userId));
-				//jsonModel.put(JSON_DAYCARE_HOLIDAYS_TOTAL, getTotalTasks(userId, token, TODO_DAYCARE_FILTER))
-				//etc. work in progress, blocked until actually implemented in forms, KOKULT-291
+				jsonModel.put(JSON_DAYCARE_HOLIDAYS_TOTAL, getTotalTasks(userId, token, RECEIVED_DAYCARE_HOLIDAYS));
 				try {
 					jsonModel.put(JSON_REQUESTS_TOTAL, getTotalTasks(userId, token, RECEIVED_REQUESTS_FILTER));
 				} catch (Exception e) {
@@ -56,36 +56,36 @@ public class QueryProcessCitizenImpl extends AbstractQueryProcess {
 				jsonModel.put(JSON_ARCHIVE_INBOX, 0);
 				jsonModel.put(JSON_CONSENTS_TOTAL, 0);
 				jsonModel.put(JSON_APPOINTMENT_TOTAL, 0);
-			}			
+			}
 		}
 		return jsonModel;
 	}
-	
-	
+
+
 	/**
 	 * Returns total amount of assigned consents (not just new ones)
-	 * 
+	 *
 	 * @param userId
 	 * @return number of assigned consents
-	 * @throws KokuServiceException 
+	 * @throws KokuServiceException
 	 */
 	private int getTotalAssignedConsents(String userId) throws KokuServiceException {
 		TivaCitizenServiceHandle handle = new TivaCitizenServiceHandle(new DummyMessageSource());
 		return handle.getTotalAssignedConsents(userId);
 	}
-	
+
 	/**
 	 * Returns total amount of assigned appointments
-	 * 
+	 *
 	 * @param userId
 	 * @return number of assigned appointments
-	 * @throws KokuServiceException 
+	 * @throws KokuServiceException
 	 */
 	private int getTotalAssignedAppointments(String userId) throws KokuServiceException {
 		AvCitizenServiceHandle handle = new AvCitizenServiceHandle(new DummyMessageSource(), userId);
 		return handle.getTotalAssignedAppointmentsNum(userId);
 	}
-	
+
 
 
 }
