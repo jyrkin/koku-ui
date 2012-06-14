@@ -3,25 +3,9 @@
 <portlet:resourceURL var="ajaxURL" id="getTask">
 </portlet:resourceURL>
 
-<portlet:renderURL var="formURL" windowState="<%= WindowState.NORMAL.toString() %>" >
-	<portlet:param name="myaction" value="taskform" />
-	<portlet:param name="tasklink" value= "CONSTANT_TASK_FORM_LINK" />
-	<portlet:param name="currentPage" value= "CONSTANT_TASK_CURRENT_PAGE" />
-	<portlet:param name="taskType" value= "CONSTANT_TASK_TASK_TYPE" />
-	<portlet:param name="keyword" value= "CONSTANT_TASK_KEYWORD" />
-	<portlet:param name="orderType" value= "CONSTANT_TASK_ORDER_TYPE" />
-</portlet:renderURL>
-
-<portlet:resourceURL var="popupURL" id="getForm">
-	<portlet:param name="myaction" value="popup" />
-	<portlet:param name="tasklink" value= "CONSTANT_TASK_FORM_LINK" />
-</portlet:resourceURL>
-
-<portlet:resourceURL var="formRenderURL" id="createFormRenderUrl">
-</portlet:resourceURL>
-
-<portlet:resourceURL var="popupRenderURL" id="createPopupRenderUrl">
-</portlet:resourceURL>
+<portlet:actionURL var="formActionUrl">
+	<portlet:param name="action" value="toTaskform" />
+</portlet:actionURL>
 
 <portlet:renderURL var="homeURL" windowState="<%= WindowState.NORMAL.toString() %>" >
 	<portlet:param name="myaction" value="home" />
@@ -164,6 +148,13 @@
 		});
 	}
 
+	function showForm(formLink) {
+		var url = "<%= formActionUrl %>";
+		url = formatUrl(url);
+		window.location = url + "&tasklink="+encodeURIComponent(formLink);
+	}
+
+	
 	/**
 	 * Create tasks table in Html
 	 */
@@ -261,71 +252,6 @@
 		return taskHtml;
 	}
 	
-	<%  //for jboss portal
-	if(defaultPath.contains("default")) { %>
-	
-	function showForm(link) {
-		var formUrl = "<%= formURL %>";
-		var formUrl = formUrl.replace("CONSTANT_TASK_FORM_LINK", escape(link));
-		var formUrl = formUrl.replace("CONSTANT_TASK_CURRENT_PAGE", pageObj.currentPage);
-		var formUrl = formUrl.replace("CONSTANT_TASK_TASK_TYPE", pageObj.taskType);
-		var formUrl = formUrl.replace("CONSTANT_TASK_KEYWORD", pageObj.keyword);
-		var formUrl = formUrl.replace("CONSTANT_TASK_ORDER_TYPE", pageObj.orderType);
-		
-		window.location = formUrl;	
-	}
-	
-	/**
-	 * Show task form in pop up window
-	 */
-	function popupTaskForm(formLink) {
-		var w = 900;
-		var h = 650;
-		var left = (screen.width/2)-(w/2);
-		var top = (screen.height/2)-(h/2);
-		
-		var popupUrl = "<%= popupURL %>";
-		var popupUrl = popupUrl.replace("CONSTANT_TASK_FORM_LINK", escape(formLink));
-		var pWindow = window.open(popupUrl, 'popwindow','scrollbars=no, resizable=yes, width='+w+', height='+h+', top='+top+', left='+left);
-		var popupObj = new popupWindow(pWindow);
-		popupObj.run();
-	}
-	
-	<%}else{ // for gatein %>
-		// Creates a renderURL by ajax, to show the detailed message page 
-		function showForm(formLink) {
-			var url="<%= formRenderURL %>";
-			url = formatUrl(url);
-			
-			jQuery.post(url, {tasklink:formLink, currentPage:pageObj.currentPage, taskType:pageObj.taskType, 
-				keyword:pageObj.keyword, orderType:pageObj.orderType}, function(data) {
-				var obj = jQuery.parseJSON(data);
-				var json = obj.response;
-				var renderUrl = json["renderUrl"];
-				window.location = renderUrl;
-			});
-		}
-		
-		function popupTaskForm(formLink) {
-			var w = 900;
-			var h = 650;
-			var left = (screen.width/2)-(w/2);
-			var top = (screen.height/2)-(h/2);
-			var url = "<%= popupRenderURL %>";
-			url = formatUrl(url);
-			
-			jQuery.post(url, {tasklink:formLink, currentPage:pageObj.currentPage, taskType:pageObj.taskType, 
-				keyword:pageObj.keyword, orderType:pageObj.orderType}, function(data) {
-				var obj = jQuery.parseJSON(data);
-				var json = obj.response;
-				var renderUrl = json["renderUrl"];
-				var pWindow = window.open(renderUrl, 'popwindow','scrollbars=no, resizable=yes, width='+w+', height='+h+', top='+top+', left='+left);
-				var popupObj = new popupWindow(pWindow);
-				popupObj.run();
-			});
-		}
-	
-	<%}%>
 	/**
 	 * Create task form Html link for different open form types
 	 */
@@ -339,7 +265,7 @@
 		}else if(configObj.openForm == '2') {
 			linkHtml = '<a href="' + link + '" target="_blank">';
 		}else if(configObj.openForm == '3' || configObj.openForm == 'task') {
-			linkHtml = '<a href="javascript:void(0)" onclick="popupTaskForm(\'' + link + '\')">';
+			linkHtml = '<a href="javascript:void(0)" onclick="showForm(\'' + link + '\')">';
 		}
 		
 		if(description == '') { // no description for the task

@@ -14,7 +14,6 @@ import static fi.arcusys.koku.common.util.Constants.VIEW_TASK_MANAGER;
 import javax.portlet.PortletSession;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
-import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +28,7 @@ import fi.arcusys.koku.common.services.intalio.TaskHandle;
 
 /**
  * Handles the main task manager page
- * 
+ *
  * @author Jinhua Chen
  * May 11, 2011
  */
@@ -41,20 +40,20 @@ public class TaskManagerController {
 
 	/**
 	 * Handles the portlet request to show default page
-	 * 
+	 *
 	 * @param request RenderRequest
 	 * @param response RenderResponse
 	 * @param modelmap ModelMap
 	 * @return default page taskmanager
 	 */
 	@RenderMapping
-	public String home(RenderRequest request, RenderResponse response, ModelMap modelmap) {		
+	public String home(RenderRequest request, RenderResponse response, ModelMap modelmap) {
 		return VIEW_TASK_MANAGER;
 	}
 
 	/**
 	 * Returns to default page and set the page variable
-	 * 
+	 *
 	 * @param request RenderRequest
 	 * @param response RenderResponse
 	 * @param modelmap ModelMap
@@ -62,14 +61,14 @@ public class TaskManagerController {
 	 */
 	@RenderMapping(params = "myaction=home")
 	public String showHome(RenderRequest request, RenderResponse response, ModelMap modelmap) {
-		//get parameters from 
+		//get parameters from
 		String currentPage = (String) request.getPortletSession().getAttribute(ATTR_CURRENT_PAGE, PortletSession.APPLICATION_SCOPE);
 		String taskType = (String) request.getPortletSession().getAttribute(ATTR_TASK_TYPE, PortletSession.APPLICATION_SCOPE);
 		String keyword = (String) request.getPortletSession().getAttribute(ATTR_KEYWORD, PortletSession.APPLICATION_SCOPE);
 		String orderType = (String) request.getPortletSession().getAttribute(ATTR_ORDER_TYPE, PortletSession.APPLICATION_SCOPE);
-		
+
 		clearSession(request); // clear session since it's used only once
-		
+
 		modelmap.addAttribute(ATTR_CURRENT_PAGE, currentPage);
 		modelmap.addAttribute(ATTR_TASK_TYPE, taskType);
 		modelmap.addAttribute(ATTR_KEYWORD, keyword);
@@ -77,10 +76,10 @@ public class TaskManagerController {
 
 		return VIEW_TASK_MANAGER;
 	}
-	
+
 	/**
 	 * Clears page parameters in session
-	 * 
+	 *
 	 * @param request RenderRequest
 	 */
 	public void clearSession(RenderRequest request) {
@@ -93,7 +92,7 @@ public class TaskManagerController {
 
 	/**
 	 * Returns intalio token status
-	 * 
+	 *
 	 * @param request
 	 * @return returns intalio token status
 	 */
@@ -108,26 +107,18 @@ public class TaskManagerController {
 
 	/**
 	 * Checks user logged in or not, if logged in, verify the participant token
-	 * 
+	 *
 	 * @param request
 	 * @return true if token is valid, otherwise false
 	 */
 	private boolean checkUserToken(RenderRequest request) {
 		String userid = null;
 		String token = null;
-		String sessionId = null;
-		String portletSessionId = null;
 		userid = request.getRemoteUser();
-		
 		try {
-			
 			if(userid != null) { // user is logged in
-				
 				PortletSession portletSession = request.getPortletSession();
-				portletSessionId = portletSession.getId();
-				sessionId = request.getRequestedSessionId();
 				token = (String) portletSession.getAttribute(ATTR_TOKEN);
-				
 				if(token == null) {
 					TaskHandle taskhandle = new TaskHandle();
 					//String username = "Kalle Kuntalainen";
@@ -146,7 +137,7 @@ public class TaskManagerController {
 		} catch (Exception e) {
 			LOG.error("Exception when getting user id. Username: '"+userid+"'",e);
 		}
-		
+
 		if (token != null) {
 			LOG.info("Intalio token is valid! Username: '"+userid+"' Token: '"+ token +"'");
 			return true;
@@ -155,5 +146,4 @@ public class TaskManagerController {
 			return false;
 		}
 	}
-
 }

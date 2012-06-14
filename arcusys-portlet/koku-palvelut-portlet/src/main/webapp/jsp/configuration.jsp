@@ -15,7 +15,7 @@
 			 <c:set value="<%=prefs.getValue(Constants.PREF_SHOW_ONLY_FORM_BY_ID, null) %>" var="formId"></c:set>
 			 <c:set value="<%=prefs.getValue(Constants.PREF_SHOW_ONLY_FORM_BY_DESCRIPTION, null) %>" var="formDescription"></c:set>
 		 	 <c:set value="<%=prefs.getValue(Constants.PREF_SHOW_TASKS_BY_ID, null) %>" var="selectFormById"></c:set>
-			 <div class="CurrentForm">T√§ll√§hetkell√§ valittu lomake:
+			 <div class="CurrentForm">T‰ll‰hetkell‰ valittu lomake:
 			 <% Boolean isTaskIdEnabled = Boolean.valueOf(prefs.getValue(Constants.PREF_SHOW_TASKS_BY_ID, null)); %>
 			 <c:choose>	 
 			 	<c:when test="<%= (isTaskIdEnabled) %>">
@@ -41,8 +41,8 @@
 						</c:forEach>
 						</tbody>
 					</table>
-					<div class="FormValuesHelp">Lomakkeen sis√§lt√∂√§ ei voi muuttaa t√§√§lt√§. Muutokset t√§h√§n portletti instanssiin 
-					t√§ytyy tehd√§ portaalin hallintapaneelin kautta (Admin -> Portlet instances).</div>
+					<div class="FormValuesHelp">Lomakkeen sis‰ltˆ‰ ei voi muuttaa t‰‰lt‰. Muutokset t‰h‰n portletti instanssiin 
+					t‰ytyy tehd‰ portaalin hallintapaneelin kautta (Admin -> Portlet instances).</div>
 					
 	 	</c:when>
 		<c:otherwise>

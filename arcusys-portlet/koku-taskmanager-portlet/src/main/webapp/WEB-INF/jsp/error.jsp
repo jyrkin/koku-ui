@@ -2,4 +2,4 @@
 
 <portlet:defineObjects />
 
-<p>Boom!</p>
+<p>Palvelu on tilapäisesti pois käytöstä</p>

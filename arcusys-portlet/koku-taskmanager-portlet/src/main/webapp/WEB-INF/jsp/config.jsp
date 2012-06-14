@@ -4,6 +4,14 @@
 	<portlet:param name="myaction" value="config" />
 </portlet:actionURL>
 <div>
+
+	<c:choose>
+	<c:when test="<%= renderRequest.getPortalContext().getPortalInfo().contains(Constants.PORTAL_JBOSS) %>">
+		<div class="FormValuesHelp">Portletin asetuksia ei voi muuttaa täältä. Muutokset tähän portletti instanssiin 
+		täytyy tehdä portaalin hallintapaneelin kautta (Admin -> Portlet instances).</div>
+	</c:when>
+	<c:otherwise>
+
 	<form name="configForm" action="${configActionURL}" method="post" >
 		<table class="task-config-table">
 			<tr>
@@ -51,6 +59,9 @@
 			<tr><td><input type="submit" value="<spring:message code="config.save"/>" /></td><td></td></tr>
 		</table>
 	</form>
+	</c:otherwise>
+	</c:choose>
+	
 </div>
 <script type="text/javascript">
 	// set the default selected option for selectors refreshDuration and openForm

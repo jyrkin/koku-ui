@@ -4,6 +4,9 @@
 </portlet:renderURL>
 
 <%@ include file="js_koku_navigation_helper.jspf" %>
+	<!-- taskform.jsp -->
+	
+<% final String tasklink = renderRequest.getParameter(Constants.ATTR_TASK_LINK); %>
 
 <script type="text/javascript" src="<%= request.getContextPath() %>/js/taskManagerResizer.js"></script>
 <script type="text/javascript"> 
@@ -11,7 +14,6 @@
 	var loadingTimes = 0;
 	/* the source url that iframe loads at first time */
 	var firstUrl = "";	
-	
 	/**
 	 * Checks the operation of forms finished or not. Usually the form operation is
 	 * finished if the source url forwards to another url such as empty.jsp
@@ -64,15 +66,19 @@
 		iframeElement.contentWindow.print();
 	}
 	
+	jQuery(document).ready(function() {
+		<%-- var taskFormPath = decodeURIComponent('<c:out value="${tasklink}" />'); --%>
+		var taskFormPath = decodeURIComponent('<%= tasklink %>');		
+		jQuery('#taskform').attr('src', taskFormPath);		
+		startResizer("taskform");
+		eppHack();
+	});
+	
 </script>
 <div id="task-manager-wrap">
 	<div id="task-manager-tasklist">
 		<div id="intalioPrintingLink"><img title="Tulosta" src="${pageContext.request.contextPath}/images/print.png" /><a id="printLink" href="#" onclick="kokuIframePrint(); return false;">Tulosta</a></div>
-		<iframe src="<c:out value="${tasklink}" />" id="taskform" name="taskform" style="width:100%; height:100%" frameborder="0" scrolling="no" onload="checkForm()" ></iframe>
-		<script type="text/javascript">
-			startResizer("taskform");
-			eppHack();
-		</script>
+		<iframe src="" id="taskform" name="taskform" style="width:100%; height:100%" frameborder="0" scrolling="no" ></iframe>
 	</div>
 	<div id="task-manager-operation" class="task-manager-operation-part">
 		<input type="button" value="<spring:message code="task.return"/>" onclick="kokuNavigationHelper.returnMainPage()" />

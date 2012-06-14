@@ -4,7 +4,9 @@
 <%@ page import="javax.portlet.PortletPreferences" %>
 <%@ page import="javax.portlet.WindowState" %>
 <%@ page import="fi.arcusys.koku.common.util.TaskUtil" %>
-<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %> 
+<%@ page import="fi.arcusys.koku.common.util.Constants" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+ 
 
 <portlet:defineObjects />
 
@@ -12,7 +14,7 @@
 PortletPreferences preferences = renderRequest.getPreferences();
 String taskFilter = preferences.getValue("taskFilter", "");
 String notifFilter = preferences.getValue("notifFilter", "");
-String refreshDuration = preferences.getValue("refreshDuration", "30");
+String refreshDuration = preferences.getValue("refreshDuration", "180");
 String openForm = preferences.getValue("openForm", "1");
 String defaultTaskType = preferences.getValue("defaultTaskType", "task");
 String editable = "false";
