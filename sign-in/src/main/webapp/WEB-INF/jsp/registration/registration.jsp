@@ -9,128 +9,145 @@
  (kohtikumppanuutta@ixonos.com).
 --%>
 
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
-<%@ taglib uri="http://java.sun.com/portlet" prefix="portlet"%>
 
-<%@ page import="javax.portlet.PortletPreferences"%>
-<%@ page import="javax.portlet.WindowState"%>
-<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
-
-<%@ page contentType="text/html" isELIgnored="false"%>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-
-<portlet:defineObjects />
+<%@ include file="imports.jsp" %>
 
 <portlet:actionURL var="saveRegistrationActionUrl">
 	<portlet:param name="action" value="saveRegistrationAAA" />
 </portlet:actionURL>
 
-<div class="koku-signin">
+
+<div class="koku-registration">
 	<div class="portlet-section-body">
+
+<h2><spring:message	code="ui.registration.authentication.success" /></h2>
 
 		<form:form name="saveRegistrationForm" commandName="registration"
 			method="post" action="${saveRegistrationActionUrl}">
 
-<%--
-	<c:if test="${not empty error}">
-			<div class="error">
-				<spring:message code="${error}"></spring:message>
-			</div>
-		</c:if>
-		--%>
-
 			<div>
 
 				<table border="0">
+					<tr><th width="25%"></th><th width="30%"></th><th width="45%"></th></tr>
+					<tr><td colspan="3"><p><b><spring:message	code="ui.registration.authentication.service.information" /></b></p></td></tr>
+
 					<tr>
-						<td>Etunimi</td>
-						<td><div class="portlet-form-field">
-								<span class="kks-left"> <form:input class="defaultText"
-										readonly="true" disabled="true" path="firstname" />
-								</span>
-							</div></td>
-							<td><form:errors path="firstname" /></td>
+						<td><spring:message	code="ui.registration.firstname" /></td>
+						<td><c:out value="${registration.firstname}" /></td>
+						<td></td>
+						
 					</tr>
 
 					<tr>
-						<td>Sukunimi</td>
-						<td><div class="portlet-form-field">
-								<span class="kks-left"> <form:input class="defaultText"
-										disabled="true" path="lastname" />
-								</span>
-							</div></td>
-							<td><form:errors path="lastname" /></td>
+						<td><spring:message	code="ui.registration.lastname" /></td>
+						<td><c:out value="${registration.lastname}" /></td>
+						<td></td>	
 					</tr>
 
 					<tr>
-						<td>Syntymaaika</td>
-						<td><div class="portlet-form-field">
-								<span class="kks-left"> <form:input class="defaultText"
-										disabled="true" path="dayOfBirth" />
-								</span>
-
-							</div></td>
-					<td><form:errors path="dayOfBirth" /></td>
+						<td><spring:message	code="ui.registration.birthday" /></td>
+						<td><c:out value="${registration.dayOfBirth}" /></td>
+						<td></td>	
 					</tr>
 
+					<tr><td colspan="3"><p><b><spring:message	code="ui.registration.additional.information" /></b></p></td></tr>
+
 					<tr>
-						<td>Email</td>
+						<td><spring:message	code="ui.registration.email" /> <span style="color: red">*</span></td>
 						<td><div class="portlet-form-field">
 								<span class="kks-left"> <form:input class="defaultText"
 										path="email" />
 								</span>
+								<spring:message var="uiEmailHelp" code="ui.registration.form.field.help.email" />
+								<img class="koku-registration-help" title="${ uiEmailHelp }" src="${pageContext.request.contextPath}/css/images/help-button-small.png"/>
 							</div></td>
-					<td><form:errors path="email" /></td>
+					<td class="koku-registration-error"><form:errors path="email" cssClass="error"/></td>
 					</tr>
 
 					<tr>
-						<td>Puhelinnumero</td>
+						<td><spring:message	code="ui.registration.phonenumber" /> </td>
 						<td><div class="portlet-form-field">
 								<span class="kks-left"> <form:input class="defaultText"
 										path="phonenumber" />
 								</span>
+								<spring:message var="uiPhonenumberHelp" code="ui.registration.form.field.help.phonenumber" />
+								<img class="koku-registration-help" title="${ uiPhonenumberHelp }" src="${pageContext.request.contextPath}/css/images/help-button-small.png"/>
 							</div></td>
-							<td><form:errors path="phonenumber" /></td>
+							<td class="koku-registration-error"><form:errors path="phonenumber" cssClass="error"/></td>
 					</tr>
 
 					<tr>
-						<td>Kayttajatunnus</td>
+						<td><spring:message	code="ui.registration.preferred.contact.method" /> <span style="color: red">*</span></td>
+						<td><div class="portlet-form-field">
+								<span class="kks-left"> 
+								<form:radiobutton path="preferredContactMethod" value="email"/><spring:message	code="ui.registration.email" />
+								<form:radiobutton path="preferredContactMethod" value="phone"/><spring:message	code="ui.registration.phone" />
+								</span>
+								<spring:message var="uiPreferredContactMethodHelp" code="ui.registration.form.field.help.preferredcontactmethod" />
+								<img class="koku-registration-help" title="${ uiPreferredContactMethodHelp }" src="${pageContext.request.contextPath}/css/images/help-button-small.png"/>
+							</div></td>
+							<td class="koku-registration-error"><form:errors path="preferredContactMethod" cssClass="error"/></td>
+					</tr>
+
+
+
+					<tr>
+						<td><spring:message	code="ui.registration.useraccount" /> <span style="color: red">*</span></td>
 						<td><div class="portlet-form-field">
 								<span class="kks-left"> <form:input class="defaultText"
 										path="useraccount" />
 								</span>
+								<spring:message var="uiUseraccountHelp" code="ui.registration.form.field.help.useraccount" />
+								<img class="koku-registration-help" title="${ uiUseraccountHelp }" src="${pageContext.request.contextPath}/css/images/help-button-small.png"/>
 							</div></td>
-							<td><form:errors path="useraccount" /></td>
+							<td class="koku-registration-error"><form:errors path="useraccount" cssClass="error"/></td>
 					</tr>
 
 					<tr>
-						<td>Salasana</td>
+						<td><spring:message	code="ui.registration.password" /> <span style="color: red">*</span></td>
 						<td><div class="portlet-form-field">
-								<span class="kks-left"> <form:input class="defaultText"
-										path="password" />
+								<span class="kks-left"> 
+								<form:password class="defaultText"	path="password" />
 								</span>
+								<spring:message var="uiPasswordHelp" code="ui.registration.form.field.help.password" />
+								<img class="koku-registration-help" title="${ uiPasswordHelp }" src="${pageContext.request.contextPath}/css/images/help-button-small.png"/>
 							</div></td>
-							<td><form:errors path="password" /></td>
+							<td class="koku-registration-error"><form:errors path="password" cssClass="error"/></td>
 					</tr>
 
 					<tr>
-						<td>Salasana2</td>
+						<td><spring:message	code="ui.registration.password.confirm" /> <span style="color: red">*</span></td>
+						<td>
+						<div class="portlet-form-field">
+								<span class="kks-left"> 
+								<form:password class="defaultText"	path="password2" />
+								</span>
+						</div></td>
+						<td class="koku-registration-error"><form:errors path="password2" cssClass="error"/></td>
+					</tr>
+
+					<tr>
+						<td>Olen lukenut ja hyväksyn <a href="#" onclick="javascript: toggleTermsOfUse()"><span class="koku-termsofuse">käyttöehdot</span></a> <span style="color: red">*</span></td>
+						<td>
+						<div class="portlet-form-field">
+								<span class="kks-left"> 
+									<form:checkbox path="acceptTermsOfUse" />
+								</span>
+								<spring:message var="uiTermsOfUseHelp" code="ui.registration.form.field.help.termsofuse" />
+								<img class="koku-registration-help" title="${ uiTermsOfUseHelp }" src="${pageContext.request.contextPath}/css/images/help-button-small.png"/>
+						</div>
+						</td>
+						<td></td>
+					</tr>
+
+					<tr>
+						<td><a href="#" onclick="javascript: toggleInstructions()">Ohjeet rekisteröintiin</a></td>
+						<td></td>
 						<td></td>
 					</tr>
 
 					<tr>
 						<td></td>
-						<td></td>
-					</tr>
-
-					<tr>
-						<td></td>
-						<td></td>
-					</tr>
-
-					<tr>
 						<td></td>
 						<td></td>
 					</tr>
@@ -148,53 +165,52 @@
 
 				</table>
 
-				<div class="koku-signin-reset-floating"></div>
+				<div id="koku-termsofuse" style="display: none">
+				
+				<h3>Käyttöehdot</h3>
+				<p> &laquo; käyttöehdot tähän &raquo;
+				</p>
+				</div>
+
+				<div id="koku-registration-instructions" style="display: none">
+				
+				<h3>Rekisteröintiohjeet</h3>
+				<p> Palvelun käyttö vaatii rekisteröitymisen. Rekisteröitymislomakkeella on tunnistautumispalvelusta saadut esitiedot ja sen lisäksi lomakkeessa on annettava Kohti kumppanuutta -järjestelmän 
+					käyttöön liittyviä lisätietoja. Lomakkeen täyttäminen:</p> 
+					
+					<ol>
+						<li>Tarkista, että lomakkeen esitäytetyt tiedot ovat oikein</li>
+						<li>Täytä lomakkeen pakolliset kentät. Pakolliset kentät on merkitty punaisella tähdellä. Tarkempia kenttäkohtaisia ohjeita näet viemällä hiiren kohdistimen <img title="infokuvake" src="${pageContext.request.contextPath}/css/images/help-button-small.png"/>-kuvakkeen päälle </li>
+						<li>Paina Rekisteröidy -nappia</li>
+					</ol>
+				
+				</div>
+
+
+
+				<div class="koku-registration-reset-floating"></div>
 			</div>
 
-			<div class="koku-signin-reset-floating"></div>
+			<div class="koku-registration-reset-floating"></div>
 
 		</form:form>
 
-
-		<%--      
-	   <div class="koku-signin-main" style="padding: 5px; padding-top: 10px; padding-bottom: 10px;">     
-       <c:if test="${not empty fullname }">         
-			<span class="koku-signin-right">
-				<spring:message code="ui.signin.welcome" /> <b>${ fullname }</b> <c:if test="${ pwdSupported }"> <span class="koku-signin-tabulator"><spring:message code="ui.signin.separator" /></span> <a class="koku-signin-account" onclick="showKokuAccountSettings();"><spring:message code="ui.signin.account" /></a> </c:if> <span class="koku-signin-tabulator"><spring:message code="ui.signin.separator" /></span> <a class="koku-signin-logout" onclick="logoutKokuUser();"><spring:message code="ui.signin.logout" /></a>   
-			</span> 			
-       </c:if>
-       
-       
-       <c:if test="${ empty fullname }">
-       	   <span class="koku-signin-right">
-       	     <c:if test="${ empty loginUrl }">
-			 	<b><a class="koku-signin-login" onclick="loginKokuUser();"><spring:message code="ui.signin.login" /></a> </b>
-			 </c:if>
-			 
-			 <c:if test="${ not empty loginUrl }">
-			 	<b><a class="koku-signin-login" href="${loginUrl}"><spring:message code="ui.signin.login" /></a></b> 
-			 </c:if>
-			</span>
-       </c:if>
-       </div>
-       <div class="koku-signin-reset-floating"></div>
-     
-		--%>
 	</div>
 </div>
 
+
+
+
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-1.5.2.min.js"></script>
 <script type="text/javascript">
-	/*
-	function logoutKokuUser() {
-		eXo.portal.logout();
+	
+	function toggleInstructions() {
+		$("#koku-registration-instructions").toggle();
 	}
 	
-	function loginKokuUser() {
-		if(document.getElementById('UIMaskWorkspace')) ajaxGet(eXo.env.server.createPortalURL('UIPortal', 'ShowLoginForm', true)); 
+	function toggleTermsOfUse() {
+		$("#koku-termsofuse").toggle();
 	}
 	
-	function showKokuAccountSettings() {
-		if(document.getElementById('UIMaskWorkspace')) ajaxGet(eXo.env.server.createPortalURL('UIPortal', 'AccountSettings', true));
-	}
-	*/
 </script>
+

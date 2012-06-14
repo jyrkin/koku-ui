@@ -8,12 +8,13 @@
  If you did not receive a license, please contact the copyright holder
  (kohtikumppanuutta@ixonos.com).
 --%>
+
 <%@ include file="imports.jsp" %>
 
-<portlet:defineObjects />
-
-<%--
-<p><spring:message code="koku.common.error.serviceunavailable" /></p>
- --%>
- 
- <spring:message code="ui.registration.general.error" />
+<div class="koku-registration">
+	<div class="portlet-section-body">
+		<p>
+			<a href="${registrationURL}"><spring:message code="ui.registration.strong.auth.instructions" /></a>
+		</p>
+	</div>
+</div>

@@ -10,10 +10,12 @@
 --%>
 <%@ include file="imports.jsp" %>
 
-<portlet:defineObjects />
+<div class="koku-registration">
+	<div class="portlet-section-body">
+		<h2><spring:message	code="ui.registration.success" /></h2>
 
-<%--
-<p><spring:message code="koku.common.error.serviceunavailable" /></p>
- --%>
- 
- <spring:message code="ui.registration.general.error" />
+		<p>
+		<a href="${loginurl}"><spring:message	code="ui.registration.login.and.continue" /></a>
+		</p>
+</div>
+</div>

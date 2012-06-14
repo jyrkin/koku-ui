@@ -11,6 +11,7 @@
  */
 package fi.koku.registration;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -38,23 +39,41 @@ public class RegistrationValidator implements Validator  {
  
   @Override
   public void validate(Object target, Errors errors) {
- 
-    log.error("DEBUG_ validator");
     
-    ValidationUtils.rejectIfEmptyOrWhitespace(errors, "useraccount",
-        "ui.registration.useraccount.cannot.be.empty", "Useraccount is required.");
-   //#TODO# Add check if useraccount is usable (service call)
+    Registration r = (Registration)target;
     
-    ValidationUtils.rejectIfEmptyOrWhitespace(errors, "email",
-         "ui.registration.email.cannot.be.empty", "Email is required.");
+    //Email
+    CommonValidationUtils.validateEmail(r.getEmail(), errors);
     
-    ValidationUtils.rejectIfEmptyOrWhitespace(errors, "phonenumber",
-        "ui.registration.phonenumber.cannot.be.empty", "Phonenumber is required.");
+    CommonValidationUtils.validateUserAccount(r.getUseraccount(), errors);
     
+    //Preferred contact method and phonenumber
+    if( "phone".equals( r.getPreferredContactMethod() ) ){
+      ValidationUtils.rejectIfEmptyOrWhitespace(errors, "phonenumber",
+          "ui.registration.phonenumber.cannot.be.empty", "Phonenumber is required.");
+    }
+    
+    //Password validations
     ValidationUtils.rejectIfEmptyOrWhitespace(errors, "password",
         "ui.registration.password.cannot.be.empty", "Password is required.");
-    //#TODO# Add more spesific password validity checks
+    
+    if(r.getPassword()!=null && !r.getPassword().equals(r.getPassword2())){
+        errors.rejectValue("password","ui.registration.password.does.not.match");
+        errors.rejectValue("password2","ui.registration.password.does.not.match");
+    }else{
+        //Passwords match, check against more spesific rules
+      CommonValidationUtils.validatePassword(r.getPassword(), errors);
+    }
+    
+    //Terms of use
+    if( !r.isAcceptTermsOfUse()){
+      errors.rejectValue("acceptTermsOfUse", "ui.registration.accepttermsofuse.false");
+    }
+    
     
   }
 
+ 
+  
+  
 }

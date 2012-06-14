@@ -17,11 +17,45 @@
       <version>0.2.0</version>
       <scope>compile</scope>
     </dependency>
+    
+    <dependency>
+      <groupId>kohti-kumppanuutta</groupId>
+      <artifactId>koku-vetuma-authlib</artifactId>
+      <version>0.0.3</version>
+      <scope>provided</scope>
+    </dependency>
+    <!-- 
+    <dependency>
+      <groupId>kohti-kumppanuutta</groupId>
+      <artifactId>userinfoservice-api</artifactId>
+      <version>0.0.7</version>
+    </dependency>
+    -->
+    <dependency>
+      <groupId>kohti-kumppanuutta</groupId>
+      <artifactId>portaluserservice-api</artifactId>
+      <version>0.0.3-SNAPSHOT</version>
+    </dependency>
+    
+     <dependency>
+      <groupId>kohti-kumppanuutta</groupId>
+      <artifactId>koku-common-lib</artifactId>
+      <version>0.2.0</version>
+      <!--scope>compile</scope-->
+    </dependency>
+    
     <dependency>
       <groupId>org.exoplatform.core</groupId>
       <artifactId>exo.core.component.organization.api</artifactId>
       <version>2.3.0-GA</version>
       <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.10</version>
+      <scope>test</scope>
     </dependency>
 
     <dependency>

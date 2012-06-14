@@ -1,0 +1,54 @@
+@charset "UTF-8";
+
+.koku-registration   {
+	padding: 15px; 
+	padding-top: 20px; 
+	padding-bottom: 20px;
+}
+
+.koku-registration .koku-registration-main a:hover {
+   cursor: pointer;
+}
+
+.koku-registration .koku-registration-main a {
+}
+
+
+.koku-registration .koku-registration-reset-floating {
+    clear: both;
+}
+.koku-registration .koku-registration-right {
+    float: right;
+}
+.koku-registration .koku-registration-read-only-text {
+    display: block;
+    padding: 5px;
+    padding-bottom: 10px
+}
+
+/* UUDET */
+.koku-registration .error {
+	color: red;
+}
+
+.koku-registration tr {
+  border-spacing: 10px;
+  border-collapse:collapse;
+}
+
+div.koku-registration {
+  border: 1px black solid;
+  padding: 10px;
+}
+
+img.koku-registration-help {
+	position: absolute; 
+	margin-left: 5px; 
+	margin-right: 5px; 
+	margin-top: 5px;	
+}
+
+td.koku-registration-error {
+	padding-left: 15px;
+	text-align: left;
+}
