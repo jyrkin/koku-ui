@@ -24,6 +24,8 @@
 <xs:import namespace="http://soa.common.koku.arcusys.fi/" />
 <xs:element name="cancelAppointment" type="tns:cancelAppointment" />
 <xs:element name="cancelAppointmentResponse" type="tns:cancelAppointmentResponse" />
+<xs:element name="disableSlot" type="tns:disableSlot" />
+<xs:element name="disableSlotResponse" type="tns:disableSlotResponse" />
 <xs:element name="getAppointmentById" type="tns:getAppointmentById" />
 <xs:element name="getAppointmentByIdResponse" type="tns:getAppointmentByIdResponse" />
 <xs:element name="getCreatedAppointments" type="tns:getCreatedAppointments" />
@@ -115,6 +117,7 @@
 <xs:element minOccurs="0" name="appointmentDate" type="xs:date" />
 <xs:element minOccurs="0" name="startTime" type="xs:time" />
 <xs:element minOccurs="0" name="endTime" type="xs:time" />
+<xs:element name="disabled" type="xs:boolean" />
 <xs:element minOccurs="0" name="location" type="xs:string" />
 <xs:element minOccurs="0" name="comment" type="xs:string" />
 </xs:sequence>
@@ -134,6 +137,15 @@
 <xs:element minOccurs="0" name="userInfo" type="ns1:user" />
 <xs:element minOccurs="0" name="userUid" type="xs:string" />
 </xs:sequence>
+</xs:complexType>
+<xs:complexType name="disableSlot">
+<xs:sequence>
+<xs:element name="appointmentId" type="xs:long" />
+<xs:element name="slotNumber" type="xs:int" />
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="disableSlotResponse">
+<xs:sequence />
 </xs:complexType>
 <xs:complexType name="getCreatedAppointments">
 <xs:sequence>
@@ -179,8 +191,8 @@
 </xs:simpleType>
 </xs:schema>
   </wsdl:types>
-  <wsdl:message name="getProcessedAppointments">
-    <wsdl:part element="tns:getProcessedAppointments" name="parameters">
+  <wsdl:message name="disableSlotResponse">
+    <wsdl:part element="tns:disableSlotResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="getProcessedAppointmentsResponse">
@@ -191,10 +203,6 @@
     <wsdl:part element="tns:getCreatedAppointments" name="parameters">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="getAppointmentByIdResponse">
-    <wsdl:part element="tns:getAppointmentByIdResponse" name="parameters">
-    </wsdl:part>
-  </wsdl:message>
   <wsdl:message name="getTotalProcessedAppointmentsResponse">
     <wsdl:part element="tns:getTotalProcessedAppointmentsResponse" name="parameters">
     </wsdl:part>
@@ -203,12 +211,20 @@
     <wsdl:part element="tns:getTotalCreatedAppointmentsResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="getTotalCreatedAppointments">
-    <wsdl:part element="tns:getTotalCreatedAppointments" name="parameters">
-    </wsdl:part>
-  </wsdl:message>
   <wsdl:message name="getTotalProcessedAppointments">
     <wsdl:part element="tns:getTotalProcessedAppointments" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getProcessedAppointments">
+    <wsdl:part element="tns:getProcessedAppointments" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getAppointmentByIdResponse">
+    <wsdl:part element="tns:getAppointmentByIdResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getTotalCreatedAppointments">
+    <wsdl:part element="tns:getTotalCreatedAppointments" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="cancelAppointmentResponse">
@@ -221,6 +237,10 @@
   </wsdl:message>
   <wsdl:message name="cancelAppointment">
     <wsdl:part element="tns:cancelAppointment" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="disableSlot">
+    <wsdl:part element="tns:disableSlot" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="getCreatedAppointmentsResponse">
@@ -244,6 +264,12 @@
       <wsdl:input message="tns:getAppointmentById" name="getAppointmentById">
     </wsdl:input>
       <wsdl:output message="tns:getAppointmentByIdResponse" name="getAppointmentByIdResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="disableSlot">
+      <wsdl:input message="tns:disableSlot" name="disableSlot">
+    </wsdl:input>
+      <wsdl:output message="tns:disableSlotResponse" name="disableSlotResponse">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getCreatedAppointments">
@@ -291,6 +317,15 @@
         <soap:body use="literal" />
       </wsdl:input>
       <wsdl:output name="getAppointmentByIdResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="disableSlot">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="disableSlot">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="disableSlotResponse">
         <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>

@@ -7,11 +7,12 @@
 
 <%@ include file="init.jsp"%>
 
-<portlet:renderURL var="homeURL" windowState="<%= WindowState.NORMAL.toString() %>" >
-	<portlet:param name="myaction" value="home" />
-</portlet:renderURL>
+<portlet:actionURL var="homeURL">
+	<portlet:param name="action" value="toHome" />
+</portlet:actionURL>
 
 <portlet:resourceURL var="cancelURL" id="cancelAppointment"></portlet:resourceURL>
+<portlet:resourceURL var="disableSlotURL" id="disableAppointmentSlot"></portlet:resourceURL>
 
 <portlet:resourceURL var="appointmentRenderURL" id="createAppointmentRenderUrl">
 </portlet:resourceURL>
@@ -109,7 +110,7 @@
 		<input type="button" value="<spring:message code="page.return"/>" onclick="kokuNavigationHelper.returnMainPage()" />
 		<c:if test="${appointment.model.status != 'Peruutettu'}">
 			<input type="button" id="cancelButton" value="<spring:message code="appointment.cancel.button"/>" onclick="kokuAppointmentDetails.cancelAppointment('<%= appointmentId %>', '<%= targetPerson %>')" />
-			<input type="button" id="editButton" value="<spring:message code="appointment.edit.button"/>" onclick="kokuAppointmentDetails.editAppointment()" />			
 		</c:if>
+		<input type="button" id="editButton" value="<spring:message code="appointment.edit.button"/>" onclick="kokuAppointmentDetails.editAppointment()" />			
 	</div>
 </div>

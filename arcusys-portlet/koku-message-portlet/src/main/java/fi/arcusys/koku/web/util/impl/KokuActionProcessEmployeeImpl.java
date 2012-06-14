@@ -8,9 +8,9 @@ import fi.arcusys.koku.common.services.appointments.employee.AvEmployeeServiceHa
 import fi.arcusys.koku.web.util.exception.KokuActionProcessException;
 
 public class KokuActionProcessEmployeeImpl extends AbstractKokuActionProcess {
-	
+
 	private static final Logger LOG = LoggerFactory.getLogger(KokuActionProcessEmployeeImpl.class);
-	
+
 	/* Lazily initialized */
 	private AvEmployeeServiceHandle avEmployeeServiceHandle = null;
 
@@ -20,15 +20,15 @@ public class KokuActionProcessEmployeeImpl extends AbstractKokuActionProcess {
 
 	@Override
 	public void cancelAppointments(String[] appointmentIds, String[] targetPersons, String comment) throws KokuActionProcessException {
-		
+
 		if (appointmentIds == null) {
 			throw new KokuActionProcessException("AppoimentsIds parameter is null");
 		}
-		
+
 		if (targetPersons != null) {
-			LOG.warn("TargetPersons is not null. This might indicate bug somewhere in code, because Employee AppoimentWS doesn't require it.");			
+			LOG.warn("TargetPersons is not null. This might indicate bug somewhere in code, because Employee AppoimentWS doesn't require it.");
 		}
-		
+
 		if (avEmployeeServiceHandle == null) {
 			avEmployeeServiceHandle = new AvEmployeeServiceHandle(DUMMY_MSG_SOURCE);
 		}
@@ -44,7 +44,7 @@ public class KokuActionProcessEmployeeImpl extends AbstractKokuActionProcess {
 			} catch (NumberFormatException nfe) {
 				throw new KokuActionProcessException("Invalid appointmentId. AppointmentId: '"+appointmentId+"' comment: '"+comment+"'", nfe);
 			} catch (KokuServiceException e) {
-				throw new KokuActionProcessException("Failed to cancelAppointment! appoimentId: '" + 
+				throw new KokuActionProcessException("Failed to cancelAppointment! appoimentId: '" +
 						appointmentId + "' comment: '" + comment + "'", e);
 			}
 		}
@@ -59,6 +59,24 @@ public class KokuActionProcessEmployeeImpl extends AbstractKokuActionProcess {
 	@Override
 	public void revokeConsents(String[] consentIds)
 			throws KokuActionProcessException {
-		throw new KokuActionProcessException("Not implemented. Employee can't revoke consent");		
-	}	
+		throw new KokuActionProcessException("Not implemented. Employee can't revoke consent");
+	}
+
+	@Override
+	public void disableAppointmentSlot(long appointmentId, int slotNumber)
+			throws KokuActionProcessException {
+
+		if (avEmployeeServiceHandle == null) {
+			avEmployeeServiceHandle = new AvEmployeeServiceHandle(DUMMY_MSG_SOURCE);
+		}
+
+		try {
+			avEmployeeServiceHandle.disableAppointmentSlot(appointmentId, slotNumber);
+		} catch (NumberFormatException nfe) {
+			throw new KokuActionProcessException("Invalid appointmentId. AppointmentId: '"+appointmentId+"' slotNumber: '"+slotNumber+"'", nfe);
+		} catch (KokuServiceException e) {
+			throw new KokuActionProcessException("Failed to disableAppointmentSlot! appoimentId: '" +
+					appointmentId + "' slotNumber: '" + slotNumber + "'", e);
+		}
+	}
 }

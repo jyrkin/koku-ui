@@ -24,29 +24,29 @@
 <portlet:resourceURL var="cancelURL" id="cancelAppointment">
 </portlet:resourceURL>
 
-<portlet:renderURL var="homeURL" windowState="<%= WindowState.NORMAL.toString() %>" >
-	<portlet:param name="myaction" value="home" />
-</portlet:renderURL>
+<portlet:actionURL var="homeURL">
+	<portlet:param name="action" value="toHome" />
+</portlet:actionURL>
 
+<portlet:actionURL var="messageActionURL">
+	<portlet:param name="action" value="toMessage" />
+</portlet:actionURL>
 
-<!-- For gatein Portal -->
-<portlet:resourceURL var="messageRenderURL" id="createMessageRenderUrl">
-</portlet:resourceURL>
+<portlet:actionURL var="responseActionURL">
+	<portlet:param name="action" value="toResponse" />
+</portlet:actionURL>
 
-<portlet:resourceURL var="requestRenderURL" id="createRequestRenderUrl">
-</portlet:resourceURL> 
+<portlet:actionURL var="consentActionURL">
+	<portlet:param name="action" value="toConsent" />
+</portlet:actionURL>
 
-<portlet:resourceURL var="responseRenderURL" id="createResponseRenderUrl">
-</portlet:resourceURL> 
+<portlet:actionURL var="appointmentActionURL">
+	<portlet:param name="action" value="toAppointment" />
+</portlet:actionURL>
 
-<portlet:resourceURL var="appointmentRenderURL" id="createAppointmentRenderUrl">
-</portlet:resourceURL> 
-
-<portlet:resourceURL var="consentRenderURL" id="createConsentRenderUrl">
-</portlet:resourceURL>
-
-<portlet:resourceURL var="warrantRenderURL" id="createWarrantRenderUrl">
-</portlet:resourceURL>
+<portlet:actionURL var="warrantActionURL">
+	<portlet:param name="action" value="toWarrant" />
+</portlet:actionURL>
 
 
 <%-- Do not move navigation helper inside <script> tags --%>
@@ -67,7 +67,6 @@
 	 var ajaxUrls = {	 	
 	 	defaultUrl : "<%= portletPath %>",
 
-		/* Actions or somethings? (portlet:resourceURL)*/
 	 	ajaxTaskUrl : "<%= ajaxURL %>",
 	 	homeUrl : "<%= homeURL %>",
 		suggestUrl : "<%= suggestURL %>",
@@ -78,16 +77,14 @@
 		revokeWarrantUrl : "<%= revokeWarrantURL %>", 
 		cancelUrl : "<%= cancelURL %>", 
 	 	
-	 	/* RenderUrls GateIn Kunpo (portlet:renderURL) */
-	 	messageRenderUrl : "<%= messageRenderURL %>",
-	 	requestRenderUrl : "<%= requestRenderURL %>",
-	 	responseRenderUrl :  "<%= responseRenderURL %>",
-	 	appointmentRenderUrl :  "<%= appointmentRenderURL %>",
-	 	consentRenderUrl : 	"<%= consentRenderURL %>",
-	 	warrantRenderUrl : "<%= warrantRenderURL %>"
+	 	messageUrl : "<%= messageActionURL %>",
+	 	responseUrl :  "<%= responseActionURL %>",
+	 	consentUrl : 	"<%= consentActionURL %>",
+	 	appointmentUrl :  "<%= appointmentActionURL %>",
+	 	warrantUrl : "<%= warrantActionURL %>"
 	};
 
-	<%-- Loading JS from separate jspf files instead of .js files. Thanks to "ugly" Gatein portal. --%>
+	<%-- Loading JS from separate jspf files instead of .js files. --%>
 	<%-- Note that loading order in here is important! --%>
 	<%@ include file="js_koku_config.jspf" %>
 	<%@ include file="js_koku_utils.jspf" %>
@@ -116,7 +113,7 @@
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.jgrowl_minimized.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.qtip.min.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-ui-1.8.20.custom.min.js"></script>
-
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.inputhints.min.js"></script>
 
 	<%@ include file="js_koku_main.jspf" %>
 
@@ -148,7 +145,7 @@
 				<div id="consent-search" class="basic-search" style="display:none; position:relative;">
 					<form name="searchForm" onsubmit="kokuTableNavigation.searchConsents(); return false;">		
 						<span class="text-bold" ><spring:message code="consent.recipients" /></span>
-						<input type="text" name="recipient" id="recipient" style="width:100px;" />
+						<input type="text" title="123456-789A" name="recipient" id="recipient" style="width:100px;" />
 						<span class="text-bold" ><spring:message code="consent.templateName" /></span>
 						<input type="text" name="templateName" id="templateName" style="width:160px;" autocomplete="off" onkeydown="beKeyDown(event)" onkeyup="beKeyUp(event)" onclick="createSuggestDiv('consent-search', 'templateName')" />
 						<input type="submit" value="<spring:message code="message.search"/>" />

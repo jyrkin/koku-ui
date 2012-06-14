@@ -11,10 +11,10 @@ import fi.arcusys.koku.common.services.warrants.citizens.KokuCitizenWarrantHandl
 import fi.arcusys.koku.web.util.exception.KokuActionProcessException;
 
 public class KokuActionProcessCitizenImpl extends AbstractKokuActionProcess {
-		
+
 	/* Lazily initialized */
 	private AvCitizenServiceHandle avCitizenServiceHandle = null;
-	private KokuCitizenWarrantHandle warrantHandle = null;	
+	private KokuCitizenWarrantHandle warrantHandle = null;
 	private TivaCitizenServiceHandle tivaHandle = null;
 
 	public KokuActionProcessCitizenImpl(String userId) {
@@ -23,11 +23,11 @@ public class KokuActionProcessCitizenImpl extends AbstractKokuActionProcess {
 
 	@Override
 	public void cancelAppointments(String[] appointmentIds, String[] targetPersons, String comment) throws KokuActionProcessException {
-		
+
 		if (appointmentIds == null || targetPersons == null) {
 			throw new KokuActionProcessException("AppoimentsId or targetPersons parameter(s) are null");
 		}
-		
+
 		/* Lazy services loading */
 		if (avCitizenServiceHandle == null) {
 			avCitizenServiceHandle = new AvCitizenServiceHandle(DUMMY_MSG_SOURCE, getUserId());
@@ -35,12 +35,12 @@ public class KokuActionProcessCitizenImpl extends AbstractKokuActionProcess {
 
 		final int appointments = appointmentIds.length;
 		final int targetPersonCount = targetPersons.length;
-		
+
 		if (appointments != targetPersonCount) {
 			throw new KokuActionProcessException("Appointments and targetPerson count doesn't match! appointments: '"+
 					Arrays.toString(appointmentIds)+"' targetPersons: '"+Arrays.toString(targetPersons)+"'");
 		}
-		
+
 		String appointmentId;
 		String targetPerson;
 		for (int i=0; i < appointments; i++ ) {
@@ -53,7 +53,7 @@ public class KokuActionProcessCitizenImpl extends AbstractKokuActionProcess {
 			} catch (NumberFormatException nfe) {
 				throw new KokuActionProcessException("Invalid appointmentId. AppointmentId: '"+appointmentId+"' targetPerson: '"+targetPerson+"' comment: '"+comment+"'", nfe);
 			} catch (KokuServiceException e) {
-				throw new KokuActionProcessException("Failed to cancelAppointment! appoimentId: '" + 
+				throw new KokuActionProcessException("Failed to cancelAppointment! appoimentId: '" +
 						appointmentId + "' targetPerson: '" + targetPerson + "' comment: '" + comment + "'", e);
 			}
 		}
@@ -66,12 +66,12 @@ public class KokuActionProcessCitizenImpl extends AbstractKokuActionProcess {
 		if (warrantIds == null) {
 			throw new KokuActionProcessException("warrantIds parameter is null");
 		}
-		
+
 		/* Lazy initialization */
 		if (warrantHandle == null) {
-			warrantHandle = new KokuCitizenWarrantHandle(DUMMY_MSG_SOURCE);				
+			warrantHandle = new KokuCitizenWarrantHandle(DUMMY_MSG_SOURCE);
 		}
-		
+
 		for(String authorizationId : warrantIds) {
 			try {
 				long authId = Long.parseLong(authorizationId);
@@ -92,7 +92,7 @@ public class KokuActionProcessCitizenImpl extends AbstractKokuActionProcess {
 			throw new KokuActionProcessException("consentIds parameter is null");
 		}
 		if (tivaHandle == null) {
-			tivaHandle = new TivaCitizenServiceHandle(DUMMY_MSG_SOURCE, getUserId());			
+			tivaHandle = new TivaCitizenServiceHandle(DUMMY_MSG_SOURCE, getUserId());
 		}
 		try {
 			for(String consentId : consentIds) {
@@ -101,5 +101,11 @@ public class KokuActionProcessCitizenImpl extends AbstractKokuActionProcess {
 		} catch (KokuServiceException e) {
 			throw new KokuActionProcessException("Failed to revoke consent(s). ConsentIds: '"+Arrays.toString(consentIds)+"'", e);
 		}
-	}	
+	}
+
+	@Override
+	public void disableAppointmentSlot(long appointmentId, int slotNumber)
+			throws KokuActionProcessException {
+		throw new KokuActionProcessException("Not implemented for citizen.");
+	}
 }

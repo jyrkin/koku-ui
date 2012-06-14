@@ -301,6 +301,10 @@
 		background-color: #EFEFEF; /* #E7F5E7 for even row */
 	}
 	
+	.request-table tr.comment {
+		border-top: 1px solid #C3C3C3;
+	}
+	
 	.task-manager-table tr.focusRow {
 		background-color: #D8D8A8; /* for the current row */
 	}
@@ -492,6 +496,9 @@
 	
 	#show-message .request-table td.location {
 		width: 100px;
+	}
+
+	#show-message .request-table td.delete {
 	}
 	
 	.request-table td {
@@ -886,5 +893,9 @@
 	div#cancelAppointment textarea {
 		width: 100%;
 		height: 100px;
+	}
+	
+	input.hint {
+		color: #888;
 	}
 }

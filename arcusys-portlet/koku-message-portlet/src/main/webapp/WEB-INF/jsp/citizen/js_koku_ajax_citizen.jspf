@@ -11,105 +11,24 @@ function KokuAjaxCitizen(renderUrls) {
 	KokuAjax.call(this, renderUrls);
 };
 
-
-// Creates a renderURL by ajax, to show the detailed message page 
-KokuAjaxCitizen.prototype.showMessage = function(messageId) {
-	var url = this.renderUrls.messageRenderUrl;
-	url = this.formatUrl(url);
-	
-	jQuery.post(url, {messageId:messageId, currentPage:pageObj.currentPage, taskType:pageObj.taskType, 
-		keyword:pageObj.keyword+'|'+pageObj.field, orderType:pageObj.orderType}, function(data) {
-		var obj = jQuery.parseJSON(data);
-		var json = obj.response;
-		var renderUrl = json["renderUrl"];
-		window.location = renderUrl;
-	});
-};
-	
-//Creates a renderURL by ajax, to show the detailed request page
-KokuAjaxCitizen.prototype.showRequest = function(requestId) {
-	var url = this.renderUrls.requestRenderUrl;
-	url = this.formatUrl(url);
-	
-	jQuery.post(url, {requestId:requestId, currentPage:pageObj.currentPage, taskType:pageObj.taskType, 
-		keyword:pageObj.keyword+'|'+pageObj.field, orderType:pageObj.orderType}, function(data) {
-		var obj = jQuery.parseJSON(data);
-		var json = obj.response;
-		var renderUrl = json["renderUrl"];
-		window.location = renderUrl;
-	});
-};
-
-//Creates a renderURL by ajax, to show the detailed request page
-KokuAjaxCitizen.prototype.showResponse = function(index) {
-	var task = pageObj.tasks[index];
-	var responseId = task["responseId"];
-
-	var url = this.renderUrls.responseRenderUrl;
-	url = this.formatUrl(url);
-	
-	jQuery.post(url, {responseId:responseId, currentPage:pageObj.currentPage, taskType:pageObj.taskType, 
-		keyword:pageObj.keyword+'|'+pageObj.field, orderType:pageObj.orderType}, function(data) {
-		var obj = jQuery.parseJSON(data);
-		var json = obj.response;
-		var renderUrl = json["renderUrl"];
-		window.location = renderUrl;
-	});
-};
-
-//Creates a renderURL by ajax,to show the detailed appointment page
-KokuAjaxCitizen.prototype.showAppointment = function(index) {
-
-	var task = pageObj.tasks[index];
-	var appointmentId = task["appointmentId"];
-	var targetPerson = task["targetPersonUser"]["uid"];
-	var url="";
-	
-	if (pageObj.taskType == "<%= Constants.TASK_TYPE_APPOINTMENT_RESPONSE_EMPLOYEE%>" 
-		|| pageObj.taskType == "<%= Constants.TASK_TYPE_APPOINTMENT_RESPONSE_CITIZEN%>"
-		|| pageObj.taskType == "<%= Constants.TASK_TYPE_APPOINTMENT_RESPONSE_CITIZEN_OLD%>") {
-		
-		url = this.renderUrls.appointmentRenderUrl;
-		url = this.formatUrl(url);
-		
-		jQuery.post(url, {appointmentId:appointmentId, currentPage:pageObj.currentPage, taskType:pageObj.taskType, 
-			keyword:pageObj.keyword+'|'+pageObj.field, orderType:pageObj.orderType, targetPerson:targetPerson}, function(data) {
-			var obj = jQuery.parseJSON(data);
-			var json = obj.response;
-			var renderUrl = json["renderUrl"];
-			window.location = renderUrl;
-		});
-	} else if(pageObj.taskType == "app_inbox_employee") {
-		url = "<%= portletPath %><%= NavigationPortletProperties.APPOINTMENTS_NEW_APPOINTMENT %>" + "?FormID=" + appointmentId;
-		window.location = url;
-	} else if(pageObj.taskType == "app_inbox_citizen") {
-		url = "<%= portletPath %><%= NavigationPortletProperties.CONSENTS_ANSWER_TO_CONSENT %>" + "?FormID=" + appointmentId + "&arg1=" + targetPerson;	
-		window.location = url;
-	}
-};
-
 //Creates a renderURL by ajax,to show the detailed consent page
 KokuAjaxCitizen.prototype.showConsent = function(index) {
 
-	var url="";
+	var url = "";
 	var task = pageObj.tasks[index];	
 	var consentId = task['consentId'];	
-	if (pageObj.taskType == "<%= Constants.TASK_TYPE_CONSENT_CITIZEN_CONSENTS%>" && task['approvalStatus'] == 'Hyv‰ksytty' && task['status'] != 'Mit‰tˆity') { // edit mode
+	if (pageObj.taskType == "<%= Constants.TASK_TYPE_CONSENT_CITIZEN_CONSENTS%>" && task['approvalStatus'] == 'Hyv√§ksytty' && task['status'] != 'Mit√§t√∂ity') { // edit mode
 		url = "<%= portletPath %><%= NavigationPortletProperties.CONSENTS_NEW_CONSENT_TEMPLATE %>" + "?FormID=" + consentId;	
 		window.location = url;
 	} else if(pageObj.taskType == "<%= Constants.TASK_TYPE_CONSENT_CITIZEN_CONSENTS%>"
-				||pageObj.taskType == "<%= Constants.TASK_TYPE_CONSENT_CITIZEN_CONSENTS_OLD%>" 
-				||pageObj.taskType == "<%= Constants.TASK_TYPE_CONSENT_EMPLOYEE_CONSENTS%>") {
-		url = this.renderUrls.consentRenderUrl;
-		url = this.formatUrl(url);
+			||pageObj.taskType == "<%= Constants.TASK_TYPE_CONSENT_CITIZEN_CONSENTS_OLD%>" 
+			||pageObj.taskType == "<%= Constants.TASK_TYPE_CONSENT_EMPLOYEE_CONSENTS%>") {
 		
-		jQuery.post(url, {consentId:consentId, currentPage:pageObj.currentPage, taskType:pageObj.taskType, 
-			keyword:pageObj.keyword+'|'+pageObj.field, orderType:pageObj.orderType}, function(data) {
-			var obj = jQuery.parseJSON(data);
-			var json = obj.response;
-			var renderUrl = json["renderUrl"];
-			window.location = renderUrl;
-		});
+		url = this.renderUrls.consentUrl;
+		url = this.formatUrl(url);
+		url += "&consentId="+consentId;
+		window.location = url;
+		
 	} else if(pageObj.taskType == "<%= Constants.TASK_TYPE_CONSENT_ASSIGNED_CITIZEN%>") {
 		url = "<%= portletPath %><%= NavigationPortletProperties.CONSENTS_NEW_CONSENT %>" + "?FormID=" + consentId;
 		window.location = url;
@@ -118,17 +37,4 @@ KokuAjaxCitizen.prototype.showConsent = function(index) {
 		url = "<%= portletPath %><%= NavigationPortletProperties.CONSENTS_NEW_CONSENT %>" + "?FormID=" + consentId;
 		window.location = url;			
 	}
-};
-
-KokuAjaxCitizen.prototype.showWarrant = function(index) {
-	var authorizationId = pageObj.tasks[index]['authorizationId'];	
-	url = this.renderUrls.warrantRenderUrl;
-	url = this.formatUrl(url);
-	jQuery.post(url, {authorizationId:authorizationId, currentPage:pageObj.currentPage, taskType:pageObj.taskType, 
-		keyword:pageObj.keyword+'|'+pageObj.field, orderType:pageObj.orderType}, function(data) {
-		var obj = jQuery.parseJSON(data);
-		var json = obj.response;
-		var renderUrl = json["renderUrl"];
-		window.location = renderUrl;
-	});
 };

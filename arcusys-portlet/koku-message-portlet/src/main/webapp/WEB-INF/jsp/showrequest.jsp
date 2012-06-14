@@ -2,11 +2,9 @@
 <%@ page import="fi.arcusys.koku.common.services.requests.models.KokuRequest"%>
 <%@ page import="fi.arcusys.koku.web.util.ModelWrapper"%>
 
-
-<portlet:renderURL var="homeURL"
-	windowState="<%= WindowState.NORMAL.toString() %>">
-	<portlet:param name="myaction" value="home" />
-</portlet:renderURL>
+<portlet:actionURL var="homeURL">
+	<portlet:param name="action" value="toHome" />
+</portlet:actionURL>
 
 <%!public String htmlToCode(String s) {
 		if (s == null) {
@@ -140,6 +138,12 @@
 								</td>
 							</tr>
 						</c:forEach>
+						<tr class="comment">
+							<td colspan="2"><span class="request-c-1"><spring:message code="response.comment" /></span>:</td>
+						</tr>
+						<tr>
+							<td colspan="2"><c:out value="${response.comment}" /></td>
+						</tr>
 					</table>
 				</c:forEach>
 

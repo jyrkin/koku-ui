@@ -18,9 +18,9 @@ import fi.arcusys.koku.common.util.Properties;
  * Aug 22, 2011
  */
 public class AvEmployeeService {
-	
+
 	private final KokuLooraAppointmentService service;
-	
+
 	/**
 	 * Constructor and initialization
 	 */
@@ -29,7 +29,7 @@ public class AvEmployeeService {
 		service = as.getKokuLooraAppointmentServicePort();
 		((BindingProvider)service).getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, Properties.AV_EMPLOYEE_SERVICE);
 	}
-	
+
 	/**
 	 * Gets the assigned appointments
 	 * @param user user name
@@ -44,7 +44,7 @@ public class AvEmployeeService {
 			throw new KokuServiceException("getCreatedAppointments failed. user: '"+user+"'", e);
 		}
 	}
-	
+
 	/**
 	 * Gets the responded appointments
 	 * @param user user name
@@ -58,9 +58,9 @@ public class AvEmployeeService {
 		} catch(RuntimeException e) {
 			throw new KokuServiceException("getProcessedAppointments failed. user: '"+user+"'", e);
 		}
-		
+
 	}
-	
+
 	/**
 	 * Gets the amount of created appointments
 	 * @param user user name
@@ -73,7 +73,7 @@ public class AvEmployeeService {
 			throw new KokuServiceException("getTotalCreatedAppointmentNum failed. user: '"+user+"'", e);
 		}
 	}
-	
+
 	/**
 	 * Gets the amount of processed appointments
 	 * @param user user name
@@ -86,7 +86,7 @@ public class AvEmployeeService {
 			throw new KokuServiceException("getTotalProcessedAppointments failed. user: '"+user+"'", e);
 		}
 	}
-	
+
 	/**
 	 * Gets the responded appointment in detail
 	 * @param appointmentId appointment id
@@ -97,9 +97,9 @@ public class AvEmployeeService {
 			return service.getAppointmentById(appointmentId);
 		} catch(RuntimeException e) {
 			throw new KokuServiceException("getAppointmentById failed. appointmentId: '"+appointmentId+"'", e);
-		}	
+		}
 	}
-	
+
 	/**
 	 * Cancels appointment
 	 * @param appointmentId
@@ -112,5 +112,18 @@ public class AvEmployeeService {
 			throw new KokuServiceException("getAppointmentById failed. appointmentId: '"+appointmentId+"' comment: '"+comment+"'", e);
 		}
 	}
-	
+
+	/**
+	 * Disables an appointment timeslot
+	 * @param appointmentId
+	 * @param slotNumber
+	 */
+	public void disableAppointmentSlot(long appointmentId, int slotNumber) throws KokuServiceException {
+		try {
+			service.disableSlot(appointmentId, slotNumber);
+		} catch(RuntimeException e) {
+			throw new KokuServiceException("getAppointmentById failed. appointmentId: '"+appointmentId+"' slotNumber: '"+slotNumber+"'", e);
+		}
+	}
+
 }

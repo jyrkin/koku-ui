@@ -97,6 +97,80 @@ KokuAjax.prototype.cancelAppointments = function(messageList, targetPersons, com
 };
 
 /**
+ * Disables an appointment slot selected by employee
+ */
+KokuAjax.prototype.disableAppointmentSlot = function(appointmentId, slotNumber, callback) {
+	var url = this.renderUrls.disableSlotUrl;
+	url = this.formatUrl(url);
+
+	jQuery.post(url, {'appId':appointmentId, 'slotNumber':slotNumber}, function(data) {
+		var obj = jQuery.parseJSON(data);
+		var json = obj.response;
+		var result = json["result"];
+		callback(result);
+	});
+};
+
+/* Shows detailed message page */
+KokuAjax.prototype.showMessage = function(messageId) {
+	var url = this.renderUrls.messageUrl;
+	url = this.formatUrl(url);
+	url += "&messageId="+messageId;
+	window.location = url;
+};
+
+/* Shows detailed warrant page */
+KokuAjax.prototype.showWarrant = function(index) {	
+	var authorizationId = pageObj.tasks[index]['authorizationId'];	
+	url = this.renderUrls.warrantUrl;
+	url = this.formatUrl(url);
+	url += "&authorizationId="+authorizationId;
+	window.location = url;
+};
+
+/* Creates a renderURL by ajax, to show the detailed request page */
+KokuAjax.prototype.showResponse = function(index) {
+	var task = pageObj.tasks[index];
+	var responseId = task["responseId"];
+	var url = this.renderUrls.responseUrl;	
+	url = this.formatUrl(url);
+	url += "&responseId="+responseId;
+	window.location = url;
+};
+
+/* Shows detailed appointment page */
+KokuAjax.prototype.showAppointment = function(index) {
+
+	var task = pageObj.tasks[index];
+	var appointmentId = task["appointmentId"];
+	var targetPersonUid = null;
+	if (typeof task["targetPersonUser"] !== 'undefined') {
+		targetPersonUid = task["targetPersonUser"]["uid"];
+	}
+	if (typeof targetPersonUid === 'undefined' || targetPersonUid === null) {
+		targetPersonUid = "";
+	}
+	var url="";
+	
+	if (pageObj.taskType == "<%= Constants.TASK_TYPE_APPOINTMENT_RESPONSE_EMPLOYEE%>" 
+	 || pageObj.taskType == "<%= Constants.TASK_TYPE_APPOINTMENT_RESPONSE_CITIZEN%>"
+	 || pageObj.taskType == "<%= Constants.TASK_TYPE_APPOINTMENT_RESPONSE_CITIZEN_OLD%>") {		
+		url = this.renderUrls.appointmentUrl;
+		url = this.formatUrl(url);
+		url += "&appointmentId="+appointmentId;
+		url += "&targetPerson="+targetPersonUid;
+		window.location = url;
+	} else if(pageObj.taskType == "<%= Constants.TASK_TYPE_APPOINTMENT_INBOX_EMPLOYEE %>"){
+		url = "<%= portletPath %><%= NavigationPortletProperties.APPOINTMENTS_NEW_APPOINTMENT %>" + "?FormID=" + appointmentId;
+		window.location = url;			
+	} else if(pageObj.taskType == "<%= Constants.TASK_TYPE_APPOINTMENT_INBOX_CITIZEN %>") {
+		url = "<%= portletPath %><%= NavigationPortletProperties.CONSENTS_ANSWER_TO_CONSENT %>" + "?FormID=" + appointmentId + "&arg1=" + targetPersonUid;
+		window.location = url;				
+	}					
+};
+
+
+/**
  * Execute ajax query in Post way, and parse the Json format response, and
  * then create tasks in table and task page filed.
  */

@@ -1,8 +1,8 @@
 <%@page import="fi.arcusys.koku.common.services.requests.models.KokuResponseDetail"%>
 <%@ include file="init.jsp"%>
-<portlet:renderURL var="homeURL" windowState="<%= WindowState.NORMAL.toString() %>" >
-	<portlet:param name="myaction" value="home" />
-</portlet:renderURL>
+<portlet:actionURL var="homeURL">
+	<portlet:param name="action" value="toHome" />
+</portlet:actionURL>
 
 <%@ include file="js_koku_detail.jspf" %>
 <%@ include file="js_koku_navigation_helper.jspf" %>
