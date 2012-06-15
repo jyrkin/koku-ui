@@ -26,7 +26,13 @@
 <portlet:renderURL var="homeUrl">
 	<portlet:param name="action" value="showCollection" />
 	<portlet:param name="pic" value="${child.pic}" />
-	<portlet:param name="collection" value="${collection.id}" />
+	<portlet:param name="collection" value="${collection.id}" />	
+	<c:if test="${not empty fromGroup}">
+		<portlet:param name="fromGroup" value="true" />
+	</c:if>
+	<c:if test="${not empty selected}">
+		<portlet:param name="selected" value="${selected}" />
+	</c:if>		
 </portlet:renderURL>
 <portlet:actionURL var="addMultivalue">
 	<portlet:param name="action" value="addMultivalue" />
@@ -36,6 +42,12 @@
 	
 	<c:if test="${ not empty entryvalue }">
 	   <portlet:param name="entryId" value="${entry.id}" />
+	</c:if>
+		<c:if test="${not empty fromGroup}">
+		<portlet:param name="fromGroup" value="true" />
+	</c:if>
+	<c:if test="${not empty selected}">
+		<portlet:param name="selected" value="${selected}" />
 	</c:if>
 </portlet:actionURL>
 <portlet:actionURL var="removeMultivalue">
@@ -48,11 +60,23 @@
     <c:if test="${ not empty entry }">
        <portlet:param name="entryId" value="${entry.id}" />
     </c:if>
+    	<c:if test="${not empty fromGroup}">
+		<portlet:param name="fromGroup" value="true" />
+	</c:if>
+	<c:if test="${not empty selected}">
+		<portlet:param name="selected" value="${selected}" />
+	</c:if>
 </portlet:actionURL>
 <portlet:actionURL var="cancelMultivalue">
     <portlet:param name="action" value="cancelMultivalue" />
     <portlet:param name="pic" value="${child.pic}" />
     <portlet:param name="collection" value="${collection.id}" />
+    	<c:if test="${not empty fromGroup}">
+		<portlet:param name="fromGroup" value="true" />
+	</c:if>
+	<c:if test="${not empty selected}">
+		<portlet:param name="selected" value="${selected}" />
+	</c:if>
 </portlet:actionURL>
 
 <div class="koku-kks"> 

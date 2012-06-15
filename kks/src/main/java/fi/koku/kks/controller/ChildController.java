@@ -54,7 +54,8 @@ public class ChildController {
   private static final Logger LOG = LoggerFactory.getLogger(ChildController.class);
 
   @ActionMapping(params = "action=toChildInfo")
-  public void toChildInfo(@RequestParam(value = "selected", required = false) String selected, @ModelAttribute(value = "child") Person child, BindingResult bindingResult,
+  public void toChildInfo(@RequestParam(value = "selected", required = false) String selected,
+      @RequestParam(value = "fromGroup", required = false) String fromGroup, @ModelAttribute(value = "child") Person child, BindingResult bindingResult,
       ActionResponse response, SessionStatus sessionStatus) {
     LOG.debug("toChildInfo");
     response.setRenderParameter("action", "showChild");
@@ -64,6 +65,10 @@ public class ChildController {
       response.setRenderParameter("selected", selected );
     }
     
+    if (StringUtils.isNotEmpty(fromGroup)) {
+      response.setRenderParameter("fromGroup", fromGroup);
+    }
+    
     sessionStatus.setComplete();
   }
 
@@ -71,6 +76,7 @@ public class ChildController {
   public String show(PortletSession session, @ModelAttribute(value = "child") Person child,
       @RequestParam(value = "error", required = false) String error,
       @RequestParam(value = "message", required = false) String message, @RequestParam(value = "selected", required = false) String selected,
+      @RequestParam(value = "fromGroup", required = false) String fromGroup,
       RenderResponse response, Model model) {
     LOG.debug("show child");
 
@@ -103,6 +109,11 @@ public class ChildController {
         model.addAttribute("selected", selected );
       }
 
+      if (StringUtils.isNotEmpty(fromGroup)) {
+        model.addAttribute("fromGroup", fromGroup);
+      }
+      
+      
       return "child";
 
     } catch (ServiceFault e) {
@@ -113,7 +124,10 @@ public class ChildController {
 
   @ActionMapping(params = "action=sendConsentRequest")
   public void sendConsentRequest(PortletSession session, @ModelAttribute(value = "child") Person child,
-      @RequestParam String collectionId, @RequestParam String consent, ActionResponse response,
+      @RequestParam String collectionId, @RequestParam String consent, 
+      @RequestParam(value = "fromGroup", required = false) String fromGroup,
+      @RequestParam(value = "selected", required = false) String selected,
+      ActionResponse response,
       SessionStatus sessionStatus) {
     LOG.debug("sendConsentRequest");
 
@@ -121,6 +135,14 @@ public class ChildController {
 
     response.setRenderParameter("action", "showChild");
     response.setRenderParameter("pic", child.getPic());
+    
+    if ( StringUtils.isNotEmpty(selected) ) {
+      response.setRenderParameter("selected", selected );
+    }
+    
+    if (StringUtils.isNotEmpty(fromGroup)) {
+      response.setRenderParameter("fromGroup", fromGroup);
+    }
 
     if (!success) {
       response.setRenderParameter("error", "collection.consent.request.failed");

@@ -18,6 +18,13 @@
 <portlet:renderURL var="homeUrl">
 		<portlet:param name="action" value="showChild" />
 		<portlet:param name="pic" value="${child.pic}" />
+		
+		<c:if test="${not empty fromGroup}">
+			<portlet:param name="fromGroup" value="true" />
+		</c:if>
+		<c:if test="${not empty selected}">
+			<portlet:param name="selected" value="${selected}" />
+		</c:if>
 </portlet:renderURL>
 
 <portlet:actionURL var="deleteCollection">
@@ -26,10 +33,22 @@
     <portlet:param name="collection" value="${collection.id}" />
     <portlet:param name="collectionName" value="${collection.name}" />
     <portlet:param name="collectionType" value="${collection.collectionClass.typeCode}" />
+    <c:if test="${not empty fromGroup}">
+			<portlet:param name="fromGroup" value="true" />
+	</c:if>
+	<c:if test="${not empty selected}">
+			<portlet:param name="selected" value="${selected}" />
+	</c:if>
 </portlet:actionURL>
 <portlet:actionURL var="cancelDeletion">
 		<portlet:param name="action" value="showChild" />
 		<portlet:param name="pic" value="${child.pic}" />
+		<c:if test="${not empty fromGroup}">
+			<portlet:param name="fromGroup" value="true" />
+		</c:if>
+		<c:if test="${not empty selected}">
+			<portlet:param name="selected" value="${selected}" />
+		</c:if>
 </portlet:actionURL>
 
 <div class="koku-kks"> 

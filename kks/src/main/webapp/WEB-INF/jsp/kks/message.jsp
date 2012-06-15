@@ -18,6 +18,14 @@
 <portlet:renderURL var="homeUrl">
 		<portlet:param name="action" value="showChild" />
 		<portlet:param name="pic" value="${child.pic}" />
+
+		<c:if test="${not empty fromGroup}">
+			<portlet:param name="fromGroup" value="true" />
+		</c:if>
+		<c:if test="${not empty selected}">
+			<portlet:param name="selected" value="${selected}" />
+		</c:if>
+				
 </portlet:renderURL>
 
 <portlet:actionURL var="sendMessageURL">
@@ -25,6 +33,13 @@
     <portlet:param name="pic" value="${child.pic}" />
     <portlet:param name="collectionName" value="${collectionName}" />
     <portlet:param name="childName" value="${childName}" />
+   
+   	<c:if test="${not empty fromGroup}">
+		<portlet:param name="fromGroup" value="true" />
+	</c:if>
+	<c:if test="${not empty selected}">
+		<portlet:param name="selected" value="${selected}" />
+	</c:if>
 </portlet:actionURL>
 
 

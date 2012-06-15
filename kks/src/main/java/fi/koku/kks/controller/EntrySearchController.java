@@ -18,6 +18,7 @@ import javax.portlet.ActionResponse;
 import javax.portlet.PortletSession;
 import javax.portlet.RenderResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,7 +55,10 @@ public class EntrySearchController {
   @RenderMapping(params = "action=showSearchResult")
   public String showResults(PortletSession session, @ModelAttribute(value = "child") Person child,
       @RequestParam(value = "description") String description,
-      @RequestParam(value = "classification") String classification, RenderResponse response, Model model) {
+      @RequestParam(value = "classification") String classification, 
+      @RequestParam(value = "fromGroup", required = false) String fromGroup,
+      @RequestParam(value = "selected", required = false) String selected,
+      RenderResponse response, Model model) {
     LOG.debug("show search result");
     String tmp[] = classification.replaceAll(" ", "").split(",");
     List<String> names = Arrays.asList(tmp);
@@ -67,6 +71,15 @@ public class EntrySearchController {
     model.addAttribute("collections", collections);
     model.addAttribute("description", description);
     model.addAttribute("authorized", kksService.getAuthorizedRegistries(pic));
+    
+    
+    if (StringUtils.isNotEmpty(fromGroup)) {
+      model.addAttribute("fromGroup", fromGroup);
+    }
+    
+    if (StringUtils.isNotEmpty(selected)) {
+      model.addAttribute("selected", selected);
+    }
 
     return "search_result";
   }
@@ -74,13 +87,25 @@ public class EntrySearchController {
   @ActionMapping(params = "action=searchEntries")
   public void search(@ModelAttribute(value = "child") Person child,
       @RequestParam(value = "classification") String classification,
-      @RequestParam(value = "description") String description, ActionResponse response, SessionStatus sessionStatus) {
+      @RequestParam(value = "description") String description, 
+      @RequestParam(value = "fromGroup", required = false) String fromGroup,
+      @RequestParam(value = "selected", required = false) String selected,
+      ActionResponse response, SessionStatus sessionStatus) {
     LOG.debug("search entries");
 
     response.setRenderParameter("action", "showSearchResult");
     response.setRenderParameter("pic", child.getPic());
     response.setRenderParameter("description", description);
     response.setRenderParameter("classification", classification);
+    
+    if ( StringUtils.isNotEmpty(selected) ) {
+      response.setRenderParameter("selected", selected );
+    }
+    
+    if (StringUtils.isNotEmpty(fromGroup)) {
+      response.setRenderParameter("fromGroup", fromGroup);
+    }
+    
     sessionStatus.setComplete();
   }
 
