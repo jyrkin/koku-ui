@@ -52,7 +52,11 @@ import fi.koku.services.entity.kks.v1.KksCollectionsType;
 import fi.koku.services.entity.kks.v1.KksEntryClassType;
 import fi.koku.services.entity.kks.v1.KksEntryCriteriaType;
 import fi.koku.services.entity.kks.v1.KksEntryValueType;
+import fi.koku.services.entity.kks.v1.KksGroupCollectionCreationCriteriaType;
+import fi.koku.services.entity.kks.v1.KksGroupCollectionsCriteriaType;
 import fi.koku.services.entity.kks.v1.KksGroupType;
+import fi.koku.services.entity.kks.v1.KksPersonCollectionsType;
+import fi.koku.services.entity.kks.v1.KksPersonGroupType;
 import fi.koku.services.entity.kks.v1.KksQueryCriteriaType;
 import fi.koku.services.entity.kks.v1.KksServiceFactory;
 import fi.koku.services.entity.kks.v1.KksServicePortType;
@@ -496,7 +500,7 @@ public class KksService {
   }
   
   public List<Person> getChilds(String pic) {
-    List<Person> childs = new ArrayList<Person>();
+    
     CommunityQueryCriteriaType communityQueryCriteria = new CommunityQueryCriteriaType();
     communityQueryCriteria.setCommunityType(Constants.COMMUNITY_TYPE_GUARDIAN_COMMUNITY);
     MemberPicsType mpt = new MemberPicsType();
@@ -523,15 +527,19 @@ public class KksService {
           }
         }
       }
-    }
+    }    
+    return getCustomers(pic, pics);
+  }
 
+  private List<Person> getCustomers(String user, List<String> pics) {
+    List<Person> childs = new ArrayList<Person>();
     if (pics.size() > 0) {
       try {
         CustomerQueryCriteriaType criteria = new CustomerQueryCriteriaType();
         PicsType pt = new PicsType();
         pt.getPic().addAll(pics);
         criteria.setPics(pt);
-        CustomersType customers = customerService.opQueryCustomers(criteria, getCustomerAuditInfo(pic));
+        CustomersType customers = customerService.opQueryCustomers(criteria, getCustomerAuditInfo(user));
         for (CustomerType customer : customers.getCustomer()) {
           childs.add(Person.fromCustomerType(customer));
         }
@@ -706,6 +714,70 @@ public class KksService {
   }
   
   public Group getGroup( String userId, String groupId ) {
-    return personService.getGroup(PersonConstants.PERSON_SERVICE_DOMAIN_OFFICER, groupId, userId, Constants.COMPONENT_KKS);
+    return personService.getGroup(PersonConstants.PERSON_SERVICE_DOMAIN_OFFICER, groupId.trim(), userId, Constants.COMPONENT_KKS);
+  }
+  
+  public List<PersonCollectionContainer> getGroupCollections(String user, List<String> pics)  throws ServiceFault {
+    
+    List<PersonCollectionContainer> tmp = new ArrayList<PersonCollectionContainer>();
+    List<KKSCollection> createdCollections = new ArrayList<KKSCollection>();
+    List<String> customerPics = new ArrayList<String>();
+
+    KksGroupCollectionsCriteriaType criteria = new KksGroupCollectionsCriteriaType();
+    criteria.getPic().addAll(pics);
+    criteria.setKksScope("minimum");
+    KksPersonGroupType kks = kksService.opGetGroupKks(criteria, getKksAuditInfo(user));
+    
+    for ( KksPersonCollectionsType type : kks.getKksGroupCollections().getKksPersonGroup() ){
+      PersonCollectionContainer gc = new PersonCollectionContainer();
+      tmp.add(gc);
+      gc.setPic(type.getPic());
+      customerPics.add(gc.getPic());
+      List<KksCollectionType> collections = type.getKksCollection();
+
+      if (collections != null) {
+
+        for (KksCollectionType kct : collections) {
+          gc.getCollections().add(converter.fromWsType(kct, user));
+        }
+      }
+
+      Collections.sort(gc.getCollections(), new CollectionComparator());    
+      createdCollections.addAll(gc.getCollections());
+    }
+    
+    setCollectionCreators(user,createdCollections);    
+    setCustomers(user, tmp, customerPics);    
+    return tmp;
+  }
+
+  private void setCustomers(String user, List<PersonCollectionContainer> tmp,
+      List<String> customerPics) {
+    List<Person> customers = getCustomers(user, customerPics);
+    
+    Map<String,Person> customerMap = new HashMap<String, Person>();
+    
+    for ( Person p : customers ) {
+      customerMap.put(p.getPic(), p );
+    }
+    
+    for ( PersonCollectionContainer gc : tmp ) {
+      gc.setCustomer(customerMap.get(gc.getPic()));
+    }
+  }
+  
+  public boolean addCollectionForGroup(String user, List<String> pics, String collectionType, String collectionName ) {
+    
+    try {
+      KksGroupCollectionCreationCriteriaType kksCollectionCreationCriteria = new KksGroupCollectionCreationCriteriaType();
+      kksCollectionCreationCriteria.setCollectionName(collectionName);
+      kksCollectionCreationCriteria.getPic().addAll(pics);
+      kksCollectionCreationCriteria.setCollectionTypeId(collectionType);
+      kksCollectionCreationCriteria.setKksScope("new");
+      return kksService.opAddKksCollectionForGroup(kksCollectionCreationCriteria, getKksAuditInfo(user));
+    } catch (ServiceFault e) {
+      LOG.error("Failed to create KKS collection " + collectionName + " for group " + pics, e);
+    }    
+    return false;
   }
 }

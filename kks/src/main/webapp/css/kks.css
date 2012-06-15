@@ -108,12 +108,53 @@
     margin-bottom: 10px;
 }
 
+.koku-kks .kks-fake-link {
+    cursor:pointer;
+}
+
+.koku-kks .kks-width-50 {
+   width: 50%;
+}
+
+.koku-kks .kks-width-75 {
+   width: 75%;
+}
+
+.koku-kks .kks-width-100 {
+   width: 100%;
+}
+
+.koku-kks .kks-choose-all {
+   padding-top: 5px;
+   padding-bottom: 5px;
+}
+
+.koku-kks .kks-table {
+   width: 100%;
+   border: 0;
+}
+
 .koku-kks a.create {
     cursor:pointer;
     text-transform:uppercase;
     padding: 2px 0;
     display:block;
 }
+
+.koku-kks a.show {
+    cursor:pointer;
+    text-transform:uppercase;
+    padding: 2px 0;
+    display:block;
+}
+
+.koku-kks a.close {
+    cursor:pointer;
+    text-transform:uppercase;
+    padding: 2px 0;
+    display:block;
+}
+
 .koku-kks a.small {
     font-size: 11px;
     margin-top: -21px;
@@ -164,9 +205,17 @@
 
 .koku-kks .kks-inner {
     margin-left: 50px;
-    
+    margin-top: 5px;
+    margin-bottom: 5px;
 }
 
+.koku-kks .kks-medium-left-margin {
+    margin-left: 15px;
+}
+
+.koku-kks .kks-small-top-margin {
+    margin-top: 5px;
+}
 
 .koku-kks .kks-tmp {
 	padding: 0px;

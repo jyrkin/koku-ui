@@ -15,6 +15,7 @@ import javax.portlet.ActionResponse;
 import javax.portlet.PortletSession;
 import javax.portlet.RenderResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -56,6 +57,8 @@ public class MessageController {
       @RequestParam(value = "collectionName") String collectionName,
       @RequestParam(value = "pic") String pic,
       @RequestParam(value = "childName") String childName,
+      @RequestParam(value = "fromGroup", required = false) String fromGroup,
+      @RequestParam(value = "selected", required = false) String selected,
       ActionResponse response,
       SessionStatus sessionStatus) {
     
@@ -63,6 +66,16 @@ public class MessageController {
     response.setRenderParameter("collectionName", collectionName );
     response.setRenderParameter("pic", pic );
     response.setRenderParameter("childName", pic );
+    
+    
+    if (StringUtils.isNotEmpty(fromGroup)) {
+      response.setRenderParameter("fromGroup", fromGroup);
+    }
+    
+    if (StringUtils.isNotEmpty(selected)) {
+      response.setRenderParameter("selected", selected);
+    }
+    
     sessionStatus.setComplete();
   }
 
@@ -72,12 +85,23 @@ public class MessageController {
       @RequestParam(value = "error", required = false) String error,
       @RequestParam(value = "childName") String childName,
       @RequestParam(value = "collectionName") String collectionName,
+      @RequestParam(value = "fromGroup", required = false) String fromGroup,
+      @RequestParam(value = "selected", required = false) String selected,
       @ModelAttribute(value = "kks_message") Message message,
       BindingResult errors,
       RenderResponse response, Model model) {
     model.addAttribute("childName", childName);
     model.addAttribute("collectionName", collectionName);
     model.addAttribute("error", error);
+    
+    if (StringUtils.isNotEmpty(fromGroup)) {
+      model.addAttribute("fromGroup", fromGroup);
+    }
+    
+    if (StringUtils.isNotEmpty(selected)) {
+      model.addAttribute("selected", selected);
+    }
+    
     return "message";
   }
   
@@ -87,6 +111,8 @@ public class MessageController {
       @RequestParam(value = "error", required = false) String error,
       @RequestParam(value = "childName") String childName,
       @RequestParam(value = "collectionName") String collectionName,
+      @RequestParam(value = "fromGroup", required = false) String fromGroup,
+      @RequestParam(value = "selected", required = false) String selected,
       RenderResponse response, Model model) {
     model.addAttribute("childName", childName);
     model.addAttribute("collectionName", collectionName);
@@ -97,9 +123,21 @@ public class MessageController {
   @ActionMapping(params = "action=sendMessage")
   public void send(PortletSession session, @RequestParam(value = "collectionName") String collectionName, @RequestParam(value = "childName") String childName, 
       @RequestParam(value = "cancel", required = false ) Boolean cancel,
-      @ModelAttribute(value = "child") Person child, @ModelAttribute(value = "kks_message") Message message,
+      @RequestParam(value = "fromGroup", required = false) String fromGroup,
+      @RequestParam(value = "selected", required = false) String selected,
+      @ModelAttribute(value = "child") Person child,
+      @ModelAttribute(value = "kks_message") Message message,
       BindingResult errors, ActionResponse response,
       SessionStatus sessionStatus) {
+    
+    if (StringUtils.isNotEmpty(fromGroup)) {
+      response.setRenderParameter("fromGroup", fromGroup);
+    }
+    
+    if (StringUtils.isNotEmpty(selected)) {
+      response.setRenderParameter("selected", selected);
+    }
+    
     
     if ( cancel != null && cancel ) {
       response.setRenderParameter("action", "showChild" );

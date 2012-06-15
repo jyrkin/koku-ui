@@ -17,6 +17,12 @@
 <portlet:renderURL var="homeUrl">
 	<portlet:param name="action" value="showChild" />
 	<portlet:param name="pic" value="${child.pic}" />
+	<c:if test="${not empty fromGroup}">
+		<portlet:param name="fromGroup" value="true" />
+	</c:if>
+	<c:if test="${not empty selected}">
+		<portlet:param name="selected" value="${selected}" />
+	</c:if>
 </portlet:renderURL>
 
 <div class="koku-kks"> 
@@ -57,6 +63,12 @@
 		                         <portlet:param name="action" value="showCollection" />
 		                         <portlet:param name="pic" value="${child.pic}" />
 		                         <portlet:param name="collection" value="${result.id }" />
+		                         <c:if test="${not empty fromGroup}">
+									<portlet:param name="fromGroup" value="true" />
+								</c:if>
+								<c:if test="${not empty selected}">
+									<portlet:param name="selected" value="${selected}" />
+								</c:if>
 		                     </portlet:renderURL>">
 								<spring:message code="ui.kks.modify" />  </a> </span>
 		

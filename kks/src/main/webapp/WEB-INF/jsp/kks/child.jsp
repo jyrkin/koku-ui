@@ -12,6 +12,12 @@
 
 
 <portlet:renderURL var="homeUrl">
+<c:choose>
+	<c:when test="${not empty fromGroup}">
+		<portlet:param name="action" value="showGroup" />
+		<portlet:param name="selected" value="${selected}" />
+	</c:when>
+	<c:otherwise>
 	<c:if test="${ not sessionScope.municipal_employee }">
 		<portlet:param name="action" value="showChildrens" />
 	</c:if>
@@ -23,27 +29,59 @@
 		   <portlet:param name="selected" value="${selected}" />
 		</c:if>
 	</c:if>
+	</c:otherwise>
+</c:choose>
 </portlet:renderURL>
 <portlet:actionURL var="creationActionUrl">
 	<portlet:param name="action" value="createCollection" />
 	<portlet:param name="pic" value="${child.pic}" />
+	<c:if test="${not empty fromGroup}">
+		<portlet:param name="fromGroup" value="true" />
+	</c:if>
+	<c:if test="${not empty selected}">
+		<portlet:param name="selected" value="${selected}" />
+	</c:if>	
 </portlet:actionURL>
 <portlet:actionURL var="searchUrl">
 	<portlet:param name="action" value="searchEntries" />
 	<portlet:param name="pic" value="${child.pic}" />
+	<c:if test="${not empty fromGroup}">
+		<portlet:param name="fromGroup" value="true" />
+	</c:if>
+	<c:if test="${not empty selected}">
+		<portlet:param name="selected" value="${selected}" />
+	</c:if>		
 </portlet:actionURL>
 <portlet:actionURL var="sendConsentURL">
 	<portlet:param name="action" value="sendConsentRequest" />
 	<portlet:param name="pic" value="${child.pic}" />
+	<c:if test="${not empty fromGroup}">
+		<portlet:param name="fromGroup" value="true" />
+	</c:if>
+	<c:if test="${not empty selected}">
+		<portlet:param name="selected" value="${selected}" />
+	</c:if>	
 </portlet:actionURL>
 <portlet:actionURL var="deleteCollectionURL">
 	<portlet:param name="action" value="toDeleteConfirmation" />
     <portlet:param name="pic" value="${child.pic}" />
+	<c:if test="${not empty fromGroup}">
+		<portlet:param name="fromGroup" value="true" />
+	</c:if>
+	<c:if test="${not empty selected}">
+		<portlet:param name="selected" value="${selected}" />
+	</c:if>	
 </portlet:actionURL>
 <portlet:actionURL var="sendMailURL">
 	<portlet:param name="action" value="toMessage" />
     <portlet:param name="pic" value="${child.pic}" />
     <portlet:param name="childName" value="${child.name}" />
+	<c:if test="${not empty fromGroup}">
+		<portlet:param name="fromGroup" value="true" />
+	</c:if>
+	<c:if test="${not empty selected}">
+		<portlet:param name="selected" value="${selected}" />
+	</c:if>	
 </portlet:actionURL>
 
 <div class="koku-kks"> 
@@ -110,6 +148,12 @@
 															<portlet:param name="action" value="showCollection" />
 															<portlet:param name="pic" value="${child.pic}" />
 															<portlet:param name="collection" value="${collection.id}" />
+															<c:if test="${not empty fromGroup}">
+																<portlet:param name="fromGroup" value="true" />
+															</c:if>
+															<c:if test="${not empty selected}">
+																<portlet:param name="selected" value="${selected}" />
+															</c:if>	
 														</portlet:renderURL>">
 														<c:out value="${ collection.name }" /></a> 
 											</strong> 											
@@ -148,6 +192,12 @@
 							                            <portlet:param name="action" value="lock" />
 							                            <portlet:param name="pic" value="${child.pic}" />
 							                            <portlet:param name="collection" value="${collection.id}" />
+							                            <c:if test="${not empty fromGroup}">
+															<portlet:param name="fromGroup" value="true" />
+														</c:if>
+														<c:if test="${not empty selected}">
+															<portlet:param name="selected" value="${selected}" />
+														</c:if>	
 							                        </portlet:actionURL>">
 													<spring:message code="ui.kks.lock" />  </a> </span>
 										</c:when>
@@ -160,6 +210,12 @@
 	                                                        <portlet:param name="action" value="activate" />
 	                                                        <portlet:param name="pic" value="${child.pic}" />
 	                                                        <portlet:param name="collection" value="${collection.id}" />
+	                                                        <c:if test="${not empty fromGroup}">
+																<portlet:param name="fromGroup" value="true" />
+															</c:if>
+															<c:if test="${not empty selected}">
+																<portlet:param name="selected" value="${selected}" />
+															</c:if>	
 	                                                    </portlet:actionURL>">
 														<spring:message code="ui.kks.activate" /> </a> </span>
 											</c:if>
@@ -205,6 +261,12 @@
                             <portlet:param name="pic" value="${child.pic}" />
                             <portlet:param name="classification" value="terveydentila" />
                             <portlet:param name="description" value="ui.kks.terveydentila.query" />
+                            <c:if test="${not empty fromGroup}">
+								<portlet:param name="fromGroup" value="true" />
+							</c:if>
+							<c:if test="${not empty selected}">
+								<portlet:param name="selected" value="${selected}" />
+							</c:if>	
                         </portlet:actionURL>">
                     <spring:message code="ui.kks.healthcare" />  </a> </div>
                     
@@ -215,6 +277,12 @@
                             <portlet:param name="pic" value="${child.pic}" />
                             <portlet:param name="classification" value="mittaus" />
                             <portlet:param name="description" value="ui.kks.mittaukset.query" />
+                            <c:if test="${not empty fromGroup}">
+								<portlet:param name="fromGroup" value="true" />
+							</c:if>
+							<c:if test="${not empty selected}">
+								<portlet:param name="selected" value="${selected}" />
+							</c:if>
                         </portlet:actionURL>">
 					<spring:message code="ui.kks.measurement" /> </a> </div>
 			 <div
@@ -225,6 +293,12 @@
                             <portlet:param name="pic" value="${child.pic}" />
                             <portlet:param name="classification" value="koti" />
                             <portlet:param name="description" value="ui.kks.kasvatusta.ohjaavat.tiedot.query" />
+                            <c:if test="${not empty fromGroup}">
+								<portlet:param name="fromGroup" value="true" />
+							</c:if>
+							<c:if test="${not empty selected}">
+								<portlet:param name="selected" value="${selected}" />
+							</c:if>
                         </portlet:actionURL>">
 					<spring:message code="ui.kks.child.rase" /> </a> </div>
 			<div class="kks-link"> <a
@@ -234,6 +308,12 @@
                             <portlet:param name="pic" value="${child.pic}" />
                             <portlet:param name="classification" value="tuen_tarve, huolenaiheet" />
                             <portlet:param name="description" value="ui.kks.tuen.tarve.query" />
+                            <c:if test="${not empty fromGroup}">
+								<portlet:param name="fromGroup" value="true" />
+							</c:if>
+							<c:if test="${not empty selected}">
+								<portlet:param name="selected" value="${selected}" />
+							</c:if>
                         </portlet:actionURL>">
 					<spring:message code="ui.kks.support.needs" /> </a> </div> 
 
@@ -246,6 +326,12 @@
                             <portlet:param name="pic" value="${child.pic}" />
                             <portlet:param name="classification" value="palaute" />
                             <portlet:param name="description" value="ui.kks.palautteet.query" />
+                            <c:if test="${not empty fromGroup}">
+								<portlet:param name="fromGroup" value="true" />
+							</c:if>
+							<c:if test="${not empty selected}">
+								<portlet:param name="selected" value="${selected}" />
+							</c:if>
                         </portlet:actionURL>">
 						<spring:message code="ui.kks.feedback" />  </a> </span>
 				<br />
@@ -258,6 +344,12 @@
                             <portlet:param name="pic" value="${child.pic}" />
                             <portlet:param name="classification" value="toive" />
                             <portlet:param name="description" value="ui.kks.toiveet.query" />
+                            <c:if test="${not empty fromGroup}">
+								<portlet:param name="fromGroup" value="true" />
+							</c:if>
+							<c:if test="${not empty selected}">
+								<portlet:param name="selected" value="${selected}" />
+							</c:if>
                         </portlet:actionURL>">
 						<spring:message code="ui.kks.wishes" />  </a> </span>
 				<br />
@@ -297,7 +389,6 @@
 											<c:if test="${not creatable.needsVersioning}">
                                             <form:option class="portlet-form-input-field" value="${creatable.asText}" label="${creatable.name}" />
                                             </c:if>
-
 										</c:forEach>
 									</form:select> </span>
 								<div class="portlet-form-field-label"><spring:message code="ui.kks.contract.name" />
@@ -333,11 +424,9 @@
 
 
 	$(document).ready(function() {
-
 		$("a.create").click(function() {
 			$(this).toggleClass("active").next().slideToggle("fast");
 		});
-
 	});
 	
 	function insertSelection() {

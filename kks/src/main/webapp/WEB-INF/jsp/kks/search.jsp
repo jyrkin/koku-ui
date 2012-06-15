@@ -17,6 +17,9 @@
 <portlet:actionURL var="searchActionUrl">
 	<portlet:param name="action" value="searchChild" />
 </portlet:actionURL>
+<portlet:actionURL var="toGroupActionUrl">
+	<portlet:param name="action" value="toGroupActions" />
+</portlet:actionURL>
 
 <c:set var="municipal_employee" value="${true}" scope="session" />
 
@@ -88,6 +91,8 @@
 				</c:if>
 			</div>
 
+			<div class="kks-reset-floating"></div>
+
 			<h3 class="portlet-section-subheader"><spring:message code="ui.kks.groups" /></h3>
 			
 			<c:if test="${empty groups}">
@@ -101,24 +106,31 @@
 					<c:choose>
 
 						<c:when test="${ selected eq group }">
-							<strong> <a
-								href="
-									<portlet:actionURL>
-										<portlet:param name="action" value="searchGroup" />
-										<portlet:param name="pic" value="${child.pic}" />
+							<div class="kks-left kks-small-top-margin">		
+							<strong><c:out value="${group}" /></strong>
+							</div>
+							
+							<div class="kks-right kks-medium-left-margin kks-small-top-margin" style="text-transform: uppercase;">	
+	                        	<a href="
+		                        	<portlet:actionURL>
+										<portlet:param name="action" value="toGroupActions" />
 										<portlet:param name="selected" value="${group}" />
 									</portlet:actionURL>">
-									<c:out value="${group}" />
-							</a>
-							</strong>
+									<spring:message code="ui.kks.group.collections"/>	
+								</a>						
+							</div>
+							
 
+							<div class="kks-reset-floating"></div>
+							
 							<div class="kks-inner">
 								<c:forEach var="groupChild" items="${groupChilds}">
 									<div class="kks-link">		
 									
 									<c:choose>
 											<c:when test="${selectedPic eq groupChild.pic}">
-												<strong><a href="
+												<div class="kks-left" style="width: 90px">${groupChild.pic}</div>
+												<div class="kks-left"><strong><a href="
 								                        <portlet:actionURL>
 								                            <portlet:param name="action" value="toChildInfo" />
 								                            <portlet:param name="pic" value="${groupChild.pic}" />
@@ -126,11 +138,12 @@
 								                        </portlet:actionURL>">
 														<c:out value="${groupChild.sname }" />, <c:out
 															value="${groupChild.fname}" />
-												</a></strong>
-												<span>${groupChild.pic}</span>
+												</a></strong></div>												
+												<div class="kks-reset-floating"></div>
 											</c:when>
 										<c:otherwise>
-											<a href="
+										    <div class="kks-left" style="width: 90px">${groupChild.pic}</div>
+											<div class="kks-left"><a href="
 						                        <portlet:actionURL>
 						                            <portlet:param name="action" value="toChildInfo" />
 						                            <portlet:param name="pic" value="${groupChild.pic}" />
@@ -138,8 +151,9 @@
 						                        </portlet:actionURL>">
 												<c:out value="${groupChild.sname }" />, <c:out
 													value="${groupChild.fname}" />
-											</a> <span>${groupChild.pic}</span>
-										
+											</a> </div>
+												
+												<div class="kks-reset-floating"></div>										
 										</c:otherwise>
 									</c:choose>								
 										
@@ -147,18 +161,14 @@
 								</c:forEach>
 							</div>
 						</c:when>
-
-
 						<c:otherwise>
-
-							<a
-								href="
-							<portlet:actionURL>
-								<portlet:param name="action" value="searchGroup" />
-								<portlet:param name="pic" value="${child.pic}" />
-								<portlet:param name="selected" value="${group}" />
-							</portlet:actionURL>">
-								<c:out value="${group}" />
+							<a href="
+								<portlet:actionURL>
+									<portlet:param name="action" value="searchGroup" />
+									<portlet:param name="pic" value="${child.pic}" />
+									<portlet:param name="selected" value="${group}" />
+								</portlet:actionURL>">
+									<c:out value="${group}" />
 							</a>
 						</c:otherwise>
 					</c:choose>
@@ -173,8 +183,6 @@
 		<div class="kks-version">
 			<%@ include file="../common/page-footer.jsp"%>
 		</div>
-
-
 	</div>
 </div>
 

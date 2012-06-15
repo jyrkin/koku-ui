@@ -23,34 +23,66 @@
 <portlet:defineObjects />
 
 <portlet:renderURL var="homeUrl" windowState="normal">
-	<c:if test="${empty print_mode}">
-		<portlet:param name="action" value="showChild" />
-		<portlet:param name="pic" value="${child.pic}" />
-	</c:if>
-	<c:if test="${not empty print_mode}">
-		<portlet:param name="action" value="showCollection" />
-		<portlet:param name="pic" value="${child.pic}" />
-		<portlet:param name="collection" value="${collection.id}" />
-	</c:if>
+<c:choose>
+	<c:when test="${not empty fromGroup}">
+		<portlet:param name="action" value="showGroup" />
+		<portlet:param name="selected" value="${selected}" />
+	</c:when>
+	<c:otherwise>
+		<c:if test="${empty print_mode}">
+			<portlet:param name="action" value="showChild" />
+			<portlet:param name="pic" value="${child.pic}" />
+		</c:if>
+		<c:if test="${not empty print_mode}">
+			<portlet:param name="action" value="showCollection" />
+			<portlet:param name="pic" value="${child.pic}" />
+			<portlet:param name="collection" value="${collection.id}" />
+		</c:if>
+	</c:otherwise>
+</c:choose>
 </portlet:renderURL>
 <portlet:actionURL var="saveActionUrl">
 	<portlet:param name="action" value="saveCollection" />
 	<portlet:param name="pic" value="${child.pic}" />
-	<portlet:param name="collection" value="${collection.id}" />
+	<portlet:param name="collection" value="${collection.id}" />	
+	<c:if test="${not empty fromGroup}">
+		<portlet:param name="fromGroup" value="true" />
+	</c:if>
+	<c:if test="${not empty selected}">
+		<portlet:param name="selected" value="${selected}" />
+	</c:if>		
 </portlet:actionURL>
 <portlet:actionURL var="addMultivalue">
 	<portlet:param name="action" value="addMultivalue" />
 	<portlet:param name="pic" value="${child.pic}" />
 	<portlet:param name="collection" value="${collection.id}" />
+	<c:if test="${not empty fromGroup}">
+		<portlet:param name="fromGroup" value="true" />
+	</c:if>
+	<c:if test="${not empty selected}">
+		<portlet:param name="selected" value="${selected}" />
+	</c:if>	
 </portlet:actionURL>
 <portlet:actionURL var="createVersionURL">
     <portlet:param name="action" value="createNewVersion" />
     <portlet:param name="pic" value="${child.pic}" />
+    <c:if test="${not empty fromGroup}">
+		<portlet:param name="fromGroup" value="true" />
+	</c:if>
+	<c:if test="${not empty selected}">
+		<portlet:param name="selected" value="${selected}" />
+	</c:if>	
 </portlet:actionURL>
 <portlet:actionURL var="logoutURL">
     <portlet:param name="action" value="logoutKKS" />
     <portlet:param name="pic" value="${child.pic}" />
     <portlet:param name="collection" value="${collection.id}" />
+    <c:if test="${not empty fromGroup}">
+		<portlet:param name="fromGroup" value="true" />
+	</c:if>
+	<c:if test="${not empty selected}">
+		<portlet:param name="selected" value="${selected}" />
+	</c:if>	
 </portlet:actionURL>
 
 <div class="koku-kks"> 
@@ -139,7 +171,13 @@
                         <portlet:renderURL>
                             <portlet:param name="action" value="showCollection" />
                             <portlet:param name="pic" value="${child.pic}" />
-                            <portlet:param name="collection" value="${collection.prevVersion}" />
+                            <portlet:param name="collection" value="${collection.prevVersion}" />                            
+                            <c:if test="${not empty fromGroup}">
+								<portlet:param name="fromGroup" value="true" />
+							</c:if>
+							<c:if test="${not empty selected}">
+								<portlet:param name="selected" value="selected" />
+							</c:if>	
                         </portlet:renderURL>">
                 <spring:message code="ui.kks.prev.version" />
             </a>
@@ -151,6 +189,12 @@
                             <portlet:param name="action" value="showCollection" />
                             <portlet:param name="pic" value="${child.pic}" />
                             <portlet:param name="collection" value="${collection.nextVersion}" />
+                            <c:if test="${not empty fromGroup}">
+								<portlet:param name="fromGroup" value="true" />
+							</c:if>
+							<c:if test="${not empty selected}">
+								<portlet:param name="selected" value="selected" />
+							</c:if>	
                         </portlet:renderURL>">
                 <spring:message code="ui.kks.next.version" />
             </a>

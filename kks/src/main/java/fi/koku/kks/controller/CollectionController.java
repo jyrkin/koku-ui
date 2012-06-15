@@ -90,7 +90,10 @@ public class CollectionController {
       @ModelAttribute(value = "collectionForm") CollectionForm collectionForm,
       @RequestParam(value = "collection") String collection,
       @RequestParam(value = "print", required = false) String print,
-      @RequestParam(value = "error", required = false) String error, RenderResponse response, Model model) {
+      @RequestParam(value = "error", required = false) String error, 
+      @RequestParam(value = "fromGroup", required = false) String fromGroup,
+      @RequestParam(value = "selected", required = false) String selected,
+      RenderResponse response, Model model) {
     LOG.debug("show collection");
 
     try {
@@ -115,6 +118,7 @@ public class CollectionController {
       model.addAttribute("can_save", canSave);
       model.addAttribute("idleTime", idleTime != null ? idleTime : "720" );
       model.addAttribute("redirectTime", redirectTime != null ? redirectTime : "120" );
+      
 
       if (!model.containsAttribute("version")) {
         Version v = new Version();
@@ -124,6 +128,14 @@ public class CollectionController {
 
       if (StringUtils.isNotEmpty(error)) {
         model.addAttribute("error", error);
+      }
+      
+      if (StringUtils.isNotEmpty(fromGroup)) {
+        model.addAttribute("fromGroup", fromGroup);
+      }
+      
+      if (StringUtils.isNotEmpty(selected)) {
+        model.addAttribute("selected", selected);
       }
       
       if (StringUtils.isNotEmpty(print)) {
@@ -164,6 +176,8 @@ public class CollectionController {
       @RequestParam(required = false) String multiValueId, @RequestParam(required = false) String type,
       @RequestParam(value = "valueId", required = false) String valueId,
       @RequestParam(value = "close", required = false) Boolean close,
+      @RequestParam(value = "fromGroup", required = false) String fromGroup,
+      @RequestParam(value = "selected", required = false) String selected,
       Model model, ActionResponse response,
       SessionStatus sessionStatus) {
     LOG.debug("save collection");
@@ -171,6 +185,15 @@ public class CollectionController {
     KKSCollection collection = (KKSCollection) session.getAttribute("kks.collection");
     collection.setEntries(collectionForm.getEntries());
     boolean success = kksService.updateKksCollection(collection, child.getPic(), Utils.getPicFromSession(session));
+    
+    
+    if (StringUtils.isNotEmpty(fromGroup)) {
+      response.setRenderParameter("fromGroup", fromGroup);
+    }
+    
+    if (StringUtils.isNotEmpty(selected)) {
+      response.setRenderParameter("selected", selected);
+    }
     
     if (!success) {
       response.setRenderParameter("error", "collection.update.failed");
@@ -191,7 +214,12 @@ public class CollectionController {
       } else {
         
         if ( close != null && close ) {
-          response.setRenderParameter("action", "showChild");                   
+          
+          if ( StringUtils.isNotEmpty(fromGroup) ) {
+            response.setRenderParameter("action", "showGroup");    
+          } else {
+            response.setRenderParameter("action", "showChild");         
+          }
         } else {       
           response.setRenderParameter("action", "showCollection");   
           response.setRenderParameter("collection", collection.getId());
@@ -226,7 +254,9 @@ public class CollectionController {
   public void saveMultivalue(PortletSession session, @ModelAttribute(value = "child") Person child,
       @RequestParam(value = "entryType") String entryType, @RequestParam(value = "collection") String collection,
       @RequestParam(value = "entryId", required = false) String entry,
-      @RequestParam(value = "valueId", required = false) String valueId, EntryValue value, BindingResult bindingResult,
+      @RequestParam(value = "valueId", required = false) String valueId, 
+      @RequestParam(value = "fromGroup", required = false) String fromGroup,
+      @RequestParam(value = "selected", required = false) String selected, EntryValue value, BindingResult bindingResult,
       ActionResponse response, SessionStatus sessionStatus) {
     LOG.debug("save multivalue");
 
@@ -240,6 +270,15 @@ public class CollectionController {
     response.setRenderParameter("action", "showCollection");
     response.setRenderParameter("pic", child.getPic());
     response.setRenderParameter("collection", collection);
+    
+    
+    if (StringUtils.isNotEmpty(fromGroup)) {
+      response.setRenderParameter("fromGroup", fromGroup);
+    }
+    
+    if (StringUtils.isNotEmpty(selected)) {
+      response.setRenderParameter("selected", selected);
+    }
 
     sessionStatus.setComplete();
   }
@@ -247,7 +286,10 @@ public class CollectionController {
   @ActionMapping(params = "action=removeMultivalue")
   public void removeMultiValue(PortletSession session, @ModelAttribute(value = "child") Person child,
       @RequestParam(value = "collection") String collection, @RequestParam(value = "entryId") String entry,
-      @RequestParam(value = "valueId") String valueId, EntryValue value, BindingResult bindingResult,
+      @RequestParam(value = "valueId") String valueId, 
+      @RequestParam(value = "fromGroup", required = false) String fromGroup,
+      @RequestParam(value = "selected", required = false) String selected,
+      EntryValue value, BindingResult bindingResult,
       ActionResponse response, SessionStatus sessionStatus) {
     LOG.debug("remove multivalue");
     boolean success = kksService.removeKksEntry(collection, child.getPic(), entry, valueId, "",
@@ -260,28 +302,63 @@ public class CollectionController {
     response.setRenderParameter("action", "showCollection");
     response.setRenderParameter("pic", child.getPic());
     response.setRenderParameter("collection", collection);
+    
+    
+    if (StringUtils.isNotEmpty(fromGroup)) {
+      response.setRenderParameter("fromGroup", fromGroup);
+    }
+    
+    if (StringUtils.isNotEmpty(selected)) {
+      response.setRenderParameter("selected", selected);
+    }
     sessionStatus.setComplete();
   }
 
   @ActionMapping(params = "action=cancelMultivalue")
   public void cancelMultiValue(@ModelAttribute(value = "child") Person child,
-      @RequestParam(value = "collection") String collection, ActionResponse response, SessionStatus sessionStatus) {
+      @RequestParam(value = "collection") String collection, 
+      @RequestParam(value = "fromGroup", required = false) String fromGroup,
+      @RequestParam(value = "selected", required = false) String selected,
+      ActionResponse response, SessionStatus sessionStatus) {
     LOG.debug("cancel multivalue");
 
     response.setRenderParameter("action", "showCollection");
     response.setRenderParameter("pic", child.getPic());
     response.setRenderParameter("collection", collection);
+    
+    
+    if (StringUtils.isNotEmpty(fromGroup)) {
+      response.setRenderParameter("fromGroup", fromGroup);
+    }
+    
+    if (StringUtils.isNotEmpty(selected)) {
+      response.setRenderParameter("selected", selected);
+    }
+    
     sessionStatus.setComplete();
   }
   
   @ActionMapping(params = "action=printCollection")
   public void printCollection(@ModelAttribute(value = "child") Person child,
-      @RequestParam(value = "collection") String collection, ActionResponse response, SessionStatus sessionStatus) {
+      @RequestParam(value = "collection") String collection, 
+      @RequestParam(value = "fromGroup", required = false) String fromGroup,
+      @RequestParam(value = "selected", required = false) String selected,
+      ActionResponse response, SessionStatus sessionStatus) {
     LOG.debug("printCollection");
     response.setRenderParameter("action", "showCollection");
     response.setRenderParameter("pic", child.getPic());
     response.setRenderParameter("collection", collection);
     response.setRenderParameter("print", "print");
+    
+    
+    if (StringUtils.isNotEmpty(fromGroup)) {
+      response.setRenderParameter("fromGroup", fromGroup);
+    }
+    
+    if (StringUtils.isNotEmpty(selected)) {
+      response.setRenderParameter("selected", selected);
+    }
+    
     try {
       response.setWindowState(WindowState.MAXIMIZED);
     } catch (WindowStateException e) {
@@ -295,7 +372,10 @@ public class CollectionController {
       @RequestParam(value = "collection") String collection,
       @RequestParam(value = "entryType", required = false) String entryType,
       @RequestParam(value = "entryId", required = false) String entry,
-      @RequestParam(value = "valueId", required = false) String valueId, RenderResponse response, Model model) {
+      @RequestParam(value = "valueId", required = false) String valueId, 
+      @RequestParam(value = "fromGroup", required = false) String fromGroup,
+      @RequestParam(value = "selected", required = false) String selected,
+      RenderResponse response, Model model) {
     LOG.debug("show collection");
 
     KKSCollection c = (KKSCollection)session.getAttribute("kks.collection");
@@ -307,6 +387,15 @@ public class CollectionController {
     model.addAttribute("collection", c);
     model.addAttribute("type", t);
     model.addAttribute("valueId", valueId);
+    
+    
+    if (StringUtils.isNotEmpty(fromGroup)) {
+      model.addAttribute("fromGroup", fromGroup);
+    }
+    
+    if (StringUtils.isNotEmpty(selected)) {
+      model.addAttribute("selected", selected);
+    }
 
 
     if (StringUtils.isNotEmpty(entry)) {
@@ -335,22 +424,47 @@ public class CollectionController {
   
   @ActionMapping(params = "action=toDeleteConfirmation")
   public void forwardToDelete(PortletSession session, @ModelAttribute(value = "child") Person child,
-      @RequestParam(value = "collection", required = false ) String collection,  ActionResponse response, SessionStatus sessionStatus) {
+      @RequestParam(value = "collection", required = false ) String collection,  
+      @RequestParam(value = "fromGroup", required = false) String fromGroup,
+      @RequestParam(value = "selected", required = false) String selected,
+      ActionResponse response, SessionStatus sessionStatus) {
       LOG.debug("show collection");
       response.setRenderParameter("action", "showDeleteConfirmation" );
       response.setRenderParameter("pic", child.getPic());
       response.setRenderParameter("collection", collection );
+      
+      
+      if (StringUtils.isNotEmpty(fromGroup)) {
+        response.setRenderParameter("fromGroup", fromGroup);
+      }
+      
+      if (StringUtils.isNotEmpty(selected)) {
+        response.setRenderParameter("selected", selected);
+      }
+      
       sessionStatus.setComplete();
   }
   
   @RenderMapping(params = "action=showDeleteConfirmation")
   public String showDelete(PortletSession session, @ModelAttribute(value = "child") Person child,
-      @RequestParam(value = "collection") String collection, @RequestParam(value = "error", required = false ) String error, RenderResponse response, Model model) {
+      @RequestParam(value = "collection") String collection, @RequestParam(value = "error", required = false ) String error, 
+      @RequestParam(value = "fromGroup", required = false) String fromGroup,
+      @RequestParam(value = "selected", required = false) String selected,
+      RenderResponse response, Model model) {
     LOG.debug("show collection");
     try {
       model.addAttribute("child", child);
       KKSCollection c = kksService.getKksCollection(collection, Utils.getUserInfoFromSession(session));
       model.addAttribute("collection", c);
+      
+      
+      if (StringUtils.isNotEmpty(fromGroup)) {
+        model.addAttribute("fromGroup", fromGroup);
+      }
+      
+      if (StringUtils.isNotEmpty(selected)) {
+        model.addAttribute("selected", selected);
+      }
       
       if ( error != null ) {
         model.addAttribute("error", error );
@@ -367,9 +481,21 @@ public class CollectionController {
       @RequestParam(value = "collection", required = false) String collection, 
       @RequestParam(value="collectionName") String collectionName, 
       @RequestParam(value="collectionType") String collectionType,
-      @RequestParam(value="cancel", required=false) Boolean cancel, 
+      @RequestParam(value="cancel", required=false) Boolean cancel,
+      @RequestParam(value = "fromGroup", required = false) String fromGroup,
+      @RequestParam(value = "selected", required = false) String selected,
       @ModelAttribute(value = "deletable") Deletion deletion, 
       BindingResult errors, ActionResponse response, SessionStatus sessionStatus) {
+    
+    
+    if (StringUtils.isNotEmpty(fromGroup)) {
+      response.setRenderParameter("fromGroup", fromGroup);
+    }
+    
+    if (StringUtils.isNotEmpty(selected)) {
+      response.setRenderParameter("selected", selected);
+    }
+    
 
     if ( cancel != null && cancel ) {
       response.setRenderParameter("action", "showChild" );
