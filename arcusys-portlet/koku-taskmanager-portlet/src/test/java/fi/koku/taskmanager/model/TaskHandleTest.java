@@ -1,58 +1,66 @@
 package fi.koku.taskmanager.model;
 
 
-import static org.junit.Assert.*;
-import java.util.ArrayList;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
+
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
+
 import fi.arcusys.intalio.tms.TaskMetadata;
 import fi.arcusys.koku.common.exceptions.IntalioAuthException;
+import fi.arcusys.koku.common.exceptions.IntalioException;
 import fi.arcusys.koku.common.services.intalio.Task;
 import fi.arcusys.koku.common.services.intalio.TaskHandle;
 import fi.arcusys.koku.common.services.intalio.TaskManagementService;
 
 
 public class TaskHandleTest{
-	
-	private String TEST_USERNAME = "Ville Virkamies";
-	private String TEST_PASSWORD = "test";
+
+	private final String TEST_USERNAME = "Ville Virkamies";
+	private final String TEST_PASSWORD = "test";
 	TaskHandle tester;
-	
-	@BeforeClass  
-	public static void runBeforeClass() {  
+
+	@BeforeClass
+	public static void runBeforeClass() {
 		System.out.println("*** Test TaskHandle class starts ***");
-		
-	} 
-	
-	@AfterClass  
-	public static void runAfterClass() {  	
+
+	}
+
+	@AfterClass
+	public static void runAfterClass() {
 		System.out.println("*** Test TaskHandle class ends ***");
-	} 
-	
+	}
+
 	@Before
     public void setUp() throws Exception {
 		String username = TEST_USERNAME;
 		String token = getTestToken();
 		tester = new TaskHandle(token, username);
     }
-	
+
 	@After
     public void tearDown() throws Exception {
     }
-	
+
 	@Ignore
 	@Test
-	public void getTasksByParams() {			
+	public void getTasksByParams() throws IntalioException {
 		int taskType = 1;
 		String keyword = "";
 		String orderType = "creationDate_desc";
@@ -64,7 +72,7 @@ public class TaskHandleTest{
 
 	@Ignore
 	@Test
-	public void getTasksFromServ() {
+	public void getTasksFromServ() throws IntalioException {
 		String taskType = "PATask";
 		String subQuery = "T._state = TaskState.READY AND T._description like '%%' ORDER BY T._creationDate DESC";
 		String first = "0";
@@ -91,7 +99,7 @@ public class TaskHandleTest{
 //			// TODO Auto-generated catch block
 //			e.printStackTrace();
 //		}
-//		
+//
 //		task.setTaskId("task-id-1");
 //		String url = "http://trelx28b:8080/form.htm";
 //		task.setFormUrl(url);
@@ -105,7 +113,7 @@ public class TaskHandleTest{
 //		assertEquals("createTask first description failed", expected, actual);
 //		expected = "20.5.2011 10:30:20";
 //		actual = myTask.getCreationDate();
-//		assertEquals("createTask first creation date failed", expected, actual);		
+//		assertEquals("createTask first creation date failed", expected, actual);
 //	}
 	@Ignore
 	@Test
@@ -149,9 +157,9 @@ public class TaskHandleTest{
 		assertEquals("createTask task link failed", expected, actual);
 	}
 
-	@Ignore("Not Ready to Run") 
+	@Ignore("Not Ready to Run")
 	@Test
-	public void getTotalTasksNumber() {
+	public void getTotalTasksNumber() throws IntalioException {
 		int taskType = 1;
 		String keyword = "Marko";
 		int expected = 3;
@@ -166,19 +174,19 @@ public class TaskHandleTest{
 		String expected = "(T._state = TaskState.READY OR T._state = TaskState.CLAIMED) AND T._description like '%%'";
 		String actual = tester.createTotalNumSubQuery(taskType, keyword);
 		assertEquals("createTotalNumSubQuery for task failed", expected, actual);
-		
+
 		taskType = 2;
 		keyword = "key";
 		expected = "T._state = TaskState.READY AND T._description like '%key%'";
 		actual = tester.createTotalNumSubQuery(taskType, keyword);
 		assertEquals("createTotalNumSubQuery for notification failed", expected, actual);
-		
+
 		taskType = 3;
 		keyword = "key";
 		expected = "T._description like '%key%'";
 		actual = tester.createTotalNumSubQuery(taskType, keyword);
 		assertEquals("createTotalNumSubQuery for process failed", expected, actual);
-		
+
 		taskType = 5;
 		keyword = "key";
 		expected = "";
@@ -194,19 +202,19 @@ public class TaskHandleTest{
 		String expected = "(T._state = TaskState.READY OR T._state = TaskState.CLAIMED) AND T._description like '%%' ORDER BY T._description DESC";
 		String actual = tester.createTaskSubQuery(taskType, keyword, orderType);
 		assertEquals("createTaskSubQuery for task failed", expected, actual);
-		
+
 		taskType = 2;
 		keyword = "key";
 		expected = "T._state = TaskState.READY AND T._description like '%key%' ORDER BY T._description DESC";
 		actual = tester.createTaskSubQuery(taskType, keyword, orderType);
 		assertEquals("createTaskSubQuery for notification failed", expected, actual);
-		
+
 		taskType = 3;
 		keyword = "key";
 		expected = "T._description like '%key%' ORDER BY T._description DESC";
 		actual = tester.createTaskSubQuery(taskType, keyword, orderType);
 		assertEquals("createTaskSubQuery for process failed", expected, actual);
-		
+
 		taskType = 5;
 		keyword = "key";
 		expected = "";
@@ -220,37 +228,37 @@ public class TaskHandleTest{
 		String expected = "T._description DESC";
 		String actual = tester.getOrderTypeStr(orderType);
 		assertEquals("getOrderTypeStr " + orderType + " failed", expected, actual);
-		
+
 		orderType = "description_asc";
 		expected = "T._description ASC";
 		actual = tester.getOrderTypeStr(orderType);
 		assertEquals("getOrderTypeStr " + orderType + " failed", expected, actual);
-		
+
 		orderType = "state_desc";
 		expected = "T._state DESC";
 		actual = tester.getOrderTypeStr(orderType);
 		assertEquals("getOrderTypeStr " + orderType + " failed", expected, actual);
-		
+
 		orderType = "state_asc";
 		expected = "T._state ASC";
 		actual = tester.getOrderTypeStr(orderType);
 		assertEquals("getOrderTypeStr " + orderType + " failed", expected, actual);
-		
+
 		orderType = "creationDate_desc";
 		expected = "T._creationDate DESC";
 		actual = tester.getOrderTypeStr(orderType);
 		assertEquals("getOrderTypeStr " + orderType + " failed", expected, actual);
-		
+
 		orderType = "creationDate_asc";
 		expected = "T._creationDate ASC";
 		actual = tester.getOrderTypeStr(orderType);
 		assertEquals("getOrderTypeStr " + orderType + " failed", expected, actual);
-		
+
 		orderType = "other";
 		expected = "T._creationDate DESC";
 		actual = tester.getOrderTypeStr(orderType);
 		assertEquals("getOrderTypeStr " + orderType + " failed", expected, actual);
-		
+
 	}
 
 	@Ignore
@@ -261,31 +269,31 @@ public class TaskHandleTest{
 		String participantToken = tester.getTokenByUser(username, password);
 		System.out.println(participantToken);
 		assertNotNull("getTokenByUser failed", participantToken);
-		
+
 		username = "wrong";
 		password = "wrong";
 		participantToken = tester.getTokenByUser(username, password);
 		assertNull("getTokenByUser failed", participantToken);
 	}
 
-	@Ignore("Not Ready to Run") 
+	@Ignore("Not Ready to Run")
 	@Test
 	public void getToken() {
 		fail("Not yet implemented");
 	}
 
-	@Ignore("Not Ready to Run") 
+	@Ignore("Not Ready to Run")
 	@Test
 	public void setToken() {
 		fail("Not yet implemented");
 	}
 
-	@Ignore("Not Ready to Run") 
+	@Ignore("Not Ready to Run")
 	@Test
 	public void getMessage() {
 		fail("Not yet implemented");
 	}
-	
+
 	private String getTestToken() throws IntalioAuthException {
 		TaskManagementService tms = new TaskManagementService();
 		String username = TEST_USERNAME;

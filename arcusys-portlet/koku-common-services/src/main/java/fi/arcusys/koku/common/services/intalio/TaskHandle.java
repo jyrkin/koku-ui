@@ -22,19 +22,20 @@ import org.w3c.dom.NodeList;
 import fi.arcusys.intalio.tms.TaskData;
 import fi.arcusys.intalio.tms.TaskMetadata;
 import fi.arcusys.koku.common.exceptions.IntalioAuthException;
+import fi.arcusys.koku.common.exceptions.IntalioException;
 import fi.arcusys.koku.common.util.Properties;
 import fi.arcusys.koku.common.util.TaskUtil;
 
 /**
  * Handles the intalio task processing including querying tasks, formatting task
  * to be presented to web
- * 
+ *
  * @author Jinhua Chen May 9, 2011
  */
 
 public class TaskHandle {
 
-	private static final Logger logger = Logger.getLogger(TaskHandle.class);
+	private static final Logger LOG = Logger.getLogger(TaskHandle.class);
 	// TODO: We probably need some sort filter here?
 	public static final String TASKMGR_REQUESTS_FILTER = "";
 	private static final String LOCAL_AJAXFORMS_WEB_APP_URL_PART = "/palvelut-portlet/ajaxforms/";
@@ -42,9 +43,9 @@ public class TaskHandle {
 
 	private static final String START_TASK_SEARCH = "0";
 	private static final String MAX_TASKS = "50";
-	
+
 	private static final String UNKNOWN = "?";
-	
+
 	private final TaskManagementService taskMngServ = new TaskManagementService();
 
 	private String message;
@@ -69,7 +70,7 @@ public class TaskHandle {
 
 	/**
 	 * Gets available tasks by the given parameters and return task list
-	 * 
+	 *
 	 * @param taskType
 	 *            the intalio task type
 	 * @param keyword
@@ -81,9 +82,10 @@ public class TaskHandle {
 	 * @param max
 	 *            the maximum tasks to be queried
 	 * @return available task list
+	 * @throws IntalioException
 	 */
 	public List<Task> getTasksByParams(int taskType, String keyword,
-			String orderType, String first, String max) {
+			String orderType, String first, String max) throws IntalioException {
 		String taskTypeStr = TaskUtil.getTaskType(taskType);
 		String subQuery = "";
 		subQuery = createTaskSubQuery(taskType, keyword, orderType);
@@ -92,7 +94,7 @@ public class TaskHandle {
 
 	/**
 	 * Gets tasks from task management service
-	 * 
+	 *
 	 * @param taskType
 	 *            the intalio task type
 	 * @param subQuery
@@ -102,26 +104,29 @@ public class TaskHandle {
 	 * @param max
 	 *            the maximum tasks to be queried
 	 * @return a list of tasks
+	 * @throws IntalioException
 	 */
 	public List<Task> getTasks(String taskType, String subQuery, String first,
-			String max) {
-		List<TaskMetadata> tasklist = taskMngServ.getAvailableTasks(
-				participantToken, taskType, subQuery, first, max);
+			String max) throws IntalioException {
+		List<TaskMetadata> tasklist;
+			tasklist = taskMngServ.getAvailableTasks(
+					participantToken, taskType, subQuery, first, max);
 		return createTasks(tasklist, participantToken);
 	}
 
-	public Task getTask(String taskId, String token) {
-		fi.arcusys.intalio.tms.Task task = taskMngServ.getTask(taskId, token);
+	public Task getTask(String taskId, String token) throws IntalioException {
+		fi.arcusys.intalio.tms.Task task;
+		task = taskMngServ.getTask(taskId, token);
 		return createTask(task.getMetadata(), task.getInput());
 	}
 
-	public List<Task> getPIPATaskList(String token) {
+	public List<Task> getPIPATaskList(String token) throws IntalioException {
 		List<TaskMetadata> metadata = taskMngServ.getAvailableTasks(token,
 				TaskUtil.PROCESS_TYPE, "", START_TASK_SEARCH, MAX_TASKS);
 		return createTasklistByMetadata(metadata, TaskUtil.PROCESS_TYPE);
 	}
 
-	public Task getTaskByDescription(String token, String description) {
+	public Task getTaskByDescription(String token, String description) throws IntalioException {
 		Task task = null;
 		List<TaskMetadata> metadata = taskMngServ.getAvailableTasks(
 				token, TaskUtil.PROCESS_TYPE, "", START_TASK_SEARCH, MAX_TASKS);
@@ -141,31 +146,33 @@ public class TaskHandle {
 
 	/**
 	 * Gets task status such as 'READY', 'CLAIMED', 'COMPLETED'
-	 * 
+	 *
 	 * @param taskId
 	 *            intalio task id
 	 * @return the intalio task status
+	 * @throws IntalioException
 	 */
-	public String getTaskStatus(String taskId) {
+	public String getTaskStatus(String taskId) throws IntalioException {
 		return taskMngServ.getTask(taskId, participantToken).getMetadata()
 				.getTaskState();
 	}
 
 	/**
 	 * Creates task model to be shown in portlet from intalio task
-	 * 
+	 *
 	 * @param tasklist
 	 *            a list of intalio tasks
 	 * @return formatted task list to be presented on web
+	 * @throws IntalioException
 	 */
-	private List<Task> createTasks(List<TaskMetadata> tasklist, String token) {
+	private List<Task> createTasks(List<TaskMetadata> tasklist, String token) throws IntalioException {
 		List<Task> myTasklist = new ArrayList<Task>();
 		/*
 		 * Unfortunately getTasks WS call doesn't contain Input object which
 		 * includes information what we want (like sender name). Only way seems
 		 * to be call task details and this will generate more WS calls (default
 		 * is 10). =\
-		 * 
+		 *
 		 * Better ideas?
 		 */
 		for (TaskMetadata task : tasklist) {
@@ -227,7 +234,7 @@ public class TaskHandle {
 
 	/**
 	 * Returns task sender name (if available)
-	 * 
+	 *
 	 * @param task
 	 * @param input
 	 * @return sender name
@@ -246,7 +253,7 @@ public class TaskHandle {
 		} else if (descriptionName.endsWith(Properties.RECEIVED_WARRANTS_FILTER)) {
 			// Vastaanotetut valtakirjat
 			return getSenderName(input, "Tiedot_LahettajaDisplay");
-		} else if (descriptionName.startsWith(Properties.RECEIVED_DAYCARE_PAYMENT_FILTER) 
+		} else if (descriptionName.startsWith(Properties.RECEIVED_DAYCARE_PAYMENT_FILTER)
 				|| descriptionName.startsWith(Properties.RECEIVED_DAYCARE_PAYMENT_MODIFY)
 				|| descriptionName.startsWith(Properties.RECEIVED_DAYCARE_PAYMENT_DISCOUNT)
 				|| descriptionName.startsWith(Properties.RECEIVED_DAYCARE_TERMINATION)
@@ -286,7 +293,7 @@ public class TaskHandle {
 
 	/**
 	 * Formats the task date with given format and Helsinki timezone
-	 * 
+	 *
 	 * @param xmlGregorianCalendar
 	 * @return formatted date string
 	 */
@@ -299,7 +306,7 @@ public class TaskHandle {
 
 	/**
 	 * Creates form operation link of task
-	 * 
+	 *
 	 * @param task
 	 *            intalio task object
 	 * @return intalio task form string
@@ -327,7 +334,7 @@ public class TaskHandle {
 					URLEncoder.encode(url, "UTF-8"), participantToken,
 					URLEncoder.encode(username, "UTF-8"), false };
 		} catch (UnsupportedEncodingException e) {
-			logger.error("Unsupported Encoding Exception");
+			LOG.error("Unsupported Encoding Exception");
 		}
 		link = MessageFormat
 				.format("{0}?id={1}&type={2}&url={3}&token={4}&user={5}&claimTaskOnOpen={6}",
@@ -337,14 +344,15 @@ public class TaskHandle {
 
 	/**
 	 * Gets total tasks number
-	 * 
+	 *
 	 * @param taskType
 	 *            the intalio task type
 	 * @param subQuery
 	 *            the sql string for intalio tasks database
 	 * @return total number of total tasks
+	 * @throws IntalioException
 	 */
-	public int getTotalTasksNumber(int taskType, String keyword) {
+	public int getTotalTasksNumber(int taskType, String keyword) throws IntalioException {
 		int totalNum = 0;
 		String subQuery;
 		String totalNumStr;
@@ -357,20 +365,20 @@ public class TaskHandle {
 		return totalNum;
 	}
 
-	public int getTasksTotalNumber(final String keywordFilter) {
+	public int getTasksTotalNumber(final String keywordFilter) throws IntalioException {
 		final String filter = (keywordFilter != null) ? keywordFilter : "";
 		return Integer.valueOf(taskMngServ.getTotalTasksNumber(
 				participantToken, TaskUtil.TASK_TYPE,
 				createTotalNumSubQuery(TaskUtil.TASK, filter)));
 	}
 
-	public int getRequestsTasksTotalNumber() {
+	public int getRequestsTasksTotalNumber() throws IntalioException {
 		return getTasksTotalNumber("");
 	}
 
 	/**
 	 * Creates subquery to get total number of tasks
-	 * 
+	 *
 	 * @param taskType
 	 *            the intalio task type
 	 * @param keyword
@@ -401,7 +409,7 @@ public class TaskHandle {
 
 	/**
 	 * Creates subquery to get available tasks
-	 * 
+	 *
 	 * @param taskType
 	 *            the intalio task type
 	 * @param keyword
@@ -443,7 +451,7 @@ public class TaskHandle {
 
 	/**
 	 * Gets query order type according to order string from jsp page
-	 * 
+	 *
 	 * @param orderType
 	 *            order type of tasks
 	 * @return order type query for intalio tasks
@@ -472,7 +480,7 @@ public class TaskHandle {
 
 	/**
 	 * Gets token authenticated by username and password
-	 * 
+	 *
 	 * @param username
 	 *            username of intalio user
 	 * @param password
@@ -488,7 +496,7 @@ public class TaskHandle {
 
 	/**
 	 * Gets participant token
-	 * 
+	 *
 	 * @return intalio participant token
 	 */
 	public String getToken() {
@@ -497,7 +505,7 @@ public class TaskHandle {
 
 	/**
 	 * Sets participant token
-	 * 
+	 *
 	 * @param token
 	 *            intalio participant token
 	 */
@@ -507,7 +515,7 @@ public class TaskHandle {
 
 	/**
 	 * Shows handling message e.g. error message
-	 * 
+	 *
 	 * @return message log
 	 */
 	public String getMessage() {

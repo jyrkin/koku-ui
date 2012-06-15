@@ -14,6 +14,7 @@ import static fi.arcusys.koku.common.util.Constants.RESPONSE;
 import static fi.arcusys.koku.common.util.Constants.TOKEN_STATUS_INVALID;
 import static fi.arcusys.koku.common.util.Constants.TOKEN_STATUS_VALID;
 
+import java.util.Collections;
 import java.util.List;
 
 import javax.portlet.PortletPreferences;
@@ -31,6 +32,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.portlet.bind.annotation.ResourceMapping;
 
+import fi.arcusys.koku.common.exceptions.IntalioException;
 import fi.arcusys.koku.common.services.intalio.Task;
 import fi.arcusys.koku.common.services.intalio.TaskHandle;
 import fi.arcusys.koku.common.util.TaskUtil;
@@ -114,7 +116,13 @@ public class AjaxController {
 			LOG.info("Intalio token is invalid!");
 		} else {
 			TaskHandle taskhandle = new TaskHandle(token, username);
-			String taskState = taskhandle.getTaskStatus(taskId);
+			String taskState;
+			try {
+				taskState = taskhandle.getTaskStatus(taskId);
+			} catch (IntalioException e) {
+				LOG.error("Retrieving taskState failed! ", e);
+				taskState = null;
+			}
 			jsonModel.put(JSON_TASK_STATE, taskState);
 		}
 		modelmap.addAttribute(RESPONSE, jsonModel);
@@ -147,13 +155,19 @@ public class AjaxController {
 		} else {
 			TaskHandle taskhandle = new TaskHandle(token, username);
 			int numPerPage = TaskUtil.PAGE_NUMBER;
-			int totalTasksNum;
-			int totalPages;
-			String first = String.valueOf((page-1)*numPerPage);
-			String max =  String.valueOf(numPerPage);
-			final List<Task> tasks = taskhandle.getTasksByParams(taskType, keyword, orderType, first, max);
-			totalTasksNum = taskhandle.getTotalTasksNumber(taskType, keyword);
-			totalPages = (totalTasksNum == 0) ? 1:(int) Math.ceil((double)totalTasksNum/numPerPage);
+			int totalTasksNum = 0;
+			int totalPages = 0;
+			List<Task> tasks = null;
+			try {
+				String first = String.valueOf((page-1)*numPerPage);
+				String max =  String.valueOf(numPerPage);
+				tasks = taskhandle.getTasksByParams(taskType, keyword, orderType, first, max);
+				totalTasksNum = taskhandle.getTotalTasksNumber(taskType, keyword);
+				totalPages = (totalTasksNum == 0) ? 1:(int) Math.ceil((double)totalTasksNum/numPerPage);
+			} catch (IntalioException e) {
+				LOG.error("Retrieving tasks failed!", e);
+				tasks = Collections.emptyList();
+			}
 			jsonModel.put(JSON_TOTAL_ITEMS, totalTasksNum);
 			jsonModel.put(JSON_TOTAL_PAGES, totalPages);
 			jsonModel.put(JSON_TASKS, tasks);

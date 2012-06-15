@@ -7,14 +7,13 @@ import javax.portlet.PortletRequest;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-//import org.intalio.tempo.workflow.task.Task;
-import fi.arcusys.koku.common.services.intalio.Task;
 
+import fi.arcusys.koku.common.exceptions.IntalioException;
+import fi.arcusys.koku.common.services.intalio.Task;
+import fi.arcusys.koku.common.services.intalio.TaskHandle;
 import fi.arcusys.koku.palvelut.model.client.FormHolder;
-import fi.arcusys.koku.palvelut.util.TaskUtil;
 import fi.arcusys.koku.palvelut.util.TokenResolver;
 import fi.arcusys.koku.palvelut.util.URLUtil;
-import fi.arcusys.koku.common.services.intalio.TaskHandle;
 
 /**
  * @author Dmitry Kudinov (dmitry.kudinov@arcusys.fi)
@@ -24,7 +23,7 @@ public abstract class FormHolderController
 {
 //	@Autowired(required = false)
 //	private PortletContext portletContext;
-	
+
 	private static final Log LOG = LogFactory.getLog(FormHolderController.class);
 
 	public FormHolderController() {
@@ -35,9 +34,13 @@ public abstract class FormHolderController
 		TokenResolver tokenResolver = new TokenResolver();
 		TaskHandle taskHandle = new TaskHandle();
 		String token = tokenResolver.getAuthenticationToken(request);
-//		List<Task> taskList = TaskUtil.getPIPATaskList(token);
-		List<Task> taskList = taskHandle.getPIPATaskList(token);
-//		taskList.get(0).get
+		List<Task> taskList;
+		try {
+			taskList = taskHandle.getPIPATaskList(token);
+		} catch (IntalioException e) {
+			LOG.error("Failed to get Tasklist from Intalio!", e);
+			taskList = new ArrayList<Task>();
+		}
 		List<FormHolder> formList = new ArrayList<FormHolder>();
 		for (Task task: taskList) {
 				String taskFormURL = getFormUrlByTask(request, token, task);
@@ -50,19 +53,24 @@ public abstract class FormHolderController
 		TokenResolver tokenResolver = new TokenResolver();
 		TaskHandle taskHandle = new TaskHandle();
 		String token = tokenResolver.getAuthenticationToken(request);
-	
-//		List<Task> taskList = TaskUtil.getPIPATaskList(token);
-		List<Task> taskList = taskHandle.getPIPATaskList(token);
+
+		List<Task> taskList;
+		try {
+			taskList = taskHandle.getPIPATaskList(token);
+		} catch (IntalioException e) {
+			LOG.error("Failed to get Tasklist from Intalio!", e);
+			taskList = new ArrayList<Task>();
+		}
 		for (Task task : taskList) {
 			if (task.getDescription().equals(description)) {
 				String taskFormURL = getFormUrlByTask(request, token, task);
 				return new FormHolder(description, taskFormURL);
 			}
 		}
-		LOG.error("Didn't find any form! Username: '"+request.getUserPrincipal().getName()+"'");	
+		LOG.error("Didn't find any form! Username: '"+request.getUserPrincipal().getName()+"'");
 		return null;
 	}
-	
+
 	private String getFormUrlByTask(PortletRequest request, String token, Task task) {
 		return URLUtil.getFormURLForTask(task, token, request);
 	}

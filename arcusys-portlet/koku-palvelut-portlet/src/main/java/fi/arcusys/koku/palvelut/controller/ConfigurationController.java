@@ -23,8 +23,6 @@ import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.portlet.WindowState;
 
-//import org.intalio.tempo.workflow.task.Task;
-import fi.arcusys.koku.common.services.intalio.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -33,9 +31,10 @@ import org.springframework.web.portlet.ModelAndView;
 import org.springframework.web.portlet.bind.annotation.ActionMapping;
 import org.springframework.web.portlet.bind.annotation.RenderMapping;
 
+import fi.arcusys.koku.common.exceptions.IntalioException;
+import fi.arcusys.koku.common.services.intalio.Task;
 import fi.arcusys.koku.common.services.intalio.TaskHandle;
 import fi.arcusys.koku.palvelut.model.client.TaskHolder;
-import fi.arcusys.koku.palvelut.util.TaskUtil;
 import fi.arcusys.koku.palvelut.util.TokenResolver;
 import fi.arcusys.koku.palvelut.util.URLUtil;
 
@@ -43,12 +42,12 @@ import fi.arcusys.koku.palvelut.util.URLUtil;
 
 @Controller("configurationController")
 @RequestMapping(value = "EDIT")
-public class ConfigurationController { 
-	
+public class ConfigurationController {
+
 	private static final Logger LOG = LoggerFactory.getLogger(ConfigurationController.class.getName());
 	public static final String EDIT_ACTION = "configuration";
 	public static final String JBOSS_PORTAL = "JBoss Portal 2.7";
-	
+
 	@RenderMapping
 	protected ModelAndView handleRenderRequestInternal(RenderRequest request,
 			RenderResponse response) throws Exception {
@@ -56,16 +55,16 @@ public class ConfigurationController {
 		Map<String, Object> map = new HashMap<String, Object>();
 		ModelAndView mav = new ModelAndView(EDIT_ACTION, "model", map);
 		String portalInfo = request.getPortalContext().getPortalInfo();
-		
+
 		if (portalInfo.startsWith(JBOSS_PORTAL)) {
 			mav.addObject(ATTR_PORTAL_ID, PORTAL_JBOSS);
 		} else {
 			mav.addObject(ATTR_PORTAL_ID, PORTAL_GATEIN);
 		}
-		
+
 		try {
 			mav.addObject(ATTR_FORM_LIST, getTaskHolders(request));
-			mav.addObject(ATTR_PREFERENCES, request.getPreferences());			
+			mav.addObject(ATTR_PREFERENCES, request.getPreferences());
 		} catch (Exception e) {
 			LOG.error("Failure while trying to get TaskHolders. See following log for more information: ", e);
 			ModelAndView failureMav = new ModelAndView("failureView", "model", null);
@@ -74,10 +73,10 @@ public class ConfigurationController {
 		}
 		return mav;
 	}
-	
-	/** 
+
+	/**
 	 * Save palvelut-portlet configurations
-	 * 
+	 *
 	 * @param request
 	 * @param response
 	 * @throws Exception
@@ -86,13 +85,13 @@ public class ConfigurationController {
 	protected void handleActionRequestInternal(ActionRequest request,
 			ActionResponse response) throws Exception {
 		LOG.debug("handleActionRequestInternal - Save settings");
-		
+
 		fi.arcusys.koku.common.services.intalio.Task task = null;
 		try {
 			final TokenResolver tokenUtil = new TokenResolver();
 			final String token = tokenUtil.getAuthenticationToken(request);
 			final TaskHandle handle = new TaskHandle(token, request.getUserPrincipal().getName());
-			task = handle.getTask(request.getParameter(PREF_SHOW_ONLY_FORM_BY_ID), token);			
+			task = handle.getTask(request.getParameter(PREF_SHOW_ONLY_FORM_BY_ID), token);
 		} catch (Exception e) {
 			LOG.error("Username '"+request.getUserPrincipal().getName()+"' tried to change palvelut-portlet settings. See following errormsg: ", e);
 			response.setPortletMode(PortletMode.VIEW);
@@ -110,20 +109,25 @@ public class ConfigurationController {
 		LOG.info("showOnlyFormByDescription: " + prefs.getValue(PREF_SHOW_ONLY_FORM_BY_DESCRIPTION, null));
 		LOG.info("showTasksById: "+ prefs.getValue(PREF_SHOW_TASKS_BY_ID, Boolean.FALSE.toString()));
 		request.setAttribute(ATTR_PREFERENCES, prefs);
-		 
+
 		/* Return back to VIEW mode */
 		response.setPortletMode(PortletMode.VIEW);
         response.setWindowState(WindowState.NORMAL);
 	}
-		
-	
+
+
 	private List<TaskHolder<Task>> getTaskHolders(PortletRequest request) {
 		final String token = new TokenResolver().getAuthenticationToken(request);
 		TaskHandle taskHandle = new TaskHandle();
 		LOG.debug("Token: "+token);
-		//List<Task> taskList = TaskUtil.getPIPATaskList(token);
-		List<Task> taskList = taskHandle.getPIPATaskList(token);
-		LOG.debug("taskList size: "+ taskList.size());
+		List<Task> taskList;
+		try {
+			taskList = taskHandle.getPIPATaskList(token);
+			LOG.debug("taskList size: "+ taskList.size());
+		} catch (IntalioException e) {
+			LOG.error("Failed to get Tasklist from Intalio!", e);
+			taskList = new ArrayList<Task>();
+		}
 		List<TaskHolder<Task>> tasks = new ArrayList<TaskHolder<Task>>();
 		for (Task task : taskList) {
 			String taskFormURL = URLUtil
