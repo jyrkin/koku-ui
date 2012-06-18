@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?><wsdl:definitions name="KokuKunpoValtakirjaService" targetNamespace="http://soa.tiva.koku.arcusys.fi/" xmlns:ns1="http://schemas.xmlsoap.org/wsdl/soap/http" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://soa.tiva.koku.arcusys.fi/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <wsdl:types>
-<xs:schema elementFormDefault="unqualified" targetNamespace="http://soa.tiva.koku.arcusys.fi/" version="1.0" xmlns:ns1="http://soa.common.koku.arcusys.fi/" xmlns:tns="http://soa.tiva.koku.arcusys.fi/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://soa.tiva.koku.arcusys.fi/" xmlns:ns1="http://soa.common.koku.arcusys.fi/" xmlns:tns="http://soa.tiva.koku.arcusys.fi/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
 <xs:import namespace="http://soa.common.koku.arcusys.fi/" />
 <xs:element name="getAuthorizationSummaryById" type="tns:getAuthorizationSummaryById" />
 <xs:element name="getAuthorizationSummaryByIdResponse" type="tns:getAuthorizationSummaryByIdResponse" />
