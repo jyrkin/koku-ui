@@ -129,6 +129,24 @@
    padding-bottom: 5px;
 }
 
+.koku-kks .kks-header {
+	background:#DEDEDE;
+	padding: 5px;	
+}
+
+.koku-kks .kks-pic-box {
+	width: 90px;	
+}
+
+.koku-kks .kks-checkbox-label {
+	margin-top: 1px;
+	margin-left: 5px;
+}
+
+.koku-kks .kks-uppercase {
+	text-transform: uppercase;
+}
+
 .koku-kks .kks-table {
    width: 100%;
    border: 0;

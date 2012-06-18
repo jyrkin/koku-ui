@@ -106,20 +106,21 @@
 					<c:choose>
 
 						<c:when test="${ selected eq group }">
-							<div class="kks-left kks-small-top-margin">		
-							<strong><c:out value="${group}" /></strong>
+							<div class="kks-header">&nbsp
+								<div class="kks-left">		
+								<strong><c:out value="${group}" /></strong>
+								</div>
+								
+								<div class="kks-right kks-medium-left-margin kks-uppercase">	
+		                        	<a href="
+			                        	<portlet:actionURL>
+											<portlet:param name="action" value="toGroupActions" />
+											<portlet:param name="selected" value="${group}" />
+										</portlet:actionURL>">
+										<spring:message code="ui.kks.group.collections"/>	
+									</a>						
+								</div>
 							</div>
-							
-							<div class="kks-right kks-medium-left-margin kks-small-top-margin" style="text-transform: uppercase;">	
-	                        	<a href="
-		                        	<portlet:actionURL>
-										<portlet:param name="action" value="toGroupActions" />
-										<portlet:param name="selected" value="${group}" />
-									</portlet:actionURL>">
-									<spring:message code="ui.kks.group.collections"/>	
-								</a>						
-							</div>
-							
 
 							<div class="kks-reset-floating"></div>
 							
@@ -129,7 +130,8 @@
 									
 									<c:choose>
 											<c:when test="${selectedPic eq groupChild.pic}">
-												<div class="kks-left" style="width: 90px">${groupChild.pic}</div>
+											
+												<div class="kks-left kks-pic-box">${groupChild.pic}</div>
 												<div class="kks-left"><strong><a href="
 								                        <portlet:actionURL>
 								                            <portlet:param name="action" value="toChildInfo" />
@@ -142,7 +144,7 @@
 												<div class="kks-reset-floating"></div>
 											</c:when>
 										<c:otherwise>
-										    <div class="kks-left" style="width: 90px">${groupChild.pic}</div>
+										    <div class="kks-left kks-pic-box">${groupChild.pic}</div>
 											<div class="kks-left"><a href="
 						                        <portlet:actionURL>
 						                            <portlet:param name="action" value="toChildInfo" />

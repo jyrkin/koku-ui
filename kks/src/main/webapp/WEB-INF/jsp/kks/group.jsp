@@ -61,7 +61,7 @@
 			    	<form:errors path="type" cssClass="error" />
 			    </div>
 				<div class="portlet-form-field"> 
-					<form:select id="kks.select" path="type" onchange="insertSelection();" class="kks-width-75">
+					<form:select id="kks.select" path="type" onchange="insertSelection();" class="kks-width-50">
 
 						<form:option value="" label="" class="portlet-form-input-field"/>
 						<c:forEach var="creatable" items="${creatables}">
@@ -77,7 +77,7 @@
 				<div>  
 			    	<form:errors path="name" cssClass="error" />
 			    </div>
-				<div class="portlet-form-field"><form:input maxlength="250" class="portlet-form-input-field kks-width-75"
+				<div class="portlet-form-field"><form:input maxlength="250" class="portlet-form-input-field kks-width-50"
 						id="kks.name" path="name" size="70" /> </div>
 				<div class="kks-small-top-margin">
 				
@@ -96,7 +96,7 @@
 							<div class="kks-left">	
 								<input type="checkbox" id="select_all" name="select_all" value="all"/>				
 							</div>
-							<div  class="kks-left" style="margin-top: 1px;margin-left: 5px">
+							<div  class="kks-left kks-checkbox-label">
 								<b><spring:message code="ui.kks.group.select.all"></spring:message></b>
 							</div>													
 							<div class="kks-reset-floating"></div>
@@ -107,7 +107,8 @@
 							<div class="kks-left">						
 								<form:checkbox path="customers" value="${groupChild.pic}"  />
 							</div>
-							<div  class="kks-left kks-fake-link " style="margin-top: 1px;margin-left: 5px">
+							<div  class="kks-left kks-fake-link kks-checkbox-label">
+								<strong>
 								<a href="
 						                        <portlet:actionURL>
 						                            <portlet:param name="action" value="toChildInfo" />
@@ -115,10 +116,10 @@
 						                            <portlet:param name="selected" value="${selected}" />
 						                            <portlet:param name="fromGroup" value="true" />
 						                        </portlet:actionURL>">
-												<c:out value="${groupChild.customer.name}" /></a>,&nbsp;<span>${groupChild.pic}</span>
+												<c:out value="${groupChild.customer.name}" /></a></strong>,&nbsp;<span>${groupChild.pic}</span>
 																			
 							</div>	
-							<div  class="kks-right single-collection" style="margin-top: 1px;margin-left: 5px">
+							<div  class="kks-right single-collection kks-checkbox-label">
 								<a href="#"><spring:message code="ui.kks.group.show.hide"></spring:message></a>
 							</div>												
 							<div class="kks-reset-floating"></div>
