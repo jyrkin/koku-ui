@@ -253,20 +253,8 @@ public class TaskHandle {
 		} else if (descriptionName.endsWith(Properties.RECEIVED_WARRANTS_FILTER)) {
 			// Vastaanotetut valtakirjat
 			return getSenderName(input, "Tiedot_LahettajaDisplay");
-		} else if (descriptionName.startsWith(Properties.RECEIVED_DAYCARE_PAYMENT_FILTER)
-				|| descriptionName.startsWith(Properties.RECEIVED_DAYCARE_PAYMENT_MODIFY)
-				|| descriptionName.startsWith(Properties.RECEIVED_DAYCARE_PAYMENT_DISCOUNT)
-				|| descriptionName.startsWith(Properties.RECEIVED_DAYCARE_TERMINATION)
-				|| descriptionName.startsWith(Properties.RECEIVED_DAYCARE_HOLIDAYS)) {
-			// Päivähoidon asiakasmaksulomakkeet
-			// Päivähoidon asiakasmaksun muutoslomakkeet
-			// Päivähoidon asiakasmaksunalentamiset
-			// Irtisanoutumiset päivähoitopaikasta
-			// Loma-aikojen hoitotarvekyselyt
-			return getSenderName(input, "SenderFullname");
 		} else {
-			// Hm?
-			return UNKNOWN;
+			return getSenderName(input, "SenderFullname");
 		}
 	}
 

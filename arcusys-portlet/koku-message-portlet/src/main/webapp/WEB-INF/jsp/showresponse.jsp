@@ -29,13 +29,13 @@
 		    <h3><spring:message code="response.questions.header"/></h3>
 		    <table class="request-table">
 		    	<tr>
-		    		<td class="head"><spring:message code="response.tableheader.indexnro"/></td>
+<%-- 		    		<td class="head"><spring:message code="response.tableheader.indexnro"/></td> --%>
 		    		<td class="head"><spring:message code="response.tableheader.description"/></td>    		
 		    		<td class="head"><spring:message code="response.tableheader.answer"/></td>
 		    	</tr>
 		    	<c:forEach var="question" items="${response.model.questions}" varStatus="loopStatus">
 			        <tr class="<c:out value="${loopStatus.index % 2 == 0 ? 'evenRow' : 'oddRow'}"/>">
-			          <td><c:out value="${question.number}"/></td>
+<%-- 			          <td><c:out value="${question.number}"/></td> --%>
 			          <td><c:out value="${question.description}"/></td>
 			          <td><script type="text/javascript">document.write(decodeURIComponent("<c:out value="${question.answer.answer}" />"));</script></td>
 			        </tr>
