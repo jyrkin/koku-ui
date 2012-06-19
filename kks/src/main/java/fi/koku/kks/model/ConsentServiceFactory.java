@@ -28,7 +28,8 @@ import fi.koku.settings.KoKuPropertiesUtil;
  */
 public class ConsentServiceFactory {
 
-  private final URL wsdlLocation = getClass().getClassLoader().getResource("wsdl/tivaService.wsdl");
+  private final URL wsdlLocation = getClass().getClassLoader().getResource(
+      "wsdl/tivaService.wsdl");
 
   public ConsentServiceFactory() {
 
@@ -36,13 +37,16 @@ public class ConsentServiceFactory {
 
   public KokuTivaToKksService getService() {
 
-    KokuTivaToKksService_Service ft = new KokuTivaToKksService_Service(wsdlLocation, new QName(
-        "http://services.koku.fi/entity/tiva/v1", "KokuTivaToKksService"));
+    KokuTivaToKksService_Service ft = new KokuTivaToKksService_Service(
+        wsdlLocation, new QName("http://services.koku.fi/entity/tiva/v1",
+            "KokuTivaToKksService"));
 
     KokuTivaToKksService port = ft.getKokuTivaToKksServicePort();
-    String epAddr = KoKuPropertiesUtil.get("kks.tiva.service.full.endpointaddress");
+    String epAddr = KoKuPropertiesUtil
+        .get("kks.tiva.service.full.endpointaddress");
 
-    ((BindingProvider) port).getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, epAddr);
+    ((BindingProvider) port).getRequestContext().put(
+        BindingProvider.ENDPOINT_ADDRESS_PROPERTY, epAddr);
 
     return port;
   }

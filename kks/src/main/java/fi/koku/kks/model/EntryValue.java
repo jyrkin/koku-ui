@@ -19,7 +19,7 @@ import java.util.List;
  * Class for entry value
  * 
  * @author Ixonos / tuomape
- *
+ * 
  */
 public class EntryValue {
 

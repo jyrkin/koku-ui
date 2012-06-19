@@ -37,7 +37,7 @@ import fi.koku.settings.KoKuPropertiesUtil;
  * Main controller (handler request that have no action)
  * 
  * @author Ixonos / tuomape
- *
+ * 
  */
 @Controller("mainController")
 @RequestMapping(value = "VIEW")
@@ -49,30 +49,35 @@ public class MainController {
 
   @RenderMapping
   public String render(PortletSession session, RenderRequest req, Model model) {
-    
+
     String kunpo = KoKuPropertiesUtil.get("environment.name");
     if ("kunpo".equalsIgnoreCase(kunpo)) {
       model.addAttribute("childs", getChilds(session));
       return "childs";
     } else {
       model.addAttribute("child", new Person());
-      model.addAttribute("groups", kksService.getGroups(Utils.getPicFromSession(session)));
+      model.addAttribute("groups",
+          kksService.getGroups(Utils.getPicFromSession(session)));
       return "search";
     }
   }
-  
+
   @ActionMapping(params = "action=logoutKKS")
-  public void logout(@RequestParam(value = "pic") String pic, @RequestParam(value = "collection") String collection, ActionResponse response, SessionStatus sessionStatus) {
+  public void logout(@RequestParam(value = "pic") String pic,
+      @RequestParam(value = "collection") String collection,
+      ActionResponse response, SessionStatus sessionStatus) {
     response.setRenderParameter("action", "renderLogout");
     response.setRenderParameter("pic", pic);
-    response.setRenderParameter("collection", collection );
+    response.setRenderParameter("collection", collection);
     sessionStatus.setComplete();
   }
-  
+
   @RenderMapping(params = "action=renderLogout")
-  public String renderLogout(@RequestParam(value = "pic") String pic, @RequestParam(value = "collection") String collection, PortletSession session, RenderRequest req, Model model) {
-    model.addAttribute("pic", pic );
-    model.addAttribute("collection", collection );
+  public String renderLogout(@RequestParam(value = "pic") String pic,
+      @RequestParam(value = "collection") String collection,
+      PortletSession session, RenderRequest req, Model model) {
+    model.addAttribute("pic", pic);
+    model.addAttribute("collection", collection);
     return "logout";
   }
 

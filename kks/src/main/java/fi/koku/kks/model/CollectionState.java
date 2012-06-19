@@ -32,7 +32,7 @@ public class CollectionState {
     return state;
   }
 
-  public void setState(State state) {
+  public void setState(State state) { 
     this.state = state;
   }
 

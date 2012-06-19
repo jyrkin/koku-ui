@@ -51,14 +51,15 @@
 					</h3>
 
 					<div>
-						<h3 class="portlet-section-subheader"> <spring:message
-								code="ui.kks.form.pic" />
-						</h3> 
-						
-						<div class="portlet-form-field"> <span class="kks-left"><form:input
-								class="defaultText" path="pic" /> </span><span class="kks-left"><input type="submit"
-							class="portlet-form-button"
-							value="<spring:message code="ui.kks.search.info"/>"></span>
+						<h3 class="portlet-section-subheader">
+							<spring:message code="ui.kks.form.pic" />
+						</h3>
+
+						<div class="portlet-form-field">
+							<span class="kks-left"><form:input class="defaultText"
+									path="pic" /> </span><span class="kks-left"><input
+								type="submit" class="portlet-form-button"
+								value="<spring:message code="ui.kks.search.info"/>"></span>
 						</div>
 						<div class="kks-reset-floating"></div>
 					</div>
@@ -67,7 +68,7 @@
 
 				</form:form>
 			</div>
-			<br/>
+			<br />
 			<div class="kks-collection">
 				<c:if test="${not empty childs}">
 					<c:forEach var="child" items="${childs}">
@@ -93,84 +94,95 @@
 
 			<div class="kks-reset-floating"></div>
 
-			<h3 class="portlet-section-subheader"><spring:message code="ui.kks.groups" /></h3>
-			
+			<h3 class="portlet-section-subheader">
+				<spring:message code="ui.kks.groups" />
+			</h3>
+
 			<c:if test="${empty groups}">
 				<div>
 					<spring:message code="ui.kks.no.groups" />
 				</div>
 			</c:if>
-			
+
 			<c:forEach var="group" items="${groups}">
 				<div>
 					<c:choose>
 
 						<c:when test="${ selected eq group }">
-							<div class="kks-header">&nbsp
-								<div class="kks-left">		
-								<strong><c:out value="${group}" /></strong>
+							<div class="kks-header">
+								&nbsp
+								<div class="kks-left">
+									<strong><c:out value="${group}" /></strong>
 								</div>
-								
-								<div class="kks-right kks-medium-left-margin kks-uppercase">	
-		                        	<a href="
+
+								<div class="kks-right kks-medium-left-margin kks-uppercase">
+									<a
+										href="
 			                        	<portlet:actionURL>
 											<portlet:param name="action" value="toGroupActions" />
 											<portlet:param name="selected" value="${group}" />
 										</portlet:actionURL>">
-										<spring:message code="ui.kks.group.collections"/>	
-									</a>						
+										<spring:message code="ui.kks.group.collections" />
+									</a>
 								</div>
 							</div>
 
 							<div class="kks-reset-floating"></div>
-							
+
 							<div class="kks-inner">
 								<c:forEach var="groupChild" items="${groupChilds}">
-									<div class="kks-link">		
-									
-									<c:choose>
+									<div class="kks-link">
+
+										<c:choose>
 											<c:when test="${selectedPic eq groupChild.pic}">
-											
+
 												<div class="kks-left kks-pic-box">${groupChild.pic}</div>
-												<div class="kks-left"><strong><a href="
+												<div class="kks-left">
+													<strong><a
+														href="
 								                        <portlet:actionURL>
 								                            <portlet:param name="action" value="toChildInfo" />
 								                            <portlet:param name="pic" value="${groupChild.pic}" />
 								                            <portlet:param name="selected" value="${group}" />
 								                        </portlet:actionURL>">
-														<c:out value="${groupChild.sname }" />, <c:out
-															value="${groupChild.fname}" />
-												</a></strong></div>												
+															<c:out value="${groupChild.sname }" />, <c:out
+																value="${groupChild.fname}" />
+													</a></strong>
+												</div>
 												<div class="kks-reset-floating"></div>
 											</c:when>
-										<c:otherwise>
-										    <div class="kks-left kks-pic-box">${groupChild.pic}</div>
-											<div class="kks-left"><a href="
+											<c:otherwise>
+												<div class="kks-left kks-pic-box">${groupChild.pic}</div>
+												<div class="kks-left">
+													<a
+														href="
 						                        <portlet:actionURL>
 						                            <portlet:param name="action" value="toChildInfo" />
 						                            <portlet:param name="pic" value="${groupChild.pic}" />
 						                            <portlet:param name="selected" value="${group}" />
 						                        </portlet:actionURL>">
-												<c:out value="${groupChild.sname }" />, <c:out
-													value="${groupChild.fname}" />
-											</a> </div>
-												
-												<div class="kks-reset-floating"></div>										
-										</c:otherwise>
-									</c:choose>								
-										
+														<c:out value="${groupChild.sname }" />, <c:out
+															value="${groupChild.fname}" />
+													</a>
+												</div>
+
+												<div class="kks-reset-floating"></div>
+											</c:otherwise>
+										</c:choose>
+
 									</div>
 								</c:forEach>
 							</div>
 						</c:when>
 						<c:otherwise>
-							<a href="
+							<a
+								href="
 								<portlet:actionURL>
 									<portlet:param name="action" value="searchGroup" />
 									<portlet:param name="pic" value="${child.pic}" />
 									<portlet:param name="selected" value="${group}" />
 								</portlet:actionURL>">
-									<c:out value="${group}" />
+								<c:out value="${group}" />
 							</a>
 						</c:otherwise>
 					</c:choose>

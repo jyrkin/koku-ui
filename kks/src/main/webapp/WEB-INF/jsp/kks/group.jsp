@@ -22,7 +22,7 @@
 
 <portlet:actionURL var="createCollectionsURL">
 	<portlet:param name="action" value="addCollectionsForGroup" />
-	<portlet:param name="selected" value="${selected}" />	
+	<portlet:param name="selected" value="${selected}" />
 </portlet:actionURL>
 
 
@@ -30,9 +30,9 @@
 	<div class="portlet-section-body">
 		<div>
 
-		<div class="kks-home">
-			<a href="${homeUrl}"><spring:message code="ui.kks.back" /> </a>
-		</div>
+			<div class="kks-home">
+				<a href="${homeUrl}"><spring:message code="ui.kks.back" /> </a>
+			</div>
 
 		</div>
 
@@ -41,29 +41,34 @@
 				<spring:message code="${error}"></spring:message>
 			</div>
 		</c:if>
-		
+
 		<c:if test="${not empty message}">
-			<div class="kks-read-only-text"><spring:message code="${message}"></spring:message> 
+			<div class="kks-read-only-text">
+				<spring:message code="${message}"></spring:message>
 			</div>
 		</c:if>
 
-		<h1><spring:message code="ui.kks.group.create"></spring:message></h1>
+		<h1>
+			<spring:message code="ui.kks.group.create"></spring:message>
+		</h1>
 		<h3>${selected}</h3>
 
 		<div class="kks-entry kks-print">
 
-			<form:form name="createCollections" commandName="group" method="post" action="${createCollectionsURL}">
+			<form:form name="createCollections" commandName="group" method="post"
+				action="${createCollectionsURL}">
 
 				<div class="portlet-form-field-label">
 					<spring:message code="ui.kks.contract.type" />
 				</div>
-				<div>  
-			    	<form:errors path="type" cssClass="error" />
-			    </div>
-				<div class="portlet-form-field"> 
-					<form:select id="kks.select" path="type" onchange="insertSelection();" class="kks-width-50">
+				<div>
+					<form:errors path="type" cssClass="error" />
+				</div>
+				<div class="portlet-form-field">
+					<form:select id="kks.select" path="type"
+						onchange="insertSelection();" class="kks-width-50">
 
-						<form:option value="" label="" class="portlet-form-input-field"/>
+						<form:option value="" label="" class="portlet-form-input-field" />
 						<c:forEach var="creatable" items="${creatables}">
 							<form:option class="portlet-form-input-field"
 								value="${creatable.asText}" label="${creatable.name}" />
@@ -74,73 +79,88 @@
 				<div class="portlet-form-field-label">
 					<spring:message code="ui.kks.contract.name" />
 				</div>
-				<div>  
-			    	<form:errors path="name" cssClass="error" />
-			    </div>
-				<div class="portlet-form-field"><form:input maxlength="250" class="portlet-form-input-field kks-width-50"
-						id="kks.name" path="name" size="70" /> </div>
+				<div>
+					<form:errors path="name" cssClass="error" />
+				</div>
+				<div class="portlet-form-field">
+					<form:input maxlength="250"
+						class="portlet-form-input-field kks-width-50" id="kks.name"
+						path="name" size="70" />
+				</div>
 				<div class="kks-small-top-margin">
-				
-				<div class="kks-left"><h3><spring:message code="ui.kks.group.select"></spring:message></h3></div>
-				<div class="kks-right kks-small-top-margin" ><a class="show kks-small-top-margin"><spring:message code="ui.kks.group.show"></spring:message></a><a class="close kks-small-top-margin" style="display: none;"><spring:message code="ui.kks.group.hide"></spring:message></a></div>
-				
+
+					<div class="kks-left">
+						<h3>
+							<spring:message code="ui.kks.group.select"></spring:message>
+						</h3>
+					</div>
+					<div class="kks-right kks-small-top-margin">
+						<a class="show kks-small-top-margin"><spring:message
+								code="ui.kks.group.show"></spring:message></a><a
+							class="close kks-small-top-margin" style="display: none;"><spring:message
+								code="ui.kks.group.hide"></spring:message></a>
+					</div>
+
 				</div>
 				<div class="kks-reset-floating"></div>
-				<div>  
-			    	<form:errors path="customers" cssClass="error" />
-			    </div>
+				<div>
+					<form:errors path="customers" cssClass="error" />
+				</div>
 				<div>
 					<c:if test="${not empty groupChilds}">
-					
+
 						<div class="kks-choose-all">
-							<div class="kks-left">	
-								<input type="checkbox" id="select_all" name="select_all" value="all"/>				
+							<div class="kks-left">
+								<input type="checkbox" id="select_all" name="select_all"
+									value="all" />
 							</div>
-							<div  class="kks-left kks-checkbox-label">
+							<div class="kks-left kks-checkbox-label">
 								<b><spring:message code="ui.kks.group.select.all"></spring:message></b>
-							</div>													
+							</div>
 							<div class="kks-reset-floating"></div>
 						</div>
 						<c:forEach var="groupChild" items="${groupChilds}">
-						
-						<div class="kks-small-top-margin">
-							<div class="kks-left">						
-								<form:checkbox path="customers" value="${groupChild.pic}"  />
-							</div>
-							<div  class="kks-left kks-fake-link kks-checkbox-label">
-								<strong>
-								<a href="
+
+							<div class="kks-small-top-margin">
+								<div class="kks-left">
+									<form:checkbox path="customers" value="${groupChild.pic}" />
+								</div>
+								<div class="kks-left kks-fake-link kks-checkbox-label">
+									<strong> <a
+										href="
 						                        <portlet:actionURL>
 						                            <portlet:param name="action" value="toChildInfo" />
 						                            <portlet:param name="pic" value="${groupChild.pic}" />
 						                            <portlet:param name="selected" value="${selected}" />
 						                            <portlet:param name="fromGroup" value="true" />
 						                        </portlet:actionURL>">
-												<c:out value="${groupChild.customer.name}" /></a></strong>,&nbsp;<span>${groupChild.pic}</span>
-																			
-							</div>	
-							<div  class="kks-right single-collection kks-checkbox-label">
-								<a href="#"><spring:message code="ui.kks.group.show.hide"></spring:message></a>
-							</div>												
-							<div class="kks-reset-floating"></div>
-							<div class="show-collection" style="display: none;">
-						
+											<c:out value="${groupChild.customer.name}" />
+									</a></strong>,&nbsp;<span>${groupChild.pic}</span>
 
-						<table class="portlet-table-body kks-print kks-table">
-							<tr>
-								<th><spring:message code="ui.kks.collection" /></th>								
-								<th><spring:message code="ui.kks.last.entry" /></th>
-								<th><spring:message code="ui.kks.entry.state" /></th>
-							
-							</tr>
-							<c:if test="${not empty groupChild.collections}">
-				<c:forEach var="collection" items="${groupChild.collections}">
+								</div>
+								<div class="kks-right single-collection kks-checkbox-label">
+									<a href="#"><spring:message code="ui.kks.group.show.hide"></spring:message></a>
+								</div>
+								<div class="kks-reset-floating"></div>
+								<div class="show-collection" style="display: none;">
 
-					
-							<tr>
-									<td class="kks-width-50">
-										<div>
-											<a href="
+
+									<table class="portlet-table-body kks-print kks-table">
+										<tr>
+											<th><spring:message code="ui.kks.collection" /></th>
+											<th><spring:message code="ui.kks.last.entry" /></th>
+											<th><spring:message code="ui.kks.entry.state" /></th>
+
+										</tr>
+										<c:if test="${not empty groupChild.collections}">
+											<c:forEach var="collection" items="${groupChild.collections}">
+
+
+												<tr>
+													<td class="kks-width-50">
+														<div>
+															<a
+																href="
 														<portlet:renderURL>
 															<portlet:param name="action" value="showCollection" />
 															<portlet:param name="pic" value="${groupChild.pic}" />
@@ -148,45 +168,46 @@
 															<portlet:param name="selected" value="${selected}" />
 															<portlet:param name="fromGroup" value="true" />
 														</portlet:renderURL>">
-														<c:out value="${ collection.name }" /></a> 
-										</div>
-									</td>
-									
-									<td><c:out value="${collection.modifierFullName}"/><c:out value=" "/><fmt:formatDate
-									pattern="dd.MM.yyyy" value="${collection.creationTime}" />
-									</td>
+																<c:out value="${ collection.name }" />
+															</a>
+														</div>
+													</td>
 
-							
-								<td>
-									<c:choose>
-										<c:when test="${collection.state.active}">
-											<spring:message code="ui.kks.active" />
-										</c:when>
-										<c:otherwise>
-											<c:if test="${ not collection.versioned }">
-												<spring:message code="ui.kks.locked" />
-											</c:if>
-											<c:if test="${ collection.versioned }">
-												<spring:message code="ui.kks.versioned" />
-											</c:if>
-										</c:otherwise>
-									</c:choose>
-								</td>
-							</tr>
-							</c:forEach>
-						</c:if>
-							
-						</table>	
-						
-						</div>
-						</div>
+													<td><c:out value="${collection.modifierFullName}" />
+														<c:out value=" " />
+														<fmt:formatDate pattern="dd.MM.yyyy"
+															value="${collection.creationTime}" /></td>
+
+
+													<td><c:choose>
+															<c:when test="${collection.state.active}">
+																<spring:message code="ui.kks.active" />
+															</c:when>
+															<c:otherwise>
+																<c:if test="${ not collection.versioned }">
+																	<spring:message code="ui.kks.locked" />
+																</c:if>
+																<c:if test="${ collection.versioned }">
+																	<spring:message code="ui.kks.versioned" />
+																</c:if>
+															</c:otherwise>
+														</c:choose></td>
+												</tr>
+											</c:forEach>
+										</c:if>
+
+									</table>
+
+								</div>
+							</div>
 						</c:forEach>
-					
+
 					</c:if>
 				</div>
 
 
-				<div class="kks-reset-floating"></div><br></br>
+				<div class="kks-reset-floating"></div>
+				<br></br>
 
 				<div class="kks-left">
 					<input type="submit" class="portlet-form-button"
@@ -213,7 +234,8 @@
 </div>
 
 <c:set var="hasChild" value="${not empty group.customers}"></c:set>
-<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-1.5.2.min.js"></script>
+<script type="text/javascript"
+	src="${pageContext.request.contextPath}/js/jquery-1.5.2.min.js"></script>
 <script type="text/javascript">
 	
 	var selectAll = '${hasChild}';

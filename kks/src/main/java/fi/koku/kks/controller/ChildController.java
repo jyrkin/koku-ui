@@ -51,31 +51,37 @@ public class ChildController {
   private KksService kksService;
   private int test = 0;
 
-  private static final Logger LOG = LoggerFactory.getLogger(ChildController.class);
+  private static final Logger LOG = LoggerFactory
+      .getLogger(ChildController.class);
 
   @ActionMapping(params = "action=toChildInfo")
-  public void toChildInfo(@RequestParam(value = "selected", required = false) String selected,
-      @RequestParam(value = "fromGroup", required = false) String fromGroup, @ModelAttribute(value = "child") Person child, BindingResult bindingResult,
-      ActionResponse response, SessionStatus sessionStatus) {
+  public void toChildInfo(
+      @RequestParam(value = "selected", required = false) String selected,
+      @RequestParam(value = "fromGroup", required = false) String fromGroup,
+      @ModelAttribute(value = "child") Person child,
+      BindingResult bindingResult, ActionResponse response,
+      SessionStatus sessionStatus) {
     LOG.debug("toChildInfo");
     response.setRenderParameter("action", "showChild");
     response.setRenderParameter("pic", child.getPic());
-    
-    if ( StringUtils.isNotEmpty(selected) ) {
-      response.setRenderParameter("selected", selected );
+
+    if (StringUtils.isNotEmpty(selected)) {
+      response.setRenderParameter("selected", selected);
     }
-    
+
     if (StringUtils.isNotEmpty(fromGroup)) {
       response.setRenderParameter("fromGroup", fromGroup);
     }
-    
+
     sessionStatus.setComplete();
   }
 
   @RenderMapping(params = "action=showChild")
-  public String show(PortletSession session, @ModelAttribute(value = "child") Person child,
+  public String show(PortletSession session,
+      @ModelAttribute(value = "child") Person child,
       @RequestParam(value = "error", required = false) String error,
-      @RequestParam(value = "message", required = false) String message, @RequestParam(value = "selected", required = false) String selected,
+      @RequestParam(value = "message", required = false) String message,
+      @RequestParam(value = "selected", required = false) String selected,
       @RequestParam(value = "fromGroup", required = false) String fromGroup,
       RenderResponse response, Model model) {
     LOG.debug("show child");
@@ -88,10 +94,12 @@ public class ChildController {
       }
 
       model.addAttribute("child", child);
-      model.addAttribute("collections", kksService.getKksCollections(child.getPic(), pic));
-      model.addAttribute("creatables", kksService.searchPersonCreatableCollections(child, pic));
+      model.addAttribute("collections",
+          kksService.getKksCollections(child.getPic(), pic));
+      model.addAttribute("creatables",
+          kksService.searchPersonCreatableCollections(child, pic));
       model.addAttribute("registries", kksService.getAuthorizedRegistries(pic));
-      model.addAttribute("kksUser", pic );
+      model.addAttribute("kksUser", pic);
 
       if (!model.containsAttribute("creation")) {
         model.addAttribute("creation", new Creation());
@@ -104,16 +112,15 @@ public class ChildController {
       if (StringUtils.isNotEmpty(message)) {
         model.addAttribute("message", message);
       }
-      
-      if ( StringUtils.isNotEmpty(selected) ) {
-        model.addAttribute("selected", selected );
+
+      if (StringUtils.isNotEmpty(selected)) {
+        model.addAttribute("selected", selected);
       }
 
       if (StringUtils.isNotEmpty(fromGroup)) {
         model.addAttribute("fromGroup", fromGroup);
       }
-      
-      
+
       return "child";
 
     } catch (ServiceFault e) {
@@ -123,23 +130,24 @@ public class ChildController {
   }
 
   @ActionMapping(params = "action=sendConsentRequest")
-  public void sendConsentRequest(PortletSession session, @ModelAttribute(value = "child") Person child,
-      @RequestParam String collectionId, @RequestParam String consent, 
+  public void sendConsentRequest(PortletSession session,
+      @ModelAttribute(value = "child") Person child,
+      @RequestParam String collectionId, @RequestParam String consent,
       @RequestParam(value = "fromGroup", required = false) String fromGroup,
       @RequestParam(value = "selected", required = false) String selected,
-      ActionResponse response,
-      SessionStatus sessionStatus) {
+      ActionResponse response, SessionStatus sessionStatus) {
     LOG.debug("sendConsentRequest");
 
-    boolean success = kksService.sendConsentRequest(consent, child.getPic(), Utils.getPicFromSession(session));
+    boolean success = kksService.sendConsentRequest(consent, child.getPic(),
+        Utils.getPicFromSession(session));
 
     response.setRenderParameter("action", "showChild");
     response.setRenderParameter("pic", child.getPic());
-    
-    if ( StringUtils.isNotEmpty(selected) ) {
-      response.setRenderParameter("selected", selected );
+
+    if (StringUtils.isNotEmpty(selected)) {
+      response.setRenderParameter("selected", selected);
     }
-    
+
     if (StringUtils.isNotEmpty(fromGroup)) {
       response.setRenderParameter("fromGroup", fromGroup);
     }
@@ -147,13 +155,15 @@ public class ChildController {
     if (!success) {
       response.setRenderParameter("error", "collection.consent.request.failed");
     } else {
-      response.setRenderParameter("message", "collection.consent.request.success");
+      response.setRenderParameter("message",
+          "collection.consent.request.success");
     }
     sessionStatus.setComplete();
   }
 
   @RenderMapping(params = "action=showPegasos")
-  public String showPegasos(@ModelAttribute(value = "child") Person child, RenderResponse response, Model model) {
+  public String showPegasos(@ModelAttribute(value = "child") Person child,
+      RenderResponse response, Model model) {
     LOG.debug("show child");
     model.addAttribute("child", child);
     return "pegasos";

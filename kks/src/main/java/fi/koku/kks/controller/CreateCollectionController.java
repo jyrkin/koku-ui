@@ -48,11 +48,12 @@ public class CreateCollectionController {
   @Qualifier("kksService")
   private KksService kksService;
 
-  private static final Logger LOG = LoggerFactory.getLogger(CreateCollectionController.class);
+  private static final Logger LOG = LoggerFactory
+      .getLogger(CreateCollectionController.class);
 
   @ActionMapping(params = "action=createNewVersion")
-  public void createVersion(PortletSession session, @ModelAttribute(value = "child") Person child,
-      @RequestParam String id, 
+  public void createVersion(PortletSession session,
+      @ModelAttribute(value = "child") Person child, @RequestParam String id,
       @RequestParam(value = "fromGroup", required = false) String fromGroup,
       @RequestParam(value = "selected", required = false) String selected,
       Version version, BindingResult result, ActionResponse response,
@@ -61,8 +62,9 @@ public class CreateCollectionController {
     version.validate(version, result);
     if (!result.hasErrors()) {
       LOG.debug("create new version");
-      String collection = kksService.createKksCollectionVersion(version.getName(), id, child.getPic(),
-          version.isClear(), Utils.getPicFromSession(session));
+      String collection = kksService.createKksCollectionVersion(
+          version.getName(), id, child.getPic(), version.isClear(),
+          Utils.getPicFromSession(session));
 
       if (collection == null) {
         result.reject("collection.create.failed");
@@ -84,11 +86,12 @@ public class CreateCollectionController {
   }
 
   @ActionMapping(params = "action=createCollection")
-  public void create(PortletSession session, @ModelAttribute(value = "child") Person child, 
+  public void create(PortletSession session,
+      @ModelAttribute(value = "child") Person child,
       @RequestParam(value = "fromGroup", required = false) String fromGroup,
       @RequestParam(value = "selected", required = false) String selected,
-      Creation creation,
-      BindingResult bindingResult, ActionResponse response, SessionStatus sessionStatus) {
+      Creation creation, BindingResult bindingResult, ActionResponse response,
+      SessionStatus sessionStatus) {
 
     LOG.debug("create collection");
 
@@ -96,8 +99,10 @@ public class CreateCollectionController {
     if (!bindingResult.hasErrors()) {
 
       Creatable a = Creatable.create(creation.getField());
-      String name = "".equals(creation.getName()) ? a.getName() : creation.getName();
-      String id = kksService.createKksCollection(name, a.getId(), child.getPic(), Utils.getPicFromSession(session));
+      String name = "".equals(creation.getName()) ? a.getName() : creation
+          .getName();
+      String id = kksService.createKksCollection(name, a.getId(),
+          child.getPic(), Utils.getPicFromSession(session));
 
       if (id == null) {
         bindingResult.reject("collection.create.failed");
@@ -124,42 +129,43 @@ public class CreateCollectionController {
   }
 
   @ActionMapping(params = "action=activate")
-  public void activate(PortletSession session, @ModelAttribute(value = "child") Person child,
-      @RequestParam(value = "collection") String collection, 
+  public void activate(PortletSession session,
+      @ModelAttribute(value = "child") Person child,
+      @RequestParam(value = "collection") String collection,
       @RequestParam(value = "fromGroup", required = false) String fromGroup,
       @RequestParam(value = "selected", required = false) String selected,
       ActionResponse response, SessionStatus sessionStatus) {
 
-    boolean success = kksService.updateKksCollectionStatus(child.getPic(), collection, State.ACTIVE.toString(),
-        Utils.getPicFromSession(session));
+    boolean success = kksService.updateKksCollectionStatus(child.getPic(),
+        collection, State.ACTIVE.toString(), Utils.getPicFromSession(session));
     response.setRenderParameter("action", "showChild");
     response.setRenderParameter("pic", child.getPic());
 
     if (!success) {
       response.setRenderParameter("error", "collection.status.update.failed");
     }
-    
+
     if (StringUtils.isNotEmpty(fromGroup)) {
       response.setRenderParameter("fromGroup", fromGroup);
     }
-    
+
     if (StringUtils.isNotEmpty(selected)) {
       response.setRenderParameter("selected", selected);
     }
-    
-    
+
     sessionStatus.setComplete();
   }
 
   @ActionMapping(params = "action=lock")
-  public void lock(PortletSession session, @ModelAttribute(value = "child") Person child,
-      @RequestParam(value = "collection") String collection, 
+  public void lock(PortletSession session,
+      @ModelAttribute(value = "child") Person child,
+      @RequestParam(value = "collection") String collection,
       @RequestParam(value = "fromGroup", required = false) String fromGroup,
       @RequestParam(value = "selected", required = false) String selected,
       ActionResponse response, SessionStatus sessionStatus) {
 
-    boolean success = kksService.updateKksCollectionStatus(child.getPic(), collection, State.LOCKED.toString(),
-        Utils.getPicFromSession(session));
+    boolean success = kksService.updateKksCollectionStatus(child.getPic(),
+        collection, State.LOCKED.toString(), Utils.getPicFromSession(session));
 
     response.setRenderParameter("action", "showChild");
     response.setRenderParameter("pic", child.getPic());
@@ -167,17 +173,16 @@ public class CreateCollectionController {
     if (!success) {
       response.setRenderParameter("error", "collection.status.update.failed");
     }
-    
+
     if (StringUtils.isNotEmpty(fromGroup)) {
       response.setRenderParameter("fromGroup", fromGroup);
     }
-    
+
     if (StringUtils.isNotEmpty(selected)) {
       response.setRenderParameter("selected", selected);
     }
-    
+
     sessionStatus.setComplete();
   }
-  
 
 }

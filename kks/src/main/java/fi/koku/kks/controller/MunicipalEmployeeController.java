@@ -59,13 +59,14 @@ public class MunicipalEmployeeController {
   @Autowired
   @Qualifier("kksService")
   private KksService kksService;
-  
+
   @Autowired
   @Qualifier("groupCreationValidator")
   private Validator groupCreationValidator;
 
-  private static final Logger LOG = LoggerFactory.getLogger(MunicipalEmployeeController.class);
-  
+  private static final Logger LOG = LoggerFactory
+      .getLogger(MunicipalEmployeeController.class);
+
   @InitBinder("groupCreationValidator")
   public void initBinder(WebDataBinder binder) {
     binder.setValidator(groupCreationValidator);
@@ -74,90 +75,99 @@ public class MunicipalEmployeeController {
   @RenderMapping(params = "action=showEmployee")
   public String show(PortletSession session, RenderResponse response,
       @RequestParam(value = "childs", required = false) String[] childs,
-      @RequestParam(value = "search", required = false) String search,  @RequestParam(value = "error", required = false) String error,
+      @RequestParam(value = "search", required = false) String search,
+      @RequestParam(value = "error", required = false) String error,
       @RequestParam(value = "selected", required = false) String selected,
       Model model) {
     LOG.debug("show employee");
-    
+
     String pic = Utils.getPicFromSession(session);
-   
+
     model.addAttribute("childs", toChilds(childs, pic));
     List<String> groups = kksService.getGroups(pic);
-    
-    if ( StringUtils.isNotEmpty(selected)) {
-      Group group = kksService.getGroup(pic, selected );
-      model.addAttribute("selected", selected );
+
+    if (StringUtils.isNotEmpty(selected)) {
+      Group group = kksService.getGroup(pic, selected);
+      model.addAttribute("selected", selected);
       model.addAttribute("childs", new ArrayList<Person>());
-      if ( childs != null && childs.length > 0 ) {
-        model.addAttribute("selectedPic", childs[0] );
+      if (childs != null && childs.length > 0) {
+        model.addAttribute("selectedPic", childs[0]);
       }
-      
-      if ( group != null ) {
-        model.addAttribute("groupChilds", group.getPersons() );
+
+      if (group != null) {
+        model.addAttribute("groupChilds", group.getPersons());
       }
     }
-    
-    model.addAttribute("groups", groups );
+
+    model.addAttribute("groups", groups);
 
     if (search != null) {
       model.addAttribute("search", search);
     }
-    
+
     if (error != null) {
       model.addAttribute("error", error);
     }
     return "search";
   }
-  
+
   @RenderMapping(params = "action=showGroup")
-  public String showGroup(PortletSession session, RenderResponse response,      
-      @RequestParam(value = "selected") String selected, @RequestParam(value = "message", required = false) String message, 
+  public String showGroup(PortletSession session, RenderResponse response,
+      @RequestParam(value = "selected") String selected,
+      @RequestParam(value = "message", required = false) String message,
       @ModelAttribute(value = "group") GroupCreatable groupCreatable,
       BindingResult bindingResult, Model model) {
     LOG.debug("show group " + selected);
-    
+
     String pic = Utils.getPicFromSession(session);
-   
+
     setContent(selected, groupCreatable, model, pic, true);
     groupCreatable.setName("");
     groupCreatable.setType("");
-    if ( StringUtils.isNotEmpty(message) ) {
-      model.addAttribute("message", message );
+    if (StringUtils.isNotEmpty(message)) {
+      model.addAttribute("message", message);
     }
     return "group";
   }
 
   private void setContent(String selected, GroupCreatable groupCreatable,
-      Model model, String pic, boolean setChilds ) {
-    model.addAttribute("selected", selected );
-    model.addAttribute("creatables", kksService.searchPersonCreatableCollections(null, ""));
-    
-    Group group = kksService.getGroup(pic, selected );
+      Model model, String pic, boolean setChilds) {
+    model.addAttribute("selected", selected);
+    model.addAttribute("creatables",
+        kksService.searchPersonCreatableCollections(null, ""));
+
+    Group group = kksService.getGroup(pic, selected);
     model.addAttribute("childs", new ArrayList<Person>());
-    
-    if ( group != null ) {
+
+    if (group != null) {
       List<String> pics = new ArrayList<String>();
-      
-      for ( fi.koku.services.entity.person.v1.Person p : group.getPersons() ) {
+
+      for (fi.koku.services.entity.person.v1.Person p : group.getPersons()) {
         pics.add(p.getPic());
       }
-      
+
       try {
-        
-        if ( setChilds && groupCreatable.getCustomers() == null || groupCreatable.getCustomers().length == 0 ) {
+
+        if (setChilds && groupCreatable.getCustomers() == null
+            || groupCreatable.getCustomers().length == 0) {
           groupCreatable.setCustomers(pics.toArray(new String[pics.size()]));
         }
-        model.addAttribute("groupChilds", kksService.getGroupCollections(pic, pics ));
-        model.addAttribute("group", groupCreatable );
-      } catch (ServiceFault e) {        
-        LOG.error("Failed to get group: "  + e.toString() );
+        model.addAttribute("groupChilds",
+            kksService.getGroupCollections(pic, pics));
+        model.addAttribute("group", groupCreatable);
+      } catch (ServiceFault e) {
+        LOG.error("Failed to get group: " + e.toString());
       }
     }
   }
 
   @ActionMapping(params = "action=addCollectionsForGroup")
-  public void addCollections(PortletSession session, @RequestParam(value = "cancel", required = false ) Boolean cancel, @RequestParam(value = "selected") String selected, @ModelAttribute(value = "group") GroupCreatable groupCreation,
-      BindingResult bindingResult, ActionResponse response, SessionStatus sessionStatus) {
+  public void addCollections(PortletSession session,
+      @RequestParam(value = "cancel", required = false) Boolean cancel,
+      @RequestParam(value = "selected") String selected,
+      @ModelAttribute(value = "group") GroupCreatable groupCreation,
+      BindingResult bindingResult, ActionResponse response,
+      SessionStatus sessionStatus) {
     LOG.info("addCollectionsForGroup");
 
     if (cancel != null && cancel) {
@@ -178,8 +188,9 @@ public class MunicipalEmployeeController {
       } else {
 
         Creatable a = Creatable.create(groupCreation.getType());
-        String name = "".equals(groupCreation.getName()) ? a.getName() : groupCreation.getName();
-        
+        String name = "".equals(groupCreation.getName()) ? a.getName()
+            : groupCreation.getName();
+
         boolean success = kksService.addCollectionForGroup(pic, pics,
             a.getId(), name);
 
@@ -195,32 +206,36 @@ public class MunicipalEmployeeController {
     }
     sessionStatus.setComplete();
   }
-  
+
   @RenderMapping(params = "action=showGroupErrors")
   public String showErrors(PortletSession session,
       @RequestParam(value = "selected") String selected,
-      @RequestParam(value = "error", required = false) String error, @ModelAttribute(value = "group") GroupCreatable groupCreation, BindingResult bindingResult, 
-      RenderResponse response, Model model) {
+      @RequestParam(value = "error", required = false) String error,
+      @ModelAttribute(value = "group") GroupCreatable groupCreation,
+      BindingResult bindingResult, RenderResponse response, Model model) {
     model.addAttribute("selected", selected);
     groupCreationValidator.validate(groupCreation, bindingResult);
-    
+
     String pic = Utils.getPicFromSession(session);
-    setContent(selected, groupCreation, model, pic, false );
-    
-    if ( StringUtils.isNotEmpty(error) ) {
+    setContent(selected, groupCreation, model, pic, false);
+
+    if (StringUtils.isNotEmpty(error)) {
       model.addAttribute("error", error);
     }
     return "group";
   }
-  
+
   @ActionMapping(params = "action=searchChild")
-  public void fecthChild(PortletSession session, @ModelAttribute(value = "child") Person child,
-      BindingResult bindingResult, ActionResponse response, SessionStatus sessionStatus) {
+  public void fecthChild(PortletSession session,
+      @ModelAttribute(value = "child") Person child,
+      BindingResult bindingResult, ActionResponse response,
+      SessionStatus sessionStatus) {
     LOG.info("search child");
 
     String pic = Utils.getPicFromSession(session);
     String error = validateInput(child, pic);
-    Person p = error == null ? kksService.searchPerson(child, Utils.getPicFromSession(session)) : null;
+    Person p = error == null ? kksService.searchPerson(child,
+        Utils.getPicFromSession(session)) : null;
 
     if (p != null) {
       response.setRenderParameter("action", "showChild");
@@ -229,42 +244,45 @@ public class MunicipalEmployeeController {
       response.setRenderParameter("action", "showEmployee");
       response.setRenderParameter("childs", new String[] { "" });
       response.setRenderParameter("search", "true");
-      
-      if ( error != null ) {
-        response.setRenderParameter("error", error );
+
+      if (error != null) {
+        response.setRenderParameter("error", error);
       }
     }
     sessionStatus.setComplete();
   }
-  
+
   @ActionMapping(params = "action=searchGroup")
-  public void fecthGroup(PortletSession session, @RequestParam(value = "selected") String selected, @ModelAttribute(value = "child") Person child,
-      BindingResult bindingResult, ActionResponse response, SessionStatus sessionStatus) {
+  public void fecthGroup(PortletSession session,
+      @RequestParam(value = "selected") String selected,
+      @ModelAttribute(value = "child") Person child,
+      BindingResult bindingResult, ActionResponse response,
+      SessionStatus sessionStatus) {
     LOG.info("search group");
 
     response.setRenderParameter("action", "showEmployee");
     response.setRenderParameter("childs", new String[] { "" });
-    response.setRenderParameter("selected", selected );
-      
+    response.setRenderParameter("selected", selected);
+
     sessionStatus.setComplete();
   }
-  
+
   @ActionMapping(params = "action=toGroupActions")
-  public void toGroup(PortletSession session, @RequestParam(value = "selected") String selected ,
+  public void toGroup(PortletSession session,
+      @RequestParam(value = "selected") String selected,
       ActionResponse response, SessionStatus sessionStatus) {
     LOG.info("to group");
 
     response.setRenderParameter("action", "showGroup");
-    response.setRenderParameter("selected", selected );      
+    response.setRenderParameter("selected", selected);
     sessionStatus.setComplete();
   }
 
-
   private String validateInput(Person child, String pic) {
-    if ( child.getPic().trim().equals( pic ) ) {
+    if (child.getPic().trim().equals(pic)) {
       return "ui.kks.illegal.pic.search";
     }
-    
+
     return null;
   }
 
@@ -273,7 +291,6 @@ public class MunicipalEmployeeController {
     LOG.debug("get entry command object");
     return new Person();
   }
-  
 
   @ModelAttribute("group")
   public GroupCreatable getGroupCommandObject() {

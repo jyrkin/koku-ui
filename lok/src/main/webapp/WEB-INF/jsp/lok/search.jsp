@@ -26,7 +26,10 @@
 </portlet:renderURL>
 
 
+
+
 <div class="koku-lok">
+	<!--  -->
 	<div class="portlet-section-body">
 		<c:choose>
 			<c:when test="${not empty requestScope.allowedToView}">
@@ -79,12 +82,12 @@
 							code="koku.common.endTime" /> </span>
 					<form:input path="to" value="${endDate}" maxlength="10" size="10" />
 
- 
+
 
 					<input type="submit"
 						value="<spring:message code="koku.lok.search"/>">
 				</form:form>
-				
+
 				<c:if test="${not empty limit}">
 					<br>
 					<div class="error">
@@ -105,69 +108,58 @@
 							<c:if test="${not empty visited}">
 								<h2 class="portlet-section-subheader">
 									<c:if test="${searchParams.picType eq 'userPic'}">
-									<spring:message code="koku.common.userSearchResults" />
+										<spring:message code="koku.common.userSearchResults" />
 									</c:if>
 									<c:if test="${searchParams.picType eq 'customerPic'}">
-									<spring:message code="koku.common.customerSearchResults" />
-									</c:if>							
-									<c:out value=" "/>
-									<c:out value="${searchParams.pic}" />,
-									<c:out value=" "/>									
+										<spring:message code="koku.common.customerSearchResults" />
+									</c:if>
+									<c:out value=" " />
+									<c:out value="${searchParams.pic}" />
+									,
+									<c:out value=" " />
 									<c:out value="${searchParams.concept}" />
-									<c:out value=" "/>
+									<c:out value=" " />
 									<fmt:formatDate pattern="dd.MM.yyyy"
 										value="${searchParams.from}" />
 									-
 									<fmt:formatDate pattern="dd.MM.yyyy" value="${searchParams.to}" />
 								</h2>
-								
-								<table id=kuntalaishaku class="portlet-table-body" width="100%" border="0">
-								  <thead>
-									<tr>
-										<%-- TODO! when using <th> the text won't align to left, that's why we use <td> and <b> here now.
-This should be changed! --%>
-										<!-- TODO: Should the header titles be changed?  -->
 
-										<th width=20% scope="col"><b><spring:message
-													code="koku.lok.time" /> </b>
-										</th>
-										<th width=20% scope="col">
-												<b><spring:message
-													code="koku.lok.end.user" /> </b>											
-										</th>
-													<th width=5% scope="col"><b><spring:message
-													code="koku.lok.operation" /> </b>
-													</th>
-													<th width=15% scope="col"><b><spring:message
-													code="koku.lok.target.user" /> </b>
-													</th>
-													<th width=30% scope="col"><b><spring:message
-													code="koku.lok.data.item.type" /> </b>
-													</th>
-										<th width=10% scope="col"><b><spring:message
-													code="koku.lok.service" /> </b>
-										</th>
-									</tr>
-								  </thead>
-								  <tbody>
-									<c:forEach var="e" items="${entries}">
+								<table id=kuntalaishaku class="portlet-table-body" width="100%"
+									border="0">
+									<thead>
 										<tr>
-											<td width=20%><fmt:formatDate
-													pattern="dd.MM.yyyy HH:mm:ss" value="${e.timestamp}" />
-											</td>
-											<td width=20%><c:out value="${e.user}" />
-											</td>
-													<td width=5%><c:out value="${e.operation}" />
-													</td>
-													<td width=15%><c:out value="${e.child}" />
-													</td>
-													<td width=30%><c:out value="${e.message}" />
-													</td>
-											<td width=10%><c:out value="${e.clientSystemId}" />
-											</td>
+											<%-- TODO! when using <th> the text won't align to left, that's why we use <td> and <b> here now.
+This should be changed! --%>
+											<!-- TODO: Should the header titles be changed?  -->
+
+											<th width=20% scope="col"><b><spring:message
+														code="koku.lok.time" /> </b></th>
+											<th width=20% scope="col"><b><spring:message
+														code="koku.lok.end.user" /> </b></th>
+											<th width=5% scope="col"><b><spring:message
+														code="koku.lok.operation" /> </b></th>
+											<th width=15% scope="col"><b><spring:message
+														code="koku.lok.target.user" /> </b></th>
+											<th width=30% scope="col"><b><spring:message
+														code="koku.lok.data.item.type" /> </b></th>
+											<th width=10% scope="col"><b><spring:message
+														code="koku.lok.service" /> </b></th>
 										</tr>
-									</c:forEach>
-								  </tbody>	
+									</thead>
+									<tbody>
+										<c:forEach var="e" items="${entries}">
+											<tr>
+												<td width=20%><fmt:formatDate
+														pattern="dd.MM.yyyy HH:mm:ss" value="${e.timestamp}" /></td>
+												<td width=20%><c:out value="${e.user}" /></td>
+												<td width=5%><c:out value="${e.operation}" /></td>
+												<td width=15%><c:out value="${e.child}" /></td>
+												<td width=30%><c:out value="${e.message}" /></td>
+												<td width=10%><c:out value="${e.clientSystemId}" /></td>
+											</tr>
+										</c:forEach>
+									</tbody>
 								</table>
 							</c:if>
 						</c:if>
@@ -219,30 +211,34 @@ This should be changed! --%>
 			</c:otherwise>
 		</c:choose>
 	</div>
-		</div>
-	<div class="lok-version">
-		<%@ include file="../common/page-footer.jsp"%>
-	</div>
+</div>
+<div class="lok-version">
+	<%@ include file="../common/page-footer.jsp"%>
+</div>
 </div>
 <!-- end of koku-lok-div -->
 
-<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-1.5.2.min.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript"
+	src="${pageContext.request.contextPath}/js/jquery-1.5.2.min.js"></script>
+<script type="text/javascript"
+	src="${pageContext.request.contextPath}/js/jquery.dataTables.min.js"></script>
 <script type="text/javascript">
-		$(document).ready(function() {			
-			$('#kuntalaishaku').dataTable({
-				"bJQueryUI": true,
-				"sPaginationType": "full_numbers",
-				"oLanguage": {
-					"sSearch": "Haku",
-					"sProcessing": "Odota...",
-					"sZeroRecords": "Ei löytynyt tuloksia."
-				  },
-				 "aaSorting": [[ 0, "desc" ]],
-				 "bPaginate": false,
-			     "bLengthChange": false,
-			     "bInfo": false			     			     
-			});			
-			$("div#kuntalaishaku_filter input").attr("title","Haku rajaa vain taulukon tuloksia");			
-		});		
+	$(document).ready(
+			function() {
+				$('#kuntalaishaku').dataTable({
+					"bJQueryUI" : true,
+					"sPaginationType" : "full_numbers",
+					"oLanguage" : {
+						"sSearch" : "Haku",
+						"sProcessing" : "Odota...",
+						"sZeroRecords" : "Ei löytynyt tuloksia."
+					},
+					"aaSorting" : [ [ 0, "desc" ] ],
+					"bPaginate" : false,
+					"bLengthChange" : false,
+					"bInfo" : false
+				});
+				$("div#kuntalaishaku_filter input").attr("title",
+						"Haku rajaa vain taulukon tuloksia");
+			});
 </script>

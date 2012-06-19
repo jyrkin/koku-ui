@@ -8,8 +8,10 @@
  If you did not receive a license, please contact the copyright holder
  (kohtikumppanuutta@ixonos.com).
 --%>
-<%@ include file="imports.jsp" %>
+<%@ include file="imports.jsp"%>
 
 <portlet:defineObjects />
 
-<p><spring:message code="koku.common.error.serviceunavailable" /></p>
+<p>
+	<spring:message code="koku.common.error.serviceunavailable" />
+</p>

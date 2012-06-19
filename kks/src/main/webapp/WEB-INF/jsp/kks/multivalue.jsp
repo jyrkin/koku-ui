@@ -9,7 +9,7 @@
  (kohtikumppanuutta@ixonos.com).
 --%>
 <%@page import="fi.koku.kks.ui.common.DataType"%>
-<%@ include file="imports.jsp" %>
+<%@ include file="imports.jsp"%>
 
 
 <c:set var="free_text" value="<%=DataType.FREE_TEXT%>" />
@@ -26,24 +26,24 @@
 <portlet:renderURL var="homeUrl">
 	<portlet:param name="action" value="showCollection" />
 	<portlet:param name="pic" value="${child.pic}" />
-	<portlet:param name="collection" value="${collection.id}" />	
+	<portlet:param name="collection" value="${collection.id}" />
 	<c:if test="${not empty fromGroup}">
 		<portlet:param name="fromGroup" value="true" />
 	</c:if>
 	<c:if test="${not empty selected}">
 		<portlet:param name="selected" value="${selected}" />
-	</c:if>		
+	</c:if>
 </portlet:renderURL>
 <portlet:actionURL var="addMultivalue">
 	<portlet:param name="action" value="addMultivalue" />
 	<portlet:param name="pic" value="${child.pic}" />
 	<portlet:param name="collection" value="${collection.id}" />
 	<portlet:param name="valueId" value="${valueId}" />
-	
+
 	<c:if test="${ not empty entryvalue }">
-	   <portlet:param name="entryId" value="${entry.id}" />
+		<portlet:param name="entryId" value="${entry.id}" />
 	</c:if>
-		<c:if test="${not empty fromGroup}">
+	<c:if test="${not empty fromGroup}">
 		<portlet:param name="fromGroup" value="true" />
 	</c:if>
 	<c:if test="${not empty selected}">
@@ -51,16 +51,16 @@
 	</c:if>
 </portlet:actionURL>
 <portlet:actionURL var="removeMultivalue">
-    <portlet:param name="action" value="removeMultivalue" />
-    <portlet:param name="pic" value="${child.pic}" />
-    <portlet:param name="collection" value="${collection.id}" />
-    <portlet:param name="valueId" value="${valueId}" />
-    <portlet:param name="value" value="${value}" />
-    
-    <c:if test="${ not empty entry }">
-       <portlet:param name="entryId" value="${entry.id}" />
-    </c:if>
-    	<c:if test="${not empty fromGroup}">
+	<portlet:param name="action" value="removeMultivalue" />
+	<portlet:param name="pic" value="${child.pic}" />
+	<portlet:param name="collection" value="${collection.id}" />
+	<portlet:param name="valueId" value="${valueId}" />
+	<portlet:param name="value" value="${value}" />
+
+	<c:if test="${ not empty entry }">
+		<portlet:param name="entryId" value="${entry.id}" />
+	</c:if>
+	<c:if test="${not empty fromGroup}">
 		<portlet:param name="fromGroup" value="true" />
 	</c:if>
 	<c:if test="${not empty selected}">
@@ -68,10 +68,10 @@
 	</c:if>
 </portlet:actionURL>
 <portlet:actionURL var="cancelMultivalue">
-    <portlet:param name="action" value="cancelMultivalue" />
-    <portlet:param name="pic" value="${child.pic}" />
-    <portlet:param name="collection" value="${collection.id}" />
-    	<c:if test="${not empty fromGroup}">
+	<portlet:param name="action" value="cancelMultivalue" />
+	<portlet:param name="pic" value="${child.pic}" />
+	<portlet:param name="collection" value="${collection.id}" />
+	<c:if test="${not empty fromGroup}">
 		<portlet:param name="fromGroup" value="true" />
 	</c:if>
 	<c:if test="${not empty selected}">
@@ -79,48 +79,57 @@
 	</c:if>
 </portlet:actionURL>
 
-<div class="koku-kks"> 
-<div class="portlet-section-body">
-<div>
+<div class="koku-kks">
+	<div class="portlet-section-body">
+		<div>
 
-	<div class="kks-home">
-		<a href="${homeUrl}"><spring:message code="ui.kks.back" /> </a>
-	</div>
+			<div class="kks-home">
+				<a href="${homeUrl}"><spring:message code="ui.kks.back" /> </a>
+			</div>
 
-</div>
+		</div>
 
 
-<h1 class="portlet-section-header kks-print"><c:out value="${child.name}"/><c:out value=" "/><c:out value="${collection.name}"/></h1>
+		<h1 class="portlet-section-header kks-print">
+			<c:out value="${child.name}" />
+			<c:out value=" " />
+			<c:out value="${collection.name}" />
+		</h1>
 
-	<div class="kks-entry kks-print">
+		<div class="kks-entry kks-print">
 
-		<form:form name="addMultivalue" commandName="value"
-			method="post" action="${addMultivalue}">
-			<input type="hidden" name="entryType" value="${type.id }" />		
-			         
-				<span class="portlet-form-field-label">
-				
-				<c:out value="${type.name }"/>
-				
+			<form:form name="addMultivalue" commandName="value" method="post"
+				action="${addMultivalue}">
+				<input type="hidden" name="entryType" value="${type.id }" />
+
+				<span class="portlet-form-field-label"> <c:out
+						value="${type.name }" />
+
 				</span>
 				<c:if test="${ not empty entry }">
-				    <span style="padding-left: 5px"> <a href="${removeMultivalue}">(<spring:message code="ui.kks.remove" />)</a> </span>
+					<span style="padding-left: 5px"> <a
+						href="${removeMultivalue}">(<spring:message
+								code="ui.kks.remove" />)
+					</a>
+					</span>
 				</c:if>
-				
+
 				<div class="portlet-form-field">
-                	<form:textarea maxlength="2000" path="value" class="portlet-form-input-field" title="${type.description }" />
-            	</div>
+					<form:textarea maxlength="2000" path="value"
+						class="portlet-form-input-field" title="${type.description }" />
+				</div>
 
-			<span > 			
-			 <input type="submit" class="portlet-form-button"
-				value="<spring:message code="ui.kks.contract.save"/>"> <span style="padding-left: 5px">
-					<a href="${homeUrl}"><spring:message code="ui.kks.cancel" /> </a>  </span> 
-			</span>
+				<span> <input type="submit" class="portlet-form-button"
+					value="<spring:message code="ui.kks.contract.save"/>"> <span
+					style="padding-left: 5px"> <a href="${homeUrl}"><spring:message
+								code="ui.kks.cancel" /> </a>
+				</span>
+				</span>
 
-		</form:form>
-	</div>
-	
-	<div class="kks-reset-floating"></div>
+			</form:form>
+		</div>
+
+		<div class="kks-reset-floating"></div>
 
 	</div>
 

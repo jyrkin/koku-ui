@@ -53,7 +53,8 @@ public class Version implements Validator {
 
   @Override
   public void validate(Object target, Errors errors) {
-    ValidationUtils.rejectIfEmptyOrWhitespace(errors, "name", "NotEmpty.creation.name");
+    ValidationUtils.rejectIfEmptyOrWhitespace(errors, "name",
+        "NotEmpty.creation.name");
   }
 
 }

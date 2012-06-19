@@ -15,7 +15,7 @@ package fi.koku.kks.model;
  * Consent request object
  * 
  * @author Ixonos / tuomape
- *
+ * 
  */
 public class ConsentRequest {
 

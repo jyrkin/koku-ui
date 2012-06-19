@@ -46,9 +46,12 @@ public final class KksConverter {
 
   public KKSCollection fromWsType(KksCollectionType collection, String user) {
 
-    KKSCollection tmp = new KKSCollection(collection.getId(), collection.getName(), collection.getDescription(),
-        fromWsType(collection.getStatus()), CalendarUtil.getDate(collection.getCreated()), collection.getVersion().intValue(),
-        kksService.getCollectionClassType(collection.getCollectionClassId(), user));
+    KKSCollection tmp = new KKSCollection(collection.getId(),
+        collection.getName(), collection.getDescription(),
+        fromWsType(collection.getStatus()), CalendarUtil.getDate(collection
+            .getCreated()), collection.getVersion().intValue(),
+        kksService.getCollectionClassType(collection.getCollectionClassId(),
+            user));
 
     tmp.setModifier(collection.getCreator());
     tmp.setPrevVersion(collection.getPrevVersion());
@@ -61,7 +64,8 @@ public final class KksConverter {
     tmp.setUserConsentStatus(collection.getUserConsentStatus());
     for (KksEntryType entryType : collection.getKksEntries().getEntries()) {
 
-      KksEntryClassType metaEntry = kksService.getEntryClassType(entryType.getEntryClassId(), user);
+      KksEntryClassType metaEntry = kksService.getEntryClassType(
+          entryType.getEntryClassId(), user);
 
       if (metaEntry != null) {
         Entry e = fromWsType(entryType, metaEntry);
@@ -73,12 +77,13 @@ public final class KksConverter {
     return tmp;
   }
 
-  public KksCollectionType toWsType(KKSCollection collection, String customer, String user) {
+  public KksCollectionType toWsType(KKSCollection collection, String customer,
+      String user) {
     return toWsType(collection, customer, false, false, user);
   }
 
-  public KksCollectionType toWsType(KKSCollection collection, String customer, boolean createVersion, boolean empty,
-      String user) {
+  public KksCollectionType toWsType(KKSCollection collection, String customer,
+      boolean createVersion, boolean empty, String user) {
     KksCollectionType tmp = new KksCollectionType();
     tmp.setId(collection.getId());
     tmp.setName(collection.getName());
@@ -98,7 +103,8 @@ public final class KksConverter {
 
     tmp.setModified(CalendarUtil.getXmlDateTime(cal.getTime()));
 
-    KksEntriesType entriesType = toEntriesWsType(collection, customer, empty, user, cal);
+    KksEntriesType entriesType = toEntriesWsType(collection, customer, empty,
+        user, cal);
 
     Calendar c = new GregorianCalendar();
     c.setTime(collection.getCreationTime());
@@ -110,8 +116,8 @@ public final class KksConverter {
     return tmp;
   }
 
-  private KksEntriesType toEntriesWsType(KKSCollection collection, String customer, boolean empty, String user,
-      Calendar cal) {
+  private KksEntriesType toEntriesWsType(KKSCollection collection,
+      String customer, boolean empty, String user, Calendar cal) {
     KksEntriesType entriesType = new KksEntriesType();
 
     if (!empty) {
@@ -148,7 +154,8 @@ public final class KksConverter {
       KksEntryValueType value = new KksEntryValueType();
       value.setId(ev.getId());
 
-      if (DataType.MULTI_SELECT.toString().equals(entry.getType().getDataType())) {
+      if (DataType.MULTI_SELECT.toString()
+          .equals(entry.getType().getDataType())) {
         value.setValue(ev.getValuesAsText());
       } else {
         value.setValue(ev.getValue());
@@ -176,12 +183,14 @@ public final class KksConverter {
     return fromWsType(entry, values, metaEntry);
   }
 
-  public Entry fromWsType(KksEntryType entry, KksEntryValueType val, KksEntryClassType metaEntry) {
+  public Entry fromWsType(KksEntryType entry, KksEntryValueType val,
+      KksEntryClassType metaEntry) {
     String valId = val == null ? "" : val.getId();
     String value = val == null ? "" : val.getValue();
 
-    Entry e = new Entry(entry.getId(), CalendarUtil.getDate(entry.getModified()), entry.getVersion().toString(),
-        entry.getCreator(), metaEntry);
+    Entry e = new Entry(entry.getId(),
+        CalendarUtil.getDate(entry.getModified()), entry.getVersion()
+            .toString(), entry.getCreator(), metaEntry);
 
     EntryValue entryValue = new EntryValue();
     entryValue.setId(valId);
@@ -204,10 +213,12 @@ public final class KksConverter {
     return e;
   }
 
-  public Entry fromWsType(KksEntryType entry, List<KksEntryValueType> values, KksEntryClassType metaEntry) {
+  public Entry fromWsType(KksEntryType entry, List<KksEntryValueType> values,
+      KksEntryClassType metaEntry) {
 
-    Entry e = new Entry(entry.getId(), CalendarUtil.getDate(entry.getModified()), entry.getVersion().toString(),
-        entry.getCreator(), metaEntry);
+    Entry e = new Entry(entry.getId(),
+        CalendarUtil.getDate(entry.getModified()), entry.getVersion()
+            .toString(), entry.getCreator(), metaEntry);
 
     for (KksEntryValueType kev : values) {
       EntryValue entryValue = new EntryValue();

@@ -43,10 +43,12 @@ public class GuardianController {
   @Qualifier("kksService")
   private KksService kksService;
 
-  private static final Logger LOG = LoggerFactory.getLogger(GuardianController.class);
+  private static final Logger LOG = LoggerFactory
+      .getLogger(GuardianController.class);
 
   @RenderMapping(params = "action=showChildrens")
-  public String showChilds(PortletSession session, RenderResponse response, Model model) {
+  public String showChilds(PortletSession session, RenderResponse response,
+      Model model) {
     LOG.debug("showChildrens");
     model.addAttribute("childs", getChilds(session));
     return "childs";

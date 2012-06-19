@@ -49,8 +49,10 @@ public class Creation implements Validator {
 
   @Override
   public void validate(Object target, Errors errors) {
-    ValidationUtils.rejectIfEmptyOrWhitespace(errors, "name", "NotEmpty.creation.name");
-    ValidationUtils.rejectIfEmptyOrWhitespace(errors, "field", "NotEmpty.creation.field");
+    ValidationUtils.rejectIfEmptyOrWhitespace(errors, "name",
+        "NotEmpty.creation.name");
+    ValidationUtils.rejectIfEmptyOrWhitespace(errors, "field",
+        "NotEmpty.creation.field");
   }
 
 }

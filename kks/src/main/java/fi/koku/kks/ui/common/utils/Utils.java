@@ -13,7 +13,6 @@ package fi.koku.kks.ui.common.utils;
 
 import javax.portlet.PortletSession;
 
-
 import fi.koku.portlet.filter.userinfo.UserInfo;
 
 /**
@@ -39,6 +38,5 @@ public final class Utils {
   public static UserInfo getUserInfoFromSession(PortletSession session) {
     return (UserInfo) session.getAttribute(UserInfo.KEY_USER_INFO);
   }
-  
-  
+
 }

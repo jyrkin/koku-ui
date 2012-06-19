@@ -85,6 +85,6 @@ public class Person {
     p.setSecondName(c.getEtunimetNimi());
     p.setLastName(c.getSukuNimi());
     p.setPic(c.getHenkiloTunnus());
-    return p;
+    return p; 
   }
 }
