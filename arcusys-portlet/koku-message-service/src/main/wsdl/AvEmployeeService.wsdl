@@ -185,8 +185,13 @@
 <xs:simpleType name="appointmentSummaryStatus">
 <xs:restriction base="xs:string">
 <xs:enumeration value="Created" />
+<xs:enumeration value="New" />
+<xs:enumeration value="InProgress" />
 <xs:enumeration value="Approved" />
+<xs:enumeration value="Declined" />
 <xs:enumeration value="Cancelled" />
+<xs:enumeration value="Invalidated" />
+<xs:enumeration value="Closed" />
 </xs:restriction>
 </xs:simpleType>
 </xs:schema>

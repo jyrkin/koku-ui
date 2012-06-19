@@ -1,13 +1,9 @@
 package fi.arcusys.koku.common.services.appointments.citizen;
 
 import static fi.arcusys.koku.common.util.Constants.DATE;
-import static fi.arcusys.koku.common.util.Constants.TASK_TYPE_APPOINTMENT_INBOX_CITIZEN;
-import static fi.arcusys.koku.common.util.Constants.TASK_TYPE_APPOINTMENT_RESPONSE_CITIZEN;
-import static fi.arcusys.koku.common.util.Constants.TASK_TYPE_APPOINTMENT_RESPONSE_CITIZEN_OLD;
 import static fi.arcusys.koku.common.util.Constants.TIME;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -20,7 +16,6 @@ import fi.arcusys.koku.av.citizenservice.AppointmentRespondedTO;
 import fi.arcusys.koku.av.citizenservice.AppointmentSlot;
 import fi.arcusys.koku.av.citizenservice.AppointmentSummaryStatus;
 import fi.arcusys.koku.av.citizenservice.AppointmentWithTarget;
-import fi.arcusys.koku.av.citizenservice.GetTotalAssignedAppointments;
 import fi.arcusys.koku.common.exceptions.KokuServiceException;
 import fi.arcusys.koku.common.services.AbstractHandle;
 import fi.arcusys.koku.common.services.appointments.model.CitizenAppointment;
@@ -40,12 +35,12 @@ import fi.arcusys.koku.common.util.MessageUtil;
  * Aug 22, 2011
  */
 public class AvCitizenServiceHandle extends AbstractHandle implements CitizenAppointmentTasks {
-	
+
 	private static final Logger LOG = Logger.getLogger(AvCitizenServiceHandle.class);
-		
-	private AvCitizenService acs;
+
+	private final AvCitizenService acs;
 	private String loginUserId;
-	
+
 	/**
 	 * Constructor and initialization
 	 */
@@ -53,13 +48,13 @@ public class AvCitizenServiceHandle extends AbstractHandle implements CitizenApp
 		super(messageSource);
 		acs = new AvCitizenService();
 	}
-	
+
 	public AvCitizenServiceHandle(MessageSource messageSource, String loginUser) {
 		super(messageSource);
 		loginUserId = loginUser;
 		acs = new AvCitizenService();
 	}
-	
+
 	@Override
 	public ResultList<KokuAppointment> getNewAppointments(String uid, Page page)
 			throws KokuServiceException {
@@ -83,20 +78,20 @@ public class AvCitizenServiceHandle extends AbstractHandle implements CitizenApp
 		final int total = getTotalOldAppointmentsNum(uid);
 		return new ResultListImpl<KokuAppointment>(apps, total, page);
 	}
-	
+
 	private List<KokuAppointment> getAssignedAppointmentsSummary(String uid, Page page) throws KokuServiceException {
 		return getPojoAppointments(acs.getAssignedAppointments(uid, page.getFirst(), page.getLast()));
 	}
-	
+
 	private List<KokuAppointment> getRespondedAppointmentSummary(String uid, Page page) throws KokuServiceException {
 		return getPojoAppointments(acs.getRespondedAppointments(uid, page.getFirst(), page.getLast()));
 	}
-	
+
 	private List<KokuAppointment> getOldAppointmentsSummary(String uid, Page page) throws KokuServiceException {
 		return getPojoAppointments(acs.getOldAppointments(uid, page.getFirst(), page.getLast()));
 	}
-	
-	
+
+
 	private List<KokuAppointment> getPojoAppointments(List<AppointmentWithTarget> appSummaryList) {
 		final List<KokuAppointment> appList = new ArrayList<KokuAppointment>();
 		for (AppointmentWithTarget appSummary : appSummaryList) {
@@ -108,8 +103,8 @@ public class AvCitizenServiceHandle extends AbstractHandle implements CitizenApp
 			kokuAppointment.setTargetPersonUser(new KokuUser(appSummary.getTargetPersonUserInfo()));
 			kokuAppointment.getTargetPersonUser().setUid(appSummary.getTargetPersonUserInfo().getUid());
 			kokuAppointment.setStatus(localizeActionRequestStatus(appSummary.getStatus()));
-			appList.add(kokuAppointment);		
-		}		
+			appList.add(kokuAppointment);
+		}
 		return appList;
 	}
 
@@ -121,7 +116,7 @@ public class AvCitizenServiceHandle extends AbstractHandle implements CitizenApp
 	public CitizenAppointment getAppointmentById(String appointmentId, String targetUser) throws KokuServiceException {
 		long  appId = 0;
 		try {
-			appId = (long) Long.parseLong(appointmentId);
+			appId = Long.parseLong(appointmentId);
 		} catch (NumberFormatException nfe) {
 			throw new KokuServiceException("Invalid appointmentId. AppointmentId: '"+appointmentId+"'", nfe);
 		}
@@ -137,28 +132,28 @@ public class AvCitizenServiceHandle extends AbstractHandle implements CitizenApp
 			ctzAppointment.setStatus(localizeActionRequestStatus(appointment.getStatus()));
 		}
 		if (appointment.getApprovedSlot() != null) {
-			ctzAppointment.setSlot(formatSlot(appointment.getApprovedSlot()));			
+			ctzAppointment.setSlot(formatSlot(appointment.getApprovedSlot()));
 		}
 		ctzAppointment.setReplierUser(new KokuUser(appointment.getReplierUserInfo()));
 		ctzAppointment.setReplierComment(appointment.getReplierComment());
 		ctzAppointment.setTargetPersonUser(new KokuUser(appointment.getTargetPersonUserInfo()));
 		ctzAppointment.setCancellationComment(appointment.getEmployeesCancelComent());
-		
-		return ctzAppointment;		
+
+		return ctzAppointment;
 	}
 
 	public int getTotalAssignedAppointmentsNum(String userId) throws KokuServiceException {
 		return acs.getTotalAssignedAppointmentNum(userId);
 	}
-	
+
 	private int getTotalRespondedAppointmentsNum(String userId) throws KokuServiceException {
 		return acs.getTotalRespondedAppointmentNum(userId);
 	}
-	
+
 	private int getTotalOldAppointmentsNum(String userId) throws KokuServiceException {
 		return acs.getTotalOldAppointments(userId);
 	}
-	
+
 	/**
 	 * Formats the slot data model
 	 * @param appSlot slot of appointment
@@ -172,10 +167,11 @@ public class AvCitizenServiceHandle extends AbstractHandle implements CitizenApp
 		slot.setStartTime(MessageUtil.formatDateByString(appSlot.getStartTime(), TIME, timeZone));
 		slot.setEndTime(MessageUtil.formatDateByString(appSlot.getEndTime(), TIME, timeZone));
 		slot.setLocation(appSlot.getLocation());
+		slot.setDisabled(slot.isDisabled());
 		slot.setComment(appSlot.getComment());
 		return slot;
 	}
-	
+
 	/**
 	 * Cancels appointments
 	 * @param appointmentId
@@ -186,7 +182,7 @@ public class AvCitizenServiceHandle extends AbstractHandle implements CitizenApp
 	public void cancelAppointments(long appointmentId, String targetPerson, String comment) throws KokuServiceException {
 		acs.cancelAppointment(appointmentId, targetPerson, loginUserId, comment);
 	}
-	
+
 	private String localizeActionRequestStatus(AppointmentSummaryStatus appointmentStatus) {
 		if (getMessageSource() == null) {
 			LOG.warn(MESSAGE_SOURCE_MISSING);
@@ -198,15 +194,25 @@ public class AvCitizenServiceHandle extends AbstractHandle implements CitizenApp
 			case APPROVED:
 				return getMessageSource().getMessage("AppointmentStatus.Approved", null, locale);
 			case CANCELLED:
-				return getMessageSource().getMessage("AppointmentStatus.Cancelled", null, locale);				
+				return getMessageSource().getMessage("AppointmentStatus.Cancelled", null, locale);
 			case CREATED:
 				return getMessageSource().getMessage("AppointmentStatus.Created", null, locale);
+			case DECLINED:
+				return getMessageSource().getMessage("AppointmentStatus.Declined", null, locale);
+			case INVALIDATED:
+				return getMessageSource().getMessage("AppointmentStatus.Invalidated", null, locale);
+			case NEW:
+				return getMessageSource().getMessage("AppointmentStatus.New", null, locale);
+			case CLOSED:
+				return getMessageSource().getMessage("AppointmentStatus.Closed", null, locale);
+			case IN_PROGRESS:
+				return getMessageSource().getMessage("AppointmentStatus.InProgress", null, locale);
 			default:
 				return appointmentStatus.toString();
-			}							
+			}
 		} catch (NoSuchMessageException nsme) {
 			LOG.warn("Coulnd't find localized message for '" +appointmentStatus +"'. Localization doesn't work properly");
 			return appointmentStatus.toString();
 		}
-	}	
+	}
 }
