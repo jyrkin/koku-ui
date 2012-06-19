@@ -20,7 +20,6 @@ import fi.arcusys.koku.av.employeeservice.Appointment.AcceptedSlots.Entry;
 import fi.arcusys.koku.av.employeeservice.AppointmentCriteria;
 import fi.arcusys.koku.av.employeeservice.AppointmentReceipientTO;
 import fi.arcusys.koku.av.employeeservice.AppointmentSlot;
-import fi.arcusys.koku.av.employeeservice.AppointmentSummary;
 import fi.arcusys.koku.av.employeeservice.AppointmentSummaryStatus;
 import fi.arcusys.koku.av.employeeservice.AppointmentUserRejected;
 import fi.arcusys.koku.av.employeeservice.User;
@@ -29,7 +28,6 @@ import fi.arcusys.koku.common.services.AbstractHandle;
 import fi.arcusys.koku.common.services.appointments.model.EmployeeAppointment;
 import fi.arcusys.koku.common.services.appointments.model.EmployeeAppointment.UserWithTarget;
 import fi.arcusys.koku.common.services.appointments.model.KokuAppoimentRecipient;
-import fi.arcusys.koku.common.services.appointments.model.KokuAppointment;
 import fi.arcusys.koku.common.services.appointments.model.KokuAppointmentUserRejected;
 import fi.arcusys.koku.common.services.appointments.model.Slot;
 import fi.arcusys.koku.common.services.facades.Page;
@@ -49,7 +47,7 @@ public class AvEmployeeServiceHandle extends AbstractHandle implements EmployeeA
 
 	private static final Logger LOG = Logger.getLogger(AvEmployeeServiceHandle.class);
 
-	private AvEmployeeService aes;
+	private final AvEmployeeService aes;
 
 	/**
 	 * Constructor and initialization
@@ -126,7 +124,7 @@ public class AvEmployeeServiceHandle extends AbstractHandle implements EmployeeA
 
 		long  appId = 0;
 		try {
-			appId = (long) Long.parseLong(appointmentId);
+			appId = Long.parseLong(appointmentId);
 		} catch (NumberFormatException nfe) {
 			throw new KokuServiceException("Invalid appointmentId. AppointmentId: '"+appointmentId+"'", nfe);
 		}
@@ -363,20 +361,28 @@ public class AvEmployeeServiceHandle extends AbstractHandle implements EmployeeA
 		Locale locale = MessageUtil.getLocale();
 		try {
 			switch (appointmentStatus) {
-			case APPROVED:
-				return getMessageSource().getMessage("AppointmentStatus.Approved", null, locale);
-			case CANCELLED:
-				return getMessageSource().getMessage("AppointmentStatus.Cancelled", null, locale);
-			case CREATED:
-				return getMessageSource().getMessage("AppointmentStatus.Created", null, locale);
-			default:
-				return appointmentStatus.toString();
+				case APPROVED:
+					return getMessageSource().getMessage("AppointmentStatus.Approved", null, locale);
+				case CANCELLED:
+					return getMessageSource().getMessage("AppointmentStatus.Cancelled", null, locale);
+				case CREATED:
+					return getMessageSource().getMessage("AppointmentStatus.Created", null, locale);
+				case DECLINED:
+					return getMessageSource().getMessage("AppointmentStatus.Declined", null, locale);
+				case INVALIDATED:
+					return getMessageSource().getMessage("AppointmentStatus.Invalidated", null, locale);
+				case NEW:
+					return getMessageSource().getMessage("AppointmentStatus.New", null, locale);
+				case CLOSED:
+					return getMessageSource().getMessage("AppointmentStatus.Closed", null, locale);
+				case IN_PROGRESS:
+					return getMessageSource().getMessage("AppointmentStatus.InProgress", null, locale);
+				default:
+					return appointmentStatus.toString();
 			}
 		} catch (NoSuchMessageException nsme) {
 			LOG.warn("Coulnd't find localized message for '" +appointmentStatus +"'. Localization doesn't work properly");
 			return appointmentStatus.toString();
 		}
 	}
-
-
 }

@@ -20,7 +20,7 @@
 <xs:sequence />
 </xs:complexType>
 </xs:schema>
-<xs:schema attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://soa.av.koku.arcusys.fi/" xmlns:ns1="http://soa.common.koku.arcusys.fi/" xmlns:tns="http://soa.av.koku.arcusys.fi/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:schema elementFormDefault="unqualified" targetNamespace="http://soa.av.koku.arcusys.fi/" version="1.0" xmlns:ns1="http://soa.common.koku.arcusys.fi/" xmlns:tns="http://soa.av.koku.arcusys.fi/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
 <xs:import namespace="http://soa.common.koku.arcusys.fi/" />
 <xs:element name="cancelRespondedAppointment" type="tns:cancelRespondedAppointment" />
 <xs:element name="cancelRespondedAppointmentResponse" type="tns:cancelRespondedAppointmentResponse" />
@@ -91,6 +91,7 @@
 <xs:element minOccurs="0" name="appointmentDate" type="xs:date" />
 <xs:element minOccurs="0" name="startTime" type="xs:time" />
 <xs:element minOccurs="0" name="endTime" type="xs:time" />
+<xs:element name="disabled" type="xs:boolean" />
 <xs:element minOccurs="0" name="location" type="xs:string" />
 <xs:element minOccurs="0" name="comment" type="xs:string" />
 </xs:sequence>
@@ -175,8 +176,13 @@
 <xs:simpleType name="appointmentSummaryStatus">
 <xs:restriction base="xs:string">
 <xs:enumeration value="Created" />
+<xs:enumeration value="New" />
+<xs:enumeration value="InProgress" />
 <xs:enumeration value="Approved" />
+<xs:enumeration value="Declined" />
 <xs:enumeration value="Cancelled" />
+<xs:enumeration value="Invalidated" />
+<xs:enumeration value="Closed" />
 </xs:restriction>
 </xs:simpleType>
 </xs:schema>
