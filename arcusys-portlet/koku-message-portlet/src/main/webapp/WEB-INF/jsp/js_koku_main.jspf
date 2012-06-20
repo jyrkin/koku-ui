@@ -89,7 +89,7 @@ jQuery(document).ready(function() {
     });
 	
 	/* Input hints for text boxes */
-	$('input[title]').inputHints();
+	//$('input[title]').inputHints();
 	
 });
 		
