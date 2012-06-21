@@ -141,6 +141,7 @@ KokuTable.prototype.createMessagesTable = function() {
 	function inbox(tasks, taskType) {
 		var header =  '<tr class="task-manager-table trheader">'
 					+ '<td class="choose"><spring:message code="message.choose" /></td>'
+					+ '<td> Replied </td>'
 					+ '<td>' + formatSender(taskType) + '</td>'
 					+ '<td>' + '<spring:message code="message.subject" />' + '</td>'
 					+ '<td><spring:message code="message.received" /></td>'
@@ -190,6 +191,7 @@ KokuTable.prototype.createMessagesTable = function() {
 			}
 			
 			taskHtml += '<td class="choose">' + '<input type="checkbox" name="message" value="' + KokuUtil.escapeHTML(tasks[i]["messageId"]) + '" />' + '</td>'
+					 + '<td class="messageItem" onclick="kokuAjax.showMessage(\''+ tasks[i]["messageId"] + '\')" >' + tasks[i]["replied"] + '</td>'			
 					 + '<td class="messageItem msgReciever" onclick="kokuAjax.showMessage(\''+ tasks[i]["messageId"] + '\')" >' + KokuUtil.shorty(formatUser(tasks[i], taskType), 20) + '</td>'
 					 + '<td class="messageItem msgSubject" onclick="kokuAjax.showMessage(\''+ tasks[i]["messageId"] + '\')" >' + KokuUtil.shorty(formatSubject(tasks[i]["subject"]), 50) + '</td>'
 					 + '<td class="messageItem msgDate" onclick="kokuAjax.showMessage(\''+ tasks[i]["messageId"] + '\')" >' + KokuUtil.escapeHTML(tasks[i]["creationDate"]) + '</td>'
