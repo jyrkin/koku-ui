@@ -21,7 +21,7 @@ package fi.koku.portlet.filter.userinfo;
  */
 public abstract class UserInfo {
   
-  public static final String KEY_USER_INFO = "fi.koku.userinfo";
+  public static final String KEY_USER_INFO = "fi.koku.userinfo";  
   public static final String KEY_VETUMA_AUTHENTICATION_URL = "fi.koku.vetuma_authentication_url";
   
   private String pic;
