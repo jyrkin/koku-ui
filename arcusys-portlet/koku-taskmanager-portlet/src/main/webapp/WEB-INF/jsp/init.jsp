@@ -11,12 +11,12 @@
 <portlet:defineObjects />
 
 <%
-PortletPreferences preferences = renderRequest.getPreferences();
-String taskFilter = preferences.getValue("taskFilter", "");
-String notifFilter = preferences.getValue("notifFilter", "");
-String refreshDuration = preferences.getValue("refreshDuration", "180");
-String openForm = preferences.getValue("openForm", "1");
-String defaultTaskType = preferences.getValue("defaultTaskType", "task");
-String editable = "false";
-
+final PortletPreferences preferences = renderRequest.getPreferences();
+final String taskFilter = preferences.getValue("taskFilter", "");
+final String notifFilter = preferences.getValue("notifFilter", "");
+final String refreshDuration = preferences.getValue("refreshDuration", "180");
+final String openForm = preferences.getValue("openForm", "1");
+final String defaultTaskType = preferences.getValue("defaultTaskType", "task");
+final String editable = "false";
+final String excludeFilter = preferences.getValue("excludeFilter", "");
 %>

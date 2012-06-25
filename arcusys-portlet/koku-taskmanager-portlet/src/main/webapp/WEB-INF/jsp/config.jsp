@@ -21,8 +21,12 @@
 			<tr class="evenRow">
 				<td><spring:message code="config.notifFilter" /></td>
 				<td><input type="text" name="notifFilter" value="<%= notifFilter %>" style="width: 100px;" /></td>
-			</tr> 
+			</tr>
 			<tr>
+				<td><spring:message code="config.excludeFilter" /></td>
+				<td><input type="text" name="excludeFilter" value="<%= excludeFilter %>" style="width: 100px;" /></td>
+			</tr>
+			<tr class="evenRow"> 
 				<td><spring:message code="config.refreshDuration" /></td>
 				<td>
 					<select name="refreshDuration" id="refreshDuration">
@@ -34,7 +38,7 @@
 					</select>
 				</td>
 			</tr>
-			<tr class="evenRow"><td><spring:message code="config.openForm" /></td>
+			<tr><td><spring:message code="config.openForm" /></td>
 				<td><select name="openForm" id="openForm">
 						<option value="1">In portlet</option>
 						<option value="2">New window</option>
@@ -49,7 +53,7 @@
 					</select>
 				</td>
 			</tr>
-			<tr class="evenRow"><td><spring:message code="config.defaultTaskType" /></td>
+			<tr><td><spring:message code="config.defaultTaskType" /></td>
 				<td><select name="defaultTaskType" id="defaultTaskType">
 						<option value="task" >Task</option>
 						<option value="notification" >Notification</option>

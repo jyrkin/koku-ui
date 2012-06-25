@@ -42,6 +42,10 @@
 				<name>notifFilter</name>		
 				<value></value>
 			</preference>
+			<preference>
+				<name>excludeFilter</name>
+				<value></value>
+			</preference>
 		</portlet-preferences>
 	</portlet>
 	

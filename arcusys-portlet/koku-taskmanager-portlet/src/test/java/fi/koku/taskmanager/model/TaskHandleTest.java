@@ -22,7 +22,6 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import fi.arcusys.intalio.tms.TaskMetadata;
 import fi.arcusys.koku.common.exceptions.IntalioAuthException;
 import fi.arcusys.koku.common.exceptions.IntalioException;
 import fi.arcusys.koku.common.services.intalio.Task;
@@ -131,31 +130,31 @@ public class TaskHandleTest{
 		String actual = tester.formatTaskDate(xmlGregorianCalendar);
 		assertEquals("formatTaskDate failed", expected, actual);
 	}
-	@Ignore
-	@Test
-	public void createTaskLink() {
-		TaskMetadata task = new TaskMetadata();
-		task.setTaskType("ACTIVITY");
-		task.setDescription("task test 1");
-		task.setTaskState(null);
-		GregorianCalendar cal = (GregorianCalendar) Calendar.getInstance();
-		cal.set(2011, 4, 20, 10, 30, 20);
-		XMLGregorianCalendar xmlGregorianCalendar = null;
-		try {
-			xmlGregorianCalendar = DatatypeFactory.newInstance().newXMLGregorianCalendar(cal);
-		} catch (DatatypeConfigurationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		task.setCreationDate(xmlGregorianCalendar);
-		task.setTaskId("task-id-1");
-		String url = "http://trelx28b:8080/form.htm";
-		task.setFormUrl(url);
-		tester.setToken("testtoken");
-		String expected = "http://trelx28b:8080/form.htm?id=task-id-1&type=PATask&url=http%3A%2F%2Flocalhost%3A8080%2Fform.htm&token=testtoken&user=Ville+Virkamies&claimTaskOnOpen=false";
-		String actual = tester.createTaskLink(task);
-		assertEquals("createTask task link failed", expected, actual);
-	}
+//	@Ignore
+//	@Test
+//	public void createTaskLink() {
+//		TaskMetadata task = new TaskMetadata();
+//		task.setTaskType("ACTIVITY");
+//		task.setDescription("task test 1");
+//		task.setTaskState(null);
+//		GregorianCalendar cal = (GregorianCalendar) Calendar.getInstance();
+//		cal.set(2011, 4, 20, 10, 30, 20);
+//		XMLGregorianCalendar xmlGregorianCalendar = null;
+//		try {
+//			xmlGregorianCalendar = DatatypeFactory.newInstance().newXMLGregorianCalendar(cal);
+//		} catch (DatatypeConfigurationException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		task.setCreationDate(xmlGregorianCalendar);
+//		task.setTaskId("task-id-1");
+//		String url = "http://trelx28b:8080/form.htm";
+//		task.setFormUrl(url);
+//		tester.setToken("testtoken");
+//		String expected = "http://trelx28b:8080/form.htm?id=task-id-1&type=PATask&url=http%3A%2F%2Flocalhost%3A8080%2Fform.htm&token=testtoken&user=Ville+Virkamies&claimTaskOnOpen=false";
+//		String actual = tester.createTaskLink(task);
+//		assertEquals("createTask task link failed", expected, actual);
+//	}
 
 	@Ignore("Not Ready to Run")
 	@Test
@@ -166,100 +165,100 @@ public class TaskHandleTest{
 		int actual = tester.getTotalTasksNumber(taskType, keyword);
 		assertEquals("getTotalTasksNumber failed", expected, actual);
 	}
-	@Ignore
-	@Test
-	public void createTotalNumSubQuery() {
-		int taskType = 1;
-		String keyword = "";
-		String expected = "(T._state = TaskState.READY OR T._state = TaskState.CLAIMED) AND T._description like '%%'";
-		String actual = tester.createTotalNumSubQuery(taskType, keyword);
-		assertEquals("createTotalNumSubQuery for task failed", expected, actual);
-
-		taskType = 2;
-		keyword = "key";
-		expected = "T._state = TaskState.READY AND T._description like '%key%'";
-		actual = tester.createTotalNumSubQuery(taskType, keyword);
-		assertEquals("createTotalNumSubQuery for notification failed", expected, actual);
-
-		taskType = 3;
-		keyword = "key";
-		expected = "T._description like '%key%'";
-		actual = tester.createTotalNumSubQuery(taskType, keyword);
-		assertEquals("createTotalNumSubQuery for process failed", expected, actual);
-
-		taskType = 5;
-		keyword = "key";
-		expected = "";
-		actual = tester.createTotalNumSubQuery(taskType, keyword);
-		assertEquals("createTotalNumSubQuery for other invalid processes failed", expected, actual);
-	}
-	@Ignore
-	@Test
-	public void createTaskSubQuery() {
-		int taskType = 1;
-		String keyword = "";
-		String orderType = "description_desc";
-		String expected = "(T._state = TaskState.READY OR T._state = TaskState.CLAIMED) AND T._description like '%%' ORDER BY T._description DESC";
-		String actual = tester.createTaskSubQuery(taskType, keyword, orderType);
-		assertEquals("createTaskSubQuery for task failed", expected, actual);
-
-		taskType = 2;
-		keyword = "key";
-		expected = "T._state = TaskState.READY AND T._description like '%key%' ORDER BY T._description DESC";
-		actual = tester.createTaskSubQuery(taskType, keyword, orderType);
-		assertEquals("createTaskSubQuery for notification failed", expected, actual);
-
-		taskType = 3;
-		keyword = "key";
-		expected = "T._description like '%key%' ORDER BY T._description DESC";
-		actual = tester.createTaskSubQuery(taskType, keyword, orderType);
-		assertEquals("createTaskSubQuery for process failed", expected, actual);
-
-		taskType = 5;
-		keyword = "key";
-		expected = "";
-		actual = tester.createTaskSubQuery(taskType, keyword, orderType);
-		assertEquals("createTaskSubQuery for other invalid processes failed", expected, actual);
-	}
-	@Ignore
-	@Test
-	public void getOrderTypeStr() {
-		String orderType = "description_desc";
-		String expected = "T._description DESC";
-		String actual = tester.getOrderTypeStr(orderType);
-		assertEquals("getOrderTypeStr " + orderType + " failed", expected, actual);
-
-		orderType = "description_asc";
-		expected = "T._description ASC";
-		actual = tester.getOrderTypeStr(orderType);
-		assertEquals("getOrderTypeStr " + orderType + " failed", expected, actual);
-
-		orderType = "state_desc";
-		expected = "T._state DESC";
-		actual = tester.getOrderTypeStr(orderType);
-		assertEquals("getOrderTypeStr " + orderType + " failed", expected, actual);
-
-		orderType = "state_asc";
-		expected = "T._state ASC";
-		actual = tester.getOrderTypeStr(orderType);
-		assertEquals("getOrderTypeStr " + orderType + " failed", expected, actual);
-
-		orderType = "creationDate_desc";
-		expected = "T._creationDate DESC";
-		actual = tester.getOrderTypeStr(orderType);
-		assertEquals("getOrderTypeStr " + orderType + " failed", expected, actual);
-
-		orderType = "creationDate_asc";
-		expected = "T._creationDate ASC";
-		actual = tester.getOrderTypeStr(orderType);
-		assertEquals("getOrderTypeStr " + orderType + " failed", expected, actual);
-
-		orderType = "other";
-		expected = "T._creationDate DESC";
-		actual = tester.getOrderTypeStr(orderType);
-		assertEquals("getOrderTypeStr " + orderType + " failed", expected, actual);
-
-	}
+//	@Ignore
+//	@Test
+//	public void createTotalNumSubQuery() {
+//		int taskType = 1;
+//		String keyword = "";
+//		String expected = "(T._state = TaskState.READY OR T._state = TaskState.CLAIMED) AND T._description like '%%'";
+//		String actual = tester.createTotalNumSubQuery(taskType, keyword);
+//		assertEquals("createTotalNumSubQuery for task failed", expected, actual);
+//
+//		taskType = 2;
+//		keyword = "key";
+//		expected = "T._state = TaskState.READY AND T._description like '%key%'";
+//		actual = tester.createTotalNumSubQuery(taskType, keyword);
+//		assertEquals("createTotalNumSubQuery for notification failed", expected, actual);
+//
+//		taskType = 3;
+//		keyword = "key";
+//		expected = "T._description like '%key%'";
+//		actual = tester.createTotalNumSubQuery(taskType, keyword);
+//		assertEquals("createTotalNumSubQuery for process failed", expected, actual);
+//
+//		taskType = 5;
+//		keyword = "key";
+//		expected = "";
+//		actual = tester.createTotalNumSubQuery(taskType, keyword);
+//		assertEquals("createTotalNumSubQuery for other invalid processes failed", expected, actual);
+//	}
+//	@Ignore
+//	@Test
+//	public void createTaskSubQuery() {
+//		int taskType = 1;
+//		String keyword = "";
+//		String orderType = "description_desc";
+//		String expected = "(T._state = TaskState.READY OR T._state = TaskState.CLAIMED) AND T._description like '%%' ORDER BY T._description DESC";
+//		String actual = tester.createTaskSubQuery(taskType, keyword, orderType);
+//		assertEquals("createTaskSubQuery for task failed", expected, actual);
+//
+//		taskType = 2;
+//		keyword = "key";
+//		expected = "T._state = TaskState.READY AND T._description like '%key%' ORDER BY T._description DESC";
+//		actual = tester.createTaskSubQuery(taskType, keyword, orderType);
+//		assertEquals("createTaskSubQuery for notification failed", expected, actual);
+//
+//		taskType = 3;
+//		keyword = "key";
+//		expected = "T._description like '%key%' ORDER BY T._description DESC";
+//		actual = tester.createTaskSubQuery(taskType, keyword, orderType);
+//		assertEquals("createTaskSubQuery for process failed", expected, actual);
+//
+//		taskType = 5;
+//		keyword = "key";
+//		expected = "";
+//		actual = tester.createTaskSubQuery(taskType, keyword, orderType);
+//		assertEquals("createTaskSubQuery for other invalid processes failed", expected, actual);
+//	}
+//	@Ignore
+//	@Test
+//	public void getOrderTypeStr() {
+//		String orderType = "description_desc";
+//		String expected = "T._description DESC";
+//		String actual = tester.getOrderTypeStr(orderType);
+//		assertEquals("getOrderTypeStr " + orderType + " failed", expected, actual);
+//
+//		orderType = "description_asc";
+//		expected = "T._description ASC";
+//		actual = tester.getOrderTypeStr(orderType);
+//		assertEquals("getOrderTypeStr " + orderType + " failed", expected, actual);
+//
+//		orderType = "state_desc";
+//		expected = "T._state DESC";
+//		actual = tester.getOrderTypeStr(orderType);
+//		assertEquals("getOrderTypeStr " + orderType + " failed", expected, actual);
+//
+//		orderType = "state_asc";
+//		expected = "T._state ASC";
+//		actual = tester.getOrderTypeStr(orderType);
+//		assertEquals("getOrderTypeStr " + orderType + " failed", expected, actual);
+//
+//		orderType = "creationDate_desc";
+//		expected = "T._creationDate DESC";
+//		actual = tester.getOrderTypeStr(orderType);
+//		assertEquals("getOrderTypeStr " + orderType + " failed", expected, actual);
+//
+//		orderType = "creationDate_asc";
+//		expected = "T._creationDate ASC";
+//		actual = tester.getOrderTypeStr(orderType);
+//		assertEquals("getOrderTypeStr " + orderType + " failed", expected, actual);
+//
+//		orderType = "other";
+//		expected = "T._creationDate DESC";
+//		actual = tester.getOrderTypeStr(orderType);
+//		assertEquals("getOrderTypeStr " + orderType + " failed", expected, actual);
+//
+//	}
 
 	@Ignore
 	@Test

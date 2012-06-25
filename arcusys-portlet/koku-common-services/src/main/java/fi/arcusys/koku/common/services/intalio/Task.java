@@ -1,6 +1,6 @@
 package fi.arcusys.koku.common.services.intalio;
 
-import java.util.List;
+import fi.arcusys.intalio.tms.TaskMetadata;
 
 /**
  * task data model for task manager, modified from to intalio task object
@@ -18,7 +18,7 @@ public class Task {
 	private String link;
 	private String senderName;
 	private String formUrl;
-	
+
 	/**
 	 * Possible values:
 	 * 	* "PIPATask"
@@ -35,63 +35,76 @@ public class Task {
 		this.creationDate = creationDate;
 		this.processTaskType = processTaskType;
 	}
-		
-	public Task() {}
-	
+
+	public Task() {
+
+	}
+
+	public Task(TaskMetadata taskMetadata, String processTaskType) {
+		creationDate = taskMetadata.getCreationDate().toString();
+		description = taskMetadata.getDescription();
+		id = taskMetadata.getTaskId();
+		processId = taskMetadata.getProcessId();
+		state =taskMetadata.getTaskState();
+		type = taskMetadata.getTaskType();
+		formUrl = taskMetadata.getFormUrl();
+		this.processTaskType = processTaskType;
+	}
+
 	public String getId() {
 		return id;
 	}
-	
+
 	public String getType() {
 		return type;
 	}
-	
+
 	public String getState() {
 		return state;
 	}
-	
+
 	public String getProcessId() {
 		return processId;
 	}
 	public String getDescription() {
 		return description;
 	}
-	
+
 	public String getCreationDate() {
 		return creationDate;
 	}
-	
+
 	public String getLink() {
 		return link;
 	}
 	public void setId(String id) {
 		this.id = id;
 	}
-	
+
 	public void setType(String type) {
 		this.type = type;
 	}
-	
+
 	public void setState(String state) {
 		this.state = state;
 	}
-	
+
 	public void setProcessId(String processId) {
 		this.processId = processId;
 	}
-	
+
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	
+
 	public void setCreationDate(String creationDate) {
 		this.creationDate = creationDate;
 	}
-	
+
 	public void setLink(String link) {
 		this.link = link;
 	}
-	
+
 	/**
 	 * @return the senderName
 	 */
@@ -105,11 +118,11 @@ public class Task {
 	public final void setSenderName(String senderName) {
 		this.senderName = senderName;
 	}
-	
+
 	public void setFormUrl(String formUrl) {
 		this.formUrl = formUrl;
 	}
-	
+
 	public String getFormUrl() {
 		return formUrl;
 	}
@@ -120,5 +133,5 @@ public class Task {
 
 	public void setProcessTaskType(String processTaskType) {
 		this.processTaskType = processTaskType;
-	}	
+	}
 }

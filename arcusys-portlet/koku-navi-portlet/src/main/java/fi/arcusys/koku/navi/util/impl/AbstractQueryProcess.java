@@ -59,7 +59,7 @@ public abstract class AbstractQueryProcess implements QueryProcess {
 			try {
 				return handle.getTasksTotalNumber(filter);
 			} catch (IntalioException e) {
-				LOG.error(e);
+				LOG.error("Failed to get TotalNumber of tasks. Username: '"+username+"' Filter: '"+filter+"'", e);
 				return 0;
 			}
 		} else {

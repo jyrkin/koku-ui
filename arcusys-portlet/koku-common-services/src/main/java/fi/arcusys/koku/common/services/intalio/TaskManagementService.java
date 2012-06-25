@@ -180,8 +180,8 @@ public class TaskManagementService {
 			taskList = res.getTask();
 		} catch (InvalidParticipantTokenFault_Exception e) {
 			throw new IntalioException("getTaskList - Token: '"+token+"' InvalidParticipantTokenFault_Exception", e);
-		} catch (InvalidInputMessageFault_Exception e) {
-			throw new IntalioException("getTaskList - Token: '"+token+"' InvalidInputMessageFault_Exception", e);
+		} catch (InvalidInputMessageFault_Exception e1) {
+			throw new IntalioException("getTaskList - Token: '"+token+"' InvalidInputMessageFault_Exception", e1);
 		}
 		return taskList;
 	}

@@ -9,11 +9,13 @@ import static fi.arcusys.koku.common.util.Constants.JSON_TOKEN_STATUS;
 import static fi.arcusys.koku.common.util.Constants.JSON_TOTAL_ITEMS;
 import static fi.arcusys.koku.common.util.Constants.JSON_TOTAL_PAGES;
 import static fi.arcusys.koku.common.util.Constants.PREF_EDITABLE;
+import static fi.arcusys.koku.common.util.Constants.PREF_EXCLUDE_FILTER;
 import static fi.arcusys.koku.common.util.Constants.PREF_TASK_FILTER;
 import static fi.arcusys.koku.common.util.Constants.RESPONSE;
 import static fi.arcusys.koku.common.util.Constants.TOKEN_STATUS_INVALID;
 import static fi.arcusys.koku.common.util.Constants.TOKEN_STATUS_VALID;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -80,7 +82,8 @@ public class AjaxController {
 		final int taskType = getTaskType(taskTypeStr);
 		final String taskFilter = pref.getValue(PREF_TASK_FILTER, "");
 		final String filteredKeyword = taskFilter + '%' + ((taskFilter.equals(keyword)) ? "" : keyword);
-		JSONObject jsonModel = getJsonModel(taskType, page, filteredKeyword, orderType, token, username);
+		final List<String> excludeFilter = Arrays.asList(pref.getValue(PREF_EXCLUDE_FILTER, "").split(","));
+		JSONObject jsonModel = getJsonModel(taskType, page, filteredKeyword, excludeFilter, orderType, token, username);
 
 		Boolean editableForm = Boolean.valueOf(pref.getValue(PREF_EDITABLE, Boolean.FALSE.toString()));
 		jsonModel.put(JSON_EDITABLE, editableForm.toString());
@@ -144,6 +147,7 @@ public class AjaxController {
 			int taskType,
 			int page,
 			String keyword,
+			List<String> excludeFilter,
 			String orderType,
 			String token,
 			String username) {
@@ -161,7 +165,7 @@ public class AjaxController {
 			try {
 				String first = String.valueOf((page-1)*numPerPage);
 				String max =  String.valueOf(numPerPage);
-				tasks = taskhandle.getTasksByParams(taskType, keyword, orderType, first, max);
+				tasks = taskhandle.getTasksByParams(taskType, keyword, excludeFilter, orderType, first, max);
 				totalTasksNum = taskhandle.getTotalTasksNumber(taskType, keyword);
 				totalPages = (totalTasksNum == 0) ? 1:(int) Math.ceil((double)totalTasksNum/numPerPage);
 			} catch (IntalioException e) {
