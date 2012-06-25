@@ -174,6 +174,8 @@ public final class KksConverter {
   public CollectionState fromWsType(String status) {
     if (State.ACTIVE.toString().equals(status)) {
       return new CollectionState(State.ACTIVE);
+    } else  if ( State.DELETED.toString().equals(status) ) {
+      return new CollectionState(State.DELETED);
     }
     return new CollectionState(State.LOCKED);
   }

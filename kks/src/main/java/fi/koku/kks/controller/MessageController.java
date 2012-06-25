@@ -157,7 +157,7 @@ public class MessageController {
       
       
       boolean result = kksService.sendMessage(Utils.getPicFromSession(session), message);
-      
+            
       if ( !result ) {
         response.setRenderParameter("action", "showMessage" );
         response.setRenderParameter("pic", child.getPic());

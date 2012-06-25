@@ -98,6 +98,13 @@ public class CollectionController {
 
     try {
       KKSCollection c = kksService.getKksCollection(collection, Utils.getUserInfoFromSession(session));
+      
+      boolean deleted = false;
+      
+      if (State.DELETED.equals(c.getState().getState()) ) {
+        deleted = true;
+      }
+      
       collectionForm.setEntries(c.getEntries());
       session.setAttribute("kks.collection", c);
       String pic = Utils.getPicFromSession(session);
@@ -119,7 +126,10 @@ public class CollectionController {
       model.addAttribute("idleTime", idleTime != null ? idleTime : "720" );
       model.addAttribute("redirectTime", redirectTime != null ? redirectTime : "120" );
       
-
+      if ( deleted ) {
+        model.addAttribute("deleted", "true");
+      }
+      
       if (!model.containsAttribute("version")) {
         Version v = new Version();
         v.setName(c == null ? "" : c.getName());

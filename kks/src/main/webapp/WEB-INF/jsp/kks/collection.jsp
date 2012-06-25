@@ -252,8 +252,12 @@
 			<c:if test="${ empty_collection }">
 				<spring:message code="ui.kks.no.authorization" />
 			</c:if>
+			
+			<c:if test="${ not empty deleted }">
+				<spring:message code="ui.kks.collection.deleted" />
+			</c:if>
 
-			<c:if test="${not empty collection.collectionClass }">
+			<c:if test="${not empty collection.collectionClass && empty deleted}">
 
 				<form:form class="form-wrapper" name="entryForm"
 					commandName="collectionForm" method="post"
@@ -449,7 +453,7 @@
 
 					<div class="kks-bottom-left kks-no-print">
 						<c:if
-							test="${ not empty_collection && can_save && collection.state.active && empty print_mode}">
+							test="${ not empty_collection && can_save && collection.state.active && empty print_mode && empty deleted}">
 							<input name="save-button" type="submit"
 								class="portlet-form-button"
 								value="<spring:message code="ui.kks.save"/>">
