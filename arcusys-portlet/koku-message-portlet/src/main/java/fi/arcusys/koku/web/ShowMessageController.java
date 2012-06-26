@@ -1,26 +1,19 @@
 package fi.arcusys.koku.web;
 
-import static fi.arcusys.koku.common.util.Constants.ATTR_CURRENT_PAGE;
-import static fi.arcusys.koku.common.util.Constants.ATTR_KEYWORD;
 import static fi.arcusys.koku.common.util.Constants.ATTR_MESSAGE_ID;
 import static fi.arcusys.koku.common.util.Constants.ATTR_MY_ACTION;
-import static fi.arcusys.koku.common.util.Constants.ATTR_ORDER_TYPE;
-import static fi.arcusys.koku.common.util.Constants.ATTR_TASK_TYPE;
 import static fi.arcusys.koku.common.util.Constants.MY_ACTION_SHOW_MESSAGE;
 import static fi.arcusys.koku.common.util.Constants.VIEW_SHOW_MESSAGE;
 
 import javax.annotation.Resource;
-import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.PortletSession;
-import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -45,21 +38,21 @@ import fi.arcusys.koku.web.util.impl.ModelWrapperImpl;
 public class ShowMessageController {
 	private static final Logger LOG = LoggerFactory.getLogger(ShowMessageController.class);
 
-	
+
 	@Resource
 	private ResourceBundleMessageSource messageSource;
-	
+
 	@ActionMapping(params = "action=toMessage")
 	public void actionPageView(
 			PortletSession session,
 			@ModelAttribute(value = "message") ModelWrapper<KokuMessage> message,
 			@RequestParam(value = "messageId") String messageId,
 			ActionResponse response) {
-		
+
 		response.setRenderParameter(ATTR_MY_ACTION, MY_ACTION_SHOW_MESSAGE);
 		response.setRenderParameter(ATTR_MESSAGE_ID, messageId);
 	}
-	
+
 	/**
 	 * Shows message page
 	 * @param response RenderResponse
@@ -69,7 +62,7 @@ public class ShowMessageController {
 	public String showPageView(RenderResponse response) {
 		return VIEW_SHOW_MESSAGE;
 	}
-			
+
 	/**
 	 * Creates data model integrated into the page and stores the page
 	 * @param messageId message id
@@ -78,7 +71,7 @@ public class ShowMessageController {
 	 * @param keyword page parameter keyword
 	 * @param orderType page parameter order type
 	 * @param request RenderRequest
-	 * @return 
+	 * @return
 	 * @return message data model
 	 */
 	@ModelAttribute(value = "message")
@@ -92,7 +85,7 @@ public class ShowMessageController {
 			message = msghandle.getMessageById(messageId);
 			modelWrapper = new ModelWrapperImpl<KokuMessage>(message, ResponseStatus.OK);
 		} catch (KokuServiceException kse) {
-			LOG.error("Failed to show message details. messageId: '"+messageId + 
+			LOG.error("Failed to show message details. messageId: '"+messageId +
 					 "' username: '" + (String)portletSession.getAttribute(Constants.ATTR_USERNAME) + "'", kse);
 			modelWrapper = new ModelWrapperImpl<KokuMessage>(null, ResponseStatus.FAIL, kse.getErrorcode());
 		}

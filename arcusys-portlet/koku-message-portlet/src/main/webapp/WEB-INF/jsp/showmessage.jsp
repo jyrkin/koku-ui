@@ -127,7 +127,7 @@ public String htmlToCode(String s)
 				navigateToPage("<%= Constants.TASK_TYPE_CONSENT_ASSIGNED_CITIZEN %>");
 			},
 			redirectToBrowseWarrants: function() {
-				navigateToPage("<%= Constants.TASK_TYPE_WARRANT_BROWSE_RECEIEVED %>");
+				navigateToPage("<%= Constants.TASK_TYPE_WARRANT_BROWSE_SENT %>");
 			},
 			replyToMessage : function() {
 				window.location = "<%= NavigationPortletProperties.NAVIGATION_PORTLET_PATH %><%= NavigationPortletProperties.MESSAGES_REPLY_MESSAGE %>?MessageId=<%= messageModel.getModel().getMessageId() %>";
