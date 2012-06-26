@@ -291,8 +291,7 @@ KokuTableNavigationEmployee.prototype.cancelAppointments = function() {
 			}
 			return; // no message selected
 		}
-		
-		KokuUtil.dialogs.cancelAppointment('#cancelAppointment', function() {
+		function acceptCallback() {
 			var comment = jQuery('#kokuCancelMessage').val();
 			this.kokuAjax.cancelAppointments(messageList, targetPersons, comment, function(result) {			
 				if (result == 'OK') {
@@ -309,6 +308,7 @@ KokuTableNavigationEmployee.prototype.cancelAppointments = function() {
 			if (privilidgesError) {
 				KokuUtil.notifications().warn("<spring:message code="appointment.privilidgesError"/>");
 			}
-		}, null);
+		}
+		KokuUtil.dialogs.cancelAppointment('#cancelAppointment', acceptCallback, function(){}, "<spring:message code="appointment.dialog.cancelButton"/>", "<spring:message code="appointment.dialog.closeDialog"/>");
 	}
 

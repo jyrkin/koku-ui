@@ -55,8 +55,8 @@
   
   <c:when test="${appointment.responseStatus == 'OK'}" >
   
-  	<div id="cancelAppointment" title="Peruuta tapaaminen" style="display: none">
-		<div class="cancelMessage">Peruuta tapaaminen kirjoittamalla vapaaehtoinen saateteksti ja valitsemalla 'Lähetä peruutus'. Jos et halua peruuttaa tapaamista, paina 'Sulje dialogi' painiketta.</div>
+	<div id="cancelAppointment" title="<spring:message code="appointment.dialog.caption"/>" style="display: none">
+		<div class="cancelMessage"><spring:message code="appointment.dialog.description"/></div>
 		<textarea id="kokuCancelMessage"></textarea>
 	</div>
   	<div id="cancelAppointmentSlotDialog" title="Haluatko varmasti poistaa tämän tapaamisen?" style="display: none">

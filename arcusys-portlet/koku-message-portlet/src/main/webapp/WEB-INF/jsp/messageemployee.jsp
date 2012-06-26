@@ -291,7 +291,7 @@
 	</div>
 </div>
 
-<div id="cancelAppointment" title="<spring:message code="appointmnet.dialog.caption"/>" style="display: none">
-	<div class="cancelMessage"><spring:message code="appointmnet.dialog.description"/></div>
+<div id="cancelAppointment" title="<spring:message code="appointment.dialog.caption"/>" style="display: none">
+	<div class="cancelMessage"><spring:message code="appointment.dialog.description"/></div>
 	<textarea id="kokuCancelMessage"></textarea>
 </div>

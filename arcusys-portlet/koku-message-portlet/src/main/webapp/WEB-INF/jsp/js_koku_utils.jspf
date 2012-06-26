@@ -21,6 +21,12 @@ var KokuUtil = {
 		 * @return void
 		 */
 		cancelAppointment : function(elementId, acceptCallback, refuseCallback, acceptButtonText, refuseButtonText, width, height) {
+			if (typeof width == 'undefined') {
+				width = 500;
+			}
+			if (typeof height == 'undefined') {
+				height = 290;
+			}
 			jQuery(elementId).dialog({
 				resizable: false,
 				width: width,

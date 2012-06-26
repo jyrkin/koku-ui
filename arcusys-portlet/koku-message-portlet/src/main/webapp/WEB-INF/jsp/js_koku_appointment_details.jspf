@@ -42,7 +42,7 @@ KokuAppointmentDetails.prototype.cancelAppointment = function(appointment, targe
 	};
 	var refuseCallback = function() {};
 	
-	KokuUtil.dialogs.cancelAppointment('#cancelAppointment', acceptCallback, refuseCallback, 'Lähetä peruutus', 'Sulje dialogi', 500, 290);
+	KokuUtil.dialogs.cancelAppointment('#cancelAppointment', acceptCallback, refuseCallback, "<spring:message code="appointment.dialog.cancelButton"/>", "<spring:message code="appointment.dialog.closeDialog"/>", 500, 290);
 };
 
 KokuAppointmentDetails.prototype.disableAppointmentSlot = function(appointmentId, slotNumber) {
@@ -68,5 +68,5 @@ KokuAppointmentDetails.prototype.disableAppointmentSlot = function(appointmentId
 	};
 	var refuseCallback = function() {};
 	
-	KokuUtil.dialogs.cancelAppointment('#cancelAppointmentSlotDialog', acceptCallback, refuseCallback, "Poista tapaaminen", "Sulje dialogi", 400, 175);
+	KokuUtil.dialogs.cancelAppointment('#cancelAppointmentSlotDialog', acceptCallback, refuseCallback, "<spring:message code="appointment.dialog.deleteButton"/>", "<spring:message code="appointment.dialog.closeDialog"/>", 400, 175);
 };

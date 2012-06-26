@@ -175,9 +175,8 @@ function KokuTableNavigation(ajax) {
 		if (messageList.length == 0) {
 			return; // no message selected
 		}
-		
-		jQuery('#kokuCancelMessage').val("");
-		KokuUtil.dialogs.cancelAppointment('#cancelAppointment', function() {
+
+		function acceptCallback() {
 			var comment = jQuery('#kokuCancelMessage').val();
 			this.kokuAjax.cancelAppointments(messageList, targetPersons, comment, function(result) {			
 				if (result == 'OK') {
@@ -190,7 +189,9 @@ function KokuTableNavigation(ajax) {
 					KokuUtil.errorMsg.showErrorMessage("<spring:message code="error.unLogin" />");
 				}
 			});
-		}, null);
+		}
+		jQuery('#kokuCancelMessage').val("");
+		KokuUtil.dialogs.cancelAppointment('#cancelAppointment', acceptCallback, function(){}, "<spring:message code="appointment.dialog.cancelButton"/>", "<spring:message code="appointment.dialog.closeDialog"/>");
 	}
 		
 	/**
