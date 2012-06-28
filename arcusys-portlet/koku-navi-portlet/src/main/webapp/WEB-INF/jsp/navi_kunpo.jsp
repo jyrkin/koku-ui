@@ -50,7 +50,7 @@
 %>		
 		
 <%-- 	<li><a href="<%= frontPagePath %>">Etusivu</a></li>  --%>
-		<li id="kks"><a href="<%= kksPath %>">Sopimukset ja suunnitelmat</a>
+		<li id="kks"><a href="<%= kksPath %>">Kasvatus- ja terveystiedot</a>
 		<li id="pyh"><a href="<%= pyhPath %>">Omat tiedot</a></li>
 		
 		
