@@ -108,9 +108,9 @@
 	</div>
 	<div id="task-manager-operation" class="task-manager-operation-part">
 		<input type="button" value="<spring:message code="page.return"/>" onclick="kokuNavigationHelper.returnMainPage()" />
+		<input type="button" id="editButton" value="<spring:message code="appointment.edit.button"/>" onclick="kokuAppointmentDetails.editAppointment()" />
 		<c:if test="${appointment.model.status != 'Peruutettu'}">
 			<input type="button" id="cancelButton" value="<spring:message code="appointment.cancel.button"/>" onclick="kokuAppointmentDetails.cancelAppointment('<%= appointmentId %>', '<%= targetPerson %>')" />
 		</c:if>
-		<input type="button" id="editButton" value="<spring:message code="appointment.edit.button"/>" onclick="kokuAppointmentDetails.editAppointment()" />			
 	</div>
 </div>
