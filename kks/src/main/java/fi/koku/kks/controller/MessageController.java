@@ -57,6 +57,8 @@ public class MessageController {
   
   @Autowired
   private ApplicationContext context;
+  
+  private static String LINE_SEPARATOR = System.getProperty("line.separator");
 
   @ActionMapping(params = "action=toMessage")
   public void toChildInfo(
@@ -186,11 +188,12 @@ public class MessageController {
   private void setMessageExtraInfo(Message message) {
     String messageContent =  message.getMessage();
 
-    if  ( messageContent.endsWith("\n") || messageContent.endsWith("\r\n") ) {
+    if  ( messageContent.endsWith(LINE_SEPARATOR) ) {
       messageContent = messageContent + context.getMessage("ui.kks.send.extra.info", 
           new Object[] {""}, Locale.getDefault());        
     } else {
-      messageContent = messageContent + "\n" + context.getMessage("ui.kks.send.extra.info", 
+
+      messageContent = messageContent + LINE_SEPARATOR + context.getMessage("ui.kks.send.extra.info", 
           new Object[] {""}, Locale.getDefault());      
     }
     message.setMessage(messageContent);
