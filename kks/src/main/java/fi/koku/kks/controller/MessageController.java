@@ -11,6 +11,8 @@
  */
 package fi.koku.kks.controller;
 
+import java.util.Locale;
+
 import javax.portlet.ActionResponse;
 import javax.portlet.PortletSession;
 import javax.portlet.RenderResponse;
@@ -18,6 +20,7 @@ import javax.portlet.RenderResponse;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -51,6 +54,9 @@ public class MessageController {
   @Autowired
   @Qualifier("messageValidator")
   private Validator messageValidator;
+  
+  @Autowired
+  private ApplicationContext context;
 
   @ActionMapping(params = "action=toMessage")
   public void toChildInfo(
@@ -155,10 +161,12 @@ public class MessageController {
         return;
       }
       
+      setMessageExtraInfo(message);
       
       boolean result = kksService.sendMessage(Utils.getPicFromSession(session), message);
             
       if ( !result ) {
+        removeDefaultExtraInfo(message);
         response.setRenderParameter("action", "showMessage" );
         response.setRenderParameter("pic", child.getPic());
         response.setRenderParameter("collectionName", collectionName );
@@ -173,7 +181,29 @@ public class MessageController {
       response.setRenderParameter("message", "ui.kks.send.message.sent");
     }
     sessionStatus.setComplete();
+  }
+
+  private void setMessageExtraInfo(Message message) {
+    String messageContent =  message.getMessage();
+
+    if  ( messageContent.endsWith("\n") || messageContent.endsWith("\r\n") ) {
+      messageContent = messageContent + context.getMessage("ui.kks.send.extra.info", 
+          new Object[] {""}, Locale.getDefault());        
+    } else {
+      messageContent = messageContent + "\n" + context.getMessage("ui.kks.send.extra.info", 
+          new Object[] {""}, Locale.getDefault());      
+    }
+    message.setMessage(messageContent);
   }  
+
+  private void removeDefaultExtraInfo( Message message ) {
+    String messageContent =  message.getMessage();
+    String defaultMsg = context.getMessage("ui.kks.send.extra.info", 
+        new Object[] {""}, Locale.getDefault());
+    
+    messageContent = messageContent.replace(defaultMsg, ""); 
+    message.setMessage(messageContent);
+  }
   
   @ModelAttribute("kks_message")
   public Message getMessage(@RequestParam(value = "pic") String pic, @RequestParam(value = "childName") String childName, @RequestParam(value = "collectionName") String collectionName ) {
