@@ -81,7 +81,7 @@
                         </portlet:actionURL>">
 								<c:out value="${child.lastName }" />, <c:out
 									value="${child.firstName}" />
-							</a> <span>${child.pic}</span>
+							</a> 
 						</div>
 					</c:forEach>
 				</c:if>
@@ -135,8 +135,7 @@
 
 										<c:choose>
 											<c:when test="${selectedPic eq groupChild.pic}">
-
-												<div class="kks-left kks-pic-box">${groupChild.pic}</div>
+												
 												<div class="kks-left">
 													<strong><a
 														href="
@@ -152,7 +151,7 @@
 												<div class="kks-reset-floating"></div>
 											</c:when>
 											<c:otherwise>
-												<div class="kks-left kks-pic-box">${groupChild.pic}</div>
+												
 												<div class="kks-left">
 													<a
 														href="

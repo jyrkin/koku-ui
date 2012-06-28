@@ -38,5 +38,22 @@ public final class Utils {
   public static UserInfo getUserInfoFromSession(PortletSession session) {
     return (UserInfo) session.getAttribute(UserInfo.KEY_USER_INFO);
   }
+  
+  
+  public static String picToDate(String pic) {
+    String tmp = pic.substring(0,5);
+    StringBuilder sb = new StringBuilder();
+    
+    int counter = 0;
+    for ( char a : tmp.toCharArray() ) {      
+      if ( counter == 2 ) {
+        sb.append(".");
+        counter = 0;   
+      } 
+      sb.append(a);     
+      counter++;
+    }
+    return sb.toString();
+  }
 
 }

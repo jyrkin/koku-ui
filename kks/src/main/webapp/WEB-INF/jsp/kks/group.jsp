@@ -135,7 +135,7 @@
 						                            <portlet:param name="fromGroup" value="true" />
 						                        </portlet:actionURL>">
 											<c:out value="${groupChild.customer.name}" />
-									</a></strong>,&nbsp;<span>${groupChild.pic}</span>
+									</a></strong>
 
 								</div>
 								<div class="kks-right single-collection kks-checkbox-label">
