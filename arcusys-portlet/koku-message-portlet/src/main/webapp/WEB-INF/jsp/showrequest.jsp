@@ -177,12 +177,11 @@
 				</table> -->
 
 				<h3>
-					<spring:message code="request.missed" />
-					:
+					<spring:message code="request.missed" />:
 				</h3>
 				<c:choose>
 					<c:when test="${fn:length(request.model.unrespondedList) == 0}">
-						<spring:message code="request.none" />
+						<div><spring:message code="request.none" /></div>
 					</c:when>
 					<c:otherwise>
 						<table>
@@ -198,6 +197,7 @@
 						</table>
 					</c:otherwise>
 				</c:choose>
+				</br>
 				<div id="export">
 					<input type="button"
 						value="<spring:message code="request.export"/>"
