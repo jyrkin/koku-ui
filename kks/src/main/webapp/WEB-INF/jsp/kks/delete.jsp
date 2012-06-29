@@ -32,6 +32,7 @@
 	<portlet:param name="pic" value="${child.pic}" />
 	<portlet:param name="collection" value="${collection.id}" />
 	<portlet:param name="collectionName" value="${collection.name}" />
+	<portlet:param name="${csrf_token}" value="${csrf_token_value}" />
 	<portlet:param name="collectionType"
 		value="${collection.collectionClass.typeCode}" />
 	<c:if test="${not empty fromGroup}">

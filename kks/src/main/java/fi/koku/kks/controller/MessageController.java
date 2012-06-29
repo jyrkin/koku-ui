@@ -14,6 +14,7 @@ package fi.koku.kks.controller;
 import java.util.Locale;
 
 import javax.portlet.ActionResponse;
+import javax.portlet.PortletRequest;
 import javax.portlet.PortletSession;
 import javax.portlet.RenderResponse;
 
@@ -36,6 +37,7 @@ import fi.koku.kks.model.KksService;
 import fi.koku.kks.model.Message;
 import fi.koku.kks.model.Person;
 import fi.koku.kks.ui.common.utils.Utils;
+import fi.koku.portlet.filter.userinfo.SecurityUtils;
 
 /**
  * Controller for child info.
@@ -101,6 +103,7 @@ public class MessageController {
     model.addAttribute("childName", childName);
     model.addAttribute("collectionName", collectionName);
     model.addAttribute("error", error);
+    model.addAttribute(SecurityUtils.KEY_CSRF_TOKEN, SecurityUtils.getCSRFTokenFromSession(session));    
     
     if (StringUtils.isNotEmpty(fromGroup)) {
       model.addAttribute("fromGroup", fromGroup);
@@ -125,11 +128,12 @@ public class MessageController {
     model.addAttribute("childName", childName);
     model.addAttribute("collectionName", collectionName);
     model.addAttribute("error", error);
+    model.addAttribute(SecurityUtils.KEY_CSRF_TOKEN, SecurityUtils.getCSRFTokenFromSession(session));
     return "message";
   }
 
   @ActionMapping(params = "action=sendMessage")
-  public void send(PortletSession session, @RequestParam(value = "collectionName") String collectionName, @RequestParam(value = "childName") String childName, 
+  public void send(PortletRequest request, PortletSession session, @RequestParam(value = "collectionName") String collectionName, @RequestParam(value = "childName") String childName, 
       @RequestParam(value = "cancel", required = false ) Boolean cancel,
       @RequestParam(value = "fromGroup", required = false) String fromGroup,
       @RequestParam(value = "selected", required = false) String selected,
@@ -137,6 +141,11 @@ public class MessageController {
       @ModelAttribute(value = "kks_message") Message message,
       BindingResult errors, ActionResponse response,
       SessionStatus sessionStatus) {
+    
+    if ( !SecurityUtils.hasValidCSRFToken(request) ) {
+      Utils.setCsrfErrorPage(response, sessionStatus);
+      return;
+    }
     
     if (StringUtils.isNotEmpty(fromGroup)) {
       response.setRenderParameter("fromGroup", fromGroup);

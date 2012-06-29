@@ -16,9 +16,11 @@
 </portlet:renderURL>
 <portlet:actionURL var="searchActionUrl">
 	<portlet:param name="action" value="searchChild" />
+	<portlet:param name="${csrf_token}" value="${csrf_token_value}" />	
 </portlet:actionURL>
 <portlet:actionURL var="toGroupActionUrl">
 	<portlet:param name="action" value="toGroupActions" />
+	<portlet:param name="${csrf_token}" value="${csrf_token_value}" />	
 </portlet:actionURL>
 
 <c:set var="municipal_employee" value="${true}" scope="session" />
@@ -78,6 +80,7 @@
                         <portlet:actionURL>
                             <portlet:param name="action" value="toChildInfo" />
                             <portlet:param name="pic" value="${child.pic}" />
+                            <portlet:param name="${csrf_token}" value="${csrf_token_value}" />	
                         </portlet:actionURL>">
 								<c:out value="${child.lastName }" />, <c:out
 									value="${child.firstName}" />
@@ -121,6 +124,7 @@
 			                        	<portlet:actionURL>
 											<portlet:param name="action" value="toGroupActions" />
 											<portlet:param name="selected" value="${group}" />
+											<portlet:param name="${csrf_token}" value="${csrf_token_value}" />	
 										</portlet:actionURL>">
 										<spring:message code="ui.kks.group.collections" />
 									</a>
@@ -143,6 +147,7 @@
 								                            <portlet:param name="action" value="toChildInfo" />
 								                            <portlet:param name="pic" value="${groupChild.pic}" />
 								                            <portlet:param name="selected" value="${group}" />
+								                            <portlet:param name="${csrf_token}" value="${csrf_token_value}" />	
 								                        </portlet:actionURL>">
 															<c:out value="${groupChild.sname }" />, <c:out
 																value="${groupChild.fname}" />
@@ -159,6 +164,7 @@
 						                            <portlet:param name="action" value="toChildInfo" />
 						                            <portlet:param name="pic" value="${groupChild.pic}" />
 						                            <portlet:param name="selected" value="${group}" />
+						                           	<portlet:param name="${csrf_token}" value="${csrf_token_value}" />	
 						                        </portlet:actionURL>">
 														<c:out value="${groupChild.sname }" />, <c:out
 															value="${groupChild.fname}" />
@@ -180,6 +186,7 @@
 									<portlet:param name="action" value="searchGroup" />
 									<portlet:param name="pic" value="${child.pic}" />
 									<portlet:param name="selected" value="${group}" />
+									<portlet:param name="${csrf_token}" value="${csrf_token_value}" />		
 								</portlet:actionURL>">
 								<c:out value="${group}" />
 							</a>

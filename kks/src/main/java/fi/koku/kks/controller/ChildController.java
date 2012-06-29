@@ -12,6 +12,7 @@
 package fi.koku.kks.controller;
 
 import javax.portlet.ActionResponse;
+import javax.portlet.PortletRequest;
 import javax.portlet.PortletSession;
 import javax.portlet.RenderResponse;
 
@@ -34,6 +35,7 @@ import fi.koku.kks.model.Creation;
 import fi.koku.kks.model.KksService;
 import fi.koku.kks.model.Person;
 import fi.koku.kks.ui.common.utils.Utils;
+import fi.koku.portlet.filter.userinfo.SecurityUtils;
 import fi.koku.services.entity.kks.v1.ServiceFault;
 
 /**
@@ -55,15 +57,21 @@ public class ChildController {
       .getLogger(ChildController.class);
 
   @ActionMapping(params = "action=toChildInfo")
-  public void toChildInfo(
+  public void toChildInfo( PortletRequest request, PortletSession session,
       @RequestParam(value = "selected", required = false) String selected,
       @RequestParam(value = "fromGroup", required = false) String fromGroup,
       @ModelAttribute(value = "child") Person child,
       BindingResult bindingResult, ActionResponse response,
       SessionStatus sessionStatus) {
     LOG.debug("toChildInfo");
+    
+    if ( !SecurityUtils.hasValidCSRFToken(request) ) {
+      Utils.setCsrfErrorPage(response, sessionStatus);
+      return;
+    }
+    
     response.setRenderParameter("action", "showChild");
-    response.setRenderParameter("pic", child.getPic());
+    response.setRenderParameter("pic", child.getPic());    
 
     if (StringUtils.isNotEmpty(selected)) {
       response.setRenderParameter("selected", selected);
@@ -77,7 +85,7 @@ public class ChildController {
   }
 
   @RenderMapping(params = "action=showChild")
-  public String show(PortletSession session,
+  public String show(PortletRequest request, PortletSession session,
       @ModelAttribute(value = "child") Person child,
       @RequestParam(value = "error", required = false) String error,
       @RequestParam(value = "message", required = false) String message,
@@ -87,6 +95,7 @@ public class ChildController {
     LOG.debug("show child");
 
     try {
+      
       String pic = Utils.getPicFromSession(session);
 
       if (StringUtils.isEmpty(child.getFirstName())) {
@@ -100,6 +109,7 @@ public class ChildController {
           kksService.searchPersonCreatableCollections(child, pic));
       model.addAttribute("registries", kksService.getAuthorizedRegistries(pic));
       model.addAttribute("kksUser", pic);
+      model.addAttribute(SecurityUtils.KEY_CSRF_TOKEN, SecurityUtils.getCSRFTokenFromSession(session));
 
       if (!model.containsAttribute("creation")) {
         model.addAttribute("creation", new Creation());
@@ -130,7 +140,7 @@ public class ChildController {
   }
 
   @ActionMapping(params = "action=sendConsentRequest")
-  public void sendConsentRequest(PortletSession session,
+  public void sendConsentRequest(PortletRequest request,PortletSession session,
       @ModelAttribute(value = "child") Person child,
       @RequestParam String collectionId, @RequestParam String consent,
       @RequestParam(value = "fromGroup", required = false) String fromGroup,

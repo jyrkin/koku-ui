@@ -8,6 +8,8 @@
  If you did not receive a license, please contact the copyright holder
  (kohtikumppanuutta@ixonos.com).
 --%>
+<%@page import="fi.koku.portlet.filter.userinfo.SecurityUtils"%>
+<%@page	import="javax.portlet.PortletSession"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@ taglib uri="http://java.sun.com/portlet" prefix="portlet"%>
@@ -20,4 +22,9 @@
 <%@ page contentType="text/html" isELIgnored="false"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
+
 <portlet:defineObjects />
+
+<c:set var="csrf_token" value="<%=SecurityUtils.KEY_CSRF_TOKEN%>" />
+<c:set var="csrf_token_value" value="${koku_csrf_token}" />
+
