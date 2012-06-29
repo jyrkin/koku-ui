@@ -64,9 +64,9 @@ public String htmlToCode(String s)
 		List<KokuUser> missingUsers = message.getDeliveryFailedTo();
 		
 		if (!missingUsers.isEmpty()) {
-	for (KokuUser user : missingUsers) {
-		missingUserNames.add(user.getFullName());
-	}
+			for (KokuUser user : missingUsers) {
+				missingUserNames.add(user.getFullName());
+			}
 		}
 		usernameArray = JSONArray.fromObject(missingUserNames);
 	}
@@ -128,6 +128,9 @@ public String htmlToCode(String s)
 			},
 			redirectToBrowseWarrants: function() {
 				navigateToPage("<%= Constants.TASK_TYPE_WARRANT_BROWSE_SENT %>");
+			},
+			redirectToBrowseReceivedWarrants: function() {
+				navigateToPage("<%= Constants.TASK_TYPE_WARRANT_BROWSE_RECEIEVED %>");
 			},
 			replyToMessage : function() {
 				window.location = "<%= NavigationPortletProperties.NAVIGATION_PORTLET_PATH %><%= NavigationPortletProperties.MESSAGES_REPLY_MESSAGE %>?MessageId=<%= messageModel.getModel().getMessageId() %>";
