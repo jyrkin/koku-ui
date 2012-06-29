@@ -25,6 +25,7 @@ import fi.koku.portlet.filter.userinfo.UserInfo;
  */
 public class UserInfoUtils {
 
+  
   //Singleton
   private UserInfoUtils() {}
 
@@ -69,5 +70,7 @@ public class UserInfoUtils {
   public static UserInfo getUserInfoFromSession(PortletSession session) {
     return (UserInfo) session.getAttribute(UserInfo.KEY_USER_INFO);
   }
+  
+ 
   
 }
