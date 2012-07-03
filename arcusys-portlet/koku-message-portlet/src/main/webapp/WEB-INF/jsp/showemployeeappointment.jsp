@@ -100,7 +100,12 @@
 					<br />
 					<c:out value="Klo: ${slot.startTime} - ${slot.endTime}" />
 					<c:if test="<%= !appointment.getStatus().equals("Peruutettu") && currentUserId != null && currentUserId.equals(senderUserId)%>">
-					<p><input id="slotCancelButton${slot.slotNumber}" type="button" value="<spring:message code="appointment.dialog.deleteButton" />" onclick="kokuAppointmentDetails.disableAppointmentSlot(<%= appointmentId %>, <c:out value="${slot.slotNumber}" />)" /></p>
+					<br />
+					<br />
+					<input id="slotCancelButton${slot.slotNumber}" type="button"
+							value="<spring:message code="appointment.dialog.deleteButton" />"
+							onclick="kokuAppointmentDetails.disableAppointmentSlot(<%= appointmentId %>, <c:out value="${slot.slotNumber}" />)"
+					/>
 					</c:if>
 				</td>
 				<td class="location"><c:out value="${slot.location}" /></td>
@@ -120,28 +125,39 @@
 		<c:if test="${fn:length(appointment.model.unapprovedSlots) > 0}">
 		<h3><spring:message code="appointment.unapprovedSlots"/></h3>
 		<table class="request-table employee">
+			<c:if test="<%= !appointment.getStatus().equals("Peruutettu") && currentUserId != null && currentUserId.equals(senderUserId)%>">
+			<colgroup id="unapprovedMeetingDelete"></colgroup>
+			</c:if>
 			<colgroup id="unapprovedMeetingDateTime"></colgroup>
 			<colgroup id="unapprovedMeetingLocation"></colgroup>
 			<colgroup id="unapprovedMeetingComment"></colgroup>
 			<tr>
+				<c:if test="<%= !appointment.getStatus().equals("Peruutettu") && currentUserId != null && currentUserId.equals(senderUserId)%>">
+				<th><spring:message code="status"/></th>
+				</c:if>
 				<th><spring:message code="appointment.time"/></th>
 				<th><spring:message code="appointment.location"/></th>
 				<th><spring:message code="appointment.comment"/></th>
 			</tr>
 			<c:forEach var="slot" items="${appointment.model.unapprovedSlots}" varStatus="loopStatus">
 			<tr class="<c:out value="${loopStatus.index % 2 == 0 ? 'oddRow' : 'evenRow' }" />">
+				<c:if test="<%= !appointment.getStatus().equals("Peruutettu") && currentUserId != null && currentUserId.equals(senderUserId)%>">
+				<td class="unapprovedCancelMeeting">
+					<c:choose> <c:when test="${!slot.disabled}">
+					<input id="slotCancelButton${slot.slotNumber}"
+							type="button" value="<spring:message code="appointment.deleteTimeSlot" />"
+							onclick="kokuAppointmentDetails.disableAppointmentSlot(<%= appointmentId %>, <c:out value="${slot.slotNumber}" />)"
+					/>
+					</c:when> <c:otherwise>
+						<spring:message code="deleted" />
+					</c:otherwise>
+					</c:choose>
+				</td>
+				</c:if>
 				<td>
 					<c:out value="${slot.appointmentDate}" />
 					<br />
 					<c:out value="Klo: ${slot.startTime} - ${slot.endTime}" />
-					<c:if test="<%= !appointment.getStatus().equals("Peruutettu") && currentUserId != null && currentUserId.equals(senderUserId)%>">
-					<c:choose> <c:when test="${!slot.disabled}">
-						<p><input id="slotCancelButton${slot.slotNumber}" type="button" value="<spring:message code="appointment.dialog.deleteButton" />" onclick="kokuAppointmentDetails.disableAppointmentSlot(<%= appointmentId %>, <c:out value="${slot.slotNumber}" />)" /></p>
-					</c:when> <c:otherwise>
-						<p class=""><spring:message code="deleted" /></p>
-					</c:otherwise>
-					</c:choose>
-					</c:if>
 				</td>
 				<td><c:out value="${slot.location}" /></td>
 				<td><c:out value="${slot.comment}" /></td>
@@ -219,7 +235,10 @@
 	<div id="task-manager-operation" class="task-manager-operation-part">
 		<input type="button" value="<spring:message code="page.return"/>" onclick="kokuNavigationHelper.returnMainPage()" />
 		<c:if test="<%= !appointment.getStatus().equals("Peruutettu") && currentUserId != null && currentUserId.equals(senderUserId)%>">
-			<input type="button" id="cancelButton" value="<spring:message code="appointment.cancel.button"/>" onclick="kokuAppointmentDetails.cancelAppointment('<%= appointmentId %>')" />
+		<input type="button" id="cancelButton"
+				value="<spring:message code="appointment.cancel.button"/>"
+				onclick="kokuAppointmentDetails.cancelAppointment('<%= appointmentId %>')"
+		/>
 		</c:if>
 	</div>
 </div>

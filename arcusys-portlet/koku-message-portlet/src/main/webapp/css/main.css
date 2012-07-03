@@ -472,6 +472,16 @@
 		font-weight: bold;
 	}
 	
+	.request-table th,
+	.request-table td {
+		padding: 6px; /* cell padding */
+		border: 0px solid; /* cell spacing */
+		text-align: left;
+		word-wrap: break-word;
+		word-break: break-all;
+		overflow: hidden;
+	}
+	
 	.request-table td.question {
 		width: 35%; padding-right: 18px;
 	}
@@ -485,7 +495,7 @@
 	}
 
 	#acceptedMeetingDateTime {
-		width: 15%;
+		width: 17%;
 	}
 
 	#acceptedMeetingLocation {
@@ -493,15 +503,19 @@
 	}
 
 	#acceptedMeetingChild {
-		width: 15%;
+		width: 19%;
 	}
 
 	#acceptedMeetingRecipients {
-		width: 15%;
+		width: 19%;
 	}
 	
 	#acceptedMeetingComment {
-		width: 40%;
+		width: 30%;
+	}
+
+	#unapprovedMeetingDelete {
+		width: 10%;
 	}
 
 	#unapprovedMeetingDateTime {
@@ -509,21 +523,11 @@
 	}
 
 	#unapprovedMeetingLocation {
-		width: 30%;
+		width: 20%;
 	}
 	
 	#unapprovedMeetingComment {
 		width: 50%;
-	}
-	
-	.request-table th,
-	.request-table td {
-		padding: 6px; /* cell padding */
-		border: 0px solid; /* cell spacing */
-		text-align: left;
-		word-wrap: break-word;
-		word-break: break-all;
-		overflow: hidden;
 	}
 	
 	#show-message .request-table td {
