@@ -108,6 +108,9 @@ public String htmlToCode(String s)
 				} else if (KokuMessage.portal == '<%= Constants.PORTAL_MODE_LOORA %>') {
 					KokuMessage.employee.redirectToAppointmentsReady();
 				}
+			},
+			replyToMessage : function() {
+				window.location = "<%= NavigationPortletProperties.NAVIGATION_PORTLET_PATH %><%= NavigationPortletProperties.MESSAGES_REPLY_MESSAGE %>?MessageId=<%= messageModel.getModel().getMessageId() %>";
 			}
 		},
 		citizen : {
@@ -128,9 +131,6 @@ public String htmlToCode(String s)
 			},
 			redirectToBrowseWarrants: function() {
 				navigateToPage("<%= Constants.TASK_TYPE_WARRANT_BROWSE_SENT %>");
-			},
-			replyToMessage : function() {
-				window.location = "<%= NavigationPortletProperties.NAVIGATION_PORTLET_PATH %><%= NavigationPortletProperties.MESSAGES_REPLY_MESSAGE %>?MessageId=<%= messageModel.getModel().getMessageId() %>";
 			}
 		},
 		
@@ -208,8 +208,8 @@ public String htmlToCode(String s)
 	<div id="failedEmailDelivery"></div>
 	<div id="task-manager-operation" class="task-manager-operation-part">
 		<input type="button" value="<spring:message code="page.return"/>" onclick="kokuNavigationHelper.returnMainPage()" />
-		<% if (Properties.IS_KUNPO_PORTAL && !messageModel.getModel().isReplyDisabled()) { %>
-		<input type="button" value="<spring:message code="message.replyMessage"/>" onclick="KokuMessage.citizen.replyToMessage()" />
+		<% if (!messageModel.getModel().isReplyDisabled()) { %>
+		<input type="button" value="<spring:message code="message.replyMessage"/>" onclick="KokuMessage.common.replyToMessage()" />
 		<% } %>
 	</div>
 </div>

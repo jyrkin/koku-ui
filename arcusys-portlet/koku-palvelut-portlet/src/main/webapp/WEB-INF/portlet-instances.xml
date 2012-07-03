@@ -275,7 +275,34 @@
             </policy-permission>
          </security-constraint>
       </instance>
-   </deployment>   
+   </deployment>
+   
+   <deployment>
+      <instance>
+         <instance-id>ApViestiVastaaminen</instance-id>
+         <portlet-ref>palvelut-portlet</portlet-ref>
+         <preferences>
+			<preference>
+				<name>showOnlyForm</name>
+				<value>0</value>
+			</preference>	
+			<preference>
+				<name>showOnlyFormByDescription</name>
+				<value>Virkailija vastaa käyttäjäviestiin</value>
+			</preference>
+			<preference>
+				<name>useTaskId</name>
+				<value>false</value>
+			</preference>
+		</preferences>
+         <security-constraint>
+            <policy-permission>
+               <action-name>view</action-name>
+               <unchecked/>
+            </policy-permission>
+         </security-constraint>
+      </instance>
+   </deployment>  
    
    <!-- END: Employee -->
    
@@ -283,5 +310,7 @@
    
    
    <!-- END: Citizen -->
+   
+   
    
 </deployments>
