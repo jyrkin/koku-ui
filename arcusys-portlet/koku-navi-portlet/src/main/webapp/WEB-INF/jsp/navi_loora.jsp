@@ -58,7 +58,7 @@
 %>		
 		
 		<li><a href="<%= frontPagePath %>">Etusivu</a></li>
-		<li id="kks"><a href="<%= kksPath %>">Sopimukset ja suunnitelmat</a>
+		<li id="kks"><a href="<%= kksPath %>">Kasvatus- ja terveystiedot</a>
 		<li id="lok"><a href="<%= lokPath %>">Lokihallinta</a></li>
 		
 		<!--  VIESTIT -->

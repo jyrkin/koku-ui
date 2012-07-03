@@ -12,6 +12,7 @@
 
 
 <portlet:renderURL var="homeUrl">
+	<portlet:param name="${csrf_token}" value="${csrf_token_value}" />	
 	<c:choose>
 		<c:when test="${not empty fromGroup}">
 			<portlet:param name="action" value="showGroup" />
@@ -35,6 +36,7 @@
 <portlet:actionURL var="creationActionUrl">
 	<portlet:param name="action" value="createCollection" />
 	<portlet:param name="pic" value="${child.pic}" />
+	<portlet:param name="${csrf_token}" value="${csrf_token_value}" />	
 	<c:if test="${not empty fromGroup}">
 		<portlet:param name="fromGroup" value="true" />
 	</c:if>
@@ -45,6 +47,7 @@
 <portlet:actionURL var="searchUrl">
 	<portlet:param name="action" value="searchEntries" />
 	<portlet:param name="pic" value="${child.pic}" />
+	<portlet:param name="${csrf_token}" value="${csrf_token_value}" />		
 	<c:if test="${not empty fromGroup}">
 		<portlet:param name="fromGroup" value="true" />
 	</c:if>
@@ -65,6 +68,7 @@
 <portlet:actionURL var="deleteCollectionURL">
 	<portlet:param name="action" value="toDeleteConfirmation" />
 	<portlet:param name="pic" value="${child.pic}" />
+	<portlet:param name="${csrf_token}" value="${csrf_token_value}" />		
 	<c:if test="${not empty fromGroup}">
 		<portlet:param name="fromGroup" value="true" />
 	</c:if>
@@ -76,6 +80,7 @@
 	<portlet:param name="action" value="toMessage" />
 	<portlet:param name="pic" value="${child.pic}" />
 	<portlet:param name="childName" value="${child.name}" />
+	<portlet:param name="${csrf_token}" value="${csrf_token_value}" />		
 	<c:if test="${not empty fromGroup}">
 		<portlet:param name="fromGroup" value="true" />
 	</c:if>
@@ -152,6 +157,7 @@
 															<portlet:param name="action" value="showCollection" />
 															<portlet:param name="pic" value="${child.pic}" />
 															<portlet:param name="collection" value="${collection.id}" />
+															<portlet:param name="${csrf_token}" value="${csrf_token_value}" />	
 															<c:if test="${not empty fromGroup}">
 																<portlet:param name="fromGroup" value="true" />
 															</c:if>
@@ -195,6 +201,7 @@
 							                            <portlet:param name="action" value="lock" />
 							                            <portlet:param name="pic" value="${child.pic}" />
 							                            <portlet:param name="collection" value="${collection.id}" />
+							                          	<portlet:param name="${csrf_token}" value="${csrf_token_value}" />	  
 							                            <c:if test="${not empty fromGroup}">
 															<portlet:param name="fromGroup" value="true" />
 														</c:if>
@@ -215,6 +222,7 @@
 	                                                        <portlet:param name="action" value="activate" />
 	                                                        <portlet:param name="pic" value="${child.pic}" />
 	                                                        <portlet:param name="collection" value="${collection.id}" />
+	                                                   	    <portlet:param name="${csrf_token}" value="${csrf_token_value}" />	     
 	                                                        <c:if test="${not empty fromGroup}">
 																<portlet:param name="fromGroup" value="true" />
 															</c:if>

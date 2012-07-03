@@ -18,6 +18,7 @@ package fi.koku.portlet.filter.userinfo;
  */
 
 import java.io.IOException;
+import java.security.SecureRandom;
 import java.util.Enumeration;
 
 import javax.portlet.ActionRequest;
@@ -127,6 +128,7 @@ public class UserInfoPortletFilter implements RenderFilter, ActionFilter, EventF
     if (isAuthorized(request, response)) {
       // Allow filter chaining
       try {
+        addCsrfTokenIntoSession(request, response);
         filterChain.doFilter(request, response);
       } catch (IOException e) {
         log.error("Failed to doFilterChain", e);
@@ -147,10 +149,11 @@ public class UserInfoPortletFilter implements RenderFilter, ActionFilter, EventF
     log.debug("Entered UserInfo filter on actionPhase");
 
     addUserInfoToSession(actReq, actRes);
-
+    
     if (isAuthorized(actReq, actRes)) {
       // Allow filter chaining
       try {
+        addCsrfTokenIntoSession(actReq, actRes);
         filterChain.doFilter(actReq, actRes);
       } catch (IOException e) {
         log.error("Failed to doFilterChain", e);
@@ -186,6 +189,12 @@ public class UserInfoPortletFilter implements RenderFilter, ActionFilter, EventF
 
     request.getPortletSession().setAttribute(UserInfo.KEY_USER_INFO, userInfo);
 
+  }
+  
+  private void addCsrfTokenIntoSession( PortletRequest request, PortletResponse response ) throws IOException, PortletException {
+    if ( SecurityUtils.getCSRFTokenFromSession(request) == null ) {
+        request.getPortletSession().setAttribute(SecurityUtils.KEY_CSRF_TOKEN, generateCsrfToken() );
+    }
   }
 
   private void setAuthenticationURL(PortletRequest request, PortletResponse response, UserInfo userInfo) {
@@ -269,6 +278,7 @@ public class UserInfoPortletFilter implements RenderFilter, ActionFilter, EventF
     if (isAuthorized(request, response)) {
       // Allow filter chaining
       try {
+        addCsrfTokenIntoSession(request, response);
         chain.doFilter(request, response);
       } catch (IOException e) {
         log.error("Failed to doFilterChain", e);
@@ -293,6 +303,7 @@ public class UserInfoPortletFilter implements RenderFilter, ActionFilter, EventF
     if (isAuthorized(request, response)) {
       // Allow filter chaining
       try {
+        addCsrfTokenIntoSession(request, response);
         chain.doFilter(request, response);
       } catch (IOException e) {
         log.error("Failed to doFilterChain", e);
@@ -319,6 +330,13 @@ public class UserInfoPortletFilter implements RenderFilter, ActionFilter, EventF
     }
     
     return StringUtils.isNotEmpty(ui.getPic());
+  }
+  
+  private String generateCsrfToken() {
+    long seed = System.currentTimeMillis(); 
+    SecureRandom r = new SecureRandom();
+    r.setSeed(seed);
+    return Long.toString(seed) + Long.toString(Math.abs(r.nextLong()));
   }
 
   private boolean isAuthorized(PortletRequest request, PortletResponse response) throws IOException,

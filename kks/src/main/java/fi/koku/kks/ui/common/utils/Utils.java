@@ -11,8 +11,14 @@
  */
 package fi.koku.kks.ui.common.utils;
 
+import javax.portlet.ActionResponse;
 import javax.portlet.PortletSession;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.support.SessionStatus;
+
+import fi.koku.kks.controller.ChildController;
 import fi.koku.portlet.filter.userinfo.UserInfo;
 
 /**
@@ -23,6 +29,9 @@ import fi.koku.portlet.filter.userinfo.UserInfo;
  */
 public final class Utils {
 
+  private static final Logger LOG = LoggerFactory
+      .getLogger(Utils.class);
+  
   private Utils() {
 
   }
@@ -37,6 +46,34 @@ public final class Utils {
 
   public static UserInfo getUserInfoFromSession(PortletSession session) {
     return (UserInfo) session.getAttribute(UserInfo.KEY_USER_INFO);
+  }
+  
+  
+  public static String picToDate(String pic) {
+    String tmp = pic.substring(0,5);
+    StringBuilder sb = new StringBuilder();
+    
+    int counter = 0;
+    for ( char a : tmp.toCharArray() ) {      
+      if ( counter == 2 ) {
+        sb.append(".");
+        counter = 0;   
+      } 
+      sb.append(a);     
+      counter++;
+    }
+    return sb.toString();
+  }
+  
+  public static void setCsrfErrorPage(ActionResponse response,
+      SessionStatus sessionStatus) {
+    LOG.error("Possible CSRF attack detected, forwarding to error view!");
+    response.setRenderParameter("action", "showCsrfError");
+    sessionStatus.setComplete();
+  }
+  
+  public static String getCsrfErrorPage() {
+    return "error";
   }
 
 }

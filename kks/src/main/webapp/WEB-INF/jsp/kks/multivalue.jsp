@@ -55,7 +55,8 @@
 	<portlet:param name="pic" value="${child.pic}" />
 	<portlet:param name="collection" value="${collection.id}" />
 	<portlet:param name="valueId" value="${valueId}" />
-	<portlet:param name="value" value="${value}" />
+	<portlet:param name="value" value="${value}" />	
+	<portlet:param name="${csrf_token}" value="${csrf_token_value}" />		
 
 	<c:if test="${ not empty entry }">
 		<portlet:param name="entryId" value="${entry.id}" />
@@ -101,7 +102,7 @@
 			<form:form name="addMultivalue" commandName="value" method="post"
 				action="${addMultivalue}">
 				<input type="hidden" name="entryType" value="${type.id }" />
-
+				<input type="hidden" name="${csrf_token}" value="${csrf_token_value}"/>
 				<span class="portlet-form-field-label"> <c:out
 						value="${type.name }" />
 

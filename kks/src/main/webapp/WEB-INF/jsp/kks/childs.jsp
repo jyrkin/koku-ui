@@ -48,6 +48,7 @@
 						<portlet:actionURL>
 							<portlet:param name="action" value="toChildInfo" />
 							<portlet:param name="pic" value="${child.pic}" />
+							<portlet:param name="${csrf_token}" value="${csrf_token_value}" />	
 						</portlet:actionURL>">
 							<c:out value="${child.lastName}" />, <c:out
 								value="${child.firstName}" />

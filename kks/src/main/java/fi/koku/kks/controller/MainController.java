@@ -31,6 +31,7 @@ import org.springframework.web.portlet.bind.annotation.RenderMapping;
 import fi.koku.kks.model.KksService;
 import fi.koku.kks.model.Person;
 import fi.koku.kks.ui.common.utils.Utils;
+import fi.koku.portlet.filter.userinfo.SecurityUtils;
 import fi.koku.settings.KoKuPropertiesUtil;
 
 /**
@@ -50,6 +51,8 @@ public class MainController {
   @RenderMapping
   public String render(PortletSession session, RenderRequest req, Model model) {
 
+    model.addAttribute(SecurityUtils.KEY_CSRF_TOKEN, SecurityUtils.getCSRFTokenFromSession(session));
+    
     String kunpo = KoKuPropertiesUtil.get("environment.name");
     if ("kunpo".equalsIgnoreCase(kunpo)) {
       model.addAttribute("childs", getChilds(session));
@@ -60,6 +63,12 @@ public class MainController {
           kksService.getGroups(Utils.getPicFromSession(session)));
       return "search";
     }
+  }
+  
+
+  @RenderMapping(params = "action=showCsrfError")
+  public String showError(PortletSession session, RenderRequest req, Model model) {
+      return "error";
   }
 
   @ActionMapping(params = "action=logoutKKS")

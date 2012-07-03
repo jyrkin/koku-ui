@@ -11,13 +11,17 @@
  */
 package fi.koku.kks.controller;
 
+import java.util.Locale;
+
 import javax.portlet.ActionResponse;
+import javax.portlet.PortletRequest;
 import javax.portlet.PortletSession;
 import javax.portlet.RenderResponse;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -33,6 +37,7 @@ import fi.koku.kks.model.KksService;
 import fi.koku.kks.model.Message;
 import fi.koku.kks.model.Person;
 import fi.koku.kks.ui.common.utils.Utils;
+import fi.koku.portlet.filter.userinfo.SecurityUtils;
 
 /**
  * Controller for child info.
@@ -51,6 +56,11 @@ public class MessageController {
   @Autowired
   @Qualifier("messageValidator")
   private Validator messageValidator;
+  
+  @Autowired
+  private ApplicationContext context;
+  
+  private static String LINE_SEPARATOR = System.getProperty("line.separator");
 
   @ActionMapping(params = "action=toMessage")
   public void toChildInfo(
@@ -93,6 +103,7 @@ public class MessageController {
     model.addAttribute("childName", childName);
     model.addAttribute("collectionName", collectionName);
     model.addAttribute("error", error);
+    model.addAttribute(SecurityUtils.KEY_CSRF_TOKEN, SecurityUtils.getCSRFTokenFromSession(session));    
     
     if (StringUtils.isNotEmpty(fromGroup)) {
       model.addAttribute("fromGroup", fromGroup);
@@ -117,11 +128,12 @@ public class MessageController {
     model.addAttribute("childName", childName);
     model.addAttribute("collectionName", collectionName);
     model.addAttribute("error", error);
+    model.addAttribute(SecurityUtils.KEY_CSRF_TOKEN, SecurityUtils.getCSRFTokenFromSession(session));
     return "message";
   }
 
   @ActionMapping(params = "action=sendMessage")
-  public void send(PortletSession session, @RequestParam(value = "collectionName") String collectionName, @RequestParam(value = "childName") String childName, 
+  public void send(PortletRequest request, PortletSession session, @RequestParam(value = "collectionName") String collectionName, @RequestParam(value = "childName") String childName, 
       @RequestParam(value = "cancel", required = false ) Boolean cancel,
       @RequestParam(value = "fromGroup", required = false) String fromGroup,
       @RequestParam(value = "selected", required = false) String selected,
@@ -129,6 +141,11 @@ public class MessageController {
       @ModelAttribute(value = "kks_message") Message message,
       BindingResult errors, ActionResponse response,
       SessionStatus sessionStatus) {
+    
+    if ( !SecurityUtils.hasValidCSRFToken(request) ) {
+      Utils.setCsrfErrorPage(response, sessionStatus);
+      return;
+    }
     
     if (StringUtils.isNotEmpty(fromGroup)) {
       response.setRenderParameter("fromGroup", fromGroup);
@@ -155,10 +172,12 @@ public class MessageController {
         return;
       }
       
+      setMessageExtraInfo(message);
       
       boolean result = kksService.sendMessage(Utils.getPicFromSession(session), message);
             
       if ( !result ) {
+        removeDefaultExtraInfo(message);
         response.setRenderParameter("action", "showMessage" );
         response.setRenderParameter("pic", child.getPic());
         response.setRenderParameter("collectionName", collectionName );
@@ -173,7 +192,30 @@ public class MessageController {
       response.setRenderParameter("message", "ui.kks.send.message.sent");
     }
     sessionStatus.setComplete();
+  }
+
+  private void setMessageExtraInfo(Message message) {
+    String messageContent =  message.getMessage();
+
+    if  ( messageContent.endsWith(LINE_SEPARATOR) ) {
+      messageContent = messageContent + context.getMessage("ui.kks.send.extra.info", 
+          new Object[] {""}, Locale.getDefault());        
+    } else {
+
+      messageContent = messageContent + LINE_SEPARATOR + context.getMessage("ui.kks.send.extra.info", 
+          new Object[] {""}, Locale.getDefault());      
+    }
+    message.setMessage(messageContent);
   }  
+
+  private void removeDefaultExtraInfo( Message message ) {
+    String messageContent =  message.getMessage();
+    String defaultMsg = context.getMessage("ui.kks.send.extra.info", 
+        new Object[] {""}, Locale.getDefault());
+    
+    messageContent = messageContent.replace(defaultMsg, ""); 
+    message.setMessage(messageContent);
+  }
   
   @ModelAttribute("kks_message")
   public Message getMessage(@RequestParam(value = "pic") String pic, @RequestParam(value = "childName") String childName, @RequestParam(value = "collectionName") String collectionName ) {

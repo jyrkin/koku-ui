@@ -23,6 +23,7 @@
 <portlet:actionURL var="createCollectionsURL">
 	<portlet:param name="action" value="addCollectionsForGroup" />
 	<portlet:param name="selected" value="${selected}" />
+	<portlet:param name="${csrf_token}" value="${csrf_token_value}" />	
 </portlet:actionURL>
 
 
@@ -133,9 +134,10 @@
 						                            <portlet:param name="pic" value="${groupChild.pic}" />
 						                            <portlet:param name="selected" value="${selected}" />
 						                            <portlet:param name="fromGroup" value="true" />
+						                            <portlet:param name="${csrf_token}" value="${csrf_token_value}" />	
 						                        </portlet:actionURL>">
 											<c:out value="${groupChild.customer.name}" />
-									</a></strong>,&nbsp;<span>${groupChild.pic}</span>
+									</a></strong>
 
 								</div>
 								<div class="kks-right single-collection kks-checkbox-label">
@@ -167,6 +169,7 @@
 															<portlet:param name="collection" value="${collection.id}" />
 															<portlet:param name="selected" value="${selected}" />
 															<portlet:param name="fromGroup" value="true" />
+															<portlet:param name="${csrf_token}" value="${csrf_token_value}" />	
 														</portlet:renderURL>">
 																<c:out value="${ collection.name }" />
 															</a>

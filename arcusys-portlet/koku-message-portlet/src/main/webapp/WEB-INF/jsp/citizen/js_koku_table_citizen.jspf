@@ -27,9 +27,9 @@ KokuTable.prototype.createAppoitmentsTable = function() {
 	 * Public methods
 	 */
 	 var public = {
+	 	unanswered: createUnansweredAppoitmentsTable,
 	 	open : createOpenAppointmentsTable,
-	 	ready : createReadyAppointmentsTable,
-	 	unanswered: createUnansweredAppoitmentsTable
+	 	ready : createReadyAppointmentsTable
 	 };
 
 	/*******************
@@ -39,12 +39,14 @@ KokuTable.prototype.createAppoitmentsTable = function() {
 	function createUnansweredAppoitmentsTable(tasks) {
 		var columnNames = [
 	                   "<spring:message code="message.from" />",
+	                   "<spring:message code="appointment.targetPerson" />",
 	                   "<spring:message code="message.subject" />",
 	                   "<spring:message code="message.description" />"
 	                  ];
 	
 		var columnIds = [
 						 "senderUserFullName",
+						 "targetPersonUserFullName",
 		                 "cleanHtmlsubject",
 		                 "cleanHtmldescription"
 		                ];
@@ -55,12 +57,14 @@ KokuTable.prototype.createAppoitmentsTable = function() {
 		var columnNames = [
 					   "<spring:message code="message.choose" />",
 	                   "<spring:message code="message.from" />",
+	                   "<spring:message code="appointment.targetPerson" />",
 	                   "<spring:message code="message.subject" />",
 	                   "<spring:message code="message.description" />"
 	                  ];
 	
 		var columnIds = [
 						 "senderUserFullName",
+						 "targetPersonUserFullName",
 		                 "cleanHtmlsubject",
 		                 "cleanHtmldescription"
 		                ];
@@ -70,6 +74,7 @@ KokuTable.prototype.createAppoitmentsTable = function() {
 	function createReadyAppointmentsTable(tasks) {		
 		var columnNames = [
 	                   "<spring:message code="message.from" />",
+	                   "<spring:message code="appointment.targetPerson" />",
 	                   "<spring:message code="message.subject" />",
 	                   "<spring:message code="message.description" />",
 	                   "<spring:message code="message.status" />"
@@ -77,6 +82,7 @@ KokuTable.prototype.createAppoitmentsTable = function() {
 	
 		var columnIds = [
 						 "senderUserFullName",
+						 "targetPersonUserFullName",
 		                 "cleanHtmlsubject",
 		                 "cleanHtmldescription",
 		                 "status"

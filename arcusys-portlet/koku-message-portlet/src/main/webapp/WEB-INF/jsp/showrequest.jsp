@@ -113,10 +113,6 @@
 				<c:out value="${request.model.endDate}" />
 				<br />
 
-				<%--  Why iframe here?? --%>
-				<%--  Disabled iframe because it doesn't seem to be used at all --%>
-				<%-- <iframe id="msgFrame" name="msgFrame" style="width:100%;" frameborder="0" scrolling="no"></iframe> --%>
-
 				<h3>
 					<spring:message code="request.responseSummary" />
 				</h3>
@@ -147,42 +143,12 @@
 					</table>
 				</c:forEach>
 
-				<!-- 
-				<table class="request-table">
-					<tr>
-						<td rowspan=2 style="vertical-align: middle;" class="head"><spring:message
-								code="request.respondent" /></td>
-						<c:forEach items="${request.model.questions}" varStatus="status"
-							var="question">
-							<td class="head"><c:out value="${question.description}" /></td>
-						</c:forEach>
-						<td rowspan=2 style="vertical-align: middle;" class="head"><spring:message
-								code="request.comment" /></td>
-					</tr>
-					<tr>
-						<c:forEach items="${request.model.questions}">
-							<td class="head"><spring:message code="request.answer" /></td>
-						</c:forEach>
-					</tr>
-					<c:forEach var="response" items="${request.model.respondedList}"
-						varStatus="loopStatus">
-						<tr class="<c:out value="${loopStatus.index % 2 == 0 ? 'evenRow' : 'oddRow'}"/>">
-							<td><c:out value="${response.replierUser.fullName}" /></td>
-							<c:forEach var="answer" items="${response.answers}">
-								<td><c:out value="${answer.answer}" /></td>
-							</c:forEach>
-							<td><c:out value="${response.comment}" /></td>
-						</tr>
-					</c:forEach>
-				</table> -->
-
 				<h3>
-					<spring:message code="request.missed" />
-					:
+					<spring:message code="request.missed" />:
 				</h3>
 				<c:choose>
 					<c:when test="${fn:length(request.model.unrespondedList) == 0}">
-						<spring:message code="request.none" />
+						<div><spring:message code="request.none" /></div>
 					</c:when>
 					<c:otherwise>
 						<table>
@@ -198,6 +164,7 @@
 						</table>
 					</c:otherwise>
 				</c:choose>
+				</br>
 				<div id="export">
 					<input type="button"
 						value="<spring:message code="request.export"/>"

@@ -15,6 +15,7 @@ package fi.koku.kks.controller;
 import java.util.Locale;
 
 import javax.portlet.ActionResponse;
+import javax.portlet.PortletRequest;
 import javax.portlet.PortletSession;
 import javax.portlet.RenderResponse;
 import javax.portlet.WindowState;
@@ -52,6 +53,7 @@ import fi.koku.kks.ui.common.State;
 import fi.koku.kks.ui.common.utils.DeletionValidator;
 import fi.koku.kks.ui.common.utils.Log;
 import fi.koku.kks.ui.common.utils.Utils;
+import fi.koku.portlet.filter.userinfo.SecurityUtils;
 import fi.koku.services.entity.kks.v1.KksCollectionClassType;
 import fi.koku.services.entity.kks.v1.KksEntryClassType;
 import fi.koku.services.entity.kks.v1.KksGroupType;
@@ -86,7 +88,7 @@ public class CollectionController {
   
 
   @RenderMapping(params = "action=showCollection")
-  public String show(PortletSession session, @ModelAttribute(value = "child") Person child,
+  public String show(PortletRequest request, PortletSession session, @ModelAttribute(value = "child") Person child,
       @ModelAttribute(value = "collectionForm") CollectionForm collectionForm,
       @RequestParam(value = "collection") String collection,
       @RequestParam(value = "print", required = false) String print,
@@ -97,6 +99,7 @@ public class CollectionController {
     LOG.debug("show collection");
 
     try {
+      
       KKSCollection c = kksService.getKksCollection(collection, Utils.getUserInfoFromSession(session));
       
       boolean deleted = false;
@@ -125,6 +128,7 @@ public class CollectionController {
       model.addAttribute("can_save", canSave);
       model.addAttribute("idleTime", idleTime != null ? idleTime : "720" );
       model.addAttribute("redirectTime", redirectTime != null ? redirectTime : "120" );
+      model.addAttribute(SecurityUtils.KEY_CSRF_TOKEN, SecurityUtils.getCSRFTokenFromSession(session));
       
       if ( deleted ) {
         model.addAttribute("deleted", "true");
@@ -182,7 +186,7 @@ public class CollectionController {
   }
 
   @ActionMapping(params = "action=saveCollection")
-  public void save(PortletSession session, @ModelAttribute(value = "child") Person child, @ModelAttribute(value = "collectionForm") CollectionForm collectionForm, BindingResult bindingResult,
+  public void save(PortletRequest request, PortletSession session, @ModelAttribute(value = "child") Person child, @ModelAttribute(value = "collectionForm") CollectionForm collectionForm, BindingResult bindingResult,
       @RequestParam(required = false) String multiValueId, @RequestParam(required = false) String type,
       @RequestParam(value = "valueId", required = false) String valueId,
       @RequestParam(value = "close", required = false) Boolean close,
@@ -191,6 +195,11 @@ public class CollectionController {
       Model model, ActionResponse response,
       SessionStatus sessionStatus) {
     LOG.debug("save collection");
+    
+    if ( !SecurityUtils.hasValidCSRFToken(request) ) {
+      Utils.setCsrfErrorPage(response, sessionStatus);
+      return;
+    }
 
     KKSCollection collection = (KKSCollection) session.getAttribute("kks.collection");
     collection.setEntries(collectionForm.getEntries());
@@ -224,7 +233,6 @@ public class CollectionController {
       } else {
         
         if ( close != null && close ) {
-          
           if ( StringUtils.isNotEmpty(fromGroup) ) {
             response.setRenderParameter("action", "showGroup");    
           } else {
@@ -233,6 +241,7 @@ public class CollectionController {
         } else {       
           response.setRenderParameter("action", "showCollection");   
           response.setRenderParameter("collection", collection.getId());
+
         }
         
         response.setRenderParameter("pic", child.getPic());
@@ -242,6 +251,8 @@ public class CollectionController {
       
     }
   }
+
+
 
   @ModelAttribute("collectionForm")
   public CollectionForm getCommandObject(PortletSession session, @RequestParam(value = "collection") String collection,
@@ -261,7 +272,7 @@ public class CollectionController {
   }
 
   @ActionMapping(params = "action=addMultivalue")
-  public void saveMultivalue(PortletSession session, @ModelAttribute(value = "child") Person child,
+  public void saveMultivalue(PortletRequest request, PortletSession session, @ModelAttribute(value = "child") Person child,
       @RequestParam(value = "entryType") String entryType, @RequestParam(value = "collection") String collection,
       @RequestParam(value = "entryId", required = false) String entry,
       @RequestParam(value = "valueId", required = false) String valueId, 
@@ -270,6 +281,11 @@ public class CollectionController {
       ActionResponse response, SessionStatus sessionStatus) {
     LOG.debug("save multivalue");
 
+    if ( !SecurityUtils.hasValidCSRFToken(request) ) {
+      Utils.setCsrfErrorPage(response, sessionStatus);
+      return;
+    }
+    
     String id = kksService.addKksEntry(collection, child.getPic(), entry, entryType, valueId, value.getValue(),
         Utils.getPicFromSession(session));
 
@@ -294,7 +310,7 @@ public class CollectionController {
   }
 
   @ActionMapping(params = "action=removeMultivalue")
-  public void removeMultiValue(PortletSession session, @ModelAttribute(value = "child") Person child,
+  public void removeMultiValue(PortletRequest request, PortletSession session, @ModelAttribute(value = "child") Person child,
       @RequestParam(value = "collection") String collection, @RequestParam(value = "entryId") String entry,
       @RequestParam(value = "valueId") String valueId, 
       @RequestParam(value = "fromGroup", required = false) String fromGroup,
@@ -302,6 +318,12 @@ public class CollectionController {
       EntryValue value, BindingResult bindingResult,
       ActionResponse response, SessionStatus sessionStatus) {
     LOG.debug("remove multivalue");
+    
+    if ( !SecurityUtils.hasValidCSRFToken(request) ) {
+      Utils.setCsrfErrorPage(response, sessionStatus);
+      return;
+    }
+    
     boolean success = kksService.removeKksEntry(collection, child.getPic(), entry, valueId, "",
         Utils.getPicFromSession(session));
 
@@ -397,6 +419,7 @@ public class CollectionController {
     model.addAttribute("collection", c);
     model.addAttribute("type", t);
     model.addAttribute("valueId", valueId);
+    model.addAttribute(SecurityUtils.KEY_CSRF_TOKEN, SecurityUtils.getCSRFTokenFromSession(session));
     
     
     if (StringUtils.isNotEmpty(fromGroup)) {
@@ -466,7 +489,7 @@ public class CollectionController {
       model.addAttribute("child", child);
       KKSCollection c = kksService.getKksCollection(collection, Utils.getUserInfoFromSession(session));
       model.addAttribute("collection", c);
-      
+      model.addAttribute(SecurityUtils.KEY_CSRF_TOKEN, SecurityUtils.getCSRFTokenFromSession(session));      
       
       if (StringUtils.isNotEmpty(fromGroup)) {
         model.addAttribute("fromGroup", fromGroup);
@@ -487,7 +510,7 @@ public class CollectionController {
   }
   
   @ActionMapping(params = "action=deleteCollection")
-  public void delete(PortletSession session, @ModelAttribute(value = "child") Person child, 
+  public void delete(PortletRequest request, PortletSession session, @ModelAttribute(value = "child") Person child, 
       @RequestParam(value = "collection", required = false) String collection, 
       @RequestParam(value="collectionName") String collectionName, 
       @RequestParam(value="collectionType") String collectionType,
@@ -496,7 +519,11 @@ public class CollectionController {
       @RequestParam(value = "selected", required = false) String selected,
       @ModelAttribute(value = "deletable") Deletion deletion, 
       BindingResult errors, ActionResponse response, SessionStatus sessionStatus) {
-    
+  
+    if ( !SecurityUtils.hasValidCSRFToken(request) ) {
+      Utils.setCsrfErrorPage(response, sessionStatus);
+      return;
+    }
     
     if (StringUtils.isNotEmpty(fromGroup)) {
       response.setRenderParameter("fromGroup", fromGroup);

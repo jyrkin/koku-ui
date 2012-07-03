@@ -12,6 +12,7 @@
 package fi.koku.kks.controller;
 
 import javax.portlet.ActionResponse;
+import javax.portlet.PortletRequest;
 import javax.portlet.PortletSession;
 
 import org.apache.commons.lang.StringUtils;
@@ -34,6 +35,7 @@ import fi.koku.kks.model.Person;
 import fi.koku.kks.model.Version;
 import fi.koku.kks.ui.common.State;
 import fi.koku.kks.ui.common.utils.Utils;
+import fi.koku.portlet.filter.userinfo.SecurityUtils;
 
 /**
  * Controller for creating agreements and plans
@@ -52,13 +54,18 @@ public class CreateCollectionController {
       .getLogger(CreateCollectionController.class);
 
   @ActionMapping(params = "action=createNewVersion")
-  public void createVersion(PortletSession session,
+  public void createVersion(PortletRequest request,PortletSession session,
       @ModelAttribute(value = "child") Person child, @RequestParam String id,
       @RequestParam(value = "fromGroup", required = false) String fromGroup,
       @RequestParam(value = "selected", required = false) String selected,
       Version version, BindingResult result, ActionResponse response,
       SessionStatus sessionStatus) {
 
+    if ( !SecurityUtils.hasValidCSRFToken(request) ) {
+      Utils.setCsrfErrorPage(response, sessionStatus);
+      return;
+    }
+    
     version.validate(version, result);
     if (!result.hasErrors()) {
       LOG.debug("create new version");
@@ -86,7 +93,7 @@ public class CreateCollectionController {
   }
 
   @ActionMapping(params = "action=createCollection")
-  public void create(PortletSession session,
+  public void create(PortletRequest request,PortletSession session,
       @ModelAttribute(value = "child") Person child,
       @RequestParam(value = "fromGroup", required = false) String fromGroup,
       @RequestParam(value = "selected", required = false) String selected,
@@ -95,6 +102,11 @@ public class CreateCollectionController {
 
     LOG.debug("create collection");
 
+    if ( !SecurityUtils.hasValidCSRFToken(request) ) {
+      Utils.setCsrfErrorPage(response, sessionStatus);
+      return;
+    }
+    
     creation.validate(creation, bindingResult);
     if (!bindingResult.hasErrors()) {
 
@@ -129,13 +141,18 @@ public class CreateCollectionController {
   }
 
   @ActionMapping(params = "action=activate")
-  public void activate(PortletSession session,
+  public void activate(PortletRequest request,PortletSession session,
       @ModelAttribute(value = "child") Person child,
       @RequestParam(value = "collection") String collection,
       @RequestParam(value = "fromGroup", required = false) String fromGroup,
       @RequestParam(value = "selected", required = false) String selected,
       ActionResponse response, SessionStatus sessionStatus) {
 
+    if ( !SecurityUtils.hasValidCSRFToken(request) ) {
+      Utils.setCsrfErrorPage(response, sessionStatus);
+      return;
+    }
+    
     boolean success = kksService.updateKksCollectionStatus(child.getPic(),
         collection, State.ACTIVE.toString(), Utils.getPicFromSession(session));
     response.setRenderParameter("action", "showChild");
@@ -157,12 +174,17 @@ public class CreateCollectionController {
   }
 
   @ActionMapping(params = "action=lock")
-  public void lock(PortletSession session,
+  public void lock(PortletRequest request, PortletSession session,
       @ModelAttribute(value = "child") Person child,
       @RequestParam(value = "collection") String collection,
       @RequestParam(value = "fromGroup", required = false) String fromGroup,
       @RequestParam(value = "selected", required = false) String selected,
       ActionResponse response, SessionStatus sessionStatus) {
+    
+    if ( !SecurityUtils.hasValidCSRFToken(request) ) {
+      Utils.setCsrfErrorPage(response, sessionStatus);
+      return;
+    }
 
     boolean success = kksService.updateKksCollectionStatus(child.getPic(),
         collection, State.LOCKED.toString(), Utils.getPicFromSession(session));

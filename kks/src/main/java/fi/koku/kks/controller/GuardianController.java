@@ -29,6 +29,7 @@ import org.springframework.web.portlet.bind.annotation.RenderMapping;
 import fi.koku.kks.model.KksService;
 import fi.koku.kks.model.Person;
 import fi.koku.kks.ui.common.utils.Utils;
+import fi.koku.portlet.filter.userinfo.SecurityUtils;
 
 /**
  * Controller for guardian role
@@ -51,6 +52,7 @@ public class GuardianController {
       Model model) {
     LOG.debug("showChildrens");
     model.addAttribute("childs", getChilds(session));
+    model.addAttribute(SecurityUtils.KEY_CSRF_TOKEN, SecurityUtils.getCSRFTokenFromSession(session));
     return "childs";
   }
 

@@ -16,6 +16,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import javax.portlet.ActionResponse;
+import javax.portlet.PortletRequest;
 import javax.portlet.PortletSession;
 import javax.portlet.RenderResponse;
 import javax.validation.Valid;
@@ -43,6 +44,7 @@ import fi.koku.kks.model.GroupCreatable;
 import fi.koku.kks.model.KksService;
 import fi.koku.kks.model.Person;
 import fi.koku.kks.ui.common.utils.Utils;
+import fi.koku.portlet.filter.userinfo.SecurityUtils;
 import fi.koku.services.entity.kks.v1.ServiceFault;
 import fi.koku.services.entity.person.v1.Group;
 
@@ -84,6 +86,7 @@ public class MunicipalEmployeeController {
     String pic = Utils.getPicFromSession(session);
 
     model.addAttribute("childs", toChilds(childs, pic));
+    model.addAttribute(SecurityUtils.KEY_CSRF_TOKEN, SecurityUtils.getCSRFTokenFromSession(session));
     List<String> groups = kksService.getGroups(pic);
 
     if (StringUtils.isNotEmpty(selected)) {
@@ -124,6 +127,7 @@ public class MunicipalEmployeeController {
     setContent(selected, groupCreatable, model, pic, true);
     groupCreatable.setName("");
     groupCreatable.setType("");
+    model.addAttribute(SecurityUtils.KEY_CSRF_TOKEN, SecurityUtils.getCSRFTokenFromSession(session));
     if (StringUtils.isNotEmpty(message)) {
       model.addAttribute("message", message);
     }
@@ -138,6 +142,7 @@ public class MunicipalEmployeeController {
 
     Group group = kksService.getGroup(pic, selected);
     model.addAttribute("childs", new ArrayList<Person>());
+    
 
     if (group != null) {
       List<String> pics = new ArrayList<String>();
@@ -162,13 +167,18 @@ public class MunicipalEmployeeController {
   }
 
   @ActionMapping(params = "action=addCollectionsForGroup")
-  public void addCollections(PortletSession session,
+  public void addCollections(PortletRequest request, PortletSession session,
       @RequestParam(value = "cancel", required = false) Boolean cancel,
       @RequestParam(value = "selected") String selected,
       @ModelAttribute(value = "group") GroupCreatable groupCreation,
       BindingResult bindingResult, ActionResponse response,
       SessionStatus sessionStatus) {
     LOG.info("addCollectionsForGroup");
+    
+    if ( !SecurityUtils.hasValidCSRFToken(request) ) {
+      Utils.setCsrfErrorPage(response, sessionStatus);
+      return;
+    }
 
     if (cancel != null && cancel) {
       response.setRenderParameter("action", "showEmployee");
@@ -218,7 +228,7 @@ public class MunicipalEmployeeController {
 
     String pic = Utils.getPicFromSession(session);
     setContent(selected, groupCreation, model, pic, false);
-
+    model.addAttribute(SecurityUtils.KEY_CSRF_TOKEN, SecurityUtils.getCSRFTokenFromSession(session));
     if (StringUtils.isNotEmpty(error)) {
       model.addAttribute("error", error);
     }
@@ -226,12 +236,17 @@ public class MunicipalEmployeeController {
   }
 
   @ActionMapping(params = "action=searchChild")
-  public void fecthChild(PortletSession session,
+  public void fecthChild(PortletRequest request, PortletSession session,
       @ModelAttribute(value = "child") Person child,
       BindingResult bindingResult, ActionResponse response,
       SessionStatus sessionStatus) {
     LOG.info("search child");
 
+    if ( !SecurityUtils.hasValidCSRFToken(request) ) {
+      Utils.setCsrfErrorPage(response, sessionStatus);
+      return;
+    }
+    
     String pic = Utils.getPicFromSession(session);
     String error = validateInput(child, pic);
     Person p = error == null ? kksService.searchPerson(child,
@@ -253,12 +268,17 @@ public class MunicipalEmployeeController {
   }
 
   @ActionMapping(params = "action=searchGroup")
-  public void fecthGroup(PortletSession session,
+  public void fecthGroup(PortletRequest request, PortletSession session,
       @RequestParam(value = "selected") String selected,
       @ModelAttribute(value = "child") Person child,
       BindingResult bindingResult, ActionResponse response,
       SessionStatus sessionStatus) {
     LOG.info("search group");
+    
+    if ( !SecurityUtils.hasValidCSRFToken(request) ) {
+      Utils.setCsrfErrorPage(response, sessionStatus);
+      return;
+    }
 
     response.setRenderParameter("action", "showEmployee");
     response.setRenderParameter("childs", new String[] { "" });
@@ -268,10 +288,15 @@ public class MunicipalEmployeeController {
   }
 
   @ActionMapping(params = "action=toGroupActions")
-  public void toGroup(PortletSession session,
+  public void toGroup(PortletRequest request, PortletSession session,
       @RequestParam(value = "selected") String selected,
       ActionResponse response, SessionStatus sessionStatus) {
     LOG.info("to group");
+    
+    if ( !SecurityUtils.hasValidCSRFToken(request) ) {
+      Utils.setCsrfErrorPage(response, sessionStatus);
+      return;
+    }
 
     response.setRenderParameter("action", "showGroup");
     response.setRenderParameter("selected", selected);
