@@ -220,6 +220,8 @@ public String htmlToCode(String s)
 			<% } else { %>
 				<input type="button" value="<spring:message code="message.replyMessage"/>" onclick="KokuMessage.employee.replyToMessage()" />
 			<% } %>
+		<% } else {%>
+			<input type="button" disabled="disabled" value="<spring:message code="message.unreplyable" />" />
 		<% } %>
 	</div>
 </div>
