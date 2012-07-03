@@ -64,9 +64,9 @@ public String htmlToCode(String s)
 		List<KokuUser> missingUsers = message.getDeliveryFailedTo();
 		
 		if (!missingUsers.isEmpty()) {
-			for (KokuUser user : missingUsers) {
-				missingUserNames.add(user.getFullName());
-			}
+	for (KokuUser user : missingUsers) {
+		missingUserNames.add(user.getFullName());
+	}
 		}
 		usernameArray = JSONArray.fromObject(missingUserNames);
 	}
@@ -108,6 +108,9 @@ public String htmlToCode(String s)
 				} else if (KokuMessage.portal == '<%= Constants.PORTAL_MODE_LOORA %>') {
 					KokuMessage.employee.redirectToAppointmentsReady();
 				}
+			},
+			replyToMessage : function() {
+				window.location = "<%= NavigationPortletProperties.NAVIGATION_PORTLET_PATH %><%= NavigationPortletProperties.MESSAGES_REPLY_MESSAGE %>?MessageId=<%= messageModel.getModel().getMessageId() %>";
 			}
 		},
 		citizen : {
