@@ -133,7 +133,7 @@ public String htmlToCode(String s)
 				navigateToPage("<%= Constants.TASK_TYPE_WARRANT_BROWSE_RECEIEVED %>");
 			},
 			replyToMessage : function() {
-				window.location = "<%= NavigationPortletProperties.NAVIGATION_PORTLET_PATH %><%= NavigationPortletProperties.MESSAGES_REPLY_MESSAGE %>?MessageId=<%= messageModel.getModel().getMessageId() %><%= Properties.IS_KUNPO_PORTAL ? "" : "&loora"%>";
+				window.location = "<%= NavigationPortletProperties.NAVIGATION_PORTLET_PATH %><%= NavigationPortletProperties.MESSAGES_REPLY_MESSAGE %>?MessageId=<%= messageModel.getModel().getMessageId() %>";
 			}
 		},
 		
@@ -164,6 +164,9 @@ public String htmlToCode(String s)
 			},
 			redirectToSentConsents: function() {
 				navigateToPage("<%= Constants.TASK_TYPE_CONSENT_EMPLOYEE_CONSENTS %>");
+			},
+			replyToMessage : function() {
+				window.location = "<%= NavigationPortletProperties.NAVIGATION_PORTLET_PATH %><%= NavigationPortletProperties.MESSAGES_REPLY_MESSAGE %>?MessageId=<%= messageModel.getModel().getMessageId() %>&loora";
 			}
 		},
 		
@@ -212,7 +215,11 @@ public String htmlToCode(String s)
 	<div id="task-manager-operation" class="task-manager-operation-part">
 		<input type="button" value="<spring:message code="page.return"/>" onclick="kokuNavigationHelper.returnMainPage()" />
 		<% if (!messageModel.getModel().isReplyDisabled()) { %>
-		<input type="button" value="<spring:message code="message.replyMessage"/>" onclick="KokuMessage.citizen.replyToMessage()" />
+			<% if (Properties.IS_KUNPO_PORTAL) { %>
+				<input type="button" value="<spring:message code="message.replyMessage"/>" onclick="KokuMessage.citizen.replyToMessage()" />
+			<% } else { %>
+				<input type="button" value="<spring:message code="message.replyMessage"/>" onclick="KokuMessage.employee.replyToMessage()" />
+			<% } %>
 		<% } %>
 	</div>
 </div>

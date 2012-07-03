@@ -126,6 +126,7 @@
 		
 	#show-message .request-c-1,
 	#show-message .request-table td.head,
+	#show-message .request-table th,
 	#show-message div.head {
 		font-weight: bold;
 		color: red;
@@ -291,11 +292,11 @@
 	}
 	
 	.task-manager-table tr.oddRow {
-		background-color: #FFFFFF; /* for odd row */
+		background-color: #EFEFEF; /* #E7F5E7 for even row */
 	}
 	
 	.task-manager-table tr.evenRow {
-		background-color: #EFEFEF; /* #E7F5E7 for even row */
+		background-color: #FFFFFF; /* for odd row */
 	}
 	
 	.request-table tr.comment {
@@ -462,6 +463,7 @@
 	}
 	
 	.request-table td.head,
+	.request-table th,
 	.request-table td.titleCol {
 		background-color: #D1EEEE;
 		border: 0;
@@ -481,23 +483,40 @@
 	.request-table td.titleCol {
 		vertical-align: middle;
 	}
-		
-	#show-message .request-table td.date {
-		width: 80px;
-	}
-	
-	#show-message .request-table td.startTime,
-	#show-message .request-table td.endTime {
-		width: 55px;
-	} 
-	
-	#show-message .request-table td.location {
-		width: 100px;
+
+	#acceptedMeetingDateTime {
+		width: 15%;
 	}
 
-	#show-message .request-table td.delete {
+	#acceptedMeetingLocation {
+		width: 15%;
+	}
+
+	#acceptedMeetingChild {
+		width: 15%;
+	}
+
+	#acceptedMeetingRecipients {
+		width: 15%;
 	}
 	
+	#acceptedMeetingComment {
+		width: 40%;
+	}
+
+	#unapprovedMeetingDateTime {
+		width: 20%;
+	}
+
+	#unapprovedMeetingLocation {
+		width: 30%;
+	}
+	
+	#unapprovedMeetingComment {
+		width: 50%;
+	}
+	
+	.request-table th,
 	.request-table td {
 		padding: 6px; /* cell padding */
 		border: 0px solid; /* cell spacing */
