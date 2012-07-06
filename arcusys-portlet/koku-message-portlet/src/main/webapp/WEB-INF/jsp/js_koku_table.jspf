@@ -253,12 +253,12 @@ KokuTable.prototype.createRequestsEmployeeTable = function(tasks) {
 	var taskHtml = "";
 	taskHtml = '<table class="task-manager-table requestsEmployeeTable">'
 			+ '<tr class="task-manager-table trheader">'
-			/* + '<td class="choose"><spring:message code="message.choose" /></td>' */
+			+ '<td>' + '<spring:message code="message.from" />' + '</td>'
 			+ '<td>' + '<spring:message code="message.subject" />' + '</td>'
 			+ '<td>' + '<spring:message code="request.responded"/>' + '</td>'
-			+ '<td>' + '<spring:message code="request.missed"/>'+ '</td>'
-			+ '<td>' + '<spring:message code="request.start"/>'+ '</td>'
-			+ '<td>' + '<spring:message code="request.end"/>'+ '</td>'
+			+ '<td>' + '<spring:message code="request.missed"/>' + '</td>'
+			+ '<td>' + '<spring:message code="request.start"/>' + '</td>'
+			+ '<td>' + '<spring:message code="request.end"/>' + '</td>'
 			+ '</tr>';
 			 
 	for ( var i = 0; i < tasks.length; i++) {
@@ -269,13 +269,13 @@ KokuTable.prototype.createRequestsEmployeeTable = function(tasks) {
 			taskHtml += '<tr>';
 		}
 		
-		/*  '<td class="choose">' + '<input type="checkbox" name="message" value="' + tasks[i]["requestId"] + '" />' + '</td>' */
-		taskHtml += '<td class="messageItem subject" onclick="kokuAjax.showRequest(\''+ tasks[i]["requestId"] + '\')" >' + KokuUtil.shorty(KokuUtil.escapeHTML(tasks[i]["subject"]), 40) + '</td>'
-				 + '<td class="messageItem respondedAmount" onclick="kokuAjax.showRequest(\''+ tasks[i]["requestId"] + '\')" >' + KokuUtil.escapeHTML(tasks[i]["respondedAmount"]) + '</td>'
-				 + '<td class="messageItem missedAmount" onclick="kokuAjax.showRequest(\''+ tasks[i]["requestId"] + '\')" >' + KokuUtil.escapeHTML(tasks[i]["missedAmount"]) + '</td>'
-				 + '<td class="messageItem creationDate" onclick="kokuAjax.showRequest(\''+ tasks[i]["requestId"] + '\')" >' + KokuUtil.escapeHTML(tasks[i]["creationDate"]) + '</td>'
-				 + '<td class="messageItem endDate" onclick="kokuAjax.showRequest(\''+ tasks[i]["requestId"] + '\')" >' + KokuUtil.escapeHTML(tasks[i]["endDate"]) + '</td>'
-				 + '</tr>';
+		taskHtml += '<td class="messageItem senderUser" onclick="kokuAjax.showRequest(\''+ tasks[i]["requestId"] + '\')" >' + KokuUtil.escapeHTML(tasks[i].senderUser.fullName) + '</td>'
+				+ '<td class="messageItem subject" onclick="kokuAjax.showRequest(\''+ tasks[i]["requestId"] + '\')" >' + KokuUtil.shorty(KokuUtil.escapeHTML(tasks[i]["subject"]), 40) + '</td>'
+				+ '<td class="messageItem respondedAmount" onclick="kokuAjax.showRequest(\''+ tasks[i]["requestId"] + '\')" >' + KokuUtil.escapeHTML(tasks[i]["respondedAmount"]) + '</td>'
+				+ '<td class="messageItem missedAmount" onclick="kokuAjax.showRequest(\''+ tasks[i]["requestId"] + '\')" >' + KokuUtil.escapeHTML(tasks[i]["missedAmount"]) + '</td>'
+				+ '<td class="messageItem creationDate" onclick="kokuAjax.showRequest(\''+ tasks[i]["requestId"] + '\')" >' + KokuUtil.escapeHTML(tasks[i]["creationDate"]) + '</td>'
+				+ '<td class="messageItem endDate" onclick="kokuAjax.showRequest(\''+ tasks[i]["requestId"] + '\')" >' + KokuUtil.escapeHTML(tasks[i]["endDate"]) + '</td>'
+				+ '</tr>';
 	}
 
 	taskHtml += '</table>';

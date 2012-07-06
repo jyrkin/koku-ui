@@ -15,6 +15,7 @@ public class KokuRequest {
 
 	private long requestId;
 	private String sender;
+	private KokuUser senderUser;
 	private String subject;
 	private String content;
 	private int respondedAmount;
@@ -25,17 +26,18 @@ public class KokuRequest {
 	private List<KokuResponse> respondedList;
 	private List<KokuUser> unrespondedList;
 	private List<KokuQuestion> questions;
-	
+
 	public KokuRequest() {
-		
+
 	}
-	
+
 	public KokuRequest(fi.arcusys.koku.kv.requestservice.RequestSummary reqSum) {
 		if (reqSum == null) {
 			return;
 		}
 		requestId = reqSum.getRequestId();
 		sender = reqSum.getSender();
+		setSenderUser(new KokuUser(reqSum.getSenderUserInfo()));
 		subject = reqSum.getSubject();
 		respondedAmount = reqSum.getRespondedAmount();
 		missedAmount = reqSum.getMissedAmout();
@@ -49,13 +51,13 @@ public class KokuRequest {
 			return;
 		}
 		content = req.getContent();
-		
+
 		if (req.getNotRespondedUserInfos() != null) {
 			for (fi.arcusys.koku.kv.requestservice.User user : req.getNotRespondedUserInfos()) {
 				getUnrespondedList().add(new KokuUser(user));
 			}
 		}
-		
+
 		if (req.getResponses() != null) {
 			for (fi.arcusys.koku.kv.requestservice.Response response : req.getResponses()) {
 				getRespondedList().add(new KokuResponse(response));
@@ -63,11 +65,11 @@ public class KokuRequest {
 		}
 		if (req.getQuestions() != null) {
 			for (fi.arcusys.koku.kv.requestservice.Question question : req.getQuestions()) {
-				getQuestions().add(new KokuQuestion(question, req.getPossibleAnswers()));							
+				getQuestions().add(new KokuQuestion(question, req.getPossibleAnswers()));
 			}
 		}
 	}
-	
+
 
 	public long getRequestId() {
 		return requestId;
@@ -150,8 +152,8 @@ public class KokuRequest {
 	public final void setQuestions(List<KokuQuestion> questions) {
 		this.questions = questions;
 	}
-	
-	
+
+
 	@Override
 	public String toString() {
 		return "KokuRequest [requestId=" + requestId + ", sender=" + sender
@@ -279,7 +281,15 @@ public class KokuRequest {
 		}
 		return true;
 	}
-	
-	
+
+	public KokuUser getSenderUser() {
+		return senderUser;
+	}
+
+	public void setSenderUser(KokuUser senderUser) {
+		this.senderUser = senderUser;
+	}
+
+
 
 }
