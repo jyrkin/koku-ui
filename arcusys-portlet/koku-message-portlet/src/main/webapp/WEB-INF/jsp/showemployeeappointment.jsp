@@ -181,7 +181,14 @@
 				<td><c:out value="${user.targetPersonUser.fullName}" /></td>
 				<td>
 					<c:forEach var="recipientUser" items="${user.recipientUsers}" varStatus="loopStatus">
-					  <c:out value="${recipientUser.fullName}" />,
+					<c:choose>
+						<c:when test="${!loopStatus.last}">
+							<c:out value="${recipientUser.fullName}" />,
+						</c:when>
+						<c:otherwise>
+							<c:out value="${recipientUser.fullName}" />
+						</c:otherwise>
+					</c:choose>
 					</c:forEach>
 				</td>
 			</tr>
@@ -204,7 +211,14 @@
 			  <td><c:out value="${rejectedUser.targetPersonUser.fullName}" /></td>
 				<td>
 				<c:forEach var="rejectedUserInfo" items="${rejectedUser.recipientUsers}" varStatus="loopStatus">
-				  <c:out value="${rejectedUserInfo.fullName}" />,
+					<c:choose>
+						<c:when test="${!loopStatus.last}">
+							<c:out value="${rejectedUserInfo.fullName}" />,
+						</c:when>
+						<c:otherwise>
+							<c:out value="${rejectedUserInfo.fullName}" />
+						</c:otherwise>
+					</c:choose>
 				</c:forEach>
 			  </td>
 			</tr>
