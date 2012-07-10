@@ -132,7 +132,7 @@
 						<span class="text-bold" ><spring:message code="message.searchKeyword" /></span>
 						<input type="text" name="keyword" id="keyword" style="width:160px;" />
 						<input type="submit" value="<spring:message code="message.search"/>" />
-						<input type="button" value="<spring:message code="message.searchReset"/>" onclick="resetSearch()" />
+						<input type="button" value="<spring:message code="message.searchReset"/>" onclick="kokuTableNavigation.resetSearch()" />
 						<span id="search-fields" >
 							<input type="checkbox" checked="checked" name="field" value="1" /><spring:message code="message.from" />
 							<input type="checkbox" checked="checked" name="field" value="2" /><spring:message code="message.to" />
@@ -149,7 +149,7 @@
 						<span class="text-bold" ><spring:message code="consent.templateName" /></span>
 						<input type="text" name="templateName" id="templateName" style="width:160px;" autocomplete="off" onkeydown="beKeyDown(event)" onkeyup="beKeyUp(event)" onclick="createSuggestDiv('consent-search', 'templateName')" />
 						<input type="submit" value="<spring:message code="message.search"/>" />
-						<input type="button" value="<spring:message code="message.searchReset"/>" onclick="resetSearch()" />
+						<input type="button" value="<spring:message code="message.searchReset"/>" onclick="kokuTableNavigation.resetSearch()" />
 					</form>
 				</div>
 			</div>
