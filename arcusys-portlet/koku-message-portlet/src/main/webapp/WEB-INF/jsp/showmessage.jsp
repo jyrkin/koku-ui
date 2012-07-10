@@ -123,6 +123,9 @@ public String htmlToCode(String s)
 			redirectToAppointmentsRecieved: function() {
 				navigateToPage("<%= Constants.TASK_TYPE_APPOINTMENT_INBOX_CITIZEN %>");
 			},
+			redirectToAppointmentsReady: function() {
+                navigateToPage("<%= Constants.TASK_TYPE_APPOINTMENT_RESPONSE_CITIZEN %>");
+            },
 			redirectToAppointmentsOld: function() {
 				navigateToPage("<%= Constants.TASK_TYPE_APPOINTMENT_RESPONSE_CITIZEN_OLD %>");
 			},
