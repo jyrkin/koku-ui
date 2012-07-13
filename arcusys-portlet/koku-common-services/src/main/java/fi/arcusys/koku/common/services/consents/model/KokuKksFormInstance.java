@@ -7,7 +7,7 @@ public class KokuKksFormInstance {
 
 	private String instanceId;
 	private String instanceName;
-	private List<KokuKksFormField> fields = null;
+	private List<KokuKksFormField> fields;
 
 	/* CitizenService wsdl generated KksFormInstance transformation constructor
 	 * The two types are identical but because two version of them are generated
@@ -15,7 +15,7 @@ public class KokuKksFormInstance {
 	public KokuKksFormInstance(fi.arcusys.koku.tiva.citizenservice.KksFormInstance formInstance) {
 		this.setInstanceId(formInstance.getInstanceId());
 		this.setInstanceName(formInstance.getInstanceName());
-		if (formInstance.getFields() == null) {
+		if (formInstance.getFields() != null) {
 			for (fi.arcusys.koku.tiva.citizenservice.KksFormField formField : formInstance.getFields()) {
 				this.getFields().add(new KokuKksFormField(formField));
 			}
@@ -26,7 +26,7 @@ public class KokuKksFormInstance {
 	public KokuKksFormInstance(fi.arcusys.koku.tiva.employeeservice.KksFormInstance formInstance) {
 		this.setInstanceId(formInstance.getInstanceId());
 		this.setInstanceName(formInstance.getInstanceName());
-		if (formInstance.getFields() == null) {
+		if (formInstance.getFields() != null) {
 			for (fi.arcusys.koku.tiva.employeeservice.KksFormField formField : formInstance.getFields()) {
 				this.getFields().add(new KokuKksFormField(formField));
 			}
