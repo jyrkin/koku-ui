@@ -14,6 +14,8 @@ import fi.arcusys.koku.common.exceptions.KokuServiceException;
 import fi.arcusys.koku.common.services.AbstractHandle;
 import fi.arcusys.koku.common.services.consents.model.ActionRequest;
 import fi.arcusys.koku.common.services.consents.model.KokuConsent;
+import fi.arcusys.koku.common.services.consents.model.KokuKksFormInstance;
+import fi.arcusys.koku.common.services.consents.model.KokuOrganization;
 import fi.arcusys.koku.common.services.facades.Page;
 import fi.arcusys.koku.common.services.facades.ResultList;
 import fi.arcusys.koku.common.services.facades.employee.EmployeeConsentTasks;
@@ -32,6 +34,7 @@ import fi.arcusys.koku.tiva.employeeservice.ConsentSummary;
 import fi.arcusys.koku.tiva.employeeservice.ConsentTO;
 import fi.arcusys.koku.tiva.employeeservice.SuostumuspohjaShort;
 import fi.arcusys.koku.tiva.employeeservice.User;
+import fi.arcusys.koku.tiva.employeeservice.Organization;;
 
 /**
  * Handles tiva consents related operations for employee
@@ -39,11 +42,11 @@ import fi.arcusys.koku.tiva.employeeservice.User;
  * Aug 18, 2011
  */
 public class TivaEmployeeServiceHandle extends AbstractHandle implements EmployeeConsentTasks {
-	
+
 	private static final Logger LOG = Logger.getLogger(TivaEmployeeServiceHandle.class);
-	
+
 	private TivaEmployeeService tes;
-	
+
 	/**
 	 * Constructor and initialization
 	 */
@@ -51,7 +54,7 @@ public class TivaEmployeeServiceHandle extends AbstractHandle implements Employe
 		super(messageSource);
 		tes = new TivaEmployeeService();
 	}
-	
+
 	@Override
 	public ResultList<KokuConsent> getSentConsents(String uid, ConsentSearchCriteria criteria, Page page)
 			throws KokuServiceException {
@@ -74,15 +77,15 @@ public class TivaEmployeeServiceHandle extends AbstractHandle implements Employe
 		}
 		final ConsentQuery query = new ConsentQuery();
 		query.setStartNum(page.getFirst());
-		query.setMaxNum(page.getLast());		
-		query.setCriteria(createCriteria(searchCriteria));		
+		query.setMaxNum(page.getLast());
+		query.setCriteria(createCriteria(searchCriteria));
 		final List<ConsentSummary> consentSummaries = tes.getConsents(userId, query);
 		final List<KokuConsent> consentList = new ArrayList<KokuConsent>();
-		
+
 		if(consentSummaries == null) {
 			return Collections.emptyList();
 		}
-		
+
 		for (ConsentSummary consent : consentSummaries) {
 			KokuConsent kokuConsent = new KokuConsent();
 			convertConsentSummaryToKokuConsent(kokuConsent, consent);
@@ -90,7 +93,7 @@ public class TivaEmployeeServiceHandle extends AbstractHandle implements Employe
 		}
 		return consentList;
 	}
-	
+
 	/**
 	 * Gets total number of consents
 	 * @param user user name
@@ -101,7 +104,7 @@ public class TivaEmployeeServiceHandle extends AbstractHandle implements Employe
 		ConsentCriteria criteria = createCriteria(searchCriteria);
 		return tes.getTotalConsents(user, criteria);
 	}
-	
+
 	/**
 	 * Gets consent in detail
 	 * @param consentIdStr consent id string
@@ -114,45 +117,53 @@ public class TivaEmployeeServiceHandle extends AbstractHandle implements Employe
 		} catch (NumberFormatException nfe) {
 			throw new KokuServiceException("Invalid consentId. ConsentId: '"+consentIdStr+"'", nfe);
 		}
-		KokuConsent kokuConsent = new KokuConsent();		
+		KokuConsent kokuConsent = new KokuConsent();
 		ConsentTO consent = tes.getConsentDetails(consentId);
 		convertConsentTOToKokuConsent(kokuConsent, consent);
 		return kokuConsent;
 	}
-		
+
 	private void convertConsentShortSummaryToKokuConsent(KokuConsent kokuConsent, ConsentShortSummary consent) {
 		kokuConsent.setConsentId(consent.getConsentId());
 		kokuConsent.setAnotherPermitterUser(new KokuUser(consent.getAnotherPermitterUserInfo()));
 		kokuConsent.setRequesterUser(new KokuUser(consent.getRequestorUserInfo()));
 		kokuConsent.setTemplateName(consent.getTemplateName());
 		kokuConsent.setTemplateTypeName(consent.getTemplateTypeName());
-		kokuConsent.setTargetPerson(new KokuUser(consent.getTargetPersonUserInfo()));	
+		kokuConsent.setTargetPerson(new KokuUser(consent.getTargetPersonUserInfo()));
 		kokuConsent.setCreateType(localizeConsentCreateType(consent.getCreateType()));
 		kokuConsent.setReplyTill(MessageUtil.formatTaskDateByDay(consent.getReplyTill()));
 		kokuConsent.setTemplateDescription(consent.getTemplateDescription());
 	}
-	
+
 	private void convertConsentSummaryToKokuConsent(KokuConsent kokuConsent, ConsentSummary consent) {
 		convertConsentShortSummaryToKokuConsent(kokuConsent, consent);
-		
+
 		if(consent.getStatus() != null) {
 			kokuConsent.setStatus(localizeConsentStatus(consent.getStatus()));
 		}
 		for (User receipient : consent.getReceipientUserInfos()) {
-			kokuConsent.getRecipientUsers().add(new KokuUser(receipient));			
+			kokuConsent.getRecipientUsers().add(new KokuUser(receipient));
 		}
-		kokuConsent.setApprovalStatus(localizeApprovalConsentStatus(consent.getApprovalStatus()));		
+		kokuConsent.setApprovalStatus(localizeApprovalConsentStatus(consent.getApprovalStatus()));
 		kokuConsent.setAssignedDate(MessageUtil.formatTaskDateByDay(consent.getGivenAt()));
 		kokuConsent.setValidDate(MessageUtil.formatTaskDateByDay(consent.getValidTill()));
 	}
-	
+
 	private void convertConsentTOToKokuConsent(KokuConsent kokuConsent, ConsentTO consent) {
 		convertConsentSummaryToKokuConsent(kokuConsent, consent);
-		
+
 		kokuConsent.setActionRequests(convertActionRequests(consent.getActionRequests()));
-		kokuConsent.setComment(consent.getComment());		
+		kokuConsent.setComment(consent.getComment());
+		if (consent.getKksFormInstance() != null) {
+			kokuConsent.setKksFormInstance(new KokuKksFormInstance(consent.getKksFormInstance()));
+		}
+		if (consent.getKksGivenTo() != null) {
+			for (Organization organization : consent.getKksGivenTo()) {
+				kokuConsent.getKksGivenTo().add(new KokuOrganization(organization));
+			}
+		}
 	}
-	
+
 	/**
 	 * Searches consent templates
 	 * @param searchStr search string
@@ -160,23 +171,23 @@ public class TivaEmployeeServiceHandle extends AbstractHandle implements Employe
 	 * @return a list of templates
 	 */
 	public List<SuostumuspohjaShort> searchConsentTemplates(String searchStr, int limit) throws KokuServiceException {
-		
+
 		return tes.searchConsentTemplates(searchStr, limit);
 	}
-	
+
 	/**
 	 * Creates criteria for filtering consents
-	 * 
+	 *
 	 * @param searchCriteria
 	 * @return ConsentCriteria object
 	 */
 	private ConsentCriteria createCriteria(ConsentSearchCriteria searchCriteria) {
 		ConsentCriteria criteria = new ConsentCriteria();
 		criteria.setConsentTemplateId(searchCriteria.getConsentTemplateId());
-		criteria.setReceipientUid(searchCriteria.getRecipientUid());		
+		criteria.setReceipientUid(searchCriteria.getRecipientUid());
 		return criteria;
 	}
-	
+
 	/**
 	 * Converts the ActionRequestSummary object to ActionRequest
 	 * @param actionSummaryList a list of ActionRequestSummary objects
@@ -186,7 +197,7 @@ public class TivaEmployeeServiceHandle extends AbstractHandle implements Employe
 		List<ActionRequest> actionList = new ArrayList<ActionRequest>();
 		ActionRequest actionReq;
 		Iterator<ActionRequestSummary> it = actionSummaryList.iterator();
-		
+
 		while(it.hasNext()) {
 			ActionRequestSummary actionSummary = it.next();
 			actionReq = new ActionRequest();
@@ -194,18 +205,18 @@ public class TivaEmployeeServiceHandle extends AbstractHandle implements Employe
 			actionReq.setStatus(localizeActionRequestStatus(actionSummary.getStatus()));
 			actionReq.setName(actionSummary.getName());
 			actionList.add(actionReq);
-		}		
-		return actionList;	
+		}
+		return actionList;
 	}
-	
-	
+
+
 	private String localizeConsentStatus(ConsentStatus consentStatus) {
 		if (getMessageSource() == null) {
 			LOG.warn(MESSAGE_SOURCE_MISSING);
 			return consentStatus.toString().toLowerCase();
 		}
 		Locale locale = MessageUtil.getLocale();
-		
+
 		try {
 			switch(consentStatus) {
 			case DECLINED:
@@ -228,7 +239,7 @@ public class TivaEmployeeServiceHandle extends AbstractHandle implements Employe
 			return consentStatus.toString().toLowerCase();
 		}
 	}
-	
+
 	private String localizeActionRequestStatus(ActionRequestStatus actionRequestStatus) {
 		if (getMessageSource() == null) {
 			LOG.warn(MESSAGE_SOURCE_MISSING);
@@ -251,14 +262,14 @@ public class TivaEmployeeServiceHandle extends AbstractHandle implements Employe
 			return actionRequestStatus.toString().toLowerCase();
 		}
 	}
-	
+
 	private String localizeConsentCreateType(ConsentCreateType type) {
 		if (getMessageSource() == null) {
 			LOG.warn(MESSAGE_SOURCE_MISSING);
 			return type.toString().toLowerCase();
 		}
 		Locale locale = MessageUtil.getLocale();
-		
+
 		try {
 			switch(type) {
 			case ELECTRONIC:
@@ -279,23 +290,23 @@ public class TivaEmployeeServiceHandle extends AbstractHandle implements Employe
 			return type.toString().toLowerCase();
 		}
 	}
-	
+
 	private String localizeApprovalConsentStatus(ConsentApprovalStatus approvalStatus) {
 		Locale locale = MessageUtil.getLocale();
-		
+
 		if (getMessageSource() == null) {
 			LOG.warn(MESSAGE_SOURCE_MISSING);
 			return approvalStatus.toString().toLowerCase();
 		}
-		
-		try {			
+
+		try {
 			switch(approvalStatus) {
 			case DECLINED:
 				return getMessageSource().getMessage("ApprovalConsentStatus.DECLINED", null, locale);
 			case APPROVED:
 				return getMessageSource().getMessage("ApprovalConsentStatus.APPROVED", null, locale);
 			case UNDECIDED:
-				return getMessageSource().getMessage("ApprovalConsentStatus.UNDECIDED", null, locale);		
+				return getMessageSource().getMessage("ApprovalConsentStatus.UNDECIDED", null, locale);
 			default:
 				return getMessageSource().getMessage("unknown", null, locale);
 			}
@@ -304,5 +315,5 @@ public class TivaEmployeeServiceHandle extends AbstractHandle implements Employe
 			return approvalStatus.toString().toLowerCase();
 		}
 	}
-	
+
 }

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fi.arcusys.koku.common.services.users.KokuUser;
-import fi.arcusys.koku.tiva.employeeservice.User;
 
 /**
  * Consent data model for citizen
@@ -12,7 +11,7 @@ import fi.arcusys.koku.tiva.employeeservice.User;
  * Aug 11, 2011
  */
 public class KokuConsent {
-	 
+
 	private long consentId;
 	private KokuUser anotherPermitterUser;
 	private KokuUser requesterUser;
@@ -29,9 +28,9 @@ public class KokuConsent {
 	private String templateTypeName;
 	private String templateDescription;
 	private KokuUser targetPerson;
-	
-	
-	
+	private KokuKksFormInstance kksFormInstance;
+	private List<KokuOrganization> kksGivenTo;
+
 	/**
 	 * @return the templateDescription
 	 */
@@ -49,51 +48,51 @@ public class KokuConsent {
 	public long getConsentId() {
 		return consentId;
 	}
-	
+
 	public void setConsentId(long consentId) {
 		this.consentId = consentId;
 	}
-			
+
 	public String getTemplateName() {
 		return templateName;
 	}
-	
+
 	public void setTemplateName(String templateName) {
 		this.templateName = templateName;
 	}
-	
+
 	public String getCreateType() {
 		return createType;
 	}
-	
+
 	public void setCreateType(String createType) {
 		this.createType = createType;
 	}
-	
+
 	public String getAssignedDate() {
 		return assignedDate;
 	}
-	
+
 	public void setAssignedDate(String assignedDate) {
 		this.assignedDate = assignedDate;
 	}
-	
+
 	public String getStatus() {
 		return status;
 	}
-	
+
 	public void setStatus(String status) {
 		this.status = status;
 	}
-	
+
 	public String getValidDate() {
 		return validDate;
 	}
-	
+
 	public void setValidDate(String validDate) {
 		this.validDate = validDate;
 	}
-	
+
 	public String getApprovalStatus() {
 		return approvalStatus;
 	}
@@ -104,8 +103,8 @@ public class KokuConsent {
 
 	public List<ActionRequest> getActionRequests() {
 		return actionRequests;
-	} 
-	
+	}
+
 	public void setActionRequests(List<ActionRequest> actionRequests) {
 		this.actionRequests = actionRequests;
 	}
@@ -129,7 +128,7 @@ public class KokuConsent {
 	public void setTemplateTypeName(String templateTypeName) {
 		this.templateTypeName = templateTypeName;
 	}
-	
+
 	public String getTemplateTypeName() {
 		return templateTypeName;
 	}
@@ -141,7 +140,7 @@ public class KokuConsent {
 	public void setTargetPerson(KokuUser targetPerson) {
 		this.targetPerson = targetPerson;
 	}
-	
+
 	/**
 	 * @return the anotherPermitterUser
 	 */
@@ -180,9 +179,25 @@ public class KokuConsent {
 		return recipientUsers;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
-	 */
+	public KokuKksFormInstance getKksFormInstance() {
+		return kksFormInstance;
+	}
+
+	public void setKksFormInstance(KokuKksFormInstance kksFormInstance) {
+		this.kksFormInstance = kksFormInstance;
+	}
+
+	public List<KokuOrganization> getKksGivenTo() {
+		if (kksGivenTo == null) {
+			kksGivenTo = new ArrayList<KokuOrganization>();
+		}
+		return kksGivenTo;
+	}
+
+	public void setKksGivenTo(List<KokuOrganization> kksGivenTo) {
+		this.kksGivenTo = kksGivenTo;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -202,6 +217,10 @@ public class KokuConsent {
 		result = prime * result
 				+ ((createType == null) ? 0 : createType.hashCode());
 		result = prime * result
+				+ ((kksFormInstance == null) ? 0 : kksFormInstance.hashCode());
+		result = prime * result
+				+ ((kksGivenTo == null) ? 0 : kksGivenTo.hashCode());
+		result = prime * result
 				+ ((recipientUsers == null) ? 0 : recipientUsers.hashCode());
 		result = prime * result
 				+ ((replyTill == null) ? 0 : replyTill.hashCode());
@@ -210,6 +229,10 @@ public class KokuConsent {
 		result = prime * result + ((status == null) ? 0 : status.hashCode());
 		result = prime * result
 				+ ((targetPerson == null) ? 0 : targetPerson.hashCode());
+		result = prime
+				* result
+				+ ((templateDescription == null) ? 0 : templateDescription
+						.hashCode());
 		result = prime * result
 				+ ((templateName == null) ? 0 : templateName.hashCode());
 		result = prime
@@ -220,126 +243,106 @@ public class KokuConsent {
 		return result;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj) {
+		if (this == obj)
 			return true;
-		}
-		if (obj == null) {
+		if (obj == null)
 			return false;
-		}
-		if (getClass() != obj.getClass()) {
+		if (getClass() != obj.getClass())
 			return false;
-		}
 		KokuConsent other = (KokuConsent) obj;
 		if (actionRequests == null) {
-			if (other.actionRequests != null) {
+			if (other.actionRequests != null)
 				return false;
-			}
-		} else if (!actionRequests.equals(other.actionRequests)) {
+		} else if (!actionRequests.equals(other.actionRequests))
 			return false;
-		}
 		if (anotherPermitterUser == null) {
-			if (other.anotherPermitterUser != null) {
+			if (other.anotherPermitterUser != null)
 				return false;
-			}
-		} else if (!anotherPermitterUser.equals(other.anotherPermitterUser)) {
+		} else if (!anotherPermitterUser.equals(other.anotherPermitterUser))
 			return false;
-		}
 		if (approvalStatus == null) {
-			if (other.approvalStatus != null) {
+			if (other.approvalStatus != null)
 				return false;
-			}
-		} else if (!approvalStatus.equals(other.approvalStatus)) {
+		} else if (!approvalStatus.equals(other.approvalStatus))
 			return false;
-		}
 		if (assignedDate == null) {
-			if (other.assignedDate != null) {
+			if (other.assignedDate != null)
 				return false;
-			}
-		} else if (!assignedDate.equals(other.assignedDate)) {
+		} else if (!assignedDate.equals(other.assignedDate))
 			return false;
-		}
 		if (comment == null) {
-			if (other.comment != null) {
+			if (other.comment != null)
 				return false;
-			}
-		} else if (!comment.equals(other.comment)) {
+		} else if (!comment.equals(other.comment))
 			return false;
-		}
-		if (consentId != other.consentId) {
+		if (consentId != other.consentId)
 			return false;
-		}
 		if (createType == null) {
-			if (other.createType != null) {
+			if (other.createType != null)
 				return false;
-			}
-		} else if (!createType.equals(other.createType)) {
+		} else if (!createType.equals(other.createType))
 			return false;
-		}
+		if (kksFormInstance == null) {
+			if (other.kksFormInstance != null)
+				return false;
+		} else if (!kksFormInstance.equals(other.kksFormInstance))
+			return false;
+		if (kksGivenTo == null) {
+			if (other.kksGivenTo != null)
+				return false;
+		} else if (!kksGivenTo.equals(other.kksGivenTo))
+			return false;
 		if (recipientUsers == null) {
-			if (other.recipientUsers != null) {
+			if (other.recipientUsers != null)
 				return false;
-			}
-		} else if (!recipientUsers.equals(other.recipientUsers)) {
+		} else if (!recipientUsers.equals(other.recipientUsers))
 			return false;
-		}
 		if (replyTill == null) {
-			if (other.replyTill != null) {
+			if (other.replyTill != null)
 				return false;
-			}
-		} else if (!replyTill.equals(other.replyTill)) {
+		} else if (!replyTill.equals(other.replyTill))
 			return false;
-		}
 		if (requesterUser == null) {
-			if (other.requesterUser != null) {
+			if (other.requesterUser != null)
 				return false;
-			}
-		} else if (!requesterUser.equals(other.requesterUser)) {
+		} else if (!requesterUser.equals(other.requesterUser))
 			return false;
-		}
 		if (status == null) {
-			if (other.status != null) {
+			if (other.status != null)
 				return false;
-			}
-		} else if (!status.equals(other.status)) {
+		} else if (!status.equals(other.status))
 			return false;
-		}
 		if (targetPerson == null) {
-			if (other.targetPerson != null) {
+			if (other.targetPerson != null)
 				return false;
-			}
-		} else if (!targetPerson.equals(other.targetPerson)) {
+		} else if (!targetPerson.equals(other.targetPerson))
 			return false;
-		}
+		if (templateDescription == null) {
+			if (other.templateDescription != null)
+				return false;
+		} else if (!templateDescription.equals(other.templateDescription))
+			return false;
 		if (templateName == null) {
-			if (other.templateName != null) {
+			if (other.templateName != null)
 				return false;
-			}
-		} else if (!templateName.equals(other.templateName)) {
+		} else if (!templateName.equals(other.templateName))
 			return false;
-		}
 		if (templateTypeName == null) {
-			if (other.templateTypeName != null) {
+			if (other.templateTypeName != null)
 				return false;
-			}
-		} else if (!templateTypeName.equals(other.templateTypeName)) {
+		} else if (!templateTypeName.equals(other.templateTypeName))
 			return false;
-		}
 		if (validDate == null) {
-			if (other.validDate != null) {
+			if (other.validDate != null)
 				return false;
-			}
-		} else if (!validDate.equals(other.validDate)) {
+		} else if (!validDate.equals(other.validDate))
 			return false;
-		}
 		return true;
 	}
-	
-	
-	
-		
+
+
+
+
 }
