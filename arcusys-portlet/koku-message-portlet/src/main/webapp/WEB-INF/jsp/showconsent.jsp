@@ -62,6 +62,14 @@
 			</c:if>
 		</c:if>
 		
+		<c:if test="${not empty consent.model.kksGivenTo}">
+			<span class="text-bold">Organisaatiot:</span>
+			<c:forEach var="organization" items="${consent.model.kksGivenTo}" varStatus="loopStatus">
+				<c:out value="${organization.organizationName}" />${not loopStatus.last ? ', ' : ''}
+			</c:forEach>
+			<br />
+		</c:if>
+		
 		<% if (naviPortalMode.equals(Constants.PORTAL_MODE_KUNPO)) { %>
 		<span class="modifyConsentLink">
 			<a href="<%= defaultPath %><%= NavigationPortletProperties.CONSENTS_NEW_CONSENT %>?FormID=<c:out value="${consent.model.consentId}"/>"><spring:message code="consent.modifyConsentLink"/></a>
