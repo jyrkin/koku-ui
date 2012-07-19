@@ -24,17 +24,11 @@
       <version>0.0.3</version>
       <scope>provided</scope>
     </dependency>
-    <!-- 
-    <dependency>
-      <groupId>kohti-kumppanuutta</groupId>
-      <artifactId>userinfoservice-api</artifactId>
-      <version>0.0.7</version>
-    </dependency>
-    -->
+    
     <dependency>
       <groupId>kohti-kumppanuutta</groupId>
       <artifactId>portaluserservice-api</artifactId>
-      <version>0.0.3-SNAPSHOT</version>
+      <version>0.0.3</version>
     </dependency>
     
      <dependency>
