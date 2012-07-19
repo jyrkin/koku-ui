@@ -51,10 +51,10 @@
 		<span class="text-bold"><spring:message code="consent.comment"/>:</span> <c:out value="${consent.model.comment}" /><br />
 		
 		<c:if test="${consent.model.kksFormInstance != null}">
-			<span class="text-bold">KKS Lomakkeen nimi:</span> <c:out value="${consent.model.kksFormInstance.instanceName}" /><br />
+			<span class="text-bold"><spring:message code="consent.kksFormName"/>:</span> <c:out value="${consent.model.kksFormInstance.instanceName}" /><br />
 			
 			<c:if test="${not empty consent.model.kksFormInstance.fields}">
-				<span class="text-bold">KKS Lomake-osat:</span>
+				<span class="text-bold"><spring:message code="consent.kksFieldName"/>:</span>
 				<c:forEach var="formField" items="${consent.model.kksFormInstance.fields}" varStatus="loopStatus">
 					<c:out value="${formField.fieldName}" />${not loopStatus.last ? ', ' : ''}
 				</c:forEach>
@@ -63,7 +63,7 @@
 		</c:if>
 		
 		<c:if test="${not empty consent.model.kksGivenTo}">
-			<span class="text-bold">Organisaatiot:</span>
+			<span class="text-bold"><spring:message code="consent.organization"/>:</span>
 			<c:forEach var="organization" items="${consent.model.kksGivenTo}" varStatus="loopStatus">
 				<c:out value="${organization.organizationName}" />${not loopStatus.last ? ', ' : ''}
 			</c:forEach>

@@ -254,6 +254,9 @@
 <div id="intalioPrintingLink"><img title="Tulosta" src="${pageContext.request.contextPath}/images/print.png" /><a id="printLink" href="#" onclick="kokuIframePrint(); return false;">Tulosta</a></div>
 <div id="form_wrap" style="margin:5px; position:relative; min-width: 720px;">
 	<iframe src="" id="<portlet:namespace />xforms_iframe" class="xforms_container_iframe" frameborder="0" scrolling="no" horizontalscrolling="no" style="height: 700px; width:100%; overflow-x: hidden;"></iframe>
+	<div id="task-manager-operation" class="task-manager-operation-part">
+		<input type="button" value="<spring:message code="return"/>" onclick="history.back()" />
+	</div>
 </div>
 
 <script type="text/javascript">
