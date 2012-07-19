@@ -34,7 +34,7 @@ public class SigninController {
 
   @RenderMapping
   public String render(PortletSession session, RenderRequest req, Model model) {
-    setUserInfo(model);    
+    setUserInfo(model);
     setLoginProperties(model);
     return "signin";
   }
@@ -47,12 +47,14 @@ public class SigninController {
   private void setLoginProperties(Model model) {
     String pwdSupported = KoKuPropertiesUtil.get("signin.change.pwd.supported");
     String loginUrl = KoKuPropertiesUtil.get("signin.login.url");
-    model.addAttribute("loginUrl", loginUrl );
+    String editUserinfoUrl = KoKuPropertiesUtil.get("registration.edit.userinfo.url");
+    model.addAttribute("loginUrl", loginUrl);
     model.addAttribute("pwdSupported", pwdSupported);
+    model.addAttribute("editUserinfoUrl", editUserinfoUrl);
   }
 
   /**
-   * Sets user info 
+   * Sets user info
    * 
    * @param model
    */
@@ -73,8 +75,8 @@ public class SigninController {
       try {
         portletUser = organizationService.getUserHandler().findUserByName(remoteUserName);
         model.addAttribute("fullname", portletUser.getFullName());
-      } catch (Exception e) {  
-        // not intrested 
+      } catch (Exception e) {
+        // not intrested
       }
 
     }

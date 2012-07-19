@@ -10,6 +10,13 @@
 		<css-path>/css/koku-signin.css</css-path>
 	</portlet-skin>
 
+  <portlet-skin>
+    <application-name>koku-signin-portlet-0.0.1-SNAPSHOT</application-name>
+    <portlet-name>koku-registration</portlet-name>
+    <skin-name>Default</skin-name>
+    <css-path>/css/koku-registration.css</css-path>
+  </portlet-skin>
+
 	<javascript>
 		<param>
 			<js-module>jQuery</js-module>
