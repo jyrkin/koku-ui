@@ -138,6 +138,7 @@ public class AvCitizenServiceHandle extends AbstractHandle implements CitizenApp
 		ctzAppointment.setReplierComment(appointment.getReplierComment());
 		ctzAppointment.setTargetPersonUser(new KokuUser(appointment.getTargetPersonUserInfo()));
 		ctzAppointment.setCancellationComment(appointment.getEmployeesCancelComent());
+		ctzAppointment.setModifiable(appointment.isModifiable());
 
 		return ctzAppointment;
 	}

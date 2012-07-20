@@ -13,8 +13,8 @@ public class CitizenAppointment extends KokuAppointment{
 	private KokuUser replierUser;
 	private String replierComment;
 	private KokuUser targetPersonUser;
+	private boolean modifiable;
 
-	
 	/**
 	 * @return the targetPersonUser
 	 */
@@ -46,26 +46,24 @@ public class CitizenAppointment extends KokuAppointment{
     public Slot getSlot() {
 		return slot;
 	}
-	
+
 	public String getReplierComment() {
 		return replierComment;
 	}
-	
+
 	public void setSlot(Slot slot) {
 		this.slot = slot;
 	}
-		
+
 	public void setReplierComment(String replierComment) {
 		this.replierComment = replierComment;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
-	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
+		result = prime * result + (modifiable ? 1231 : 1237);
 		result = prime * result
 				+ ((replierComment == null) ? 0 : replierComment.hashCode());
 		result = prime * result
@@ -77,62 +75,56 @@ public class CitizenAppointment extends KokuAppointment{
 		return result;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj) {
+		if (this == obj)
 			return true;
-		}
-		if (!super.equals(obj)) {
+		if (!super.equals(obj))
 			return false;
-		}
-		if (getClass() != obj.getClass()) {
+		if (getClass() != obj.getClass())
 			return false;
-		}
 		CitizenAppointment other = (CitizenAppointment) obj;
+		if (modifiable != other.modifiable)
+			return false;
 		if (replierComment == null) {
-			if (other.replierComment != null) {
+			if (other.replierComment != null)
 				return false;
-			}
-		} else if (!replierComment.equals(other.replierComment)) {
+		} else if (!replierComment.equals(other.replierComment))
 			return false;
-		}
 		if (replierUser == null) {
-			if (other.replierUser != null) {
+			if (other.replierUser != null)
 				return false;
-			}
-		} else if (!replierUser.equals(other.replierUser)) {
+		} else if (!replierUser.equals(other.replierUser))
 			return false;
-		}
 		if (slot == null) {
-			if (other.slot != null) {
+			if (other.slot != null)
 				return false;
-			}
-		} else if (!slot.equals(other.slot)) {
+		} else if (!slot.equals(other.slot))
 			return false;
-		}
 		if (targetPersonUser == null) {
-			if (other.targetPersonUser != null) {
+			if (other.targetPersonUser != null)
 				return false;
-			}
-		} else if (!targetPersonUser.equals(other.targetPersonUser)) {
+		} else if (!targetPersonUser.equals(other.targetPersonUser))
 			return false;
-		}
 		return true;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		return "CitizenAppointment [slot=" + slot + ", replierUser="
 				+ replierUser + ", replierComment=" + replierComment
-				+ ", targetPersonUser=" + targetPersonUser + "]";
+				+ ", targetPersonUser=" + targetPersonUser + ", modifiable="
+				+ modifiable + "]";
 	}
-	
-	
-	
+
+	public boolean isModifiable() {
+		return modifiable;
+	}
+
+	public void setModifiable(boolean modifiable) {
+		this.modifiable = modifiable;
+	}
+
+
+
 }

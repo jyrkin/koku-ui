@@ -65,6 +65,7 @@
 <xs:sequence>
 <xs:element minOccurs="0" name="approvedSlot" type="tns:appointmentSlot" />
 <xs:element minOccurs="0" name="employeesCancelComent" type="xs:string" />
+<xs:element name="modifiable" type="xs:boolean" />
 <xs:element minOccurs="0" name="replier" type="xs:string" />
 <xs:element minOccurs="0" name="replierComment" type="xs:string" />
 <xs:element minOccurs="0" name="replierUserInfo" type="ns1:user" />
