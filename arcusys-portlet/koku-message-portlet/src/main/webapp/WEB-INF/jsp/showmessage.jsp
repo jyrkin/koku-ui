@@ -156,6 +156,9 @@ public String htmlToCode(String s)
 			redirectToAppointmentsReady: function() {
 				navigateToPage("<%= Constants.TASK_TYPE_APPOINTMENT_RESPONSE_EMPLOYEE %>");
 			},
+			redirectToBrowseInfoRequests: function() {
+				navigateToPage("<%= Constants.TASK_TYPE_INFO_REQUEST_BROWSE %>");
+			},
 			redirectToInfoRequestsRecieved: function() {
 				window.location = "<%= NavigationPortletProperties.NAVIGATION_PORTLET_PATH %><%= NavigationPortletProperties.INFO_REQ_RECIEVED_INFO_REQS %>";
 			},
