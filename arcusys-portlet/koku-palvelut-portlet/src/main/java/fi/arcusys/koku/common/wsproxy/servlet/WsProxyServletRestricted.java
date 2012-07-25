@@ -24,33 +24,41 @@ import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 import org.apache.axis2.addressing.EndpointReference;
 import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
+import org.apache.openjpa.lib.log.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import fi.arcusys.koku.common.util.KokuWebServicesJS;
 import fi.koku.settings.KoKuPropertiesUtil;
 
+/**
+ * Servlet for proxying and securing WS requests
+ */
 public class WsProxyServletRestricted extends HttpServlet implements Servlet {
     private static final long serialVersionUID = 1L;
-    
-    private static final Set<String> RESTRICTED_ENDPOINTS = new HashSet<String>(); 
-	private static final Logger LOG = LoggerFactory.getLogger(WsProxyServletRestricted.class);
 
-    static {    	
-    	for (KokuWebServicesJS key : KokuWebServicesJS.values()) {
-    		String value = KoKuPropertiesUtil.get(key.value());
-    		if (value == null) {
-    			throw new ExceptionInInitializerError("Coulnd't find property '"+ key.value()+"'");
+    private static final Set<String> RESTRICTED_ENDPOINTS = new HashSet<String>();
+	private static final Logger logger = LoggerFactory.getLogger(WsProxyServletRestricted.class);
+
+    static {
+    	for (KokuWebServicesJS service : KokuWebServicesJS.values()) {
+
+    	    String endpoint = KoKuPropertiesUtil.get(service.value());
+
+    	    if (endpoint == null) {
+    			throw new ExceptionInInitializerError("Coulnd't find endpoint definintion property '"+ service.value()+"'");
     		}
-    		if (value.endsWith("?wsdl")) {
-    			int end = value.indexOf("?wsdl");
-    			value = value.substring(0, end);
-    		} 
-    		RESTRICTED_ENDPOINTS.add(value);    			
-    		LOG.info("Added new endpoint to WsProxyServlet: "+value);
+
+    	    // Trim ".wsdl"
+    	    if (endpoint.endsWith("?wsdl"))
+    			endpoint = endpoint.substring(0, endpoint.indexOf("?wsdl"));
+
+    	    RESTRICTED_ENDPOINTS.add(endpoint);
+
+    		logger.info("Added new permitted endpoint to WsProxyServlet: "+endpoint);
     	}
     }
-    
+
 //    /**
 //     * @param config
 //     * @throws ServletException
@@ -66,135 +74,164 @@ public class WsProxyServletRestricted extends HttpServlet implements Servlet {
 //                }
 //            }
 //        }
-//        
+//
 //    }
 
     protected void doPost(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
-        String s = processRequest(request);
+        logger.info("Start proxying request...");
+
         response.setContentType("text/xml; charset=UTF-8");
-        PrintWriter printwriter = response.getWriter();
-        printwriter.write(s);
-        printwriter.close();
+
+        String content = processRequest(request);
+
+        PrintWriter writer = response.getWriter();
+        writer.write(content);
+        writer.close();
+
+        logger.info("Completed proxying request.");
     }
 
     protected String processRequest(HttpServletRequest request) {
         if (request.getParameter("endpoint") == null) {
             return generateErrorResponse("Missing parameter: endpoint");
         }
-        
-        final String endpoint = request.getParameter("endpoint").trim();
-        if (!RESTRICTED_ENDPOINTS.contains(endpoint)) {
-            return generateErrorResponse("Endpoint '" + endpoint + "' is not allowed for proxying.");
-        }
 
-        OMElement omelement;
+        final String endpoint = request.getParameter("endpoint").trim();
+
+        // Limit the endpoint proxying to specific list
+        if (!RESTRICTED_ENDPOINTS.contains(endpoint))
+            return generateErrorResponse("Endpoint '" + endpoint + "' is not allowed for proxying.");
+
+        logger.info("Will send an envelope to endpoint: "+endpoint);
+
+        OMElement soapRequest;
         try {
             String message = request.getParameter("message");
 
+            // Read the message from the body of the request if the parameter is not available
             if (message == null) {
-                BufferedReader bodyreader = request.getReader();
-                StringBuilder messagebuilder = new StringBuilder();
-                do
-                    messagebuilder.append(bodyreader.readLine());
-                while (bodyreader.ready());
-                message = messagebuilder.toString();
+                BufferedReader reader = request.getReader();
+                StringBuilder sb = new StringBuilder();
+
+                do sb.append(reader.readLine());
+                while (reader.ready());
+
+                message = sb.toString();
             }
 
-            omelement = parseRequest(message);
+            soapRequest = parseRequest(message);
+
+            logger.info("Will send: " + soapRequest.toString());
         } catch (Exception e) {
             return generateErrorResponse("Malformed message: " + e.getMessage());
         }
-        Options options = new Options();
 
-//      String address = request.getScheme() + "://"
-//              + request.getServerName() + ":" + request.getServerPort();
-//      address = address + request.getParameter("endpoint");
+        final String userName = request.getRemoteUser();
+        logger.info("Current user: " + userName);
+        logger.info("Current user (session 2): " + request.getSession().getAttribute("koku.userinfo"));
+
+        Options options = new Options();
         options.setTo(new EndpointReference(endpoint));
 
         String action = request.getParameter("action");
 
-        if (action == null) {
+        if (action == null)
         	action = request.getHeader("soapaction");
-        }
+
         options.setAction(action);
 
-        return send(omelement, options);
+        return callEndpoint(soapRequest, options);
     }
 
-    protected OMElement parseRequest(String s) throws Exception {
-        OMElement omelement = null;
-        StringReader stringreader = new StringReader(s);
+    @SuppressWarnings("unchecked")
+    protected OMElement parseRequest(String message) throws Exception {
+        logger.info("Starting to parse request...");
+
+        StringReader stringreader = new StringReader(message);
         XMLStreamReader xmlstreamreader = XMLInputFactory.newInstance()
                 .createXMLStreamReader(stringreader);
+
         StAXOMBuilder staxombuilder = new StAXOMBuilder(xmlstreamreader);
-        OMElement omelement1 = staxombuilder.getDocumentElement();
+        OMElement document = staxombuilder.getDocumentElement();
+        OMElement element = null;
 
-        OMElement omelement2 = null;
-        for (Iterator children = omelement1.getChildElements(); children
-                .hasNext();) {
-            omelement2 = (OMElement) children.next();
-            if (omelement2.getText().toLowerCase().contains("body")) {
+        for (Iterator<OMElement> children = document.getChildElements(); children.hasNext(); ) {
+            element = (OMElement) children.next();
+
+            logger.info("Looking at element: qname="+element.getQName());
+            logger.info("Looking at element: text="+element.getText());
+
+            if (element.getText().toLowerCase().contains("body"))
                 break;
-            }
-
         }
 
-        omelement = omelement2.getFirstElement();
-        return omelement;
+        logger.info("Completed parsing request.");
+
+        return element != null ? element.getFirstElement() : null;
     }
 
-    protected String send(OMElement omelement, Options options) {
+    protected String callEndpoint(OMElement soapRequest, Options options) {
         String response = null;
-        try {
-            ServiceClient serviceclient = new ServiceClient();
-            serviceclient.setOptions(options);
 
-            OMElement omelement1 = serviceclient.sendReceive(omelement);
-            response = generateSuccessResponse(omelement1);
+        logger.info("Calling the endpoint...");
+
+        try {
+            ServiceClient client = new ServiceClient();
+            client.setOptions(options);
+
+            OMElement soapResponse = client.sendReceive(soapRequest);
+            response = generateSuccessResponse(soapResponse);
+
+            logger.info("Returned response: " + soapResponse.toString());
         } catch (Exception exception) {
-            response = generateErrorResponse("Error sending to tempo. "
+            response = generateErrorResponse("Error sending request to WS backend. Exception: "
                     + exception);
         }
+
+        logger.info("Will return: " + response);
+        logger.info("Endpoint call completed.");
 
         return response;
     }
 
-    protected String generateErrorResponse(String s) {
-        return generateResponse("error", s, null);
+    protected String generateErrorResponse(String message) {
+        return generateResponse("error", message, null);
     }
 
-    protected String generateSuccessResponse(OMElement omelement) {
-        return generateResponse("success", null, omelement);
+    protected String generateSuccessResponse(OMElement soapEnvelope) {
+        return generateResponse("success", null, soapEnvelope);
     }
 
-    protected String generateResponse(String s, String s1, OMElement omelement) {
-        OMFactory omfactory = OMAbstractFactory.getOMFactory();
-        OMElement omelement1 = omfactory.createOMElement("response", null);
-        OMElement omelement2 = createTextElement(omfactory, "status", s);
-        omelement1.addChild(omelement2);
+    protected String generateResponse(String status, String message, OMElement payload) {
+        OMFactory factory = OMAbstractFactory.getOMFactory();
+        OMElement response = factory.createOMElement("response", null);
+        OMElement omStatus = createTextElement(factory, "status", status);
 
-        if (s1 != null) {
-            OMElement omelement3 = createTextElement(omfactory, "message", s1);
-            omelement1.addChild(omelement3);
+        response.addChild(omStatus);
+
+        if (message != null) {
+            OMElement omMessage = createTextElement(factory, "message", message);
+            response.addChild(omMessage);
         }
 
-        if (omelement != null) {
-            OMElement omelement4 = omfactory.createOMElement("payload", null);
-            omelement4.addChild(omelement);
-            omelement1.addChild(omelement4);
+        if (payload != null) {
+            logger.info("Adding payload: " + payload.toString());
+
+            OMElement omPayload = factory.createOMElement("payload", null);
+            omPayload.addChild(payload);
+            response.addChild(omPayload);
         }
 
-        LOG.info("Test output:" + omelement1.toString());
-        return omelement1.toString();
+        logger.info("Test output:" + response.toString());
+        return response.toString();
     }
 
-    protected OMElement createTextElement(OMFactory omfactory, String s,
-            String s1) {
-        OMElement omelement = omfactory.createOMElement(s, null);
-        OMText omtext = omfactory.createOMText(omelement, s1);
+    protected OMElement createTextElement(OMFactory omfactory, String elementName, String text) {
+        OMElement omelement = omfactory.createOMElement(elementName, null);
+        OMText omtext = omfactory.createOMText(omelement, text);
         omelement.addChild(omtext);
         return omelement;
     }
-    
+
 }
