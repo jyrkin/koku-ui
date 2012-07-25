@@ -4,8 +4,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringReader;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.Servlet;
@@ -28,7 +30,10 @@ import org.apache.openjpa.lib.log.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import serp.bytecode.NewArrayInstruction;
+
 import fi.arcusys.koku.common.util.KokuWebServicesJS;
+import fi.arcusys.koku.common.util.Properties;
 import fi.koku.settings.KoKuPropertiesUtil;
 
 /**
@@ -37,8 +42,9 @@ import fi.koku.settings.KoKuPropertiesUtil;
 public class WsProxyServletRestricted extends HttpServlet implements Servlet {
     private static final long serialVersionUID = 1L;
 
-    private static final Set<String> RESTRICTED_ENDPOINTS = new HashSet<String>();
 	private static final Logger logger = LoggerFactory.getLogger(WsProxyServletRestricted.class);
+	private static final Map<String, KokuWebServicesJS> endpoints = new HashMap<String, KokuWebServicesJS>();
+	private static final Map<KokuWebServicesJS, WSRestriction> restrictions = new HashMap<KokuWebServicesJS, WSRestriction>();
 
     static {
     	for (KokuWebServicesJS service : KokuWebServicesJS.values()) {
@@ -53,29 +59,13 @@ public class WsProxyServletRestricted extends HttpServlet implements Servlet {
     	    if (endpoint.endsWith("?wsdl"))
     			endpoint = endpoint.substring(0, endpoint.indexOf("?wsdl"));
 
-    	    RESTRICTED_ENDPOINTS.add(endpoint);
+    	    endpoints.put(endpoint, service);
 
     		logger.info("Added new permitted endpoint to WsProxyServlet: "+endpoint);
     	}
-    }
 
-//    /**
-//     * @param config
-//     * @throws ServletException
-//     */
-//    @Override
-//    public void init(ServletConfig config) throws ServletException {
-//        super.init(config);
-//        if (config.getInitParameter("endpoints") != null) {
-//            for (final String parameter : config.getInitParameter("endpoints").split(",")) {
-//                final String endpoint = parameter.trim();
-//                if (!endpoint.isEmpty()) {
-//                    restrictedEndpoints.add(endpoint);
-//                }
-//            }
-//        }
-//
-//    }
+    	restrictions.put(KokuWebServicesJS.USERS_AND_GROUPS_SERVICE, new UsersAndGroupsServiceRestriction());
+    }
 
     protected void doPost(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
@@ -97,15 +87,17 @@ public class WsProxyServletRestricted extends HttpServlet implements Servlet {
             return generateErrorResponse("Missing parameter: endpoint");
         }
 
-        final String endpoint = request.getParameter("endpoint").trim();
+        final String endpointURI = request.getParameter("endpoint").trim();
 
         // Limit the endpoint proxying to specific list
-        if (!RESTRICTED_ENDPOINTS.contains(endpoint))
-            return generateErrorResponse("Endpoint '" + endpoint + "' is not allowed for proxying.");
+        if (!endpoints.keySet().contains(endpointURI))
+            return generateErrorResponse("Endpoint '" + endpointURI + "' is not allowed for proxying.");
 
-        logger.info("Will send an envelope to endpoint: "+endpoint);
+        logger.info("Will send an envelope to endpoint: "+endpointURI);
 
         OMElement soapRequest;
+        String methodName;
+
         try {
             String message = request.getParameter("message");
 
@@ -123,16 +115,35 @@ public class WsProxyServletRestricted extends HttpServlet implements Servlet {
             soapRequest = parseRequest(message);
 
             logger.info("Will send: " + soapRequest.toString());
+
+            methodName = soapRequest.getLocalName();
+
+            logger.info("Method name: " + methodName);
         } catch (Exception e) {
             return generateErrorResponse("Malformed message: " + e.getMessage());
         }
 
-        final String userName = request.getRemoteUser();
-        logger.info("Current user: " + userName);
-        logger.info("Current user (session 2): " + request.getSession().getAttribute("koku.userinfo"));
+        final String userName = (String) request.getSession().getAttribute("javax.portlet.identity.token");
+
+        // Check if user is authenticated
+        if (userName == null)
+            return generateErrorResponse("User is not authenticated");
+
+        final KokuWebServicesJS endpoint = endpoints.get(endpointURI);
+
+        final WSRestriction restriction = restrictions.get(endpoint);
+
+        if (restriction != null) {
+            if (!restriction.requestPermitted(userName, methodName, soapRequest)) {
+                return generateErrorResponse("User is not permitted to perform this request");
+            }
+
+        } else {
+            logger.warn("In-depth security checks are not defined for "+endpoint.value());
+        }
 
         Options options = new Options();
-        options.setTo(new EndpointReference(endpoint));
+        options.setTo(new EndpointReference(endpointURI));
 
         String action = request.getParameter("action");
 
@@ -141,7 +152,27 @@ public class WsProxyServletRestricted extends HttpServlet implements Servlet {
 
         options.setAction(action);
 
-        return callEndpoint(soapRequest, options);
+        OMElement soapResponse = null;
+
+        try {
+            ServiceClient client = new ServiceClient();
+            client.setOptions(options);
+
+            soapResponse = client.sendReceive(soapRequest);
+
+        } catch (Exception exception) {
+            return generateErrorResponse("Error sending request to WS backend. Exception: " + exception);
+        }
+
+        if (soapResponse == null) {
+            return generateErrorResponse("Error: Received empty result");
+        }
+
+        if (restriction != null && !restriction.responsePermitted(userName, methodName, soapResponse)) {
+            return generateErrorResponse("User is not permitted to receive this response");
+        }
+
+        return generateSuccessResponse(soapResponse);
     }
 
     @SuppressWarnings("unchecked")
@@ -169,30 +200,6 @@ public class WsProxyServletRestricted extends HttpServlet implements Servlet {
         logger.info("Completed parsing request.");
 
         return element != null ? element.getFirstElement() : null;
-    }
-
-    protected String callEndpoint(OMElement soapRequest, Options options) {
-        String response = null;
-
-        logger.info("Calling the endpoint...");
-
-        try {
-            ServiceClient client = new ServiceClient();
-            client.setOptions(options);
-
-            OMElement soapResponse = client.sendReceive(soapRequest);
-            response = generateSuccessResponse(soapResponse);
-
-            logger.info("Returned response: " + soapResponse.toString());
-        } catch (Exception exception) {
-            response = generateErrorResponse("Error sending request to WS backend. Exception: "
-                    + exception);
-        }
-
-        logger.info("Will return: " + response);
-        logger.info("Endpoint call completed.");
-
-        return response;
     }
 
     protected String generateErrorResponse(String message) {
