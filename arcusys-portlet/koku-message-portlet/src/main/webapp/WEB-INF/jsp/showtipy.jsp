@@ -30,12 +30,12 @@
 			<span class="text-bold"><spring:message code="tipy.details.requestPurpose"/>:</span> <c:out value="${tipy.model.requestPurpose}" /><br />
 			<span class="text-bold"><spring:message code="tipy.details.description"/>:</span> <c:out value="${tipy.model.description}" /><br />	
 			<span class="text-bold"><spring:message code="tipy.details.createdDate"/>:</span> <c:out value="${tipy.model.createdDate}" /><br />
-			<span class="text-bold"><spring:message code="tipy.details.validTill"/>:</span> <c:out value="${tipy.model.validTill}" /><br />
-			<span class="text-bold"><spring:message code="tipy.details.attachmentURL"/>:</span> <c:out value="${tipy.model.attachmentURL}" /><br />
+			<span class="text-bold"><spring:message code="tipy.details.validTill"/>:</span> <c:out value="${empty tipy.model.validTill ? 'Toistaiseksi' : tipy.model.validTill}" /><br />
 			<span class="text-bold"><spring:message code="tipy.details.additionalInfo"/>:</span> <c:out value="${tipy.model.additionalInfo}" /><br />
 			<span class="text-bold"><spring:message code="tipy.details.additionalReplyInfo"/>:</span> <c:out value="${tipy.model.additionalReplyInfo}" /><br />
-			<span class="text-bold"><spring:message code="tipy.details.accessType"/>:</span> <c:out value="${tipy.model.localizedAccessType}" /><br />
-			<span class="text-bold"><spring:message code="tipy.details.informationDetails"/>:</span> <c:out value="${tipy.model.informationDetails}" /><br />
+			<span class="text-bold"><spring:message code="tipy.details.attachmentURL"/>:</span> <c:out value="${empty tipy.model.attachmentURL ? '-' : tipy.model.attachmentURL}" /><br />
+			<span class="text-bold"><spring:message code="tipy.details.accessType"/>:</span> <c:out value="${empty tipy.model.localizedAccessType ? '-' : tipy.model.localizedAccessType}" /><br />
+			<span class="text-bold"><spring:message code="tipy.details.informationDetails"/>:</span> <c:out value="${empty tipy.model.informationDetails ? '-' : tipy.model.informationDetails}" /><br />
 			
 	    <h3><spring:message code="tipy.details.categoryHeader"/></h3>
 	    <table class="request-table">

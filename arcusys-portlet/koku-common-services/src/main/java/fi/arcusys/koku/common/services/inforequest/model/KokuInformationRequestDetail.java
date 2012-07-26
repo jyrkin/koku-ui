@@ -8,7 +8,7 @@ import fi.arcusys.koku.tiva.tietopyynto.employee.InformationRequestDetail;
 
 public class KokuInformationRequestDetail extends KokuInformationRequestSummary {
 
-	
+
 	private KokuInformationAccessType accessType;
 	private String localizedAccessType;
 	private String additionalInfo;
@@ -21,9 +21,9 @@ public class KokuInformationRequestDetail extends KokuInformationRequestSummary 
 	private String legislationInfo;
 	private String replyDescription;
 	private String requestPurpose;
-	
-	
-	
+
+
+
 	public KokuInformationRequestDetail(InformationRequestDetail requestDetails) {
 		super(requestDetails);
 		if (requestDetails == null) {
@@ -34,7 +34,7 @@ public class KokuInformationRequestDetail extends KokuInformationRequestSummary 
 		if (requestDetails.getCategories() == null) {
 			this.categories = new LinkedList<String>();
 		} else {
-			this.categories = requestDetails.getCategories();			
+			this.categories = requestDetails.getCategories();
 		}
 		this.createdDate = MessageUtil.formatTaskDateByDay(requestDetails.getCreatedDate());
 		this.description = requestDetails.getDescription();
@@ -42,16 +42,17 @@ public class KokuInformationRequestDetail extends KokuInformationRequestSummary 
 		this.legislationInfo = requestDetails.getLegislationInfo();
 		this.replyDescription = requestDetails.getReplyDescription();
 		this.requestPurpose = requestDetails.getRequestPurpose();
+		this.additionalReplyInfo = requestDetails.getAdditionalReplyInfo();
 		if (requestDetails.getAccessType() != null) {
-			setAccessTypeAsString(requestDetails.getAccessType().toString());	
+			setAccessTypeAsString(requestDetails.getAccessType().toString());
 		}
 	}
-	
+
 	protected final void setAccessTypeAsString(String accessType) {
 		setAccessType(KokuInformationAccessType.fromValue(accessType));
 	}
 
-	
+
 	public String getLocalizedAccessType() {
 		return localizedAccessType;
 	}
@@ -63,7 +64,7 @@ public class KokuInformationRequestDetail extends KokuInformationRequestSummary 
 	public KokuInformationAccessType getAccessType() {
 		return accessType;
 	}
-	
+
 	public final void setAccessType(KokuInformationAccessType accessType) {
 		this.accessType = accessType;
 	}
@@ -127,7 +128,7 @@ public class KokuInformationRequestDetail extends KokuInformationRequestSummary 
 	public void setRequestPurpose(String requestPurpose) {
 		this.requestPurpose = requestPurpose;
 	}
-	
+
 	@Override
 	public String toString() {
 		return "KokuInformationRequestDetail [accessType=" + accessType
@@ -140,7 +141,7 @@ public class KokuInformationRequestDetail extends KokuInformationRequestSummary 
 				+ ", replyDescription=" + replyDescription
 				+ ", requestPurpose=" + requestPurpose + "]";
 	}
-	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -174,7 +175,7 @@ public class KokuInformationRequestDetail extends KokuInformationRequestSummary 
 				+ ((requestPurpose == null) ? 0 : requestPurpose.hashCode());
 		return result;
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
@@ -262,5 +263,5 @@ public class KokuInformationRequestDetail extends KokuInformationRequestSummary 
 		}
 		return true;
 	}
-	
+
 }
