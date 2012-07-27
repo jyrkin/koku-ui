@@ -43,7 +43,7 @@ public class WsProxyServletRestricted extends HttpServlet implements Servlet {
     private static final long serialVersionUID = 1L;
 
 	private static final Logger logger = LoggerFactory.getLogger(WsProxyServletRestricted.class);
-	private static final Map<String, KokuWebServicesJS> endpoints = new HashMap<String, KokuWebServicesJS>();
+ 	private static final Map<String, KokuWebServicesJS> endpoints = new HashMap<String, KokuWebServicesJS>();
 	private static final Map<KokuWebServicesJS, WSRestriction> restrictions = new HashMap<KokuWebServicesJS, WSRestriction>();
 
     static {
@@ -123,10 +123,15 @@ public class WsProxyServletRestricted extends HttpServlet implements Servlet {
             return generateErrorResponse("Malformed message: " + e.getMessage());
         }
 
-        final String userName = (String) request.getSession().getAttribute("javax.portlet.identity.token");
+        final Map<KokuWebServicesJS, String> wsMap = new HashMap<KokuWebServicesJS, String>();
+        for (String uri : endpoints.keySet()) {
+            wsMap.put(endpoints.get(uri), uri);
+        }
+
+        final WSCommonData commonData = new WSCommonData(request.getSession(), wsMap);
 
         // Check if user is authenticated
-        if (userName == null)
+        if (commonData.getCurrentUserName() == null)
             return generateErrorResponse("User is not authenticated");
 
         final KokuWebServicesJS endpoint = endpoints.get(endpointURI);
@@ -134,7 +139,7 @@ public class WsProxyServletRestricted extends HttpServlet implements Servlet {
         final WSRestriction restriction = restrictions.get(endpoint);
 
         if (restriction != null) {
-            if (!restriction.requestPermitted(userName, methodName, soapRequest)) {
+            if (!restriction.requestPermitted(commonData, methodName, soapRequest)) {
                 return generateErrorResponse("User is not permitted to perform this request");
             }
 
@@ -168,7 +173,7 @@ public class WsProxyServletRestricted extends HttpServlet implements Servlet {
             return generateErrorResponse("Error: Received empty result");
         }
 
-        if (restriction != null && !restriction.responsePermitted(userName, methodName, soapResponse)) {
+        if (restriction != null && !restriction.responsePermitted(commonData, methodName, soapResponse)) {
             return generateErrorResponse("User is not permitted to receive this response");
         }
 

@@ -17,8 +17,8 @@ public interface WSRestriction {
 
     KokuWebServicesJS getAssociatedEndpoint();
 
-    boolean requestPermitted(String userName, String methodName, OMElement soapEnvelope);
+    boolean requestPermitted(WSCommonData commonData, String methodName, OMElement soapEnvelope);
 
-    boolean responsePermitted(String userName, String methodName, OMElement soapEnvelope);
+    boolean responsePermitted(WSCommonData commonData, String methodName, OMElement soapEnvelope);
 
 }
