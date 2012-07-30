@@ -603,7 +603,11 @@
 		padding-left: 5px;
 		width: 100px;
 	}
-	
+
+	div#infoRequestsSearch p span.searchTitle {
+		width: 120px;
+	}
+
 	.basic-search p.searchTimeRange input.searchTime {
 		width: 90px;
 	}

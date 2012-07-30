@@ -222,15 +222,16 @@
 						<p class="searchMisc">
 							<span class="text-bold searchTitle"><spring:message code="tipy.search.targetPerson" /></span>
 							<input type="text" title="123456-789A" name="tipyTargetPerson" id="tipyTargetPerson" style="width:200px;" />
-							
+						</p>
+						<p class="searchMisc">
 							<span class="text-bold searchTitle"><spring:message code="tipy.search.requester" /></span>
 							<input type="text" title="123456-789A" name="tipyRequester" id="tipyRequester" style="width:200px;" />
 						</p>
-		
-						<p class="searchMisc">					
+						<p class="searchMisc">
 							<span class="text-bold searchTitle"><spring:message code="tipy.search.handOver" /></span>
 							<input type="text" title="123456-789A" name="tipyHandOver" id="tipyHandOver" style="width:200px;" />
-		
+						</p>
+						<p class="searchMisc">
 							<span class="text-bold searchTitle"><spring:message code="tipy.search.information" /></span>
 							<input type="text" name="tipyInformation" id="tipyInformation" style="width:200px;" />
 						</p>
