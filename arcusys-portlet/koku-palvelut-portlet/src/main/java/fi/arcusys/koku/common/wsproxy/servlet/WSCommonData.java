@@ -3,13 +3,14 @@
  */
 package fi.arcusys.koku.common.wsproxy.servlet;
 
-import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import javax.jms.IllegalStateException;
+import javax.print.attribute.ResolutionSyntax;
 import javax.servlet.http.HttpSession;
 import javax.xml.stream.XMLStreamException;
 
@@ -19,7 +20,6 @@ import org.apache.axis2.AxisFault;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import fi.arcusys.koku.common.exceptions.KokuServiceException;
 import fi.arcusys.koku.common.util.KokuWebServicesJS;
 import fi.arcusys.koku.common.util.Properties;
 
@@ -37,26 +37,14 @@ public class WSCommonData {
     private static final String TRACKED_USER_NAME= "ws.security.username";
     private static final String SECURITY_DATA_CONTAINER = "ws.security.common.data";
 
-    private static final String GET_USER_UID_KUNPO = "<soapenv:Envelope " +
-            "xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" " +
-            "xmlns:soa=\"http://soa.common.koku.arcusys.fi/\">" +
-            "<soapenv:Header/><soapenv:Body>" +
-            "<soa:getUserUidByKunpoName><kunpoUsername>%s</kunpoUsername></soa:getUserUidByKunpoName>" +
-            "</soapenv:Body></soapenv:Envelope>";
+    private static final String GET_USER_UID_KUNPO =
+            "<soa:getUserUidByKunpoName xmlns:soa=\"http://soa.common.koku.arcusys.fi/\"><kunpoUsername>%s</kunpoUsername></soa:getUserUidByKunpoName>";
 
-    private static final String GET_USER_UID_LOORA = "<soapenv:Envelope " +
-            "xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" " +
-            "xmlns:soa=\"http://soa.common.koku.arcusys.fi/\">" +
-            "<soapenv:Header/><soapenv:Body>" +
-            "<soa:getUserUidByLooraName><looraUsername>%s</looraUsername></soa:getUserUidByLooraName>" +
-            "</soapenv:Body></soapenv:Envelope>";
+    private static final String GET_USER_UID_LOORA =
+            "<soa:getUserUidByLooraName xmlns:soa=\"http://soa.common.koku.arcusys.fi/\"><looraUsername>%s</looraUsername></soa:getUserUidByLooraName>";
 
-    private static final String GET_USER_CHILDREN = "<soapenv:Envelope " +
-            "xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" " +
-            "xmlns:soa=\"http://soa.common.koku.arcusys.fi/\">" +
-            "<soapenv:Header/><soapenv:Body>" +
-            "<soa:getUsersChildren><userUid>%s</userUid></soa:getUsersChildren>" +
-            "</soapenv:Body></soapenv:Envelope>";
+    private static final String GET_USER_CHILDREN =
+            "<soa:getUsersChildren xmlns:soa=\"http://soa.common.koku.arcusys.fi/\"><userUid>%s</userUid></soa:getUsersChildren>";
 
     private class WSDataContainer {
         public String userName;
@@ -103,27 +91,49 @@ public class WSCommonData {
 
     }
 
+    /**
+     * This function fetches user's UID based on their KunPo user name
+     * IT WILL NOT CHECK PERMISSIONS
+     * */
+    public String getUserUidByKunpoName(final String userName) throws AxisFault, XMLStreamException {
+        OMElement response = WSCommonUtil.sendRequest(endpoints.get(KokuWebServicesJS.USERS_AND_GROUPS_SERVICE),
+                AXIOMUtil.stringToOM(String.format(GET_USER_UID_KUNPO, userName)));
+
+        return WSCommonUtil.getTextOfChild(response, "userUid");
+    }
+
+    /**
+     * This function fetches user's UID based on their Loora user name
+     * IT WILL NOT CHECK PERMISSIONS
+     * */
+    public String getUserUidByLooraName(final String userName) throws AxisFault, XMLStreamException {
+        OMElement response = WSCommonUtil.sendRequest(endpoints.get(KokuWebServicesJS.USERS_AND_GROUPS_SERVICE),
+                AXIOMUtil.stringToOM(String.format(GET_USER_UID_LOORA, userName)));
+
+        return WSCommonUtil.getTextOfChild(response, "userUid");
+    }
+
     private void fetchUserData() {
         try {
-            OMElement response = null;
+            final String currentUser = getCurrentUserName();
+            String userUid = null;
 
             if (Properties.IS_KUNPO_PORTAL) {
-                response = WSCommonUtil.sendRequest(endpoints.get(KokuWebServicesJS.USERS_AND_GROUPS_SERVICE),
-                        AXIOMUtil.stringToOM(String.format(GET_USER_UID_KUNPO, getCurrentUserName())));
-            }
-
-            if (Properties.IS_LOORA_PORTAL) {
-                response = WSCommonUtil.sendRequest(endpoints.get(KokuWebServicesJS.USERS_AND_GROUPS_SERVICE),
-                        AXIOMUtil.stringToOM(String.format(GET_USER_UID_LOORA, getCurrentUserName())));
-            }
-
-            if (response == null)
+                userUid = getUserUidByKunpoName(currentUser);
+            } else if (Properties.IS_LOORA_PORTAL) {
+                userUid = getUserUidByLooraName(currentUser);
+            } else {
                 throw new IllegalStateException("The portal type is undeterminable (should be KunPo or Loora)");
+            }
 
-            final String userUid = WSCommonUtil.getTextOfChild(response, "userUid");
+            if (userUid == null)
+                throw new Exception("Services are unavailable (bad response)");
 
-            dataContainer.userName = getCurrentUserName();
+            dataContainer.userName = currentUser;
             dataContainer.userUid = userUid;
+
+            logger.info("Fetched user UID: "+dataContainer.userUid);
+            logger.info("Fetched user name: "+dataContainer.userName);
 
             dataContainer.userInfoAllowedUid.add(userUid);
 
@@ -133,14 +143,21 @@ public class WSCommonData {
 
     }
 
+    @SuppressWarnings("unchecked")
     private void fetchChildrenPermissions() {
         try {
-            OMElement response;
+            OMElement response = WSCommonUtil.sendRequest(endpoints.get(KokuWebServicesJS.USERS_AND_GROUPS_SERVICE),
+                    AXIOMUtil.stringToOM(String.format(GET_USER_CHILDREN, dataContainer.userUid)));
 
-            response = WSCommonUtil.sendRequest(endpoints.get(KokuWebServicesJS.USERS_AND_GROUPS_SERVICE),
-                    AXIOMUtil.stringToOM(String.format(GET_USER_CHILDREN, "")));
+            logger.info("Children: " + response);
 
-            // TODO: Fetch user's children
+            final Iterator<OMElement> i = response.getChildrenWithLocalName("child");
+            while (i.hasNext()) {
+                final OMElement child = i.next();
+                final String uid = WSCommonUtil.getTextOfChild(child, "uid");
+                logger.info("Adding allowed UID: " + dataContainer.userUid);
+                dataContainer.userInfoAllowedUid.add(uid);
+            }
 
         } catch (Exception e) {
             logger.warn("Could not fetch children list from WS endpoint", e);
