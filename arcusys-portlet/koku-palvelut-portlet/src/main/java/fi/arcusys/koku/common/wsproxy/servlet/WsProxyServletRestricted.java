@@ -42,29 +42,29 @@ import fi.koku.settings.KoKuPropertiesUtil;
 public class WsProxyServletRestricted extends HttpServlet implements Servlet {
     private static final long serialVersionUID = 1L;
 
-	private static final Logger logger = LoggerFactory.getLogger(WsProxyServletRestricted.class);
- 	private static final Map<String, KokuWebServicesJS> endpoints = new HashMap<String, KokuWebServicesJS>();
-	private static final Map<KokuWebServicesJS, WSRestriction> restrictions = new HashMap<KokuWebServicesJS, WSRestriction>();
+    private static final Logger logger = LoggerFactory.getLogger(WsProxyServletRestricted.class);
+    private static final Map<String, KokuWebServicesJS> endpoints = new HashMap<String, KokuWebServicesJS>();
+    private static final Map<KokuWebServicesJS, WSRestriction> restrictions = new HashMap<KokuWebServicesJS, WSRestriction>();
 
     static {
-    	for (KokuWebServicesJS service : KokuWebServicesJS.values()) {
+        for (KokuWebServicesJS service : KokuWebServicesJS.values()) {
 
-    	    String endpoint = KoKuPropertiesUtil.get(service.value());
+            String endpoint = KoKuPropertiesUtil.get(service.value());
 
-    	    if (endpoint == null) {
-    			throw new ExceptionInInitializerError("Coulnd't find endpoint definintion property '"+ service.value()+"'");
-    		}
+            if (endpoint == null) {
+                throw new ExceptionInInitializerError("Coulnd't find endpoint definintion property '"+ service.value()+"'");
+            }
 
-    	    // Trim ".wsdl"
-    	    if (endpoint.endsWith("?wsdl"))
-    			endpoint = endpoint.substring(0, endpoint.indexOf("?wsdl"));
+            // Trim ".wsdl"
+            if (endpoint.endsWith("?wsdl"))
+                endpoint = endpoint.substring(0, endpoint.indexOf("?wsdl"));
 
-    	    endpoints.put(endpoint, service);
+            endpoints.put(endpoint, service);
 
-    		logger.info("Added new permitted endpoint to WsProxyServlet: "+endpoint);
-    	}
+            logger.info("Added new permitted endpoint to WsProxyServlet: "+endpoint);
+        }
 
-    	restrictions.put(KokuWebServicesJS.USERS_AND_GROUPS_SERVICE, new UsersAndGroupsServiceRestriction());
+        restrictions.put(KokuWebServicesJS.USERS_AND_GROUPS_SERVICE, new UsersAndGroupsServiceRestriction());
     }
 
     protected void doPost(HttpServletRequest request,
@@ -153,7 +153,7 @@ public class WsProxyServletRestricted extends HttpServlet implements Servlet {
         String action = request.getParameter("action");
 
         if (action == null)
-        	action = request.getHeader("soapaction");
+            action = request.getHeader("soapaction");
 
         options.setAction(action);
 

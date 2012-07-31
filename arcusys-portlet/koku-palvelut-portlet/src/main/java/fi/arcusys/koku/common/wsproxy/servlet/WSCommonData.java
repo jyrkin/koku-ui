@@ -49,10 +49,11 @@ public class WSCommonData {
     private class WSDataContainer {
         public String userName;
         public String userUid;
-        public List<OMElement> children; // contains a list of <child> elements from getUsersCildren response (KunPo only)
+        public List<OMElement> children; // contains a list of <child> elements from getUsersChildren response (KunPo only)
         public Set<String> userInfoAllowedUid = new HashSet<String>();
         public Set<String> userInfoAllowedKunpo = new HashSet<String>();
         public Set<String> userInfoAllowedLoora = new HashSet<String>();
+        public Set<String> avAllowedMeetingIdSet = new HashSet<String>();
     }
 
     private HttpSession session;
@@ -172,21 +173,25 @@ public class WSCommonData {
         return (String) session.getAttribute(CURRENT_USER_NAME);
     }
 
-    @SuppressWarnings("unchecked")
     public Set<String> getUserInfoAllowedUid() {
         return dataContainer.userInfoAllowedUid;
     }
 
-    @SuppressWarnings("unchecked")
     public Set<String> getUserInfoAllowedKunpo() {
         return dataContainer.userInfoAllowedKunpo;
     }
 
-    @SuppressWarnings("unchecked")
     public Set<String> getUserInfoAllowedLoora() {
         return dataContainer.userInfoAllowedLoora;
     }
 
+    public Set<String> getAvAllowedMeetingIdSet() {
+        return dataContainer.avAllowedMeetingIdSet;
+    }
+
+    public String getCurrentUserUid() {
+        return dataContainer.userUid;
+    }
 
 }
 
