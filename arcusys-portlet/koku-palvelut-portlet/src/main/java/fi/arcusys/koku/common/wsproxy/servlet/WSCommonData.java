@@ -3,6 +3,7 @@
  */
 package fi.arcusys.koku.common.wsproxy.servlet;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -46,7 +47,7 @@ public class WSCommonData {
     private static final String GET_USER_CHILDREN =
             "<soa:getUsersChildren xmlns:soa=\"http://soa.common.koku.arcusys.fi/\"><userUid>%s</userUid></soa:getUsersChildren>";
 
-    private class WSDataContainer {
+    private static class WSDataContainer implements Serializable {
         public String userName;
         public String userUid;
         public List<OMElement> children; // contains a list of <child> elements from getUsersChildren response (KunPo only)
@@ -68,10 +69,17 @@ public class WSCommonData {
         final String currentUser = getCurrentUserName();
         final String trackedUser = (String) session.getAttribute(TRACKED_USER_NAME);
 
+        logger.info("Session ID is: "+session.getId());
+
+        logger.info("There "+(session.getAttribute(SECURITY_DATA_CONTAINER) != null ? "IS" : "ISN'T")+" A DATA CONTAINER IN SESSION");
+
         // If user has been changed (or not set), remove the authentications
         if (currentUser == null || trackedUser == null || !currentUser.equals(trackedUser)) {
             session.removeAttribute(SECURITY_DATA_CONTAINER);
         }
+
+        // Track current user name
+        session.setAttribute(TRACKED_USER_NAME, currentUser);
 
         dataContainer = (WSDataContainer) session.getAttribute(SECURITY_DATA_CONTAINER);
         if (dataContainer == null) {
@@ -89,7 +97,6 @@ public class WSCommonData {
             if (Properties.IS_KUNPO_PORTAL)
                 fetchChildrenPermissions();
         }
-
     }
 
     /**
