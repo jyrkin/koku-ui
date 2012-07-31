@@ -35,6 +35,8 @@ public class UsersAndGroupsServiceRestriction implements WSRestriction {
 
             if (userUid != null && commonData.getUserInfoAllowedUid().contains(userUid)) {
                 permitted = true;
+            } else {
+                logger.warn("User is not permitted to get the information about other non-relevant users");
             }
 
         // UsersAndGroupsService - getUserUidByKunpoName
@@ -45,10 +47,20 @@ public class UsersAndGroupsServiceRestriction implements WSRestriction {
 
             if (kunpoUsername != null && commonData.getUserInfoAllowedKunpo().contains(kunpoUsername)) {
                 permitted = true;
+            } else {
+                logger.warn("User is not permitted to get the information about other non-relevant users");
             }
 
-        } else {
+        } else if (methodName.equals("getUserUidByLooraName")) {
+            final String looraUsername = WSCommonUtil.getTextOfChild(soapEnvelope, "looraUsername");
 
+            logger.info("getUserUidByLooraName: looraUsername = " + looraUsername);
+
+            if (looraUsername != null && commonData.getUserInfoAllowedLoora().contains(looraUsername)) {
+                permitted = true;
+            } else {
+                logger.warn("User is not permitted to get the information about other non-relevant users");
+            }
         }
 
         return permitted;
