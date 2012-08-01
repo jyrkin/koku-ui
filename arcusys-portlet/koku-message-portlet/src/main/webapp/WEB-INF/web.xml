@@ -17,6 +17,15 @@
 		<url-pattern>/WEB-INF/servlet/view</url-pattern>
 	</servlet-mapping>
 	
+	<servlet>
+		<servlet-name>AttachmentProxy</servlet-name>
+		<servlet-class>fi.arcusys.koku.proxy.AttachmentProxy</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>AttachmentProxy</servlet-name>
+		<url-pattern>/wds/attachments/*</url-pattern>
+	</servlet-mapping>
+	
 	
    <!-- EPP only: start -->
 	 <filter>
