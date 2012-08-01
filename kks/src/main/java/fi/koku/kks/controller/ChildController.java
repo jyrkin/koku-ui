@@ -139,38 +139,6 @@ public class ChildController {
     }
   }
 
-  @ActionMapping(params = "action=sendConsentRequest")
-  public void sendConsentRequest(PortletRequest request,PortletSession session,
-      @ModelAttribute(value = "child") Person child,
-      @RequestParam String collectionId, @RequestParam String consent,
-      @RequestParam(value = "fromGroup", required = false) String fromGroup,
-      @RequestParam(value = "selected", required = false) String selected,
-      ActionResponse response, SessionStatus sessionStatus) {
-    LOG.debug("sendConsentRequest");
-
-    boolean success = kksService.sendConsentRequest(consent, child.getPic(),
-        Utils.getPicFromSession(session));
-
-    response.setRenderParameter("action", "showChild");
-    response.setRenderParameter("pic", child.getPic());
-
-    if (StringUtils.isNotEmpty(selected)) {
-      response.setRenderParameter("selected", selected);
-    }
-
-    if (StringUtils.isNotEmpty(fromGroup)) {
-      response.setRenderParameter("fromGroup", fromGroup);
-    }
-
-    if (!success) {
-      response.setRenderParameter("error", "collection.consent.request.failed");
-    } else {
-      response.setRenderParameter("message",
-          "collection.consent.request.success");
-    }
-    sessionStatus.setComplete();
-  }
-
   @RenderMapping(params = "action=showPegasos")
   public String showPegasos(@ModelAttribute(value = "child") Person child,
       RenderResponse response, Model model) {
