@@ -91,6 +91,7 @@ public class AppointmentProcessingServiceRestriction implements WSRestriction {
 
         if (methodName.equals("getAppointment"))
         {
+            soapEnvelope = soapEnvelope.getFirstElement();
             String uid = WSCommonUtil.getTextOfChild(soapEnvelope, "senderUserInfo", "uid");
             // Only creator of appointment can edit the whole appointment
             if (commonData.getCurrentUserUid().equals(uid)) {

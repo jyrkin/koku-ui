@@ -104,6 +104,7 @@ public class MessageProcessingServiceRestriction implements WSRestriction {
             String currentUid = commonData.getCurrentUserUid();
             Set<String> currentUserRoles = commonData.getCurrentUserRoles();
 
+            // Accessible to people who are senders, receivers or who have the associated role
             if (currentUid.equals(senderUid) || receiverUids.contains(currentUid) || currentUserRoles.contains(fromRoleUid)) {
                 permitted = true;
             }

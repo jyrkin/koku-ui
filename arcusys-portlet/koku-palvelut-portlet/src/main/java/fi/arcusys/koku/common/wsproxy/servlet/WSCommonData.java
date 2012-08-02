@@ -67,7 +67,6 @@ public class WSCommonData {
     private Map<KokuWebServicesJS, String> endpoints;
     private UserInfo currentUserInfo;
 
-    @SuppressWarnings("unchecked")
     public WSCommonData(final HttpSession session, final Map<KokuWebServicesJS, String> endpoints) {
         this.session = session;
         this.endpoints = endpoints;
@@ -203,10 +202,8 @@ public class WSCommonData {
 
             logger.info("Roles: " + response);
 
-            final Iterator<OMElement> roleUids = response.getChildrenWithLocalName("roleUid");
-            while (roleUids.hasNext()) {
-                String roleUid = roleUids.next().getText();
-                logger.info("Adding allowed role UID: " + roleUid);
+            Set<String> roleUids = WSCommonUtil.getTextOfChildrenOfParents(response, "role", "roleUid");
+            for (String roleUid : roleUids) {
                 dataContainer.userRoles.add(roleUid);
             }
 
