@@ -68,7 +68,7 @@ public class WsProxyServletRestricted extends HttpServlet implements Servlet {
             logger.info("Added new permitted endpoint to WsProxyServlet: "+endpoint);
         }
 
-        //restrictions.put(KokuWebServicesJS.USERS_AND_GROUPS_SERVICE, new UsersAndGroupsServiceRestriction());
+        restrictions.put(KokuWebServicesJS.USERS_AND_GROUPS_SERVICE, new UsersAndGroupsServiceRestriction());
         restrictions.put(KokuWebServicesJS.APPOINTMENT_PROCESSING_SERVICE, new AppointmentProcessingServiceRestriction());
         restrictions.put(KokuWebServicesJS.KV_MESSAGE_SERVICE, new MessageProcessingServiceRestriction());
     }
