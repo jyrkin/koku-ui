@@ -47,6 +47,9 @@ public class WSCommonData {
     private static final String GET_USER_CHILDREN =
             "<soa:getUsersChildren xmlns:soa=\"http://soa.common.koku.arcusys.fi/\"><userUid>%s</userUid></soa:getUsersChildren>";
 
+    private static final String GET_USER_ROLES =
+            "<soa:getUserRoles xmlns:soa=\"http://soa.common.koku.arcusys.fi/\"><userUid>%s</userUid></soa:getUserRoles>";
+
     private static class WSDataContainer implements Serializable {
         public String userName;
         public String userUid;
@@ -54,6 +57,7 @@ public class WSCommonData {
         public Set<String> userInfoAllowedUid = new HashSet<String>();
         public Set<String> userInfoAllowedKunpo = new HashSet<String>();
         public Set<String> userInfoAllowedLoora = new HashSet<String>();
+        public Set<String> userRoles = new HashSet<String>();
         public Set<String> avAllowedMeetingIdSet = new HashSet<String>();
     }
 
@@ -96,6 +100,9 @@ public class WSCommonData {
 
             if (Properties.IS_KUNPO_PORTAL)
                 fetchChildrenPermissions();
+
+            if (Properties.IS_LOORA_PORTAL)
+                fetchRoleInformation();
         }
     }
 
@@ -172,6 +179,26 @@ public class WSCommonData {
         }
     }
 
+    @SuppressWarnings("unchecked")
+    private void fetchRoleInformation() {
+        try {
+            OMElement response = WSCommonUtil.sendRequest(endpoints.get(KokuWebServicesJS.USERS_AND_GROUPS_SERVICE),
+                    AXIOMUtil.stringToOM(String.format(GET_USER_ROLES, dataContainer.userUid)));
+
+            logger.info("Roles: " + response);
+
+            final Iterator<OMElement> roleUids = response.getChildrenWithLocalName("roleUid");
+            while (roleUids.hasNext()) {
+                String roleUid = roleUids.next().getText();
+                logger.info("Adding allowed role UID: " + roleUid);
+                dataContainer.userRoles.add(roleUid);
+            }
+
+        } catch (Exception e) {
+            logger.warn("Could not fetch role list from WS endpoint", e);
+        }
+    }
+
     public HttpSession getSession() {
         return session;
     }
@@ -198,6 +225,10 @@ public class WSCommonData {
 
     public String getCurrentUserUid() {
         return dataContainer.userUid;
+    }
+
+    public Set<String> getCurrentUserRoles() {
+        return dataContainer.userRoles;
     }
 
 }

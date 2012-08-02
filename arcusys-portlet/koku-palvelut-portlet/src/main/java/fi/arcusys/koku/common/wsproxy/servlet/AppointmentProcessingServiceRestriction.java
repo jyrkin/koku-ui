@@ -1,6 +1,3 @@
-/**
- *
- */
 package fi.arcusys.koku.common.wsproxy.servlet;
 
 import org.apache.axiom.om.OMElement;
@@ -59,7 +56,7 @@ public class AppointmentProcessingServiceRestriction implements WSRestriction {
             if (Properties.IS_KUNPO_PORTAL) {
                 String userUid = WSCommonUtil.getTextOfChild(soapEnvelope, "user");
                 // Only Kunpo user in question of appointment can decline or approve said appointment
-                if (userUid.equals(commonData.getCurrentUserUid())) {
+                if (commonData.getCurrentUserUid().equals(userUid)) {
                     permitted = true;
                 }
             }
@@ -70,10 +67,18 @@ public class AppointmentProcessingServiceRestriction implements WSRestriction {
             if (Properties.IS_KUNPO_PORTAL) {
                 String userUid = WSCommonUtil.getTextOfChild(soapEnvelope, "user");
                 // Only Kunpo user in question of appointment can decline or approve said appointment
-                if (userUid.equals(commonData.getCurrentUserUid())) {
+                if (commonData.getCurrentUserUid().equals(userUid)) {
                     permitted = true;
                 }
             }
+        }
+
+        if (permitted) {
+            logger.info("Permission granted for " + commonData.getCurrentUserName()
+                    + " requesting " + methodName);
+        } else {
+            logger.warn("No permissions granted for " + commonData.getCurrentUserName()
+                    + " requesting " + methodName + ". Request data: " + soapEnvelope.toString());
         }
 
         return permitted;
@@ -86,9 +91,9 @@ public class AppointmentProcessingServiceRestriction implements WSRestriction {
 
         if (methodName.equals("getAppointment"))
         {
-            String uid = WSCommonUtil.getTextOfChild(soapEnvelope, "uid");
+            String uid = WSCommonUtil.getTextOfChild(soapEnvelope, "senderUserInfo", "uid");
             // Only creator of appointment can edit the whole appointment
-            if (uid.equals(commonData.getCurrentUserUid())) {
+            if (commonData.getCurrentUserUid().equals(uid)) {
                 String appointmentId = WSCommonUtil.getTextOfChild(soapEnvelope, "appointmentId");
                 // Only valid appointmentIds are stored for future permissions and returned
                 if (appointmentId != null) {
@@ -99,7 +104,7 @@ public class AppointmentProcessingServiceRestriction implements WSRestriction {
         }
         else if (methodName.equals("getAppointmentForReply"))
         {
-            // Checks done in requestPermitted
+            // All checks done in requestPermitted
             permitted = true;
 
         }
@@ -113,13 +118,21 @@ public class AppointmentProcessingServiceRestriction implements WSRestriction {
         }
         else if (methodName.equals("approveAppointment"))
         {
-            // Checks done in requestPermitted
+            // All checks done in requestPermitted
             permitted = true;
         }
         else if (methodName.equals("declineAppointment"))
         {
-            // Checks done in requestPermitted
+            // All checks done in requestPermitted
             permitted = true;
+        }
+
+        if (permitted) {
+            logger.info("Permission granted for " + commonData.getCurrentUserName()
+                    + " accessing " + methodName + " request data.");
+        } else {
+            logger.warn("No permissions granted for " + commonData.getCurrentUserName()
+                    + " accessing " + methodName + " request data. Request return data: " + soapEnvelope.toString());
         }
 
         return permitted;
