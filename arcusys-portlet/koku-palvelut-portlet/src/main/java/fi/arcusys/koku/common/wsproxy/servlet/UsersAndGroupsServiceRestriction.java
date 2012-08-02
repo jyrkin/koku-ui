@@ -27,20 +27,8 @@ public class UsersAndGroupsServiceRestriction implements WSRestriction {
     public boolean requestPermitted(WSCommonData commonData, final String methodName, final OMElement soapEnvelope) {
         boolean permitted = false;
 
-        // UsersAndGroupsService - getUserInfo
-        if (methodName.equals("getUserInfo")) {
-            final String userUid = WSCommonUtil.getTextOfChild(soapEnvelope, "userUid");
-
-            logger.info("getUserInfo: userUid = " + userUid);
-
-            if (userUid != null && commonData.getUserInfoAllowedUid().contains(userUid)) {
-                permitted = true;
-            } else {
-                logger.warn("User is not permitted to get the information about other non-relevant users");
-            }
-
         // UsersAndGroupsService - getUserUidByKunpoName
-        } else if (methodName.equals("getUserUidByKunpoName")) {
+        if (methodName.equals("getUserUidByKunpoName")) {
             final String kunpoUsername = WSCommonUtil.getTextOfChild(soapEnvelope, "kunpoUsername");
 
             logger.info("getUserUidByKunpoName: kunpoUsername = " + kunpoUsername);
@@ -51,12 +39,35 @@ public class UsersAndGroupsServiceRestriction implements WSRestriction {
                 logger.warn("User is not permitted to get the information about other non-relevant users");
             }
 
+        // UsersAndGroupsService - getUserUidByLooraName
         } else if (methodName.equals("getUserUidByLooraName")) {
             final String looraUsername = WSCommonUtil.getTextOfChild(soapEnvelope, "looraUsername");
 
             logger.info("getUserUidByLooraName: looraUsername = " + looraUsername);
 
             if (looraUsername != null && commonData.getUserInfoAllowedLoora().contains(looraUsername)) {
+                permitted = true;
+            } else {
+                logger.warn("User is not permitted to get the information about other non-relevant users");
+            }
+
+        // UsersAndGroupsService - getUsersChildren
+        } else if (methodName.equals("getUsersChildren")) {
+            final String userUid = WSCommonUtil.getTextOfChild(soapEnvelope, "userUid");
+
+            if (userUid != null && commonData.getUserInfoAllowedUid().contains(userUid)) {
+                permitted = true;
+            } else {
+                logger.warn("User is not permitted to get the information about other non-relevant users");
+            }
+
+        // UsersAndGroupsService - getUserInfo
+        } else if (methodName.equals("getUserInfo")) {
+            final String userUid = WSCommonUtil.getTextOfChild(soapEnvelope, "userUid");
+
+            logger.info("getUserInfo: userUid = " + userUid);
+
+            if (userUid != null && commonData.getUserInfoAllowedUid().contains(userUid)) {
                 permitted = true;
             } else {
                 logger.warn("User is not permitted to get the information about other non-relevant users");
