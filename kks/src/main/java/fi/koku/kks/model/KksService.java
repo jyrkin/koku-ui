@@ -68,10 +68,6 @@ import fi.koku.services.entity.kv.v1.KokuCommonMessagingService;
 import fi.koku.services.entity.person.v1.Group;
 import fi.koku.services.entity.person.v1.PersonConstants;
 import fi.koku.services.entity.person.v1.PersonService;
-import fi.koku.services.entity.tiva.v1.Consent;
-import fi.koku.services.entity.tiva.v1.ConsentTemplate;
-import fi.koku.services.entity.tiva.v1.GivenTo;
-import fi.koku.services.entity.tiva.v1.KokuTivaToKksService;
 import fi.koku.services.utility.authorizationinfo.v1.AuthorizationInfoService;
 import fi.koku.services.utility.authorizationinfo.v1.AuthorizationInfoServiceFactory;
 import fi.koku.services.utility.authorizationinfo.v1.model.Registry;
@@ -95,7 +91,6 @@ public class KksService {
   private CommunityServicePortType communityService;
   private CustomerServicePortType customerService;
   private FamilyService familyService;
-  private KokuTivaToKksService tivaService;
   private KokuCommonMessagingService messageService;
   private AuthorizationInfoService authorizationService;
   private PersonService personService;
@@ -109,7 +104,6 @@ public class KksService {
     customerService = getCustomerService();
     familyService = getFamilyService();
     authorizationService = getAuthorizationService();
-    tivaService = getTivaService();
     messageService = getKvService();
     personService = new PersonService();
   }
@@ -599,49 +593,6 @@ public class KksService {
     return creatables;
   }
 
-  /**
-   * Creates consent request for given customer and consentType
-   * 
-   * @param customer
-   * @param user
-   *          that requests the consent
-   * @param consentType
-   *          that is requested (example
-   *          kks.suostumus.4-vuotiaan.neuvolatarkastus)
-   * @return true if request is success false if failed
-   */
-  public boolean sendConsentRequest(String consentType, String customerId, String user) {
-
-    try {
-
-      List<ConsentTemplate> templates = tivaService.queryConsentTemplates(consentType, 1);
-
-      if (templates.size() == 0) {
-        LOG.error("No TIVA templates found for constentType " + consentType);
-        return false;
-      }
-
-      ConsentTemplate consentTemplate = templates.get(0);
-
-      Consent consent = new Consent();
-      consent.setTargetPerson(customerId);
-      consent.setTemplate(consentTemplate);
-      consent.setConsentRequestor(user);
-      List<String> guardians = getCustomerGuardians(customerId, user);
-      if (guardians == null) {
-        LOG.error("No guardians found for customer");
-        return false;
-      }
-
-      consent.getGivenTo().addAll(getConsentOrganizations(user, consentType));
-      consent.getConsentProviders().addAll(guardians);
-      tivaService.createConsent(consent);
-    } catch (Exception e) {
-      LOG.error("Cannot use TIVA service", e);
-      return false;
-    }
-    return true;
-  }
 
   private List<String> getCustomerGuardians(String customer, String user) {
     List<String> names = new ArrayList<String>();
@@ -654,28 +605,6 @@ public class KksService {
       LOG.error("Failed to use familyservice", e);
     }
     return names;
-  }
-
-  private List<GivenTo> getConsentOrganizations(String user, String concentType ) {
-    String consentOrganizations =  KoKuPropertiesUtil.get(concentType);
-    List<GivenTo> orgNames = new ArrayList<GivenTo>();
-    
-    if (consentOrganizations != null ) {
-      String orgs[] = consentOrganizations.split(";");  
-      for (String line : orgs ) {
-        String tmp[] = line.split(",");
-        GivenTo gt = new GivenTo();
-        gt.setPartyId(tmp[0]);
-        gt.setPartyName(tmp[1]);
-        orgNames.add(gt);
-      }
-    }
-    return orgNames;
-  }
-
-  private KokuTivaToKksService getTivaService() {
-    ConsentServiceFactory csf = new ConsentServiceFactory();
-    return csf.getService();
   }
   
   private KokuCommonMessagingService getKvService() {

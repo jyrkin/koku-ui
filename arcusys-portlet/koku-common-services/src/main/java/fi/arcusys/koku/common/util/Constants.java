@@ -39,6 +39,10 @@ public final class Constants {
 	public static final String PROPERTIES_FILTER_RECEIVED_DAYCARE_TERMINATION			= "intalioFilterReceivedDaycareTerminations";
 	public static final String PROPERTIES_FILTER_RECEIVED_DAYCARE_HOLIDAYS				= "intalioFilterReceivedDaycareHolidays";
 
+	public static final String PROPERTIES_INTALIO_HOST						= "intalio.host";
+	public static final String PROPERTIES_INTALIO_PORT						= "intalio.port";
+	public static final String PROPERTIES_INTALIO_ATTACHMENTS_PATH			= "intalio.attachments.path";
+
 
 	/* ModelMap attribute key */
 	public static final String RESPONSE										= "response";

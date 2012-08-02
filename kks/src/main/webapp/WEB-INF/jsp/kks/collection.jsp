@@ -364,53 +364,62 @@
 													</div>
 												</c:if>
 												<c:if test="${not type.multiValue}">
-													<c:choose>
-														<c:when test="${ block_guardian }">
-															<span class="kks-read-only-text"><c:out
-																	value="${collection.entries[type.id].firstValue.value}"></c:out>
-															</span>
-														</c:when>
-														<c:when test="${ type.dataType eq multi_select.name }">
-															<div class="portlet-form-field">
-																<c:forEach
-																	items="${collection.entries[type.id].valueChoices}"
-																	var="value">
-
-																	<form:checkbox class="portlet-form-input-field"
+												
+													<c:if test="${empty collection.entries[type.id]}">
+														<div class="kks-read-only-text">
+															<spring:message code="ui.kks.no.field.authorization" />
+														</div>
+													</c:if>
+													<c:if test="${not empty collection.entries[type.id]}">
+																
+														<c:choose>
+															<c:when test="${ block_guardian }">
+																<span class="kks-read-only-text"><c:out
+																		value="${collection.entries[type.id].firstValue.value}"></c:out>
+																</span>
+															</c:when>
+															<c:when test="${ type.dataType eq multi_select.name }">
+																<div class="portlet-form-field">
+																	<c:forEach
+																		items="${collection.entries[type.id].valueChoices}"
+																		var="value">
+	
+																		<form:checkbox class="portlet-form-input-field"
+																			title="${type.description }"
+																			path="entries['${type.id}'].firstValue.values"
+																			value="${value}" label="${value}" />
+																	</c:forEach>
+																</div>
+															</c:when>
+															<c:when test="${ type.dataType eq select.name }">
+																<div class="portlet-form-field">
+																	<c:forEach items="${type.valueSpaces.valueSpace}"
+																		var="value">
+																		<form:radiobutton class="portlet-form-input-field"
+																			title="${type.description }"
+																			path="entries['${type.id}'].firstValue.values"
+																			value="${ value }" label="${value}" />
+																	</c:forEach>
+																</div>
+															</c:when>
+															<c:when test="${ type.dataType eq text.name }">
+																<div class="portlet-form-field">
+																	<form:input maxlength="2000"
 																		title="${type.description }"
-																		path="entries['${type.id}'].firstValue.values"
-																		value="${value}" label="${value}" />
-																</c:forEach>
-															</div>
-														</c:when>
-														<c:when test="${ type.dataType eq select.name }">
-															<div class="portlet-form-field">
-																<c:forEach items="${type.valueSpaces.valueSpace}"
-																	var="value">
-																	<form:radiobutton class="portlet-form-input-field"
-																		title="${type.description }"
-																		path="entries['${type.id}'].firstValue.values"
-																		value="${ value }" label="${value}" />
-																</c:forEach>
-															</div>
-														</c:when>
-														<c:when test="${ type.dataType eq text.name }">
-															<div class="portlet-form-field">
-																<form:input maxlength="2000"
-																	title="${type.description }"
-																	class="portlet-form-input-field"
-																	path="entries['${type.id}'].firstValue.value" />
-															</div>
-														</c:when>
-														<c:otherwise>
-															<div class="portlet-form-field">
-																<form:textarea maxlength="2000"
-																	class="portlet-form-input-field"
-																	title="${type.description}"
-																	path="entries['${type.id}'].firstValue.value" />
-															</div>
-														</c:otherwise>
-													</c:choose>
+																		class="portlet-form-input-field"
+																		path="entries['${type.id}'].firstValue.value" />
+																</div>
+															</c:when>
+															<c:otherwise>
+																<div class="portlet-form-field">
+																	<form:textarea maxlength="2000"
+																		class="portlet-form-input-field"
+																		title="${type.description}"
+																		path="entries['${type.id}'].firstValue.value" />
+																</div>
+															</c:otherwise>
+														</c:choose>
+													</c:if>
 												</c:if>
 											</c:if>
 
@@ -419,30 +428,37 @@
 
 												<div class="portlet-section-text">
 
-													<c:choose>
-														<c:when
-															test="${ empty collection.entries[type.id] || empty collection.entries[type.id].firstValue.value }">
-															<span class="kks-read-only-text">-</span>
-														</c:when>
-														<c:otherwise>
-															<c:if test="${ type.multiValue }">
-																<c:forEach var="multivalue"
-																	items='${ collection.entries[type.id].entryValues }'>
-																	<span class="kks-read-only-text"><c:out
-																			value="${multivalue.value}" />
-																		<c:out value=" (${multivalue.modifierFullName}" /> <fmt:formatDate
-																			type="both" pattern="dd.MM.yyyy hh:mm"
-																			value="${multivalue.modified}" />)</span>
-																</c:forEach>
-															</c:if>
-															<c:if test="${ not type.multiValue }">
-																<p class="kks-read-only-text">
-																	<c:out
-																		value="${collection.entries[type.id].firstValue.value}"></c:out>
-																</p>
-															</c:if>
-														</c:otherwise>
-													</c:choose>
+													<c:if test="${empty collection.entries[type.id]}">
+														<p class="kks-read-only-text">
+															<spring:message code="ui.kks.no.field.authorization" />
+														</p>
+													</c:if>
+													<c:if test="${not empty collection.entries[type.id]}">
+														<c:choose>
+															<c:when
+																test="${ empty collection.entries[type.id] || empty collection.entries[type.id].firstValue.value }">
+																<span class="kks-read-only-text">-</span>
+															</c:when>
+															<c:otherwise>
+																<c:if test="${ type.multiValue }">
+																	<c:forEach var="multivalue"
+																		items='${ collection.entries[type.id].entryValues }'>
+																		<span class="kks-read-only-text"><c:out
+																				value="${multivalue.value}" />
+																			<c:out value=" (${multivalue.modifierFullName}" /> <fmt:formatDate
+																				type="both" pattern="dd.MM.yyyy hh:mm"
+																				value="${multivalue.modified}" />)</span>
+																	</c:forEach>
+																</c:if>
+																<c:if test="${ not type.multiValue }">
+																	<p class="kks-read-only-text">
+																		<c:out
+																			value="${collection.entries[type.id].firstValue.value}"></c:out>
+																	</p>
+																</c:if>
+															</c:otherwise>
+														</c:choose>
+													</c:if>
 												</div>
 
 											</c:if>
