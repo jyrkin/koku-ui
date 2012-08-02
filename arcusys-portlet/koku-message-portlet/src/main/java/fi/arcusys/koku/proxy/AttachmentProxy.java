@@ -29,7 +29,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
-import java.net.URLEncoder;
+import java.io.UnsupportedEncodingException;
 import java.util.Enumeration;
 
 import javax.servlet.ServletConfig;
@@ -117,14 +117,7 @@ public class AttachmentProxy extends HttpServlet {
 			HttpServletResponse response) throws IOException,
 			ServletException {
 
-		final String normalUrl = getProxyURL(request);
-		if (normalUrl == null) {
-			LOG.error("Invalid url: '"+normalUrl+"'");
-			generateErrorMessage(response, "Invalid url");
-			return;
-		}
-
-		final String urlToConnect = URLEncoder.encode(getProxyURL(request), "UTF-8");
+		final String urlToConnect = getProxyURL(request);
 
 		ProxyAuthentication authentication;
 		if (Properties.IS_LOORA_PORTAL) {
@@ -300,7 +293,7 @@ public class AttachmentProxy extends HttpServlet {
 	}
 
 	// Accessors
-	private String getProxyURL(HttpServletRequest httpServletRequest) {
+	private String getProxyURL(HttpServletRequest httpServletRequest) throws UnsupportedEncodingException {
 		// Set the protocol to HTTP
 		String stringProxyURL = "http://" + this.getProxyHostAndPort();
 		// Check if we are proxying to a path other that the document root
@@ -308,12 +301,16 @@ public class AttachmentProxy extends HttpServlet {
 			stringProxyURL += this.getProxyPath();
 		}
 		// Handle the path given to the servlet
-		stringProxyURL += (httpServletRequest.getPathInfo() == null) ? "" : httpServletRequest.getPathInfo();
+		stringProxyURL += (httpServletRequest.getPathInfo() == null) ? "" : encodeWhiteSpaces(httpServletRequest.getPathInfo());
 		// Handle the query string
 		if (httpServletRequest.getQueryString() != null) {
 			stringProxyURL += "?" + httpServletRequest.getQueryString();
 		}
 		return stringProxyURL;
+	}
+
+	private String encodeWhiteSpaces(String path) {
+		return path.replaceAll(" ", "%20");
 	}
 
 	private String getProxyHostAndPort() {
