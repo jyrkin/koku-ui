@@ -119,7 +119,7 @@ public class AttachmentProxy extends HttpServlet {
 
 		final String urlToConnect = getProxyURL(request);
 
-		debugLogs(request);
+		// debugLogs(request);
 
 		ProxyAuthentication authentication;
 		if (Properties.IS_LOORA_PORTAL) {

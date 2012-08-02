@@ -9,8 +9,6 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * <h1>ProxyAuthentication for Employee portal (JBoss)</h1>
  *
- *	<p>GateIn propably need own implementation</p>
- *
  * <p><b>NOTE!</b>
  * JBoss Portal 2.7 doesn't share automatically session attributes between servlets/portlets
  * in same WAR package (sharing session attributes between war files is forbidden from servlet spec 2.4).</p>
