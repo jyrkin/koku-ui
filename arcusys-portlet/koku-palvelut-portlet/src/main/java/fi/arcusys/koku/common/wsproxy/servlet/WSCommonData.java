@@ -4,6 +4,7 @@
 package fi.arcusys.koku.common.wsproxy.servlet;
 
 import java.io.Serializable;
+import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -23,6 +24,7 @@ import org.slf4j.LoggerFactory;
 
 import fi.arcusys.koku.common.util.KokuWebServicesJS;
 import fi.arcusys.koku.common.util.Properties;
+import fi.koku.portlet.filter.userinfo.UserInfo;
 
 /**
  * Contains common data used by several WSRestriction implementations
@@ -48,7 +50,6 @@ public class WSCommonData {
             "<soa:getUsersChildren xmlns:soa=\"http://soa.common.koku.arcusys.fi/\"><userUid>%s</userUid></soa:getUsersChildren>";
 
     private static class WSDataContainer implements Serializable {
-        public String userName;
         public String userUid;
         public List<OMElement> children; // contains a list of <child> elements from getUsersChildren response (KunPo only)
         public Set<String> userInfoAllowedUid = new HashSet<String>();
@@ -60,11 +61,14 @@ public class WSCommonData {
     private HttpSession session;
     private WSDataContainer dataContainer;
     private Map<KokuWebServicesJS, String> endpoints;
+    private UserInfo currentUserInfo;
 
     @SuppressWarnings("unchecked")
     public WSCommonData(final HttpSession session, final Map<KokuWebServicesJS, String> endpoints) {
         this.session = session;
         this.endpoints = endpoints;
+
+        fetchCurrentUserInfo();
 
         final String currentUser = getCurrentUserName();
         final String trackedUser = (String) session.getAttribute(TRACKED_USER_NAME);
@@ -121,6 +125,19 @@ public class WSCommonData {
         return WSCommonUtil.getTextOfChild(response, "userUid");
     }
 
+    private void fetchCurrentUserInfo() {
+        currentUserInfo = null;
+
+        final Enumeration<String> names = session.getAttributeNames();
+        while (names.hasMoreElements()) {
+            String name = names.nextElement();
+
+            if (name.endsWith(UserInfo.KEY_USER_INFO)) {
+                currentUserInfo = (UserInfo) session.getAttribute(name);
+            }
+        }
+    }
+
     private void fetchUserData() {
         try {
             final String currentUser = getCurrentUserName();
@@ -137,11 +154,10 @@ public class WSCommonData {
             if (userUid == null)
                 throw new Exception("Services are unavailable (bad response)");
 
-            dataContainer.userName = currentUser;
             dataContainer.userUid = userUid;
 
             logger.info("Fetched user UID: "+dataContainer.userUid);
-            logger.info("Fetched user name: "+dataContainer.userName);
+            logger.info("User name: "+currentUser);
 
             dataContainer.userInfoAllowedUid.add(userUid);
 
@@ -177,7 +193,11 @@ public class WSCommonData {
     }
 
     public String getCurrentUserName() {
-        return (String) session.getAttribute(CURRENT_USER_NAME);
+        return (currentUserInfo != null ? currentUserInfo.getUid() : null);
+    }
+
+    public String getCurrentUserHETU() {
+        return (currentUserInfo != null ? currentUserInfo.getPic() : null);
     }
 
     public Set<String> getUserInfoAllowedUid() {

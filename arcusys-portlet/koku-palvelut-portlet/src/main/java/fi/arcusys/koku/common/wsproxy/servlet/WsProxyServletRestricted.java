@@ -4,17 +4,20 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringReader;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import javax.portlet.PortletRequest;
 import javax.servlet.Servlet;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamReader;
 
@@ -34,6 +37,7 @@ import serp.bytecode.NewArrayInstruction;
 
 import fi.arcusys.koku.common.util.KokuWebServicesJS;
 import fi.arcusys.koku.common.util.Properties;
+import fi.koku.portlet.filter.userinfo.UserInfo;
 import fi.koku.settings.KoKuPropertiesUtil;
 
 /**
@@ -128,7 +132,8 @@ public class WsProxyServletRestricted extends HttpServlet implements Servlet {
             wsMap.put(endpoints.get(uri), uri);
         }
 
-        final WSCommonData commonData = new WSCommonData(request.getSession(), wsMap);
+        final HttpSession session = request.getSession();
+        final WSCommonData commonData = new WSCommonData(session, wsMap);
 
         // Check if user is authenticated
         if (commonData.getCurrentUserName() == null)
