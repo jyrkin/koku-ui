@@ -8,7 +8,6 @@ package fi.arcusys.koku.proxy;
  */
 public interface ProxyAuthentication {
 
-
 	String getUsername();
 	boolean isLoggedIn();
 	boolean isAllowedToAccessFile(String file);

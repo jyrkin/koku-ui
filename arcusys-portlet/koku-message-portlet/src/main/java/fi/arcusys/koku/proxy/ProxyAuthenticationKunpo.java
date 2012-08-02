@@ -2,6 +2,7 @@ package fi.arcusys.koku.proxy;
 
 import javax.servlet.http.HttpServletRequest;
 
+
 /**
  * ProxyAuthentication for Citizen side portal.
  *
@@ -11,32 +12,16 @@ import javax.servlet.http.HttpServletRequest;
  * @author Toni Turunen
  *
  */
-public class ProxyAuthenticationKunpo implements ProxyAuthentication {
+public class ProxyAuthenticationKunpo extends  AbstractProxyAuthentication {
 
 	public ProxyAuthenticationKunpo(HttpServletRequest request) {
-		// TODO
+		super(request);
 	}
 
 	@Override
 	public boolean isAllowedToAccessFile(String file) {
 		// Need to implement properly
-		// Currently Kunpo users doesn't need access to Intalio
-		// attachments so all access attempts should be prevent for now.
-		return false;
+		return true;
 	}
-
-	@Override
-	public String getUsername() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public boolean isLoggedIn() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-
 
 }

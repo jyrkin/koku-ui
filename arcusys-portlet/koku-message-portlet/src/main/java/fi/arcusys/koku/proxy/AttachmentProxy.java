@@ -17,8 +17,7 @@
 /*
  * Released originally without license. Original author released it
  * under Apache License, Version 2.0 2010-06-05
- *,
- *0,
+ *
  * http://edwardstx.net/2010/06/http-proxy-servlet/
  *
  */
@@ -119,8 +118,6 @@ public class AttachmentProxy extends HttpServlet {
 
 		final String urlToConnect = getProxyURL(request);
 
-		// debugLogs(request);
-
 		ProxyAuthentication authentication;
 		if (Properties.IS_LOORA_PORTAL) {
 			authentication = new ProxyAuthenticationLoora(request);
@@ -147,38 +144,13 @@ public class AttachmentProxy extends HttpServlet {
 		// Forward the request headers
 		setProxyRequestHeaders(request, getMethodProxyRequest);
 		// Execute the proxy request
-		executeProxyRequest(getMethodProxyRequest, request, response);
-		LOG.debug("User "+authentication.getUsername()+" accessed to '"+urlToConnect+"'.");
-
-	}
-
-	private void debugLogs(HttpServletRequest request) {
-		LOG.info("SessionID: '"+request.getSession().getId());
-		LOG.info("Username: "+request.getUserPrincipal());
-
-		Enumeration<?> attributeNames = request.getSession().getAttributeNames();
-		while (attributeNames.hasMoreElements()) {
-			String name = (String)attributeNames.nextElement();
-			LOG.info("sessionAttributeName: '"+name+"' value: '"+request.getSession().getAttribute(name));
+		try {
+			executeProxyRequest(getMethodProxyRequest, request, response);
+			LOG.debug("User "+authentication.getUsername()+" accessed to '"+urlToConnect+"'.");
+		} catch (IOException ioe) {
+			LOG.error("Coulnd't connect to host: '"+urlToConnect+"'", ioe);
+			generateErrorMessage(response, "Something went wrong in server. Please try again later.");
 		}
-
-		Enumeration<?> requestAttributeNames = request.getAttributeNames();
-		while (requestAttributeNames.hasMoreElements()) {
-			LOG.info("requestAttributeName: '"+(String)requestAttributeNames.nextElement()+"'");
-		}
-
-		Enumeration<?> servletContextAttrNames = request.getSession().getServletContext().getAttributeNames();
-		while (servletContextAttrNames.hasMoreElements()) {
-			String name = (String)servletContextAttrNames.nextElement();
-			LOG.info("servletContextAttrName: '"+name+"'");
-		}
-
-		Enumeration<?> reqParamNames = request.getParameterNames();
-		while (reqParamNames.hasMoreElements()) {
-			LOG.info("reqParamName: '"+(String)reqParamNames.nextElement()+"'");
-		}
-
-
 	}
 
 	private void generateErrorMessage(HttpServletResponse response, String msg) {
