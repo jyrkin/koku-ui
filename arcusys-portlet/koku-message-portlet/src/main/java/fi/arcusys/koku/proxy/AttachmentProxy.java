@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.net.URLEncoder;
 import java.util.Enumeration;
 
 import javax.servlet.ServletConfig;
@@ -116,7 +117,14 @@ public class AttachmentProxy extends HttpServlet {
 			HttpServletResponse response) throws IOException,
 			ServletException {
 
-		final String urlToConnect = getProxyURL(request);
+		final String normalUrl = getProxyURL(request);
+		if (normalUrl == null) {
+			LOG.error("Invalid url: '"+normalUrl+"'");
+			generateErrorMessage(response, "Invalid url");
+			return;
+		}
+
+		final String urlToConnect = URLEncoder.encode(getProxyURL(request), "UTF-8");
 
 		ProxyAuthentication authentication;
 		if (Properties.IS_LOORA_PORTAL) {
@@ -148,7 +156,7 @@ public class AttachmentProxy extends HttpServlet {
 			executeProxyRequest(getMethodProxyRequest, request, response);
 			LOG.debug("User "+authentication.getUsername()+" accessed to '"+urlToConnect+"'.");
 		} catch (IOException ioe) {
-			LOG.error("Coulnd't connect to host: '"+urlToConnect+"'", ioe);
+			LOG.error("Coulnd't connect to host: '"+urlToConnect+"'. Intalio or connection to server is down", ioe);
 			generateErrorMessage(response, "Something went wrong in server. Please try again later.");
 		}
 	}
