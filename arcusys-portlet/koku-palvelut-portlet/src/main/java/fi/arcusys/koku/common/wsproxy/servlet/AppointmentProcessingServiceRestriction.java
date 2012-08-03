@@ -85,19 +85,8 @@ public class AppointmentProcessingServiceRestriction implements WSRestriction {
     }
 
     private void permitMentionedParties(WSCommonData commonData, OMElement soapEnvelope) {
-        OMElement parent = WSCommonUtil.getFirstOMElement(soapEnvelope, "appointment");
-
-        if (parent == null) {
-            parent = WSCommonUtil.getFirstOMElement(soapEnvelope, "return");
-        }
-
-        if (parent == null) {
-            logger.warn("Could not find user mentions in: "+soapEnvelope);
-            return;
-        }
-
-        final String sender = WSCommonUtil.getTextOfChild(parent, "sender");
-        final String senderUid = WSCommonUtil.getTextOfChild(parent, "senderUserInfo", "uid");
+        final String sender = WSCommonUtil.getTextOfChild(soapEnvelope, "sender");
+        final String senderUid = WSCommonUtil.getTextOfChild(soapEnvelope, "senderUserInfo", "uid");
 
         logger.info("Adding "+sender+" ("+senderUid+") to the permisson list");
 
@@ -135,7 +124,7 @@ public class AppointmentProcessingServiceRestriction implements WSRestriction {
             // All checks done in requestPermitted
             permitted = true;
 
-            permitMentionedParties(commonData, soapEnvelope);
+            permitMentionedParties(commonData, soapEnvelope.getFirstElement());
         }
         else if (methodName.equals("storeAppointment"))
         {

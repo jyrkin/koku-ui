@@ -28,7 +28,6 @@ public class UsersAndGroupsServiceRestriction implements WSRestriction {
     public boolean requestPermitted(WSCommonData commonData, final String methodName, final OMElement soapEnvelope) {
         boolean permitted = false;
 
-
         // UsersAndGroupsService - loginByKunpoNameAndSsn
         if (methodName.equalsIgnoreCase("loginByKunpoNameAndSsn")) {
             // TODO: permit if necessary
@@ -190,6 +189,9 @@ public class UsersAndGroupsServiceRestriction implements WSRestriction {
                 permitted = true;
 
         }
+
+        logger.info("User is "+(permitted ? "" : "not ")+"permitted to make this request ("+methodName+") on " +
+                (Properties.IS_KUNPO_PORTAL ? "KunPo" : "Loora"));
 
         return permitted;
     }
