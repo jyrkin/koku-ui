@@ -288,7 +288,7 @@
 			</preference>	
 			<preference>
 				<name>showOnlyFormByDescription</name>
-				<value>Virkailija vastaa käyttäjäviestiin</value>
+				<value>Vastaa kayttajaviestiin</value>
 			</preference>
 			<preference>
 				<name>useTaskId</name>
