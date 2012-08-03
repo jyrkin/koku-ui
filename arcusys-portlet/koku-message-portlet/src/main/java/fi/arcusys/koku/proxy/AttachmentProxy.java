@@ -17,8 +17,7 @@
 /*
  * Released originally without license. Original author released it
  * under Apache License, Version 2.0 2010-06-05
- *,
- *0,
+ *
  * http://edwardstx.net/2010/06/http-proxy-servlet/
  *
  */
@@ -30,6 +29,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.Enumeration;
 
 import javax.servlet.ServletConfig;
@@ -119,8 +119,6 @@ public class AttachmentProxy extends HttpServlet {
 
 		final String urlToConnect = getProxyURL(request);
 
-		// debugLogs(request);
-
 		ProxyAuthentication authentication;
 		if (Properties.IS_LOORA_PORTAL) {
 			authentication = new ProxyAuthenticationLoora(request);
@@ -147,38 +145,13 @@ public class AttachmentProxy extends HttpServlet {
 		// Forward the request headers
 		setProxyRequestHeaders(request, getMethodProxyRequest);
 		// Execute the proxy request
-		executeProxyRequest(getMethodProxyRequest, request, response);
-		LOG.debug("User "+authentication.getUsername()+" accessed to '"+urlToConnect+"'.");
-
-	}
-
-	private void debugLogs(HttpServletRequest request) {
-		LOG.info("SessionID: '"+request.getSession().getId());
-		LOG.info("Username: "+request.getUserPrincipal());
-
-		Enumeration<?> attributeNames = request.getSession().getAttributeNames();
-		while (attributeNames.hasMoreElements()) {
-			String name = (String)attributeNames.nextElement();
-			LOG.info("sessionAttributeName: '"+name+"' value: '"+request.getSession().getAttribute(name));
+		try {
+			executeProxyRequest(getMethodProxyRequest, request, response);
+			LOG.debug("User "+authentication.getUsername()+" accessed to '"+urlToConnect+"'.");
+		} catch (IOException ioe) {
+			LOG.error("Coulnd't connect to host: '"+urlToConnect+"'. Intalio or connection to server is down", ioe);
+			generateErrorMessage(response, "Something went wrong in server. Please try again later.");
 		}
-
-		Enumeration<?> requestAttributeNames = request.getAttributeNames();
-		while (requestAttributeNames.hasMoreElements()) {
-			LOG.info("requestAttributeName: '"+(String)requestAttributeNames.nextElement()+"'");
-		}
-
-		Enumeration<?> servletContextAttrNames = request.getSession().getServletContext().getAttributeNames();
-		while (servletContextAttrNames.hasMoreElements()) {
-			String name = (String)servletContextAttrNames.nextElement();
-			LOG.info("servletContextAttrName: '"+name+"'");
-		}
-
-		Enumeration<?> reqParamNames = request.getParameterNames();
-		while (reqParamNames.hasMoreElements()) {
-			LOG.info("reqParamName: '"+(String)reqParamNames.nextElement()+"'");
-		}
-
-
 	}
 
 	private void generateErrorMessage(HttpServletResponse response, String msg) {
@@ -320,7 +293,7 @@ public class AttachmentProxy extends HttpServlet {
 	}
 
 	// Accessors
-	private String getProxyURL(HttpServletRequest httpServletRequest) {
+	private String getProxyURL(HttpServletRequest httpServletRequest) throws UnsupportedEncodingException {
 		// Set the protocol to HTTP
 		String stringProxyURL = "http://" + this.getProxyHostAndPort();
 		// Check if we are proxying to a path other that the document root
@@ -328,12 +301,16 @@ public class AttachmentProxy extends HttpServlet {
 			stringProxyURL += this.getProxyPath();
 		}
 		// Handle the path given to the servlet
-		stringProxyURL += (httpServletRequest.getPathInfo() == null) ? "" : httpServletRequest.getPathInfo();
+		stringProxyURL += (httpServletRequest.getPathInfo() == null) ? "" : encodeWhiteSpaces(httpServletRequest.getPathInfo());
 		// Handle the query string
 		if (httpServletRequest.getQueryString() != null) {
 			stringProxyURL += "?" + httpServletRequest.getQueryString();
 		}
 		return stringProxyURL;
+	}
+
+	private String encodeWhiteSpaces(String path) {
+		return path.replaceAll(" ", "%20");
 	}
 
 	private String getProxyHostAndPort() {

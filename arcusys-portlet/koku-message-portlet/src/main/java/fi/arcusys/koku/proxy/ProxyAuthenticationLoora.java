@@ -1,10 +1,7 @@
 package fi.arcusys.koku.proxy;
 
-import java.util.Enumeration;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import javax.servlet.http.HttpServletRequest;
+
 
 /**
  * <h1>ProxyAuthentication for Employee portal (JBoss)</h1>
@@ -26,50 +23,16 @@ import javax.servlet.http.HttpServletRequest;
  * @author Toni Turunen
  *
  */
-public class ProxyAuthenticationLoora implements ProxyAuthentication {
-
-	// javax.portlet.p./default/Message/MessagePortletWindow?USER_username
-	// javax.portlet.*?USER_username
-	private static final Pattern REGEX_SESSION_USERNAME = Pattern.compile("javax.portlet.*?USER_username");
-
-	private boolean loggedIn = false;
-	private String username = null;
+public class ProxyAuthenticationLoora extends AbstractProxyAuthentication {
 
 	public ProxyAuthenticationLoora(HttpServletRequest request) {
-
-		Enumeration<?> attributeNames = request.getSession().getAttributeNames();
-		boolean foundUser = false;
-		while (attributeNames.hasMoreElements()) {
-			final String name = (String)attributeNames.nextElement();
-			Matcher matcher = REGEX_SESSION_USERNAME.matcher(name);
-			if (matcher.matches()) {
-				loggedIn = Boolean.TRUE;
-				username = (String) request.getSession().getAttribute(name);
-				foundUser = true;
-				break;
-			}
-		}
-
-		if (!foundUser) {
-			loggedIn = Boolean.FALSE;
-			username = null;
-		}
+		super(request);
 	}
 
 	@Override
 	public boolean isAllowedToAccessFile(String file) {
 		// Need to implement properly
 		return true;
-	}
-
-	@Override
-	public boolean isLoggedIn() {
-		return loggedIn;
-	}
-
-	@Override
-	public String getUsername() {
-		return username;
 	}
 
 }
