@@ -233,7 +233,14 @@ public class AttachmentProxy extends HttpServlet {
 		// Pass response headers back to the client
 		Header[] headerArrayResponse = httpMethodProxyRequest.getResponseHeaders();
 		for (Header header : headerArrayResponse) {
-			response.setHeader(header.getName(), header.getValue());
+			// Our proxy doesn't support chunked transfer so we just filter this out
+			if (header.getValue().equals("chunked")) {
+				LOG.warn("Chuncked file");
+				response.setHeader(header.getName(), "");
+			} else {
+				response.setHeader(header.getName(), header.getValue());
+			}
+
 		}
 
 		// Send the content to the client
