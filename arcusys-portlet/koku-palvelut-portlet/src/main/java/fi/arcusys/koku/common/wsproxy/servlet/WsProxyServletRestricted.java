@@ -138,8 +138,10 @@ public class WsProxyServletRestricted extends HttpServlet implements Servlet {
         final WSCommonData commonData = new WSCommonData(session, wsMap);
 
         // Check if user is authenticated
-        if (commonData.getCurrentUserName() == null)
-            return generateErrorResponse("User is not authenticated");
+//        if (commonData.getCurrentUserName() == null)
+//        {
+//            return generateErrorResponse("User is not authenticated");
+//        }
 
         final KokuWebServicesJS endpoint = endpoints.get(endpointURI);
 
