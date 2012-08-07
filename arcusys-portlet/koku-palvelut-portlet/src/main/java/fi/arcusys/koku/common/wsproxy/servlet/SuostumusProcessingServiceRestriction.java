@@ -13,12 +13,12 @@ import fi.arcusys.koku.common.util.Properties;
  * @author Tapani Kiiskinen (tapani.kiiskinen@arcusys.fi)
  * Aug, 2012
  */
-public class RequestProcessingServiceRestriction implements WSRestriction {
+public class SuostumusProcessingServiceRestriction implements WSRestriction {
     private static final Logger logger = LoggerFactory.getLogger(MessageProcessingServiceRestriction.class);
 
     @Override
     public KokuWebServicesJS getAssociatedEndpoint() {
-        return KokuWebServicesJS.REQUEST_PROCESSING_SERVICE;
+        return KokuWebServicesJS.SUOSTUMUS_PROCESSING_SERVICE;
     }
 
     @Override
@@ -26,16 +26,28 @@ public class RequestProcessingServiceRestriction implements WSRestriction {
 
         boolean permitted = false;
 
-        if (methodName.equals("getRequestTemplateSummary"))
+        if (methodName.equals("getSuostumusForReply"))
         {
-            String uid = WSCommonUtil.getTextOfChild(soapEnvelope, "user");
-            // Only accessible to Loora users. Only users themselves can ask for
-            // their templates.
-            if (Properties.IS_LOORA_PORTAL && commonData.getCurrentUserUid().equals(uid)) {
+            String uid = WSCommonUtil.getTextOfChild(soapEnvelope, "suostuja");
+            if (commonData.getCurrentUserUid().equals(uid)) {
                 permitted = true;
             }
         }
-        else if (methodName.equals("getRequestTemplateById"))
+        else if (methodName.equals("selaaSuostumuspohjat"))
+        {
+            // Only accessible to Loora users.
+            if (Properties.IS_LOORA_PORTAL) {
+                permitted = true;
+            }
+        }
+        else if (methodName.equals("getConsentTemplateById"))
+        {
+            // Only accessible to Loora users.
+            if (Properties.IS_LOORA_PORTAL) {
+                permitted = true;
+            }
+        }
+        else if (methodName.equals("getKksFormInstances"))
         {
             // Only accessible to Loora users.
             if (Properties.IS_LOORA_PORTAL) {
@@ -59,12 +71,22 @@ public class RequestProcessingServiceRestriction implements WSRestriction {
 
         boolean permitted = false;
 
-        if (methodName.equals("getRequestTemplateSummary"))
+        if (methodName.equals("getSuostumusForReply"))
         {
             // All checks done in requestPermitted
             permitted = true;
         }
-        else if (methodName.equals("getRequestTemplateById"))
+        else if (methodName.equals("selaaSuostumuspohjat"))
+        {
+            // All checks done in requestPermitted
+            permitted = true;
+        }
+        else if (methodName.equals("getConsentTemplateById"))
+        {
+            // All checks done in requestPermitted
+            permitted = true;
+        }
+        else if (methodName.equals("getKksFormInstances"))
         {
             // All checks done in requestPermitted
             permitted = true;
