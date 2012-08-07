@@ -30,17 +30,21 @@ public class RequestProcessingServiceRestriction implements WSRestriction {
 
         boolean permitted = false;
 
-        if (methodName.equals(""))
+        if (methodName.equals("getRequestTemplateSummary"))
         {
+            String uid = WSCommonUtil.getTextOfChild(soapEnvelope, "user");
+            // Only accessible to Loora users. Only users themselves can ask for
+            // their templates.
+            if (Properties.IS_LOORA_PORTAL && commonData.getCurrentUserUid().equals(uid)) {
+                permitted = true;
+            }
         }
-        else if (methodName.equals(""))
+        else if (methodName.equals("getRequestTemplateById"))
         {
-        }
-        else if (methodName.equals(""))
-        {
-        }
-        else if (methodName.equals(""))
-        {
+            // Only accessible to Loora users.
+            if (Properties.IS_LOORA_PORTAL) {
+                permitted = true;
+            }
         }
 
         if (permitted) {
@@ -59,17 +63,15 @@ public class RequestProcessingServiceRestriction implements WSRestriction {
 
         boolean permitted = false;
 
-        if (methodName.equals(""))
+        if (methodName.equals("getRequestTemplateSummary"))
         {
+            // All checks done in requestPermitted
+            permitted = true;
         }
-        else if (methodName.equals(""))
+        else if (methodName.equals("getRequestTemplateById"))
         {
-        }
-        else if (methodName.equals(""))
-        {
-        }
-        else if (methodName.equals(""))
-        {
+            // All checks done in requestPermitted
+            permitted = true;
         }
 
         if (permitted) {
