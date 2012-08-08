@@ -50,11 +50,16 @@ public String htmlToCode(String s)
 <%@ include file="js_koku_reset_view.jspf" %>
 
 <%
-	ResponseStatus responseResult = ResponseStatus.FAIL;
-	ModelWrapper<KokuMessage> messageModel = (ModelWrapper<KokuMessage>) request.getAttribute("message");
-	responseResult = messageModel.getResponseStatus();
+	final ModelWrapper<KokuMessage> messageModel = (ModelWrapper<KokuMessage>) request.getAttribute("message");
+	final ResponseStatus responseResult = messageModel.getResponseStatus();
+	long messageId = 0;
+	boolean replyDisabled = true;
+	if (messageModel != null && messageModel.getModel() != null) {
+		messageId = messageModel.getModel().getMessageId();
+		replyDisabled = messageModel.getModel().isReplyDisabled();
+	}
 	
-	List<String> missingUserNames = new ArrayList<String>();
+	final List<String> missingUserNames = new ArrayList<String>();
 	String content = null;
 	JSONArray usernameArray = JSONArray.fromObject(missingUserNames);
 	if (responseResult.equals(ResponseStatus.OK)) {
@@ -64,9 +69,9 @@ public String htmlToCode(String s)
 		List<KokuUser> missingUsers = message.getDeliveryFailedTo();
 		
 		if (!missingUsers.isEmpty()) {
-	for (KokuUser user : missingUsers) {
-		missingUserNames.add(user.getFullName());
-	}
+			for (KokuUser user : missingUsers) {
+				missingUserNames.add(user.getFullName());
+			}
 		}
 		usernameArray = JSONArray.fromObject(missingUserNames);
 	}
@@ -75,9 +80,9 @@ public String htmlToCode(String s)
 	
 	window.onload = function() {
 		if ('<%= responseResult.toString() %>' == '<%= ResponseStatus.FAIL.toString() %>') {
-			// show errorMsg			
-			kokuErrorMsg += "<span class=\"failureUuid\"><%= htmlToCode_old(messageModel.getErrorCode()) %></span></div>";
-			jQuery.jGrowl(kokuErrorMsg, kokuErrorMsgOptions);
+			// show errorMsg
+			var kokuErrorMsg = kokuDetails.kokuErrorMsg + "<span class=\"failureUuid\"><%= htmlToCode_old(messageModel.getErrorCode()) %></span></div>";
+			jQuery.jGrowl(kokuErrorMsg, kokuDetails.kokuErrorMsgOptions);
 		} else {		
 			var content = '<%= content %>';
 			content = content.replace(/&rsquo;/g, "'");
@@ -110,7 +115,7 @@ public String htmlToCode(String s)
 				}
 			},
 			replyToMessage : function() {
-				window.location = "<%= NavigationPortletProperties.NAVIGATION_PORTLET_PATH %><%= NavigationPortletProperties.MESSAGES_REPLY_MESSAGE %>?MessageId=<%= messageModel.getModel().getMessageId() %>";
+				window.location = "<%= NavigationPortletProperties.NAVIGATION_PORTLET_PATH %><%= NavigationPortletProperties.MESSAGES_REPLY_MESSAGE %>?MessageId=<%= messageId %>";
 			}
 		},
 		citizen : {
@@ -139,7 +144,7 @@ public String htmlToCode(String s)
 				navigateToPage("<%= Constants.TASK_TYPE_WARRANT_BROWSE_RECEIEVED %>");
 			},
 			replyToMessage : function() {
-				window.location = "<%= NavigationPortletProperties.NAVIGATION_PORTLET_PATH %><%= NavigationPortletProperties.MESSAGES_REPLY_MESSAGE %>?MessageId=<%= messageModel.getModel().getMessageId() %>";
+				window.location = "<%= NavigationPortletProperties.NAVIGATION_PORTLET_PATH %><%= NavigationPortletProperties.MESSAGES_REPLY_MESSAGE %>?MessageId=<%= messageId %>";
 			}
 		},
 		
@@ -175,7 +180,7 @@ public String htmlToCode(String s)
 				navigateToPage("<%= Constants.TASK_TYPE_CONSENT_EMPLOYEE_CONSENTS %>");
 			},
 			replyToMessage : function() {
-				window.location = "<%= NavigationPortletProperties.NAVIGATION_PORTLET_PATH %><%= NavigationPortletProperties.MESSAGES_REPLY_MESSAGE %>?MessageId=<%= messageModel.getModel().getMessageId() %>&loora";
+				window.location = "<%= NavigationPortletProperties.NAVIGATION_PORTLET_PATH %><%= NavigationPortletProperties.MESSAGES_REPLY_MESSAGE %>?MessageId=<%= messageId %>&loora";
 			}
 		},
 		
@@ -223,7 +228,7 @@ public String htmlToCode(String s)
 	<div id="failedEmailDelivery"></div>
 	<div id="task-manager-operation" class="task-manager-operation-part">
 		<input type="button" value="<spring:message code="page.return"/>" onclick="kokuNavigationHelper.returnMainPage()" />
-		<% if (!messageModel.getModel().isReplyDisabled()) { %>
+		<% if (!replyDisabled) { %>
 			<% if (Properties.IS_KUNPO_PORTAL) { %>
 				<input type="button" value="<spring:message code="message.replyMessage"/>" onclick="KokuMessage.citizen.replyToMessage()" />
 			<% } else { %>

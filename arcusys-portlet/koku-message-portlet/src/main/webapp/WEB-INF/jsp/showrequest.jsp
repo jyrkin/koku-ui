@@ -42,8 +42,8 @@
 <c:choose>
 	<c:when test="${request.responseStatus == 'FAIL'}">
 		<script type="text/javascript"> 
-  			kokuErrorMsg += "<span class=\"failureUuid\"><c:out value="${request.errorCode}" /></span></div>";
-			jQuery.jGrowl(kokuErrorMsg, kokuErrorMsgOptions);
+  			var kokuErrorMsg = kokuDetails.kokuErrorMsg + "<span class=\"failureUuid\"><c:out value="${request.errorCode}" /></span></div>";
+			jQuery.jGrowl(kokuErrorMsg, kokuDetails.kokuErrorMsgOptions);
 	</script>
 	</c:when>
 

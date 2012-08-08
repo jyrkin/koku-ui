@@ -160,13 +160,16 @@ public class MessageHandle extends AbstractHandle implements MessageTasks {
 	public KokuMessage getMessageById(String messageId) throws KokuServiceException {
 		long  msgId = 0;
 		try {
-			 msgId = (long) Long.parseLong(messageId);
+			 msgId = Long.parseLong(messageId);
 		} catch (NumberFormatException nfe) {
 			LOG.error("Couldn't show message details, because messageId can't parse properly (must be long). Given MessageId: "+messageId, nfe);
 			return new KokuMessage();
 		}
 		setMessageStatusRead(msgId);
 		Message msg = ms.getMessageById(msgId);
+		if (msg == null) {
+			throw new KokuServiceException("Coulnd't find such a message by given messageId: '"+msgId+"'.");
+		}
 		KokuMessage message = new KokuMessage();
 		convertMessageToKokuMessage(message, msg);
 		return message;
