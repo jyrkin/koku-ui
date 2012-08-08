@@ -8,7 +8,7 @@ import fi.arcusys.koku.common.util.KokuWebServicesJS;
 import fi.arcusys.koku.common.util.Properties;
 
 /**
- * Restrict KokuRequestProcessingService methods
+ * Restrict KokuSuostumusProcessingService methods
  *
  * @author Tapani Kiiskinen (tapani.kiiskinen@arcusys.fi)
  * Aug, 2012
@@ -26,31 +26,25 @@ public class SuostumusProcessingServiceRestriction implements WSRestriction {
 
         boolean permitted = false;
 
-        if (methodName.equals("getSuostumusForReply"))
-        {
+        // Methods exposed to both Kunpo and Loora
+        if (methodName.equals("getSuostumusForReply")) {
+
             String uid = WSCommonUtil.getTextOfChild(soapEnvelope, "suostuja");
             if (commonData.getCurrentUserUid().equals(uid)) {
                 permitted = true;
             }
         }
-        else if (methodName.equals("selaaSuostumuspohjat"))
-        {
-            // Only accessible to Loora users.
-            if (Properties.IS_LOORA_PORTAL) {
+
+        // Methods exposed to Loora
+        if (Properties.IS_LOORA_PORTAL) {
+
+            if (methodName.equals("selaaSuostumuspohjat")) {
                 permitted = true;
             }
-        }
-        else if (methodName.equals("getConsentTemplateById"))
-        {
-            // Only accessible to Loora users.
-            if (Properties.IS_LOORA_PORTAL) {
+            else if (methodName.equals("getConsentTemplateById")) {
                 permitted = true;
             }
-        }
-        else if (methodName.equals("getKksFormInstances"))
-        {
-            // Only accessible to Loora users.
-            if (Properties.IS_LOORA_PORTAL) {
+            else if (methodName.equals("getKksFormInstances")) {
                 permitted = true;
             }
         }
@@ -58,7 +52,8 @@ public class SuostumusProcessingServiceRestriction implements WSRestriction {
         if (permitted) {
             logger.info("Permission granted for " + commonData.getCurrentUserName()
                     + " requesting " + methodName);
-        } else {
+        }
+        else {
             logger.warn("No permissions granted for " + commonData.getCurrentUserName()
                     + " requesting " + methodName + ". Request data: " + soapEnvelope.toString());
         }
@@ -71,23 +66,19 @@ public class SuostumusProcessingServiceRestriction implements WSRestriction {
 
         boolean permitted = false;
 
-        if (methodName.equals("getSuostumusForReply"))
-        {
+        if (methodName.equals("getSuostumusForReply")) {
             // All checks done in requestPermitted
             permitted = true;
         }
-        else if (methodName.equals("selaaSuostumuspohjat"))
-        {
+        else if (methodName.equals("selaaSuostumuspohjat")) {
             // All checks done in requestPermitted
             permitted = true;
         }
-        else if (methodName.equals("getConsentTemplateById"))
-        {
+        else if (methodName.equals("getConsentTemplateById")) {
             // All checks done in requestPermitted
             permitted = true;
         }
-        else if (methodName.equals("getKksFormInstances"))
-        {
+        else if (methodName.equals("getKksFormInstances")) {
             // All checks done in requestPermitted
             permitted = true;
         }
@@ -95,7 +86,8 @@ public class SuostumusProcessingServiceRestriction implements WSRestriction {
         if (permitted) {
             logger.info("Permission granted for " + commonData.getCurrentUserName()
                     + " accessing " + methodName + " request data.");
-        } else {
+        }
+        else {
             logger.warn("No permissions granted for " + commonData.getCurrentUserName()
                     + " accessing " + methodName + " request data. Request return data: " + soapEnvelope.toString());
         }

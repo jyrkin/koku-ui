@@ -73,6 +73,7 @@ public class WsProxyServletRestricted extends HttpServlet implements Servlet {
 //        restrictions.put(KokuWebServicesJS.KV_MESSAGE_SERVICE, new MessageProcessingServiceRestriction());
 //        restrictions.put(KokuWebServicesJS.REQUEST_PROCESSING_SERVICE, new RequestProcessingServiceRestriction());
 //        restrictions.put(KokuWebServicesJS.SUOSTUMUS_PROCESSING_SERVICE, new SuostumusProcessingServiceRestriction());
+//        restrictions.put(KokuWebServicesJS.VALTAKIRJA_PROCESSING_SERVICE, new ValtakirjaProcessingServiceRestriction());
     }
 
     protected void doPost(HttpServletRequest request,

@@ -27,46 +27,47 @@ public class AppointmentProcessingServiceRestriction implements WSRestriction {
 
         boolean permitted = false;
 
-        if (methodName.equals("getAppointment"))
-        {
-            // Only accessible to Loora users
-            if (Properties.IS_LOORA_PORTAL) {
-                permitted = true;
-            }
-        }
-        else if (methodName.equals("getAppointmentForReply"))
-        {
-            // Accessible for both Kunpo and Loora users
+        // Methods exposed to both Kunpo and Loora
+        if (methodName.equals("getAppointmentForReply")) {
+
             String targetChildUid = WSCommonUtil.getTextOfChild(soapEnvelope, "targetUser");
+
             // Only people who have permissions to do decisions for targetChild can use this method
             if (commonData.getUserInfoAllowedUid().contains(targetChildUid)) {
                 permitted = true;
             }
         }
-        else if (methodName.equals("storeAppointment"))
-        {
-            // Only accessible to Loora users
-            if (Properties.IS_LOORA_PORTAL) {
+
+        // Methods exposed to Loora
+        if (Properties.IS_LOORA_PORTAL) {
+
+            if (methodName.equals("getAppointment")) {
+                permitted = true;
+            }
+            else if (methodName.equals("storeAppointment")) {
                 permitted = true;
             }
         }
-        else if (methodName.equals("approveAppointment"))
-        {
-            // Only accessible to Kunpo users
-            if (Properties.IS_KUNPO_PORTAL) {
+
+        // Methods exposed to Kunpo
+        if (Properties.IS_KUNPO_PORTAL) {
+
+            if (methodName.equals("approveAppointment")) {
+
                 String userUid = WSCommonUtil.getTextOfChild(soapEnvelope, "user");
-                // Only Kunpo user in question of appointment can decline or approve said appointment
+
+                // Only target users of appointments can approve or decline
+                // their appointments
                 if (commonData.getCurrentUserUid().equals(userUid)) {
                     permitted = true;
                 }
             }
-        }
-        else if (methodName.equals("declineAppointment"))
-        {
-            // Only accessible to Kunpo users
-            if (Properties.IS_KUNPO_PORTAL) {
+            else if (methodName.equals("declineAppointment")) {
+
                 String userUid = WSCommonUtil.getTextOfChild(soapEnvelope, "user");
-                // Only Kunpo user in question of appointment can decline or approve said appointment
+
+                // Only target users of appointments can approve or decline
+                // their appointments
                 if (commonData.getCurrentUserUid().equals(userUid)) {
                     permitted = true;
                 }
@@ -76,7 +77,8 @@ public class AppointmentProcessingServiceRestriction implements WSRestriction {
         if (permitted) {
             logger.info("Permission granted for " + commonData.getCurrentUserName()
                     + " requesting " + methodName);
-        } else {
+        }
+        else {
             logger.warn("No permissions granted for " + commonData.getCurrentUserName()
                     + " requesting " + methodName + ". Request data: " + soapEnvelope.toString());
         }
@@ -99,13 +101,16 @@ public class AppointmentProcessingServiceRestriction implements WSRestriction {
 
         boolean permitted = false;
 
-        if (methodName.equals("getAppointment"))
-        {
+        if (methodName.equals("getAppointment")) {
+
             soapEnvelope = soapEnvelope.getFirstElement();
             String uid = WSCommonUtil.getTextOfChild(soapEnvelope, "senderUserInfo", "uid");
+
             // Only creator of appointment can edit the whole appointment
             if (commonData.getCurrentUserUid().equals(uid)) {
+
                 String appointmentId = WSCommonUtil.getTextOfChild(soapEnvelope, "appointmentId");
+
                 // Only valid appointmentIds are stored for future permissions and returned
                 if (appointmentId != null) {
                     commonData.getAvAllowedMeetingIdSet().add(appointmentId);
@@ -117,30 +122,28 @@ public class AppointmentProcessingServiceRestriction implements WSRestriction {
             if (permitted) {
                 permitMentionedParties(commonData, soapEnvelope);
             }
-
         }
-        else if (methodName.equals("getAppointmentForReply"))
-        {
+        else if (methodName.equals("getAppointmentForReply")) {
+
             // All checks done in requestPermitted
             permitted = true;
 
             permitMentionedParties(commonData, soapEnvelope.getFirstElement());
         }
-        else if (methodName.equals("storeAppointment"))
-        {
+        else if (methodName.equals("storeAppointment")) {
+
             String appointmentId = WSCommonUtil.getTextOfChild(soapEnvelope, "return");
+
             // Only meetings that had been previously opened in this session can be stored
             if (commonData.getAvAllowedMeetingIdSet().contains(appointmentId)) {
                 permitted = true;
             }
         }
-        else if (methodName.equals("approveAppointment"))
-        {
+        else if (methodName.equals("approveAppointment")) {
             // All checks done in requestPermitted
             permitted = true;
         }
-        else if (methodName.equals("declineAppointment"))
-        {
+        else if (methodName.equals("declineAppointment")) {
             // All checks done in requestPermitted
             permitted = true;
         }
@@ -148,7 +151,8 @@ public class AppointmentProcessingServiceRestriction implements WSRestriction {
         if (permitted) {
             logger.info("Permission granted for " + commonData.getCurrentUserName()
                     + " accessing " + methodName + " request data.");
-        } else {
+        }
+        else {
             logger.warn("No permissions granted for " + commonData.getCurrentUserName()
                     + " accessing " + methodName + " request data. Request return data: " + soapEnvelope.toString());
         }

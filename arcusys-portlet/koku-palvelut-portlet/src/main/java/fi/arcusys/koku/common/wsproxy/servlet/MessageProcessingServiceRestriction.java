@@ -31,32 +31,34 @@ public class MessageProcessingServiceRestriction implements WSRestriction {
 
         boolean permitted = false;
 
-        if (methodName.equals("sendMessage"))
-        {
-            // Accessible for both Kunpo and Loora users
+        // Methods exposed to both Kunpo and Loora
+        if (methodName.equals("sendMessage")) {
+
             String fromUid = WSCommonUtil.getTextOfChild(soapEnvelope, "fromUser");
+
             if (fromUid.equals(commonData.getCurrentUserUid())) {
                 permitted = true;
             }
         }
-        else if (methodName.equals("receiveMessage"))
-        {
+        else if (methodName.equals("receiveMessage")) {
+
             // Because of the way the functions are separated from each other
             // it's not possible to check this function for anything without
             // refactoring the services functions completely which is not an
             // option at this point. Sadly this function will remain unchecked.
             permitted = true;
         }
-        else if (methodName.equals("receiveNewMessage"))
-        {
-            // Accessible for both Kunpo and Loora users
+        else if (methodName.equals("receiveNewMessage")) {
+
             String fromUid = WSCommonUtil.getTextOfChild(soapEnvelope, "fromUser");
+
+            // Users can only put messages which they've sent into the inboxes
+            // of other people
             if (fromUid.equals(commonData.getCurrentUserUid())) {
                 permitted = true;
             }
         }
-        else if (methodName.equals("getMessageById"))
-        {
+        else if (methodName.equals("getMessageById")) {
             // All checks done in responsePermitted
             permitted = true;
         }
@@ -64,7 +66,8 @@ public class MessageProcessingServiceRestriction implements WSRestriction {
         if (permitted) {
             logger.info("Permission granted for " + commonData.getCurrentUserName()
                     + " requesting " + methodName);
-        } else {
+        }
+        else {
             logger.warn("No permissions granted for " + commonData.getCurrentUserName()
                     + " requesting " + methodName + ". Request data: " + soapEnvelope.toString());
         }
@@ -77,26 +80,24 @@ public class MessageProcessingServiceRestriction implements WSRestriction {
 
         boolean permitted = false;
 
-        if (methodName.equals("sendMessage"))
-        {
+        if (methodName.equals("sendMessage")) {
             // All checks done in requestPermitted
             permitted = true;
         }
-        else if (methodName.equals("receiveMessage"))
-        {
+        else if (methodName.equals("receiveMessage")) {
+
             // Because of the way the functions are separated from each other
             // it's not possible to check this function for anything without
             // refactoring the services functions completely which is not an
             // option at this point. Sadly this function will remain unchecked.
             permitted = true;
         }
-        else if (methodName.equals("receiveNewMessage"))
-        {
+        else if (methodName.equals("receiveNewMessage")) {
             // All checks done in requestPermitted
             permitted = true;
         }
-        else if (methodName.equals("getMessageById"))
-        {
+        else if (methodName.equals("getMessageById")) {
+
             soapEnvelope = soapEnvelope.getFirstElement();
             String senderUid = WSCommonUtil.getTextOfChild(soapEnvelope, "senderUserInfo", "uid");
             Set<String> receiverUids = WSCommonUtil.getTextOfChildrenOfParents(soapEnvelope, "recipientUserInfos", "uid");
@@ -117,7 +118,8 @@ public class MessageProcessingServiceRestriction implements WSRestriction {
         if (permitted) {
             logger.info("Permission granted for " + commonData.getCurrentUserName()
                     + " accessing " + methodName + " request data.");
-        } else {
+        }
+        else {
             logger.warn("No permissions granted for " + commonData.getCurrentUserName()
                     + " accessing " + methodName + " request data. Request return data: " + soapEnvelope.toString());
         }
