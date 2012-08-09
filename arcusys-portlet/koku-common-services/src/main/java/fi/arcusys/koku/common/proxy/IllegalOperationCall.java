@@ -1,4 +1,4 @@
-package fi.arcusys.koku.palvelut.exceptions;
+package fi.arcusys.koku.common.proxy;
 
 /**
  * The base exception for unexpected processing errors. This Exception

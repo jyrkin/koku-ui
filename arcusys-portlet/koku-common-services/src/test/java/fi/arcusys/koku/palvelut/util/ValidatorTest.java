@@ -1,13 +1,17 @@
 package fi.arcusys.koku.palvelut.util;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.util.regex.Pattern;
 
 import org.junit.Test;
 
+import fi.arcusys.koku.common.proxy.OperationsValidator;
+import fi.arcusys.koku.common.proxy.OperationsValidatorImpl;
+
 public class ValidatorTest {
-	
+
 
 	public static final String soapGetMsg = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:soa=\"http://soa.av.koku.arcusys.fi/\"> " +
 											   "<soapenv:Header/>" +
@@ -17,7 +21,7 @@ public class ValidatorTest {
 											      "</soa:getAppointmentById>" +
 											   "</soapenv:Body>" +
 											"</soapenv:Envelope>";
-	
+
 	public static final String soapFindMsg = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:soa=\"http://soa.av.koku.arcusys.fi/\"> " +
 											   "<soapenv:Header/>" +
 											   "<soapenv:Body>" +
@@ -26,7 +30,7 @@ public class ValidatorTest {
 											      "</soa:findAppointmentById>" +
 											   "</soapenv:Body>" +
 											"</soapenv:Envelope>";
-	
+
 	public static final String soapSetMsg = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:soa=\"http://soa.av.koku.arcusys.fi/\"> " +
 											   "<soapenv:Header/>" +
 											   "<soapenv:Body>" +
@@ -35,7 +39,7 @@ public class ValidatorTest {
 											      "</soa:setAppointmentById>" +
 											   "</soapenv:Body>" +
 											"</soapenv:Envelope>";
-	
+
 	public static final String soapBroken = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:soa=\"http://soa.av.koku.arcusys.fi/\"> " +
 											   "<soapenv:Header/>" +
 											   "<soapenv:Body>" +
@@ -44,26 +48,26 @@ public class ValidatorTest {
 											      "</soa:getAppointmentById>" +
 											   "</soapenv:Body>" +
 											"</soapenv:Envelope>";
-	
+
 	public static final String ILLEGAL_OPERATIONS_REGEX = "<soa:get|<soa:find";
-		
+
 	@Test
-	public void regexTest() {		
+	public void regexTest() {
 		Pattern pa = Pattern.compile(ILLEGAL_OPERATIONS_REGEX);
-		assertTrue(pa.matcher(soapGetMsg).find());		 
+		assertTrue(pa.matcher(soapGetMsg).find());
 		assertFalse(pa.matcher(soapSetMsg).find());
 		assertTrue(pa.matcher(soapFindMsg).find());
 		assertFalse(pa.matcher(soapBroken).find());
 	}
-	
+
 	@Test
 	public void validatorTest() {
 		OperationsValidator validate = new OperationsValidatorImpl();
-		
+
 		assertFalse(validate.isValid(soapGetMsg));
 		assertTrue(validate.isValid(soapSetMsg));
 		assertFalse(validate.isValid(soapFindMsg));
-		assertTrue(validate.isValid(soapBroken));	
+		assertTrue(validate.isValid(soapBroken));
 	}
-	
+
 }

@@ -1,4 +1,4 @@
-package fi.arcusys.koku.palvelut.util;
+package fi.arcusys.koku.common.proxy;
 
 import java.util.regex.Pattern;
 

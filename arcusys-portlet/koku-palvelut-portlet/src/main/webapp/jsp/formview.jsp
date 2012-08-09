@@ -1,8 +1,8 @@
 <%@ include file="/jsp/init.jsp" %>
 <%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" isELIgnored="false" %>
 
-<portlet:resourceURL var="ajax" id="intalioAjax"></portlet:resourceURL>
-<portlet:resourceURL var="services" id="servicesAjax"></portlet:resourceURL>
+<portlet:resourceURL var="sendWsRequestURL" id="sendWsRequest"></portlet:resourceURL>
+<portlet:resourceURL var="serviceNamesURL" id="serviceNames"></portlet:resourceURL>
 
 <portlet:renderURL var="homeURL" windowState="<%= WindowState.NORMAL.toString() %>" >
 	<portlet:param name="myaction" value="home" />
@@ -121,14 +121,16 @@
 			return false;
 		}
 	}
-
-<%-- 
+	
+	
+	
+<%-- WTF? --%>
 	/* Simple function to send some example ajax data */
 	function ajaxSampleData() {	
 		var command = jQuery('#ajaxCommand').val();
 		var data = jQuery('#ajaxData').val();		
-		var result = sendDataToPortlet(command, data);
-		jQuery(".test").append("<div><pre>"+result+"</pre></div>");
+		var result = sendKokuWS(command, data);
+		jQuery(".test").append("<div><pre>"+result.toString()+"</pre></div>");
 	}
 	
 	function doSomething(data) {
@@ -137,9 +139,14 @@
 		var test1 = json["result"];
 		jQuery(".test").append("<div><pre>"+test1+"</pre></div>");
 	}	
-	
-	function showServices() {
-		var result = getKokuServicesEndpoints();
+
+	/**
+	 *  Returns Koku WS services
+	 * 
+	 *	@return list of services
+	 */
+	function getKokuWsServices() {
+		var result = getKokuServices();
 		jQuery(".test2").append("<div><pre>"+result+"</pre></div>");
 	}
 	
@@ -149,12 +156,12 @@
 	 * @param service ServiceName (e.g AppoimentService)
 	 * @param data XML-data
 	 */
-	function kokuServiceSend(service, data) {	
-		var url="<%= ajax %>";		
+	function sendKokuWS(service, message) {	
+		var url="<%= sendWsRequestURL %>";		
 		var ajaxObject = {
-							"service":service,
-							"data":data
-						};
+				"service":service,
+				"message":message
+			};
 		
 		return jQuery.ajax( {
 			url: url,  
@@ -164,10 +171,11 @@
 			async: false 
 		}).responseText;
 	}
-		--%>
-		
+	
+	
+	
 	function getKokuServices() {
-		var url="<%= services %>";
+		var url="<%= serviceNamesURL %>";
 		return jQuery.parseJSON(
 			jQuery.ajax( {
 				url: url,  
@@ -176,6 +184,9 @@
 				async: false 
 			}).responseText);
 	}
+	
+	<%-- End: WTF? --%>
+
 	
 	function getKokuServicesEndpoints() {
 		var url="/palvelut-portlet/Services";
@@ -236,20 +247,18 @@
 </portlet:renderURL>
 
 
- <%-- 
  
 <!--  <div class="test" style="display: none;"> -->
- <div class="test" style="display: none;">
+ <div class="test" style="display: block;">
 	<div class="testTextAreas">
 		<textarea id="ajaxCommand" rows="3" cols="15" name="Command:"></textarea>
 		<textarea id="ajaxData" rows="3" cols="50" name="Data:"></textarea>
 	</div>	
 	<button type="button" id="ajaxTest" name="Send data" onclick="ajaxSampleData()">Send data</button>
 </div>
-<div class="test2" style="display: none;">
-	<button type="button" id="ajaxTest" name="Send data" onclick="showServices()">Show services</button>
+<div class="test2" style="display: block;">
+	<button type="button" id="ajaxTest" name="Send data" onclick="getKokuWsServices()">Show services</button>
 </div>
---%>
 
 <div id="intalioPrintingLink"><img title="Tulosta" src="${pageContext.request.contextPath}/images/print.png" /><a id="printLink" href="#" onclick="kokuIframePrint(); return false;">Tulosta</a></div>
 <div id="form_wrap" style="margin:5px; position:relative; min-width: 720px;">

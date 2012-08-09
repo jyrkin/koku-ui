@@ -50,6 +50,31 @@
 		<artifactId>json</artifactId>
 		<version>20090211</version>
 	</dependency>
+	
+	<dependency>
+		<groupId>org.apache.axis2</groupId>
+		<artifactId>axis2-transport-local</artifactId>
+		<version>1.5.4</version>
+		<exclusions>
+			<exclusion>
+				<groupId>org.apache.woden</groupId>
+				<artifactId>woden-impl-dom</artifactId>
+			</exclusion>
+		</exclusions>
+	</dependency>
+
+	<dependency>
+		<groupId>org.apache.axis2</groupId>
+		<artifactId>axis2-transport-http</artifactId>
+		<version>1.5.4</version>
+	</dependency>
+
+	<dependency>
+		<groupId>org.apache.axis2</groupId>
+		<artifactId>axis2</artifactId>
+		<version>1.5.4</version>
+	</dependency>
+	
 	</dependencies>
 
 </project>

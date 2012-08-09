@@ -3,6 +3,7 @@ package fi.koku.taskmanager.controller;
 import static fi.arcusys.koku.common.util.Constants.ATTR_TOKEN;
 import static fi.arcusys.koku.common.util.Constants.ATTR_USERNAME;
 import static fi.arcusys.koku.common.util.Constants.JSON_EDITABLE;
+import static fi.arcusys.koku.common.util.Constants.JSON_RESULT;
 import static fi.arcusys.koku.common.util.Constants.JSON_TASKS;
 import static fi.arcusys.koku.common.util.Constants.JSON_TASK_STATE;
 import static fi.arcusys.koku.common.util.Constants.JSON_TOKEN_STATUS;
@@ -23,6 +24,7 @@ import javax.portlet.PortletPreferences;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 import javax.portlet.PortletSession;
+import javax.xml.stream.XMLStreamException;
 
 import net.sf.json.JSONObject;
 
@@ -35,9 +37,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.portlet.bind.annotation.ResourceMapping;
 
 import fi.arcusys.koku.common.exceptions.IntalioException;
+import fi.arcusys.koku.common.proxy.IllegalOperationCall;
+import fi.arcusys.koku.common.proxy.WsProxy;
 import fi.arcusys.koku.common.services.intalio.Task;
 import fi.arcusys.koku.common.services.intalio.TaskHandle;
 import fi.arcusys.koku.common.util.TaskUtil;
+import fi.koku.portlet.filter.userinfo.UserInfo;
 
 /**
  * Handles ajax request from web and returns the data with json string
@@ -179,6 +184,70 @@ public class AjaxController {
 		}
 		return jsonModel;
 	}
+
+
+
+
+	@ResourceMapping(value = "serviceNames")
+	public String servicesAjax(ModelMap modelmap, PortletRequest request, PortletResponse response) {
+		JSONObject obj = new JSONObject();
+		obj.element("endpoints" , WsProxy.getServiceNames());
+		modelmap.addAttribute(RESPONSE, obj);
+		return AjaxViewResolver.AJAX_PREFIX;
+	}
+
+	@ResourceMapping(value = "sendWsRequest")
+	public String intalioAjax(
+			@RequestParam(value = "service") String service,
+			@RequestParam(value = "message") String message,
+			ModelMap modelmap, PortletRequest request, PortletResponse response) {
+
+		final String username = request.getUserPrincipal().getName();
+
+		LOG.debug("Service: '"+service+"' Messsage: '"+message+"'");
+		if (service.isEmpty()) {
+			LOG.warn("AjaxMessage Command is empty. Username: '"+username+"'");
+			returnEmptyString(modelmap);
+			return AjaxViewResolver.AJAX_PREFIX;
+		}
+
+		if (message.isEmpty()) {
+			LOG.warn("AjaxMessage Data is empty. Username: '"+username+"'");
+			returnEmptyString(modelmap);
+			return AjaxViewResolver.AJAX_PREFIX;
+		}
+
+		String result = null;
+		WsProxy proxy = new WsProxy(service, message, (UserInfo) request.getPortletSession().getAttribute("USERINFO"));
+
+		try {
+			result = proxy.send();
+		} catch (IllegalOperationCall ioc) {
+			LOG.error("Illegal operation call. User '" + username + "' tried to call restricted method that he/she doesn't have sufficient permission. ");
+		} catch (XMLStreamException xse) {
+			LOG.error("Unexpected XML-parsing error. User '" + username + "'", xse);
+		} catch (Exception e) {
+			LOG.error("Coulnd't send given message. Parsing error propably. ", e);
+		}
+
+		JSONObject obj = new JSONObject();
+		if (result == null || result.isEmpty()) {
+			obj.element(JSON_RESULT, "");
+		} else {
+			obj.element(JSON_RESULT, result);
+		}
+		modelmap.addAttribute(RESPONSE, obj);
+		return AjaxViewResolver.AJAX_PREFIX;
+	}
+
+	private ModelMap returnEmptyString(ModelMap modelmap) {
+		JSONObject obj = new JSONObject();
+		obj.element(JSON_RESULT, "");
+		modelmap.addAttribute(RESPONSE, obj);
+		return modelmap;
+	}
+
+
 
 	/**
 	 * Converts task type string to integer

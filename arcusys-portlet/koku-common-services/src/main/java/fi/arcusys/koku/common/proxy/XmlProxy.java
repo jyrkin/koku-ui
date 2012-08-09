@@ -1,4 +1,4 @@
-package fi.arcusys.koku.palvelut.util;
+package fi.arcusys.koku.common.proxy;
 
 import java.io.StringReader;
 import java.util.Iterator;
@@ -19,53 +19,51 @@ import org.apache.axis2.client.ServiceClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import fi.arcusys.koku.palvelut.exceptions.IllegalOperationCall;
-
 /**
  * XmlProxy <br/><br/>
  * Copied functionality from WsProxyServletRestricted (koku project)
- * 
+ *
  * @author Toni Turunen
  *
  */
 public class XmlProxy {
-	
+
 	private static final Logger LOG = LoggerFactory.getLogger(XmlProxy.class);
 
 	private final String message;
 	private final String action;
 	private final String endpoint;
 	private final OperationsValidator validator;
-	
+
 	public XmlProxy(String action, String endpoint, String message) {
 		this(action, endpoint, message, null);
 	}
-	
+
 	public XmlProxy(String action, String endpoint, String message, OperationsValidator validator) {
-		
+
 		if (message == null || action == null || endpoint == null) {
 			LOG.error("One or more given constructor parameters was null");
 			throw new IllegalStateException();
-		}		
+		}
 		this.action = action;
 		this.message = message;
 		this.endpoint = endpoint;
 		this.validator = validator;
 	}
-	
+
 	public String send() throws IllegalOperationCall, XMLStreamException {
 		if (validator != null && !validator.isValid(message)) {
 			throw new IllegalOperationCall();
-		}		
+		}
 		OMElement omelement = null;
 		omelement = parseRequest(message);
-		
+
 		Options options = new Options();
 		options.setTo(new EndpointReference(endpoint));
-		options.setAction(action);		
+		options.setAction(action);
 		return send(omelement, options);
 	}
-	
+
 	protected OMElement parseRequest(String s) throws XMLStreamException {
 		OMElement omelement = null;
 		StringReader stringreader = new StringReader(s);
@@ -86,12 +84,12 @@ public class XmlProxy {
 				break;
 			}
 		}
-		
+
 		omelement = omelement2.getFirstElement();
 		return omelement;
 	}
-	
-	
+
+
 	protected String send(OMElement omelement, Options options) {
 		String response = null;
 		try {
@@ -106,7 +104,7 @@ public class XmlProxy {
 		}
 		return response;
 	}
-	
+
 	protected String generateErrorResponse(String s) {
 		return generateResponse("error", s, null);
 	}
@@ -114,7 +112,7 @@ public class XmlProxy {
 	protected String generateSuccessResponse(OMElement omelement) {
 		return generateResponse("success", null, omelement);
 	}
-	
+
 	protected String generateResponse(String s, String s1, OMElement omelement) {
 		OMFactory omfactory = OMAbstractFactory.getOMFactory();
 		OMElement omelement1 = omfactory.createOMElement("response", null);
@@ -135,7 +133,7 @@ public class XmlProxy {
 		LOG.debug("Test output:" + omelement1.toString());
 		return omelement1.toString();
 	}
-	
+
 	protected OMElement createTextElement(OMFactory omfactory, String s,
 			String s1) {
 		OMElement omelement = omfactory.createOMElement(s, null);
@@ -159,5 +157,5 @@ public class XmlProxy {
 	public final OperationsValidator getValidator() {
 		return validator;
 	}
-	
+
 }

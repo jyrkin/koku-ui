@@ -1,4 +1,4 @@
-package fi.arcusys.koku.palvelut.util;
+package fi.arcusys.koku.common.proxy;
 
 /**
  * This interface is meant to validate KOKU

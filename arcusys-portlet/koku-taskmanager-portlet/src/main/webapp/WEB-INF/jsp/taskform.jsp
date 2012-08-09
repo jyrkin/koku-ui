@@ -3,6 +3,10 @@
 	<portlet:param name="myaction" value="home" />
 </portlet:renderURL>
 
+<portlet:resourceURL var="sendWsRequestURL" id="sendWsRequest"></portlet:resourceURL>
+<portlet:resourceURL var="serviceNamesURL" id="serviceNames"></portlet:resourceURL>
+
+
 <%@ include file="js_koku_navigation_helper.jspf" %>
 	<!-- taskform.jsp -->
 	
@@ -31,6 +35,7 @@
 		
 		loadingTimes += 1;
 	}
+
 	
 	
 	function setCompletedIframeSize() {
@@ -74,7 +79,84 @@
 		eppHack();
 	});
 	
+	
+	<%-- WTF? --%>
+	/* Simple function to send some example ajax data */
+	function ajaxSampleData() {	
+		var command = jQuery('#ajaxCommand').val();
+		var data = jQuery('#ajaxData').val();		
+		var result = sendKokuWS(command, data);
+		jQuery(".test").append("<div><pre>"+result.toString()+"</pre></div>");
+	}
+	
+	function doSomething(data) {
+		var obj = JSON.parse(data);
+		var json = obj.response;
+		var test1 = json["result"];
+		jQuery(".test").append("<div><pre>"+test1+"</pre></div>");
+	}	
+
+	/**
+	 *  Returns Koku WS services
+	 * 
+	 *	@return list of services
+	 */
+	function getKokuWsServices() {
+		var result = getKokuServices();
+		jQuery(".test2").append("<div><pre>"+result+"</pre></div>");
+	}
+	
+	/**
+	 * Simple function to send some example ajax data 
+	 * 
+	 * @param service ServiceName (e.g AppoimentService)
+	 * @param data XML-data
+	 */
+	function sendKokuWS(service, message) {	
+		var url="<%= sendWsRequestURL %>";		
+		var ajaxObject = {
+				"service":service,
+				"message":message
+			};
+		
+		return jQuery.ajax( {
+			url: url,  
+			type: "POST", 
+			data: ajaxObject, 
+		    dataType: "html",
+			async: false 
+		}).responseText;
+	}
+	
+	
+	
+	function getKokuServices() {
+		var url="<%= serviceNamesURL %>";
+		return jQuery.parseJSON(
+			jQuery.ajax( {
+				url: url,  
+				type: "POST", 
+			    dataType: "html",
+				async: false 
+			}).responseText);
+	}
+	
+	<%-- End: WTF? --%>
+
+	
 </script>
+
+ <div class="test" style="display: block;">
+	<div class="testTextAreas">
+		<textarea id="ajaxCommand" rows="3" cols="15" name="Command:"></textarea>
+		<textarea id="ajaxData" rows="3" cols="50" name="Data:"></textarea>
+	</div>	
+	<button type="button" id="ajaxTest" name="Send data" onclick="ajaxSampleData()">Send data</button>
+</div>
+<div class="test2" style="display: block;">
+	<button type="button" id="ajaxTest" name="Send data" onclick="getKokuWsServices()">Show services</button>
+</div>
+
 <div id="task-manager-wrap">
 	<div id="task-manager-tasklist">
 		<div id="intalioPrintingLink"><img title="Tulosta" src="${pageContext.request.contextPath}/images/print.png" /><a id="printLink" href="#" onclick="kokuIframePrint(); return false;">Tulosta</a></div>
