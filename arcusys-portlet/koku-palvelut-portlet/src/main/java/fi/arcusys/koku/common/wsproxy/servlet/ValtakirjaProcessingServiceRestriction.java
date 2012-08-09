@@ -37,7 +37,6 @@ public class ValtakirjaProcessingServiceRestriction implements WSRestriction {
 
                 String uid = WSCommonUtil.getTextOfChild(soapEnvelope, "kayttaja");
 
-                // TODO
                 if (commonData.getCurrentUserUid().equals(uid)) {
                     permitted = true;
                 }
