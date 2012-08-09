@@ -4,14 +4,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringReader;
-import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 
-import javax.portlet.PortletRequest;
 import javax.servlet.Servlet;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -29,15 +25,10 @@ import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 import org.apache.axis2.addressing.EndpointReference;
 import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
-import org.apache.openjpa.lib.log.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import serp.bytecode.NewArrayInstruction;
-
 import fi.arcusys.koku.common.util.KokuWebServicesJS;
-import fi.arcusys.koku.common.util.Properties;
-import fi.koku.portlet.filter.userinfo.UserInfo;
 import fi.koku.settings.KoKuPropertiesUtil;
 
 /**
@@ -74,6 +65,8 @@ public class WsProxyServletRestricted extends HttpServlet implements Servlet {
 //        restrictions.put(KokuWebServicesJS.REQUEST_PROCESSING_SERVICE, new RequestProcessingServiceRestriction());
 //        restrictions.put(KokuWebServicesJS.SUOSTUMUS_PROCESSING_SERVICE, new SuostumusProcessingServiceRestriction());
 //        restrictions.put(KokuWebServicesJS.VALTAKIRJA_PROCESSING_SERVICE, new ValtakirjaProcessingServiceRestriction());
+//        restrictions.put(KokuWebServicesJS.TIETOPYYNTO_PROCESSING_SERVICE, new TietopyyntoProcessingServiceRestriction());
+//        restrictions.put(KokuWebServicesJS.HAK_PROCESSING_SERVICE, new HakProcessingServiceRestriction());
     }
 
     protected void doPost(HttpServletRequest request,
