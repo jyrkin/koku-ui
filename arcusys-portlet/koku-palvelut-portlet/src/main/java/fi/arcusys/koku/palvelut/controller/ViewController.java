@@ -2,10 +2,12 @@ package fi.arcusys.koku.palvelut.controller;
 
 import static fi.arcusys.koku.common.util.Constants.ATTR_PREFERENCES;
 import static fi.arcusys.koku.common.util.Constants.JSON_RESULT;
+import static fi.arcusys.koku.common.util.Constants.JSON_WS_MESSAGE;
 import static fi.arcusys.koku.common.util.Constants.PREF_SHOW_ONLY_FORM_BY_DESCRIPTION;
 import static fi.arcusys.koku.common.util.Constants.PREF_SHOW_ONLY_FORM_BY_ID;
 import static fi.arcusys.koku.common.util.Constants.PREF_SHOW_TASKS_BY_ID;
-import static fi.arcusys.koku.common.util.Constants.RESPONSE;
+import static fi.arcusys.koku.common.util.Constants.RESPONSE_FAIL;
+import static fi.arcusys.koku.common.util.Constants.RESPONSE_OK;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
@@ -55,85 +57,46 @@ public class ViewController extends FormHolderController {
 	public static final String ROOT_CATEGORY_LIST_MODEL_NAME 			= "rootCategories";
 
 
-//	private static final Map<String, String> JS_ENDPOINTS;
-//
-//	static {
-//		Map<String, String> endpoints = new HashMap<String, String>();
-//
-//		for (KokuWebServicesJS key : KokuWebServicesJS.values()) {
-//    		String value = KoKuPropertiesUtil.get(key.value());
-//    		if (value == null) {
-//    			throw new ExceptionInInitializerError("Coulnd't find property '"+ key.value()+"'");
-//    		}
-//    		if (value.endsWith("?wsdl")) {
-//    			int end = value.indexOf("?wsdl");
-//    			value = value.substring(0, end);
-//    		}
-//    		endpoints.put(key.value(), value);
-//    		LOG.info("Added new endpoint to WsProxyServlet: "+value);
-//		}
-//		JS_ENDPOINTS = Collections.unmodifiableMap(endpoints);
-//	}
-
-
 	@ResourceMapping(value = "serviceNames")
 	public String servicesAjax(ModelMap modelmap, PortletRequest request, PortletResponse response) {
 		JSONObject obj = new JSONObject();
-		obj.element("endpoints" , WsProxy.getServiceNames());
-		modelmap.addAttribute(RESPONSE, obj);
+		modelmap.addAttribute("endpoints" , WsProxy.getServiceNames());
+		modelmap.addAttribute(JSON_RESULT, RESPONSE_OK);
 		return AjaxViewResolver.AJAX_PREFIX;
 	}
 
 	@ResourceMapping(value = "sendWsRequest")
-	public String intalioAjax(
+	public String servicesAjaxSend(
 			@RequestParam(value = "service") String service,
 			@RequestParam(value = "message") String message,
 			ModelMap modelmap, PortletRequest request, PortletResponse response) {
 
-		final String username = request.getUserPrincipal().getName();
-
 		LOG.debug("Service: '"+service+"' Messsage: '"+message+"'");
-		if (service.isEmpty()) {
-			LOG.warn("AjaxMessage Command is empty. Username: '"+username+"'");
-			returnEmptyString(modelmap);
-			return AjaxViewResolver.AJAX_PREFIX;
-		}
 
-		if (message.isEmpty()) {
-			LOG.warn("AjaxMessage Data is empty. Username: '"+username+"'");
-			returnEmptyString(modelmap);
-			return AjaxViewResolver.AJAX_PREFIX;
-		}
-
+		final String username = request.getUserPrincipal().getName();
+		final UserInfo user = (UserInfo) request.getPortletSession().getAttribute(UserInfo.KEY_USER_INFO);
+		final JSONObject obj = new JSONObject();
 		String result = null;
-		UserInfo user = (UserInfo) request.getPortletSession().getAttribute("KEY_USER_INFO");
-		WsProxy proxy = new WsProxy(service, message, null);
+		modelmap.addAttribute(JSON_RESULT, RESPONSE_FAIL);
 
 		try {
+			WsProxy proxy = new WsProxy(service, message, user);
 			result = proxy.send();
+			modelmap.addAttribute(JSON_RESULT, RESPONSE_OK);
 		} catch (IllegalOperationCall ioc) {
-			LOG.error("Illegal operation call. User '" + username + "' tried to call restricted method that he/she doesn't have sufficient permission. ");
+			LOG.error("Illegal operation call. User '" + username + "' tried to call restricted method that he/she doesn't have sufficient permission. ", ioc);
 		} catch (XMLStreamException xse) {
 			LOG.error("Unexpected XML-parsing error. User '" + username + "'", xse);
 		} catch (Exception e) {
-			LOG.error("Coulnd't send given message. Parsing error propably. ", e);
+			LOG.error("Couldn't send given message. Parsing error propably. Username: '"+username+"'", e);
 		}
 
-		JSONObject obj = new JSONObject();
 		if (result == null || result.isEmpty()) {
-			obj.element(JSON_RESULT, "");
+			modelmap.addAttribute(JSON_WS_MESSAGE, "");
 		} else {
-			obj.element(JSON_RESULT, result);
+			modelmap.addAttribute(JSON_WS_MESSAGE, result);
 		}
-		modelmap.addAttribute(RESPONSE, obj);
 		return AjaxViewResolver.AJAX_PREFIX;
-	}
-
-	private ModelMap returnEmptyString(ModelMap modelmap) {
-		JSONObject obj = new JSONObject();
-		obj.element(JSON_RESULT, "");
-		modelmap.addAttribute(RESPONSE, obj);
-		return modelmap;
 	}
 
 

@@ -37,7 +37,7 @@ public class WsProxy {
 		for (KokuWebServicesJS key : KokuWebServicesJS.values()) {
     		String value = KoKuPropertiesUtil.get(key.value());
     		if (value == null) {
-    			throw new ExceptionInInitializerError("Coulnd't find property '"+ key.value()+"'");
+    			throw new ExceptionInInitializerError("Couldn't find property '"+ key.value()+"'");
     		}
     		if (value.endsWith("?wsdl")) {
     			int end = value.indexOf("?wsdl");
@@ -55,15 +55,15 @@ public class WsProxy {
 	private final XmlProxy proxy;
 	private final UserInfo userinfo;
 
-	public WsProxy(String service, String message, UserInfo userinfo) {
+	public WsProxy(String service, String message, UserInfo userinfo) throws IllegalOperationCall {
 
 		this.userinfo = userinfo;
 //		OperationsValidator validator = new OperationsValidatorImpl();
 		OperationsValidatorImpl validator = null;
 		String endpointUrl = JS_ENDPOINTS.get(service);
 		if (endpointUrl == null) {
-			LOG.error("Coulnd't create XMLProxy. No service found by given service name: '"+service+"'");
 			proxy = null;
+			throw new IllegalOperationCall("Couldn't create XMLProxy. No service found by given service name: '"+service+"'");
 		} else {
 			proxy = new XmlProxy("", endpointUrl, message, validator);
 		}

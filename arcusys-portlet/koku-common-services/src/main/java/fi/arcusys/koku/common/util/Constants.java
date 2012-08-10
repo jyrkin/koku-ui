@@ -184,6 +184,7 @@ public final class Constants {
 	public static final String JSON_INFO_REQUESTS_TOTAL						= "infoRequestsTotal";
 	public static final String JSON_NAVI_STATE								= "navigationState";
 	public static final String JSON_NAVI_POSITION							= "navigationPosition";
+	public static final String JSON_WS_MESSAGE								= "wsMessage";
 
 
 	/* PortletPreferences keys: */

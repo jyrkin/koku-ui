@@ -9,10 +9,13 @@ import static fi.arcusys.koku.common.util.Constants.JSON_TASK_STATE;
 import static fi.arcusys.koku.common.util.Constants.JSON_TOKEN_STATUS;
 import static fi.arcusys.koku.common.util.Constants.JSON_TOTAL_ITEMS;
 import static fi.arcusys.koku.common.util.Constants.JSON_TOTAL_PAGES;
+import static fi.arcusys.koku.common.util.Constants.JSON_WS_MESSAGE;
 import static fi.arcusys.koku.common.util.Constants.PREF_EDITABLE;
 import static fi.arcusys.koku.common.util.Constants.PREF_EXCLUDE_FILTER;
 import static fi.arcusys.koku.common.util.Constants.PREF_TASK_FILTER;
 import static fi.arcusys.koku.common.util.Constants.RESPONSE;
+import static fi.arcusys.koku.common.util.Constants.RESPONSE_FAIL;
+import static fi.arcusys.koku.common.util.Constants.RESPONSE_OK;
 import static fi.arcusys.koku.common.util.Constants.TOKEN_STATUS_INVALID;
 import static fi.arcusys.koku.common.util.Constants.TOKEN_STATUS_VALID;
 
@@ -186,67 +189,47 @@ public class AjaxController {
 	}
 
 
-
-
 	@ResourceMapping(value = "serviceNames")
 	public String servicesAjax(ModelMap modelmap, PortletRequest request, PortletResponse response) {
 		JSONObject obj = new JSONObject();
-		obj.element("endpoints" , WsProxy.getServiceNames());
-		modelmap.addAttribute(RESPONSE, obj);
+		modelmap.addAttribute("endpoints" , WsProxy.getServiceNames());
+		modelmap.addAttribute(JSON_RESULT, RESPONSE_OK);
 		return AjaxViewResolver.AJAX_PREFIX;
 	}
 
 	@ResourceMapping(value = "sendWsRequest")
-	public String intalioAjax(
+	public String servicesAjaxSend(
 			@RequestParam(value = "service") String service,
 			@RequestParam(value = "message") String message,
 			ModelMap modelmap, PortletRequest request, PortletResponse response) {
 
-		final String username = request.getUserPrincipal().getName();
-
 		LOG.debug("Service: '"+service+"' Messsage: '"+message+"'");
-		if (service.isEmpty()) {
-			LOG.warn("AjaxMessage Command is empty. Username: '"+username+"'");
-			returnEmptyString(modelmap);
-			return AjaxViewResolver.AJAX_PREFIX;
-		}
 
-		if (message.isEmpty()) {
-			LOG.warn("AjaxMessage Data is empty. Username: '"+username+"'");
-			returnEmptyString(modelmap);
-			return AjaxViewResolver.AJAX_PREFIX;
-		}
-
+		final String username = request.getUserPrincipal().getName();
+		final UserInfo user = (UserInfo) request.getPortletSession().getAttribute(UserInfo.KEY_USER_INFO);
+		final JSONObject obj = new JSONObject();
 		String result = null;
-		WsProxy proxy = new WsProxy(service, message, (UserInfo) request.getPortletSession().getAttribute("USERINFO"));
+		modelmap.addAttribute(JSON_RESULT, RESPONSE_FAIL);
 
 		try {
+			WsProxy proxy = new WsProxy(service, message, user);
 			result = proxy.send();
+			modelmap.addAttribute(JSON_RESULT, RESPONSE_OK);
 		} catch (IllegalOperationCall ioc) {
-			LOG.error("Illegal operation call. User '" + username + "' tried to call restricted method that he/she doesn't have sufficient permission. ");
+			LOG.error("Illegal operation call. User '" + username + "' tried to call restricted method that he/she doesn't have sufficient permission. ", ioc);
 		} catch (XMLStreamException xse) {
 			LOG.error("Unexpected XML-parsing error. User '" + username + "'", xse);
 		} catch (Exception e) {
-			LOG.error("Coulnd't send given message. Parsing error propably. ", e);
+			LOG.error("Couldn't send given message. Parsing error propably. Username: '"+username+"'", e);
 		}
 
-		JSONObject obj = new JSONObject();
 		if (result == null || result.isEmpty()) {
-			obj.element(JSON_RESULT, "");
+			modelmap.addAttribute(JSON_WS_MESSAGE, "");
 		} else {
-			obj.element(JSON_RESULT, result);
+			modelmap.addAttribute(JSON_WS_MESSAGE, result);
 		}
-		modelmap.addAttribute(RESPONSE, obj);
 		return AjaxViewResolver.AJAX_PREFIX;
 	}
-
-	private ModelMap returnEmptyString(ModelMap modelmap) {
-		JSONObject obj = new JSONObject();
-		obj.element(JSON_RESULT, "");
-		modelmap.addAttribute(RESPONSE, obj);
-		return modelmap;
-	}
-
 
 
 	/**

@@ -3,7 +3,7 @@ package fi.arcusys.koku.common.proxy;
 /**
  * The base exception for unexpected processing errors. This Exception
  * class is used to report well-formedness errors as well as unexpected
- * processing conditions.
+ * processing errors.
  */
 public class IllegalOperationCall extends Exception {
 
@@ -24,6 +24,6 @@ public class IllegalOperationCall extends Exception {
 	public IllegalOperationCall(Throwable cause) {
 		super(cause);
 	}
-	
+
 
 }
