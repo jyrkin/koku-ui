@@ -44,34 +44,6 @@ public class AppointmentProcessingServiceRestriction implements WSRestriction {
             if (methodName.equals("getAppointment")) {
                 permitted = true;
             }
-            else if (methodName.equals("storeAppointment")) {
-                permitted = true;
-            }
-        }
-
-        // Methods exposed to Kunpo
-        if (Properties.IS_KUNPO_PORTAL) {
-
-            if (methodName.equals("approveAppointment")) {
-
-                String userUid = WSCommonUtil.getTextOfChild(soapEnvelope, "user");
-
-                // Only target users of appointments can approve or decline
-                // their appointments
-                if (commonData.getCurrentUserUid().equals(userUid)) {
-                    permitted = true;
-                }
-            }
-            else if (methodName.equals("declineAppointment")) {
-
-                String userUid = WSCommonUtil.getTextOfChild(soapEnvelope, "user");
-
-                // Only target users of appointments can approve or decline
-                // their appointments
-                if (commonData.getCurrentUserUid().equals(userUid)) {
-                    permitted = true;
-                }
-            }
         }
 
         if (permitted) {
@@ -105,9 +77,10 @@ public class AppointmentProcessingServiceRestriction implements WSRestriction {
 
             soapEnvelope = soapEnvelope.getFirstElement();
             String uid = WSCommonUtil.getTextOfChild(soapEnvelope, "senderUserInfo", "uid");
+            String role = WSCommonUtil.getTextOfChild(soapEnvelope, "senderRole");
 
-            // Only creator of appointment can edit the whole appointment
-            if (commonData.getCurrentUserUid().equals(uid)) {
+            // Only creator of appointment or person with right role can edit the appointment
+            if (commonData.getCurrentUserUid().equals(uid) || commonData.getCurrentUserRoles().contains(role)) {
 
                 String appointmentId = WSCommonUtil.getTextOfChild(soapEnvelope, "appointmentId");
 
@@ -118,7 +91,7 @@ public class AppointmentProcessingServiceRestriction implements WSRestriction {
                 }
             }
 
-            // If the checks are successfull, add mentioned users to permitted lists
+            // If the checks are successful, add mentioned users to permitted lists
             if (permitted) {
                 permitMentionedParties(commonData, soapEnvelope);
             }
@@ -129,23 +102,6 @@ public class AppointmentProcessingServiceRestriction implements WSRestriction {
             permitted = true;
 
             permitMentionedParties(commonData, soapEnvelope.getFirstElement());
-        }
-        else if (methodName.equals("storeAppointment")) {
-
-            String appointmentId = WSCommonUtil.getTextOfChild(soapEnvelope, "return");
-
-            // Only meetings that had been previously opened in this session can be stored
-            if (commonData.getAvAllowedMeetingIdSet().contains(appointmentId)) {
-                permitted = true;
-            }
-        }
-        else if (methodName.equals("approveAppointment")) {
-            // All checks done in requestPermitted
-            permitted = true;
-        }
-        else if (methodName.equals("declineAppointment")) {
-            // All checks done in requestPermitted
-            permitted = true;
         }
 
         if (permitted) {

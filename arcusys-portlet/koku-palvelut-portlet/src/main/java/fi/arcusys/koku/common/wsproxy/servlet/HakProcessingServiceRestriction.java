@@ -5,7 +5,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import fi.arcusys.koku.common.util.KokuWebServicesJS;
-import fi.arcusys.koku.common.util.Properties;
 
 /**
  * Restrict KokuHakProcessingService methods
