@@ -28,6 +28,15 @@ import org.apache.axis2.client.ServiceClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import fi.arcusys.koku.common.proxy.restrictions.AppointmentProcessingServiceRestriction;
+import fi.arcusys.koku.common.proxy.restrictions.HakProcessingServiceRestriction;
+import fi.arcusys.koku.common.proxy.restrictions.MessageProcessingServiceRestriction;
+import fi.arcusys.koku.common.proxy.restrictions.RequestProcessingServiceRestriction;
+import fi.arcusys.koku.common.proxy.restrictions.SuostumusProcessingServiceRestriction;
+import fi.arcusys.koku.common.proxy.restrictions.TietopyyntoProcessingServiceRestriction;
+import fi.arcusys.koku.common.proxy.restrictions.UsersAndGroupsServiceRestriction;
+import fi.arcusys.koku.common.proxy.restrictions.ValtakirjaProcessingServiceRestriction;
+import fi.arcusys.koku.common.proxy.restrictions.WSRestriction;
 import fi.arcusys.koku.common.util.KokuWebServicesJS;
 import fi.koku.settings.KoKuPropertiesUtil;
 
@@ -131,7 +140,7 @@ public class WsProxyServletRestricted extends HttpServlet implements Servlet {
         }
 
         final HttpSession session = request.getSession();
-        final WSCommonData commonData = new WSCommonData(session, wsMap);
+        //final WSCommonData commonData = new WSCommonData(session, wsMap);
 
         // Check if user is authenticated
 //        if (commonData.getCurrentUserName() == null)
@@ -143,14 +152,14 @@ public class WsProxyServletRestricted extends HttpServlet implements Servlet {
 
         final WSRestriction restriction = restrictions.get(endpoint);
 
-        if (restriction != null) {
+        /*if (restriction != null) {
             if (!restriction.requestPermitted(commonData, methodName, soapRequest)) {
                 return generateErrorResponse("User is not permitted to perform this request");
             }
 
         } else {
             logger.warn("In-depth security checks are not defined for "+endpoint.value());
-        }
+        }*/
 
         Options options = new Options();
         options.setTo(new EndpointReference(endpointURI));
@@ -178,9 +187,9 @@ public class WsProxyServletRestricted extends HttpServlet implements Servlet {
             return generateErrorResponse("Error: Received empty result");
         }
 
-        if (restriction != null && !restriction.responsePermitted(commonData, methodName, soapResponse)) {
+        /*if (restriction != null && !restriction.responsePermitted(commonData, methodName, soapResponse)) {
             return generateErrorResponse("User is not permitted to receive this response");
-        }
+        }*/
 
         return generateSuccessResponse(soapResponse);
     }
@@ -199,9 +208,6 @@ public class WsProxyServletRestricted extends HttpServlet implements Servlet {
 
         for (Iterator<OMElement> children = document.getChildElements(); children.hasNext(); ) {
             element = (OMElement) children.next();
-
-            logger.info("Looking at element: qname="+element.getQName());
-            logger.info("Looking at element: text="+element.getText());
 
             if (element.getText().toLowerCase().contains("body"))
                 break;

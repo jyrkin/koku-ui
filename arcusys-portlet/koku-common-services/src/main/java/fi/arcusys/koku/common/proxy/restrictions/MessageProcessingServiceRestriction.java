@@ -1,4 +1,4 @@
-package fi.arcusys.koku.common.wsproxy.servlet;
+package fi.arcusys.koku.common.proxy.restrictions;
 
 import java.util.Set;
 
@@ -6,6 +6,8 @@ import org.apache.axiom.om.OMElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import fi.arcusys.koku.common.proxy.util.WSCommonData;
+import fi.arcusys.koku.common.proxy.util.WSCommonUtil;
 import fi.arcusys.koku.common.util.KokuWebServicesJS;
 
 /**

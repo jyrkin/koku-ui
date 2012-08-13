@@ -41,7 +41,7 @@ import org.springframework.web.portlet.bind.annotation.ResourceMapping;
 
 import fi.arcusys.koku.common.exceptions.IntalioException;
 import fi.arcusys.koku.common.proxy.IllegalOperationCall;
-import fi.arcusys.koku.common.proxy.WsProxy;
+import fi.arcusys.koku.common.proxy.XmlProxy;
 import fi.arcusys.koku.common.services.intalio.Task;
 import fi.arcusys.koku.common.services.intalio.TaskHandle;
 import fi.arcusys.koku.common.util.TaskUtil;
@@ -192,7 +192,7 @@ public class AjaxController {
 	@ResourceMapping(value = "serviceNames")
 	public String servicesAjax(ModelMap modelmap, PortletRequest request, PortletResponse response) {
 		JSONObject obj = new JSONObject();
-		modelmap.addAttribute("endpoints" , WsProxy.getServiceNames());
+		modelmap.addAttribute("endpoints" , XmlProxy.getServiceNames());
 		modelmap.addAttribute(JSON_RESULT, RESPONSE_OK);
 		return AjaxViewResolver.AJAX_PREFIX;
 	}
@@ -212,8 +212,8 @@ public class AjaxController {
 		modelmap.addAttribute(JSON_RESULT, RESPONSE_FAIL);
 
 		try {
-			WsProxy proxy = new WsProxy(service, message, user);
-			result = proxy.send();
+			XmlProxy proxy = new XmlProxy(service, message, user);
+			result = proxy.send(request);
 			modelmap.addAttribute(JSON_RESULT, RESPONSE_OK);
 		} catch (IllegalOperationCall ioc) {
 			LOG.error("Illegal operation call. User '" + username + "' tried to call restricted method that he/she doesn't have sufficient permission. ", ioc);

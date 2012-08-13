@@ -1,9 +1,15 @@
 package fi.arcusys.koku.common.proxy;
 
 import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
-import javax.xml.stream.FactoryConfigurationError;
+import javax.portlet.PortletRequest;
+import javax.portlet.PortletSession;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
@@ -19,143 +25,226 @@ import org.apache.axis2.client.ServiceClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import fi.arcusys.koku.common.proxy.restrictions.AppointmentProcessingServiceRestriction;
+import fi.arcusys.koku.common.proxy.restrictions.HakProcessingServiceRestriction;
+import fi.arcusys.koku.common.proxy.restrictions.MessageProcessingServiceRestriction;
+import fi.arcusys.koku.common.proxy.restrictions.RequestProcessingServiceRestriction;
+import fi.arcusys.koku.common.proxy.restrictions.SuostumusProcessingServiceRestriction;
+import fi.arcusys.koku.common.proxy.restrictions.TietopyyntoProcessingServiceRestriction;
+import fi.arcusys.koku.common.proxy.restrictions.UsersAndGroupsServiceRestriction;
+import fi.arcusys.koku.common.proxy.restrictions.ValtakirjaProcessingServiceRestriction;
+import fi.arcusys.koku.common.proxy.restrictions.WSRestriction;
+import fi.arcusys.koku.common.proxy.util.WSCommonData;
+import fi.arcusys.koku.common.util.KokuWebServicesJS;
+import fi.koku.portlet.filter.userinfo.UserInfo;
+import fi.koku.settings.KoKuPropertiesUtil;
+
 /**
- * XmlProxy <br/><br/>
- * Copied functionality from WsProxyServletRestricted (koku project)
+ * A secure proxy for WS calls to backend
  *
  * @author Toni Turunen
+ * @author Mikhail Kapitonov
  *
  */
 public class XmlProxy {
 
 	private static final Logger LOG = LoggerFactory.getLogger(XmlProxy.class);
 
-	private final String message;
-	private final String action;
-	private final String endpoint;
-	private final OperationsValidator validator;
+	private static final List<String> JS_ENDPOINT_NAMES;
+	private static final Map<KokuWebServicesJS, String> JS_ENDPOINT_URI;
+	private static final Map<KokuWebServicesJS, WSRestriction> JS_RESTRICTIONS;
 
-	public XmlProxy(String action, String endpoint, String message) {
-		this(action, endpoint, message, null);
+	static {
+		List<String> endpointNames = new ArrayList<String>();
+		Map<KokuWebServicesJS, String> endpointURIs = new HashMap<KokuWebServicesJS, String>();
+		Map<KokuWebServicesJS, WSRestriction> restrictions = new HashMap<KokuWebServicesJS, WSRestriction>();
+
+		for (KokuWebServicesJS key : KokuWebServicesJS.values()) {
+    		String value = KoKuPropertiesUtil.get(key.value());
+
+    		if (value == null) {
+    			throw new ExceptionInInitializerError("Couldn't find property '"+ key.value()+"'");
+    		}
+
+    		if (value.endsWith("?wsdl")) {
+    			int end = value.indexOf("?wsdl");
+    			value = value.substring(0, end);
+    		}
+
+    		endpointNames.add(key.value());
+    		endpointURIs.put(key, value);
+
+    		LOG.info("Added new endpoint to XmlProxy: "+value);
+		}
+
+		restrictions.put(KokuWebServicesJS.USERS_AND_GROUPS_SERVICE, new UsersAndGroupsServiceRestriction());
+		restrictions.put(KokuWebServicesJS.APPOINTMENT_PROCESSING_SERVICE, new AppointmentProcessingServiceRestriction());
+		restrictions.put(KokuWebServicesJS.KV_MESSAGE_SERVICE, new MessageProcessingServiceRestriction());
+		restrictions.put(KokuWebServicesJS.REQUEST_PROCESSING_SERVICE, new RequestProcessingServiceRestriction());
+		restrictions.put(KokuWebServicesJS.SUOSTUMUS_PROCESSING_SERVICE, new SuostumusProcessingServiceRestriction());
+		restrictions.put(KokuWebServicesJS.VALTAKIRJA_PROCESSING_SERVICE, new ValtakirjaProcessingServiceRestriction());
+		restrictions.put(KokuWebServicesJS.TIETOPYYNTO_PROCESSING_SERVICE, new TietopyyntoProcessingServiceRestriction());
+		restrictions.put(KokuWebServicesJS.HAK_PROCESSING_SERVICE, new HakProcessingServiceRestriction());
+
+		JS_ENDPOINT_NAMES = Collections.unmodifiableList(endpointNames);
+		JS_ENDPOINT_URI = Collections.unmodifiableMap(endpointURIs);
+		JS_RESTRICTIONS = Collections.unmodifiableMap(restrictions);
 	}
 
-	public XmlProxy(String action, String endpoint, String message, OperationsValidator validator) {
+	private final String message;
+	private final KokuWebServicesJS endpoint;
+	private final String endpointName;
+	private final String endpointURI;
+	private final WSRestriction restriction;
+	private final UserInfo userInfo;
 
-		if (message == null || action == null || endpoint == null) {
+	public XmlProxy(String endpointName, String message, UserInfo userInfo) {
+
+		if (endpointName == null || message == null || userInfo == null) {
 			LOG.error("One or more given constructor parameters was null");
 			throw new IllegalStateException();
 		}
-		this.action = action;
+
+		this.endpointName = endpointName;
 		this.message = message;
-		this.endpoint = endpoint;
-		this.validator = validator;
+		this.userInfo = userInfo;
+
+		this.endpoint = KokuWebServicesJS.fromValue(endpointName);
+		this.endpointURI = JS_ENDPOINT_URI.get(endpoint);
+		this.restriction = JS_RESTRICTIONS.get(endpoint);
 	}
 
-	public String send() throws IllegalOperationCall, XMLStreamException {
-		if (validator != null && !validator.isValid(message)) {
-			throw new IllegalOperationCall();
-		}
-		OMElement omelement = null;
-		omelement = parseRequest(message);
+	public String send(PortletRequest request) throws XMLStreamException, IllegalOperationCall {
+        LOG.info("Will send an envelope to endpoint: " + endpointURI);
 
-		Options options = new Options();
-		options.setTo(new EndpointReference(endpoint));
-		options.setAction(action);
-		return send(omelement, options);
-	}
+        OMElement soapRequest;
+        String methodName;
 
-	protected OMElement parseRequest(String s) throws XMLStreamException {
-		OMElement omelement = null;
-		StringReader stringreader = new StringReader(s);
-		XMLStreamReader xmlstreamreader = null;
-		try {
-			xmlstreamreader = XMLInputFactory.newInstance().createXMLStreamReader(stringreader);
-		} catch (FactoryConfigurationError e) {
-			LOG.error("XMLInputFactory error ", e);
-			return null;
-		}
-		StAXOMBuilder staxombuilder = new StAXOMBuilder(xmlstreamreader);
-		OMElement omelement1 = staxombuilder.getDocumentElement();
+        try {
+            soapRequest = parseRequest(message);
 
-		OMElement omelement2 = null;
-		for (Iterator children = omelement1.getChildElements(); children.hasNext();) {
-			omelement2 = (OMElement) children.next();
-			if (omelement2.getText().toLowerCase().contains("body")) {
-				break;
-			}
-		}
+            LOG.info("Will send: " + soapRequest.toString());
 
-		omelement = omelement2.getFirstElement();
-		return omelement;
-	}
+            methodName = soapRequest.getLocalName();
 
+            LOG.info("Method name: " + methodName);
+        } catch (Exception e) {
+            return generateErrorResponse("Malformed message: " + e.getMessage());
+        }
 
-	protected String send(OMElement omelement, Options options) {
-		String response = null;
-		try {
-			ServiceClient serviceclient = new ServiceClient();
-			serviceclient.setOptions(options);
+        final PortletSession session = request.getPortletSession();
+        final WSCommonData commonData = new WSCommonData(session, userInfo, JS_ENDPOINT_URI);
 
-			OMElement omelement1 = serviceclient.sendReceive(omelement);
-			response = generateSuccessResponse(omelement1);
-		} catch (Exception exception) {
-			response = generateErrorResponse("Error sending to tempo. "
-					+ exception);
-		}
-		return response;
-	}
+        if (restriction != null) {
+            if (!restriction.requestPermitted(commonData, methodName, soapRequest)) {
+                return generateErrorResponse("User is not permitted to perform this request");
+            }
 
-	protected String generateErrorResponse(String s) {
-		return generateResponse("error", s, null);
-	}
+        } else {
+            LOG.warn("In-depth security checks are not defined for "+endpoint.value());
+        }
 
-	protected String generateSuccessResponse(OMElement omelement) {
-		return generateResponse("success", null, omelement);
-	}
+        Options options = new Options();
+        options.setTo(new EndpointReference(endpointURI));
 
-	protected String generateResponse(String s, String s1, OMElement omelement) {
-		OMFactory omfactory = OMAbstractFactory.getOMFactory();
-		OMElement omelement1 = omfactory.createOMElement("response", null);
-		OMElement omelement2 = createTextElement(omfactory, "status", s);
-		omelement1.addChild(omelement2);
+        /*String action = request.getParameter("action");
 
-		if (s1 != null) {
-			OMElement omelement3 = createTextElement(omfactory, "message", s1);
-			omelement1.addChild(omelement3);
-		}
+        if (action == null)
+            action = request.getHeader("soapaction");
 
-		if (omelement != null) {
-			OMElement omelement4 = omfactory.createOMElement("payload", null);
-			omelement4.addChild(omelement);
-			omelement1.addChild(omelement4);
-		}
+        options.setAction(action);*/
 
-		LOG.debug("Test output:" + omelement1.toString());
-		return omelement1.toString();
-	}
+        OMElement soapResponse = null;
 
-	protected OMElement createTextElement(OMFactory omfactory, String s,
-			String s1) {
-		OMElement omelement = omfactory.createOMElement(s, null);
-		OMText omtext = omfactory.createOMText(omelement, s1);
-		omelement.addChild(omtext);
-		return omelement;
-	}
+        try {
+            ServiceClient client = new ServiceClient();
+            client.setOptions(options);
 
-	public final String getMessage() {
-		return message;
-	}
+            soapResponse = client.sendReceive(soapRequest);
 
-	public final String getAction() {
-		return action;
-	}
+        } catch (Exception exception) {
+            return generateErrorResponse("Error sending request to WS backend. Exception: " + exception);
+        }
 
-	public final String getEndpoint() {
-		return endpoint;
-	}
+        if (soapResponse == null) {
+            return generateErrorResponse("Error: Received empty result");
+        }
 
-	public final OperationsValidator getValidator() {
-		return validator;
+        if (restriction != null && !restriction.responsePermitted(commonData, methodName, soapResponse)) {
+            return generateErrorResponse("User is not permitted to receive this response");
+        }
+
+        return generateSuccessResponse(soapResponse);
+    }
+
+    @SuppressWarnings("unchecked")
+    protected OMElement parseRequest(String message) throws Exception {
+        LOG.info("Starting to parse request...");
+
+        StringReader stringreader = new StringReader(message);
+        XMLStreamReader xmlstreamreader = XMLInputFactory.newInstance()
+                .createXMLStreamReader(stringreader);
+
+        StAXOMBuilder staxombuilder = new StAXOMBuilder(xmlstreamreader);
+        OMElement document = staxombuilder.getDocumentElement();
+        OMElement element = null;
+
+        for (Iterator<OMElement> children = document.getChildElements(); children.hasNext(); ) {
+            element = (OMElement) children.next();
+
+            LOG.info("Looking at element: qname="+element.getQName());
+            LOG.info("Looking at element: text="+element.getText());
+
+            if (element.getText().toLowerCase().contains("body"))
+                break;
+        }
+
+        LOG.info("Completed parsing request.");
+
+        return element != null ? element.getFirstElement() : null;
+    }
+
+    protected String generateErrorResponse(String message) {
+        return generateResponse("error", message, null);
+    }
+
+    protected String generateSuccessResponse(OMElement soapEnvelope) {
+        return generateResponse("success", null, soapEnvelope);
+    }
+
+    protected String generateResponse(String status, String message, OMElement payload) {
+        OMFactory factory = OMAbstractFactory.getOMFactory();
+        OMElement response = factory.createOMElement("response", null);
+        OMElement omStatus = createTextElement(factory, "status", status);
+
+        response.addChild(omStatus);
+
+        if (message != null) {
+            OMElement omMessage = createTextElement(factory, "message", message);
+            response.addChild(omMessage);
+        }
+
+        if (payload != null) {
+            LOG.info("Adding payload: " + payload.toString());
+
+            OMElement omPayload = factory.createOMElement("payload", null);
+            omPayload.addChild(payload);
+            response.addChild(omPayload);
+        }
+
+        LOG.info("Test output:" + response.toString());
+        return response.toString();
+    }
+
+    protected OMElement createTextElement(OMFactory omfactory, String elementName, String text) {
+        OMElement omelement = omfactory.createOMElement(elementName, null);
+        OMText omtext = omfactory.createOMText(omelement, text);
+        omelement.addChild(omtext);
+        return omelement;
+    }
+
+    public static List<String> getServiceNames() {
+		return JS_ENDPOINT_NAMES;
 	}
 
 }
