@@ -11,8 +11,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.jms.IllegalStateException;
-import javax.print.attribute.ResolutionSyntax;
 import javax.servlet.http.HttpSession;
 import javax.xml.stream.XMLStreamException;
 
@@ -62,9 +60,9 @@ public class WSCommonData {
         public Set<String> avAllowedMeetingIdSet = new HashSet<String>();
     }
 
-    private HttpSession session;
+    private final HttpSession session;
     private WSDataContainer dataContainer;
-    private Map<KokuWebServicesJS, String> endpoints;
+    private final Map<KokuWebServicesJS, String> endpoints;
     private UserInfo currentUserInfo;
 
     public WSCommonData(final HttpSession session, final Map<KokuWebServicesJS, String> endpoints) {
