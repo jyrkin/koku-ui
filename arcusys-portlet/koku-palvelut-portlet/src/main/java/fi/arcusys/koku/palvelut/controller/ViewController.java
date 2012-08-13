@@ -9,6 +9,9 @@ import static fi.arcusys.koku.common.util.Constants.PREF_SHOW_TASKS_BY_ID;
 import static fi.arcusys.koku.common.util.Constants.RESPONSE_FAIL;
 import static fi.arcusys.koku.common.util.Constants.RESPONSE_OK;
 
+import java.io.IOException;
+import java.io.OutputStream;
+
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.PortletPreferences;
@@ -19,8 +22,6 @@ import javax.portlet.RenderRequest;
 import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
 import javax.xml.stream.XMLStreamException;
-
-import net.sf.json.JSONObject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +34,8 @@ import org.springframework.web.portlet.bind.annotation.ActionMapping;
 import org.springframework.web.portlet.bind.annotation.RenderMapping;
 import org.springframework.web.portlet.bind.annotation.ResourceMapping;
 
+import fi.arcusys.koku.common.exceptions.KokuCommonException;
+import fi.arcusys.koku.common.proxy.AttachmentProxy;
 import fi.arcusys.koku.common.proxy.IllegalOperationCall;
 import fi.arcusys.koku.common.proxy.WsProxy;
 import fi.arcusys.koku.common.services.intalio.Task;
@@ -56,10 +59,26 @@ public class ViewController extends FormHolderController {
 	public static final String ADMIN_REMOVE_FORM_ACTION 				= "removeForm";
 	public static final String ROOT_CATEGORY_LIST_MODEL_NAME 			= "rootCategories";
 
+	@ResourceMapping(value="attachment")
+	public void attachmentAction(
+			@RequestParam(value = "path") String path,
+			ModelMap modelmap, ResourceRequest request, ResourceResponse response) {
+
+		final UserInfo user = (UserInfo) request.getPortletSession().getAttribute(UserInfo.KEY_USER_INFO);
+		try {
+			final OutputStream output = response.getPortletOutputStream();
+			final AttachmentProxy proxy = new AttachmentProxy(path, user);
+			proxy.getFile(output);
+			response.addProperty("Content-Disposition", String.format("attachment; filename=\"%s\"", "report.pdf"));
+		} catch (KokuCommonException e) {
+			LOG.error("Failed to provide file path: '"+path+"' User: '"+user.toString()+"'", e);
+		} catch (IOException ioe) {
+			LOG.error("Failed to provide file path: '"+path+"' User: '"+user.toString()+"'", ioe);
+		}
+	}
 
 	@ResourceMapping(value = "serviceNames")
 	public String servicesAjax(ModelMap modelmap, PortletRequest request, PortletResponse response) {
-		JSONObject obj = new JSONObject();
 		modelmap.addAttribute("endpoints" , WsProxy.getServiceNames());
 		modelmap.addAttribute(JSON_RESULT, RESPONSE_OK);
 		return AjaxViewResolver.AJAX_PREFIX;
@@ -75,13 +94,11 @@ public class ViewController extends FormHolderController {
 
 		final String username = request.getUserPrincipal().getName();
 		final UserInfo user = (UserInfo) request.getPortletSession().getAttribute(UserInfo.KEY_USER_INFO);
-		final JSONObject obj = new JSONObject();
-		String result = null;
 		modelmap.addAttribute(JSON_RESULT, RESPONSE_FAIL);
 
 		try {
 			WsProxy proxy = new WsProxy(service, message, user);
-			result = proxy.send();
+			modelmap.addAttribute(JSON_WS_MESSAGE, proxy.send());
 			modelmap.addAttribute(JSON_RESULT, RESPONSE_OK);
 		} catch (IllegalOperationCall ioc) {
 			LOG.error("Illegal operation call. User '" + username + "' tried to call restricted method that he/she doesn't have sufficient permission. ", ioc);
@@ -89,12 +106,6 @@ public class ViewController extends FormHolderController {
 			LOG.error("Unexpected XML-parsing error. User '" + username + "'", xse);
 		} catch (Exception e) {
 			LOG.error("Couldn't send given message. Parsing error propably. Username: '"+username+"'", e);
-		}
-
-		if (result == null || result.isEmpty()) {
-			modelmap.addAttribute(JSON_WS_MESSAGE, "");
-		} else {
-			modelmap.addAttribute(JSON_WS_MESSAGE, result);
 		}
 		return AjaxViewResolver.AJAX_PREFIX;
 	}

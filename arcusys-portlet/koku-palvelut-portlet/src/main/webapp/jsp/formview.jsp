@@ -3,10 +3,12 @@
 
 <portlet:resourceURL var="sendWsRequestURL" id="sendWsRequest"></portlet:resourceURL>
 <portlet:resourceURL var="serviceNamesURL" id="serviceNames"></portlet:resourceURL>
+<portlet:resourceURL var="attachmentURL" id="attachment"></portlet:resourceURL>
 
 <portlet:renderURL var="homeURL" windowState="<%= WindowState.NORMAL.toString() %>" >
 	<portlet:param name="myaction" value="home" />
 </portlet:renderURL>
+
 
 
 <%-- Load jQuery --%>
@@ -122,6 +124,14 @@
 		}
 	}
 	
+	function getAttachment(path) {
+		var url="<%= attachmentURL %>";
+		return jQuery.ajax( {
+				url: path, 
+				type: "GET", 
+				async: false 
+			});		
+	}
 	
 	
 	/**
@@ -158,13 +168,13 @@
 		 */
 		 getKokuServices : function() {
 			var url="<%= serviceNamesURL %>";
-			return jQuery.parseJSON(
-				jQuery.ajax( {
-					url: url,  
-					type: "POST", 
-				    dataType: "html",
-					async: false 
-				}).responseText);
+			var result = jQuery.ajax( {
+				url: url,  
+				type: "POST", 
+			    dataType: "html",
+				async: false 
+			}).responseText;
+			return jQuery.parseJSON(result);
 		}
 	};
 	

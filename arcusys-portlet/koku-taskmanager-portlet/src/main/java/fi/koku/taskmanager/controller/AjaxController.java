@@ -191,7 +191,6 @@ public class AjaxController {
 
 	@ResourceMapping(value = "serviceNames")
 	public String servicesAjax(ModelMap modelmap, PortletRequest request, PortletResponse response) {
-		JSONObject obj = new JSONObject();
 		modelmap.addAttribute("endpoints" , WsProxy.getServiceNames());
 		modelmap.addAttribute(JSON_RESULT, RESPONSE_OK);
 		return AjaxViewResolver.AJAX_PREFIX;
@@ -207,13 +206,11 @@ public class AjaxController {
 
 		final String username = request.getUserPrincipal().getName();
 		final UserInfo user = (UserInfo) request.getPortletSession().getAttribute(UserInfo.KEY_USER_INFO);
-		final JSONObject obj = new JSONObject();
-		String result = null;
 		modelmap.addAttribute(JSON_RESULT, RESPONSE_FAIL);
 
 		try {
 			WsProxy proxy = new WsProxy(service, message, user);
-			result = proxy.send();
+			modelmap.addAttribute(JSON_WS_MESSAGE, proxy.send());
 			modelmap.addAttribute(JSON_RESULT, RESPONSE_OK);
 		} catch (IllegalOperationCall ioc) {
 			LOG.error("Illegal operation call. User '" + username + "' tried to call restricted method that he/she doesn't have sufficient permission. ", ioc);
@@ -221,12 +218,6 @@ public class AjaxController {
 			LOG.error("Unexpected XML-parsing error. User '" + username + "'", xse);
 		} catch (Exception e) {
 			LOG.error("Couldn't send given message. Parsing error propably. Username: '"+username+"'", e);
-		}
-
-		if (result == null || result.isEmpty()) {
-			modelmap.addAttribute(JSON_WS_MESSAGE, "");
-		} else {
-			modelmap.addAttribute(JSON_WS_MESSAGE, result);
 		}
 		return AjaxViewResolver.AJAX_PREFIX;
 	}
