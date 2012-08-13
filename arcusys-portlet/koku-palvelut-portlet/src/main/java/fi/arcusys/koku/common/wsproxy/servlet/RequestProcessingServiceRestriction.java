@@ -41,6 +41,9 @@ public class RequestProcessingServiceRestriction implements WSRestriction {
             else if (methodName.equals("getRequestTemplateById")) {
                 permitted = true;
             }
+            else if (methodName.equals("isRequestTemplateExist")) {
+                permitted = true;
+            }
         }
 
         if (permitted) {
@@ -68,6 +71,10 @@ public class RequestProcessingServiceRestriction implements WSRestriction {
             // All checks done in requestPermitted
             permitted = true;
         }
+        else if (methodName.equals("isRequestTemplateExist")) {
+            permitted = true;
+        }
+
 
         if (permitted) {
             logger.info("Permission granted for " + commonData.getCurrentUserName()

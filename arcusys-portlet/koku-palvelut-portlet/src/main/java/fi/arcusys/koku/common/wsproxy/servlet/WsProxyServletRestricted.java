@@ -59,14 +59,14 @@ public class WsProxyServletRestricted extends HttpServlet implements Servlet {
             logger.info("Added new permitted endpoint to WsProxyServlet: "+endpoint);
         }
 
-//        restrictions.put(KokuWebServicesJS.USERS_AND_GROUPS_SERVICE, new UsersAndGroupsServiceRestriction());
-//        restrictions.put(KokuWebServicesJS.APPOINTMENT_PROCESSING_SERVICE, new AppointmentProcessingServiceRestriction());
-//        restrictions.put(KokuWebServicesJS.KV_MESSAGE_SERVICE, new MessageProcessingServiceRestriction());
-//        restrictions.put(KokuWebServicesJS.REQUEST_PROCESSING_SERVICE, new RequestProcessingServiceRestriction());
-//        restrictions.put(KokuWebServicesJS.SUOSTUMUS_PROCESSING_SERVICE, new SuostumusProcessingServiceRestriction());
-//        restrictions.put(KokuWebServicesJS.VALTAKIRJA_PROCESSING_SERVICE, new ValtakirjaProcessingServiceRestriction());
-//        restrictions.put(KokuWebServicesJS.TIETOPYYNTO_PROCESSING_SERVICE, new TietopyyntoProcessingServiceRestriction());
-//        restrictions.put(KokuWebServicesJS.HAK_PROCESSING_SERVICE, new HakProcessingServiceRestriction());
+        restrictions.put(KokuWebServicesJS.USERS_AND_GROUPS_SERVICE, new UsersAndGroupsServiceRestriction());
+        restrictions.put(KokuWebServicesJS.APPOINTMENT_PROCESSING_SERVICE, new AppointmentProcessingServiceRestriction());
+        restrictions.put(KokuWebServicesJS.KV_MESSAGE_SERVICE, new MessageProcessingServiceRestriction());
+        restrictions.put(KokuWebServicesJS.REQUEST_PROCESSING_SERVICE, new RequestProcessingServiceRestriction());
+        restrictions.put(KokuWebServicesJS.SUOSTUMUS_PROCESSING_SERVICE, new SuostumusProcessingServiceRestriction());
+        restrictions.put(KokuWebServicesJS.VALTAKIRJA_PROCESSING_SERVICE, new ValtakirjaProcessingServiceRestriction());
+        restrictions.put(KokuWebServicesJS.TIETOPYYNTO_PROCESSING_SERVICE, new TietopyyntoProcessingServiceRestriction());
+        restrictions.put(KokuWebServicesJS.HAK_PROCESSING_SERVICE, new HakProcessingServiceRestriction());
     }
 
     protected void doPost(HttpServletRequest request,
