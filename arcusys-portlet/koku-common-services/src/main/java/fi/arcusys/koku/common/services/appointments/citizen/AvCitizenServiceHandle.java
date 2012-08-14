@@ -8,7 +8,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
 import org.springframework.context.NoSuchMessageException;
 
@@ -36,7 +37,7 @@ import fi.arcusys.koku.common.util.MessageUtil;
  */
 public class AvCitizenServiceHandle extends AbstractHandle implements CitizenAppointmentTasks {
 
-	private static final Logger LOG = Logger.getLogger(AvCitizenServiceHandle.class);
+	private static final Logger LOG = LoggerFactory.getLogger(AvCitizenServiceHandle.class);
 
 	private final AvCitizenService acs;
 	private String loginUserId;

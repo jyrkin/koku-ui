@@ -6,7 +6,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
 import org.springframework.context.NoSuchMessageException;
 
@@ -32,9 +33,9 @@ import fi.arcusys.koku.tiva.employeeservice.ConsentShortSummary;
 import fi.arcusys.koku.tiva.employeeservice.ConsentStatus;
 import fi.arcusys.koku.tiva.employeeservice.ConsentSummary;
 import fi.arcusys.koku.tiva.employeeservice.ConsentTO;
+import fi.arcusys.koku.tiva.employeeservice.Organization;
 import fi.arcusys.koku.tiva.employeeservice.SuostumuspohjaShort;
 import fi.arcusys.koku.tiva.employeeservice.User;
-import fi.arcusys.koku.tiva.employeeservice.Organization;;
 
 /**
  * Handles tiva consents related operations for employee
@@ -43,9 +44,9 @@ import fi.arcusys.koku.tiva.employeeservice.Organization;;
  */
 public class TivaEmployeeServiceHandle extends AbstractHandle implements EmployeeConsentTasks {
 
-	private static final Logger LOG = Logger.getLogger(TivaEmployeeServiceHandle.class);
+	private static final Logger LOG = LoggerFactory.getLogger(TivaEmployeeServiceHandle.class);
 
-	private TivaEmployeeService tes;
+	private final TivaEmployeeService tes;
 
 	/**
 	 * Constructor and initialization
@@ -113,7 +114,7 @@ public class TivaEmployeeServiceHandle extends AbstractHandle implements Employe
 	public KokuConsent getConsentDetails(String consentIdStr) throws KokuServiceException {
 		long  consentId = 0;
 		try {
-			consentId = (long) Long.parseLong(consentIdStr);
+			consentId = Long.parseLong(consentIdStr);
 		} catch (NumberFormatException nfe) {
 			throw new KokuServiceException("Invalid consentId. ConsentId: '"+consentIdStr+"'", nfe);
 		}

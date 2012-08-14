@@ -114,7 +114,7 @@ public class XmlProxy {
 		this.restriction = JS_RESTRICTIONS.get(endpoint);
 	}
 
-	public String send(PortletRequest request) throws XMLStreamException, IllegalOperationCall {
+	public String send(PortletRequest request) throws XMLStreamException {
         LOG.info("Will send an envelope to endpoint: " + endpointURI);
 
         OMElement soapRequest;
@@ -190,7 +190,7 @@ public class XmlProxy {
         OMElement element = null;
 
         for (Iterator<OMElement> children = document.getChildElements(); children.hasNext(); ) {
-            element = (OMElement) children.next();
+            element = children.next();
 
             LOG.info("Looking at element: qname="+element.getQName());
             LOG.info("Looking at element: text="+element.getText());

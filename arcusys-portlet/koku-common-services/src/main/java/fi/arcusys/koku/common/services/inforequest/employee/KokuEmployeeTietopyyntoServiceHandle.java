@@ -3,7 +3,8 @@ package fi.arcusys.koku.common.services.inforequest.employee;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
 
 import fi.arcusys.koku.common.exceptions.KokuServiceException;
@@ -21,17 +22,17 @@ import fi.arcusys.koku.tiva.tietopyynto.employee.InformationRequestSummary;
 
 /**
  * ServiceHandle to handle infoRequests (Tietopyynnöt)
- * 
+ *
  * @author Toni Turunen
  *
  */
 public class KokuEmployeeTietopyyntoServiceHandle extends AbstractTietopyyntoHandle implements InfoRequestTasks {
-	
-	private static final Logger LOG = Logger.getLogger(KokuEmployeeTietopyyntoServiceHandle.class);
 
-	private final KokuEmployeeTietopyyntoService service;	
-	
-			
+	private static final Logger LOG = LoggerFactory.getLogger(KokuEmployeeTietopyyntoServiceHandle.class);
+
+	private final KokuEmployeeTietopyyntoService service;
+
+
 	/**
 	 * Constructor and initialization
 	 */
@@ -39,8 +40,8 @@ public class KokuEmployeeTietopyyntoServiceHandle extends AbstractTietopyyntoHan
 		super(messageSource);
 		service = new KokuEmployeeTietopyyntoService();
 	}
-	
-	
+
+
 	@Override
 	public ResultList<KokuInformationRequestSummary> getRecievedAndRepliedInfoRequests(
 			String uid, InformationRequestSearchCriteria criteria, Page page) throws KokuServiceException {
@@ -58,11 +59,11 @@ public class KokuEmployeeTietopyyntoServiceHandle extends AbstractTietopyyntoHan
 			InformationRequestSearchCriteria criteria, Page page) throws KokuServiceException {
 		return getRequests(criteria, page);
 	}
-	
-	
+
+
 	/**
 	 * Returns list of replied KokuInformationRequestSummaries. (Tietopyyntö)
-	 * 
+	 *
 	 * @param keyword
 	 * @param startNum
 	 * @param maxNum
@@ -70,7 +71,7 @@ public class KokuEmployeeTietopyyntoServiceHandle extends AbstractTietopyyntoHan
 	 */
 	private ResultList<KokuInformationRequestSummary> getRepliedRequests(String userId, InformationRequestSearchCriteria criteria, Page page) throws KokuServiceException {
 		final List<KokuInformationRequestSummary> infoRequests =  getRepliedRequests(
-				userId, 
+				userId,
 				createCriteria(criteria),
 				page.getFirst(),
 				page.getLast()
@@ -81,15 +82,15 @@ public class KokuEmployeeTietopyyntoServiceHandle extends AbstractTietopyyntoHan
 
 	/**
 	 * Returns list of sent KokuInformationRequestSummaries. (Tietopyyntö)
-	 * 
+	 *
 	 * @param keyword
 	 * @param startNum
 	 * @param maxNum
 	 * @return List of KokuInformationRequestSummaries
-	 */	
+	 */
 	private ResultList<KokuInformationRequestSummary> getSentRequests(String userId, InformationRequestSearchCriteria criteria, Page page) throws KokuServiceException {
 		final List<KokuInformationRequestSummary> infoRequests = getSentRequests(
-				userId, 
+				userId,
 				createCriteria(criteria),
 				page.getFirst(),
 				page.getLast()
@@ -97,15 +98,15 @@ public class KokuEmployeeTietopyyntoServiceHandle extends AbstractTietopyyntoHan
 		final int totalSentInfoRequests = getTotalSentRequests(userId, criteria);
 		return new ResultListImpl<KokuInformationRequestSummary>(infoRequests, totalSentInfoRequests, page);
 	}
-	
+
 	/**
 	 * Returns list of KokuInformationRequestSummaries. (Tietopyyntö) For admin users only
-	 * 
+	 *
 	 * @param keyword
 	 * @param startNum
 	 * @param maxNum
 	 * @return List of KokuInformationRequestSummaries
-	 */	
+	 */
 	private ResultList<KokuInformationRequestSummary> getRequests(InformationRequestSearchCriteria criteria, Page page) throws KokuServiceException {
 		final List<KokuInformationRequestSummary> infoRequests = getRequests(
 				createCriteria(criteria),
@@ -115,62 +116,62 @@ public class KokuEmployeeTietopyyntoServiceHandle extends AbstractTietopyyntoHan
 		final int totalRequests = getTotalRequests(criteria);
 		return new ResultListImpl<KokuInformationRequestSummary>(infoRequests, totalRequests, page);
 	}
-	
+
 	/**
 	 * Returns detailed information about tietopyyntö
-	 * 
+	 *
 	 * @param requestId
 	 * @return Detailed info
 	 */
 	public KokuInformationRequestDetail getRequestDetails(long requestId) throws KokuServiceException {
 		KokuInformationRequestDetail details =  new KokuInformationRequestDetail(service.getRequestDetails(requestId));
 		if (details.getAccessType() != null) {
-			details.setLocalizedAccessType(getLocalizedInfoAccessType(details.getAccessType()));			
+			details.setLocalizedAccessType(getLocalizedInfoAccessType(details.getAccessType()));
 		}
 		localizeDetails(details);
 		return details;
 	}
-	
+
 	/**
-	 * Returns total replied requests count 
-	 * 
+	 * Returns total replied requests count
+	 *
 	 * @param receiverUid
 	 * @return replied requests count
 	 */
 	public int getTotalRepliedRequests(String receiverUid, InformationRequestSearchCriteria criteria) throws KokuServiceException {
 		return service.getTotalRepliedRequests(receiverUid, createCriteria(criteria));
 	}
-	
+
 	/**
 	 * Returns requests total
-	 * 
+	 *
 	 * @param receiverUid
 	 * @return request count
 	 */
 	public int getTotalRequests(InformationRequestSearchCriteria criteria) throws KokuServiceException {
 		return service.getTotalRequests(createCriteria(criteria));
 	}
-	
+
 	/**
 	 * Return sent requests count
-	 * 
+	 *
 	 * @param senderUid
 	 * @return sent requests count
 	 */
 	public int getTotalSentRequests(String senderUid, InformationRequestSearchCriteria criteria) throws KokuServiceException {
 		return service.getTotalSentRequests(senderUid, createCriteria(criteria));
 	}
-	
-	
+
+
 	private List<KokuInformationRequestSummary> getRepliedRequests(String userId, InformationRequestCriteria criteria, int startNum, int maxNum) throws KokuServiceException {
 		try {
-			return createLocalPojos(service.getRepliedRequests(userId, getInformationReqQuery(criteria, startNum, maxNum)));			
+			return createLocalPojos(service.getRepliedRequests(userId, getInformationReqQuery(criteria, startNum, maxNum)));
 		} catch (RuntimeException e) {
 			LOG.error("Request: getRepliedRequests has failed", e);
 			return new ArrayList<KokuInformationRequestSummary>();
 		}
 	}
-	
+
 	private List<KokuInformationRequestSummary> getSentRequests(String userId, InformationRequestCriteria criteria, int startNum, int maxNum) throws KokuServiceException {
 		try {
 			return createLocalPojos(service.getSentRequests(userId, getInformationReqQuery(criteria, startNum, maxNum)));
@@ -179,7 +180,7 @@ public class KokuEmployeeTietopyyntoServiceHandle extends AbstractTietopyyntoHan
 			return new ArrayList<KokuInformationRequestSummary>();
 		}
 	}
-	
+
 	private List<KokuInformationRequestSummary> getRequests(InformationRequestCriteria criteria, int startNum, int maxNum) throws KokuServiceException {
 		try {
 			return createLocalPojos(service.getRequests(getInformationReqQuery(criteria, startNum, maxNum)));
@@ -188,7 +189,7 @@ public class KokuEmployeeTietopyyntoServiceHandle extends AbstractTietopyyntoHan
 			return new ArrayList<KokuInformationRequestSummary>();
 		}
 	}
-	
+
 	private InformationRequestCriteria createCriteria(InformationRequestSearchCriteria searchCriteria) {
 		InformationRequestCriteria criteria = new InformationRequestCriteria();
 		criteria.setCreatedFromDate(MessageUtil.convertCalendarToXmlGregorianCalendar(searchCriteria.getSentFrom()));
@@ -212,24 +213,24 @@ public class KokuEmployeeTietopyyntoServiceHandle extends AbstractTietopyyntoHan
 		}
 		return kokuSummaries;
 	}
-	
+
 	private InformationRequestQuery getInformationReqQuery(InformationRequestCriteria criteria, int startNum, int maxNum) {
 		InformationRequestQuery query = new InformationRequestQuery();
 		query.setStartNum(startNum);
-		query.setMaxNum(maxNum);	
+		query.setMaxNum(maxNum);
 		query.setCriteria(criteria);
 		return query;
 	}
-	
+
 	private void localizeDetails(KokuInformationRequestDetail kokuSummary) throws KokuServiceException {
 		localizeSummary(kokuSummary);
 	}
-	
+
 	private void localizeSummary(KokuInformationRequestSummary kokuSummary) throws KokuServiceException {
 		if (kokuSummary.getStatus() != null) {
 			kokuSummary.setLocalizedStatus(getLocalizedInformationRequestSummary(kokuSummary.getStatus()));
 		}
 	}
 
-	
+
 }

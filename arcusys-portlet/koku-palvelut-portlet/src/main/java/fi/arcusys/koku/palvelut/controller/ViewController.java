@@ -8,9 +8,6 @@ import static fi.arcusys.koku.common.util.Constants.PREF_SHOW_TASKS_BY_ID;
 import static fi.arcusys.koku.common.util.Constants.RESPONSE_FAIL;
 import static fi.arcusys.koku.common.util.Constants.RESPONSE_OK;
 
-import java.io.IOException;
-import java.io.OutputStream;
-
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.PortletPreferences;
@@ -33,9 +30,6 @@ import org.springframework.web.portlet.bind.annotation.ActionMapping;
 import org.springframework.web.portlet.bind.annotation.RenderMapping;
 import org.springframework.web.portlet.bind.annotation.ResourceMapping;
 
-import fi.arcusys.koku.common.exceptions.KokuCommonException;
-import fi.arcusys.koku.common.proxy.AttachmentProxy;
-import fi.arcusys.koku.common.proxy.IllegalOperationCall;
 import fi.arcusys.koku.common.proxy.XmlProxy;
 import fi.arcusys.koku.common.services.intalio.Task;
 import fi.arcusys.koku.common.services.intalio.TaskHandle;
@@ -58,23 +52,23 @@ public class ViewController extends FormHolderController {
 	public static final String ADMIN_REMOVE_FORM_ACTION 				= "removeForm";
 	public static final String ROOT_CATEGORY_LIST_MODEL_NAME 			= "rootCategories";
 
-	@ResourceMapping(value="attachment")
-	public void attachmentAction(
-			@RequestParam(value = "path") String path,
-			ModelMap modelmap, ResourceRequest request, ResourceResponse response) {
-
-		final UserInfo user = (UserInfo) request.getPortletSession().getAttribute(UserInfo.KEY_USER_INFO);
-		try {
-			final OutputStream output = response.getPortletOutputStream();
-			final AttachmentProxy proxy = new AttachmentProxy(path, user);
-			proxy.getFile(output);
-			response.addProperty("Content-Disposition", String.format("attachment; filename=\"%s\"", "report.pdf"));
-		} catch (KokuCommonException e) {
-			LOG.error("Failed to provide file path: '"+path+"' User: '"+user.toString()+"'", e);
-		} catch (IOException ioe) {
-			LOG.error("Failed to provide file path: '"+path+"' User: '"+user.toString()+"'", ioe);
-		}
-	}
+//	@RenderMapping(value="myaction=attachment")
+//	public void attachmentAction(
+//			@RequestParam(value = "path") String path,
+//			RenderRequest request, RenderResponse response) {
+//
+//		final UserInfo user = (UserInfo) request.getPortletSession().getAttribute(UserInfo.KEY_USER_INFO);
+//		try {
+//			final OutputStream output = response.getPortletOutputStream();
+//			final AttachmentProxy proxy = new AttachmentProxy(path, user);
+//			proxy.getFile(output);
+//			response.addProperty("Content-Disposition", String.format("attachment; filename=\"%s\"", "report.pdf"));
+//		} catch (KokuCommonException e) {
+//			LOG.error("Failed to provide file path: '"+path+"' User: '"+user.toString()+"'", e);
+//		} catch (IOException ioe) {
+//			LOG.error("Failed to provide file path: '"+path+"' User: '"+user.toString()+"'", ioe);
+//		}
+//	}
 
 	@ResourceMapping(value = "serviceNames")
 	public String servicesAjax(ModelMap modelmap, PortletRequest request, PortletResponse response) {
@@ -100,8 +94,6 @@ public class ViewController extends FormHolderController {
 			XmlProxy proxy = new XmlProxy(service, message, user);
 			result = proxy.send(request);
 			modelmap.addAttribute(JSON_RESULT, RESPONSE_OK);
-		} catch (IllegalOperationCall ioc) {
-			LOG.error("Illegal operation call. User '" + username + "' tried to call restricted method that he/she doesn't have sufficient permission. ", ioc);
 		} catch (XMLStreamException xse) {
 			LOG.error("Unexpected XML-parsing error. User '" + username + "'", xse);
 		} catch (Exception e) {

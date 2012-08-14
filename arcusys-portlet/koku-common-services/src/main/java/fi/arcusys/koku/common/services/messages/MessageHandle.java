@@ -5,7 +5,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
 import org.springframework.context.NoSuchMessageException;
 
@@ -38,7 +39,7 @@ import fi.arcusys.koku.kv.messageservice.User;
  */
 public class MessageHandle extends AbstractHandle implements MessageTasks {
 
-	private static final Logger LOG = Logger.getLogger(MessageHandle.class);
+	private static final Logger LOG = LoggerFactory.getLogger(MessageHandle.class);
 
 	private static final OrderBy MSG_ORDER_BY_DATE;
 

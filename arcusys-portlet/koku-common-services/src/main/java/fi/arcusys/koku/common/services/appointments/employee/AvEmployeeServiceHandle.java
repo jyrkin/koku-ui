@@ -10,7 +10,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
 import org.springframework.context.NoSuchMessageException;
 
@@ -45,7 +46,7 @@ import fi.arcusys.koku.common.util.MessageUtil;
  */
 public class AvEmployeeServiceHandle extends AbstractHandle implements EmployeeAppointmentTasks {
 
-	private static final Logger LOG = Logger.getLogger(AvEmployeeServiceHandle.class);
+	private static final Logger LOG = LoggerFactory.getLogger(AvEmployeeServiceHandle.class);
 
 	private final AvEmployeeService aes;
 

@@ -5,6 +5,7 @@
 
 <portlet:resourceURL var="sendWsRequestURL" id="sendWsRequest"></portlet:resourceURL>
 <portlet:resourceURL var="serviceNamesURL" id="serviceNames"></portlet:resourceURL>
+<portlet:resourceURL var="attachmentURL" id="attachment"></portlet:resourceURL>
 
 
 <%@ include file="js_koku_navigation_helper.jspf" %>
@@ -79,6 +80,22 @@
 		eppHack();
 	});
 	
+
+	function formatUrl(url) {
+		var newUrl;
+		newUrl = url.replace(/&quot;/g,'"');
+		newUrl = newUrl.replace(/&amp;/g,"&");
+		newUrl = newUrl.replace(/&lt;/g,"<");
+		newUrl =  newUrl.replace(/&gt;/g,">");
+		return newUrl;
+	}
+	
+	function getAttachment(path) {
+		var url = formatUrl("<%= attachmentURL %>");		
+		url = formatUrl(url);
+		window.location = url + "&path=" +path;
+	}
+
 	/**
 	 * 
 	 */
@@ -91,19 +108,21 @@
 		 * @param data XML-data
 		 */
 		send : function(service, message) {	
-			var url="<%= sendWsRequestURL %>";		
+			var url=formatUrl("<%= sendWsRequestURL %>");		
 			var ajaxObject = {
 					"service":service,
 					"message":message
 				};
 			
-			return jQuery.parseJSON(jQuery.ajax( {
+			var result = jQuery.ajax( {
 				url: url,  
 				type: "POST", 
 				data: ajaxObject, 
 			    dataType: "html",
 				async: false 
-			}).responseText);
+			}).responseText;
+			return jQuery.parseJSON(result);
+
 		},
 		
 		/**
@@ -112,14 +131,14 @@
 		 *	@return list of services
 		 */
 		 getKokuServices : function() {
-			var url="<%= serviceNamesURL %>";
-			return jQuery.parseJSON(
-				jQuery.ajax( {
-					url: url,  
-					type: "POST", 
-				    dataType: "html",
-					async: false 
-				}).responseText);
+			var url=formatUrl("<%= serviceNamesURL %>");
+			var result = jQuery.ajax( {
+				url: url,  
+				type: "POST", 
+			    dataType: "html",
+				async: false 
+			}).responseText;
+			return jQuery.parseJSON(result);
 		}
 	};
 	

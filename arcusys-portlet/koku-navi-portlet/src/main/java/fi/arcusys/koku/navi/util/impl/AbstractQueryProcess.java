@@ -1,6 +1,7 @@
 package fi.arcusys.koku.navi.util.impl;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
 
 import fi.arcusys.koku.common.exceptions.IntalioException;
@@ -13,7 +14,7 @@ import fi.arcusys.koku.navi.util.QueryProcess;
 
 public abstract class AbstractQueryProcess implements QueryProcess {
 
-	private static final Logger LOG = Logger.getLogger(AbstractQueryProcess.class);
+	private static final Logger LOG = LoggerFactory.getLogger(AbstractQueryProcess.class);
 
 	private MessageSource messageSource;
 

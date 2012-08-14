@@ -13,7 +13,8 @@ import static fi.arcusys.koku.common.util.Constants.PROPERTIES_INTALIO_ATTACHMEN
 import static fi.arcusys.koku.common.util.Constants.PROPERTIES_INTALIO_HOST;
 import static fi.arcusys.koku.common.util.Constants.PROPERTIES_INTALIO_PORT;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import fi.koku.settings.KoKuPropertiesUtil;
 
@@ -26,7 +27,7 @@ import fi.koku.settings.KoKuPropertiesUtil;
  */
 public final class Properties {
 
-	private final static Logger LOG = Logger.getLogger(Properties.class);
+	private final static Logger LOG = LoggerFactory.getLogger(Properties.class);
 
 	private Properties() { /* Not instantiable */ }
 

@@ -40,7 +40,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.portlet.bind.annotation.ResourceMapping;
 
 import fi.arcusys.koku.common.exceptions.IntalioException;
-import fi.arcusys.koku.common.proxy.IllegalOperationCall;
 import fi.arcusys.koku.common.proxy.XmlProxy;
 import fi.arcusys.koku.common.services.intalio.Task;
 import fi.arcusys.koku.common.services.intalio.TaskHandle;
@@ -214,8 +213,6 @@ public class AjaxController {
 			String result = proxy.send(request);
 			modelmap.addAttribute(JSON_WS_MESSAGE, result);
 			modelmap.addAttribute(JSON_RESULT, RESPONSE_OK);
-		} catch (IllegalOperationCall ioc) {
-			LOG.error("Illegal operation call. User '" + username + "' tried to call restricted method that he/she doesn't have sufficient permission. ", ioc);
 		} catch (XMLStreamException xse) {
 			LOG.error("Unexpected XML-parsing error. User '" + username + "'", xse);
 		} catch (Exception e) {

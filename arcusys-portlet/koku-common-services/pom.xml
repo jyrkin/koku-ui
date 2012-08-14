@@ -82,8 +82,7 @@
                <artifactId>axis2</artifactId>
                <version>1.5.4</version>
                <scope>provided</scope>
-        </dependency>
-		
+        </dependency>		
 	</dependencies>
 
 </project>

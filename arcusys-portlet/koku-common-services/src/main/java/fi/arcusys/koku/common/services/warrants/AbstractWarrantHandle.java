@@ -2,7 +2,8 @@ package fi.arcusys.koku.common.services.warrants;
 
 import java.util.Locale;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
 import org.springframework.context.NoSuchMessageException;
 
@@ -12,9 +13,9 @@ import fi.arcusys.koku.common.services.warrants.model.KokuAuthorizationStatus;
 import fi.arcusys.koku.common.util.MessageUtil;
 
 public class AbstractWarrantHandle extends AbstractHandle {
-	
-	private static final Logger LOG = Logger.getLogger(AbstractWarrantHandle.class);
-	
+
+	private static final Logger LOG = LoggerFactory.getLogger(AbstractWarrantHandle.class);
+
 	public AbstractWarrantHandle(MessageSource messageSource) {
 		super(messageSource);
 	}
@@ -25,7 +26,7 @@ public class AbstractWarrantHandle extends AbstractHandle {
 			return type.toString().toLowerCase();
 		}
 		Locale locale = MessageUtil.getLocale();
-		
+
 		try {
 			switch(type) {
 			case VALID:
@@ -46,14 +47,14 @@ public class AbstractWarrantHandle extends AbstractHandle {
 			return type.toString().toLowerCase();
 		}
 	}
-	
+
 	protected String getLocalizedWarrantCreateType(KokuAuthorizationCreateType  type) {
 		if (getMessageSource() == null) {
 			LOG.warn(MESSAGE_SOURCE_MISSING);
 			return type.toString().toLowerCase();
 		}
 		Locale locale = MessageUtil.getLocale();
-		
+
 		try {
 			switch(type) {
 			case ELECTRONIC:

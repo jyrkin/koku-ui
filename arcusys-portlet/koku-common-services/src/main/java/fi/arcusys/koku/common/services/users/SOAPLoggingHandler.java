@@ -1,6 +1,5 @@
 package fi.arcusys.koku.common.services.users;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -16,7 +15,8 @@ import javax.xml.ws.handler.MessageContext;
 import javax.xml.ws.handler.soap.SOAPHandler;
 import javax.xml.ws.handler.soap.SOAPMessageContext;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Logs SOAP in/out messages.
@@ -24,7 +24,7 @@ import org.apache.log4j.Logger;
  *
  */
 public class SOAPLoggingHandler implements SOAPHandler<SOAPMessageContext> {
-	private static final Logger LOG = Logger.getLogger(SOAPLoggingHandler.class);		
+	private static final Logger LOG = LoggerFactory.getLogger(SOAPLoggingHandler.class);
 
 	// private PrintStream out = ;
 
@@ -36,15 +36,15 @@ public class SOAPLoggingHandler implements SOAPHandler<SOAPMessageContext> {
 	@Override
 	public final boolean handleMessage(SOAPMessageContext smc) {
 //		logToSystemOut(smc);
-		
+
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		try {
 			smc.getMessage().writeTo(out);
 			LOG.info(out.toString());
 		} catch (SOAPException e) {
-			LOG.error(e);
+			LOG.error("Soap error", e);
 		} catch (IOException ioe) {
-			LOG.error(ioe);
+			LOG.error("IOError", ioe);
 		}
 		LOG.info("SOAP - '" + out.toString()+"'");
 		return true;
@@ -59,12 +59,12 @@ public class SOAPLoggingHandler implements SOAPHandler<SOAPMessageContext> {
 	@Override
 	public void close(MessageContext messageContext) {
 	}
-	
+
 //	private void logToSystemOut(SOAPMessageContext smc) {
 //		LOG.info("LOG SOAP ?!");
 //
 //		Boolean outboundProperty = (Boolean) smc.get(MessageContext.MESSAGE_OUTBOUND_PROPERTY);
-//		
+//
 //		if (outboundProperty.booleanValue()) {
 //			out.println("\n["+new Date()+"] Outbound message:");
 //		} else {
@@ -77,13 +77,13 @@ public class SOAPLoggingHandler implements SOAPHandler<SOAPMessageContext> {
 //			LOG.
 //			out.println(""); // just to add a newline
 //			LOG.error("SOAP msg - '" + out.toString() + "'");
-//			
+//
 //		} catch (Exception e) {
 //			LOG.error("Exception in handler: "+ e);
 //			out.println("Exception in handler: " + e);
 //		}
 //	}
-	
+
 	@SuppressWarnings("rawtypes")
 	public static void addSOAPLogger(BindingProvider bp) {
 		LOG.info("Add SOAP logger");
@@ -93,7 +93,7 @@ public class SOAPLoggingHandler implements SOAPHandler<SOAPMessageContext> {
 		List<Handler> handlerList = binding.getHandlerChain();
 		if (null == handlerList) {
 			handlerList = new ArrayList<Handler>();
-		}			
+		}
 		handlerList.add(new SOAPLoggingHandler());
 		binding.setHandlerChain(handlerList);
 	}

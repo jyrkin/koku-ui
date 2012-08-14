@@ -1,13 +1,11 @@
 package fi.arcusys.koku.common.services.messages;
 
-import static fi.arcusys.koku.common.util.Constants.RESPONSE_FAIL;
-import static fi.arcusys.koku.common.util.Constants.RESPONSE_OK;
-
 import java.util.List;
 
 import javax.xml.ws.BindingProvider;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import fi.arcusys.koku.common.exceptions.KokuServiceException;
 import fi.arcusys.koku.common.util.Properties;
@@ -26,9 +24,9 @@ import fi.arcusys.koku.kv.messageservice.MessageSummary;
  * Jul 29, 2011
  */
 public class MessageService {
-	
-	private static final Logger LOG = Logger.getLogger(MessageService.class);		
-	
+
+	private static final Logger LOG = LoggerFactory.getLogger(MessageService.class);
+
 	private final KokuMessageService service;
 
 	/**
@@ -58,7 +56,7 @@ public class MessageService {
 		LOG.info("getMessages  - "+((System.nanoTime()-start)/1000/1000) + "ms");
 		return messages;
 	}
-	
+
 	/**
 	 * Gets total number of messages
 	 * @param user username
@@ -67,7 +65,7 @@ public class MessageService {
 	 * @return the amount of messages
 	 */
 	public int getTotalMessageNum(String user, FolderType folderType, Criteria criteria) throws KokuServiceException {
-		
+
 		long start = System.nanoTime();
 		int count = 0;
 		try {
@@ -79,7 +77,7 @@ public class MessageService {
 		return count;
 	}
 
-	
+
 	/**
 	 * Gets the detailed message with content by messageId
 	 * @param messageId
@@ -92,7 +90,7 @@ public class MessageService {
 			throw new KokuServiceException("getMessageById failed. messageId: '"+messageId+"'", e);
 		}
 	}
-	
+
 	/**
 	 * Gets unread messages
 	 * @param user Username
@@ -106,7 +104,7 @@ public class MessageService {
 			throw new KokuServiceException("getUnreadMessageNum failed. messageId: user: '"+user+"' folderType: '"+folderType+"'", e);
 		}
 	}
-	
+
 	/**
 	 * Deletes the messages
 	 * @param messageIds List of message ids to be deleted
@@ -119,7 +117,7 @@ public class MessageService {
 			throw new KokuServiceException("ERROR while deleting message(s). See errorMsg: "+ e.getMessage(), e);
 		}
 	}
-	
+
 	/**
 	 * Sets the message status: read or unread
 	 * @param messageIds List of message ids
@@ -133,10 +131,10 @@ public class MessageService {
 			throw new KokuServiceException("ERROR while setting message(s) status. See errorMsg: "+ e.getMessage(), e);
 		}
 	}
-	
+
 	/**
 	 * Archives messages
-	 * 
+	 *
 	 * @param messageIds a list of message ids
 	 * @return Operation status
 	 */
@@ -147,10 +145,10 @@ public class MessageService {
 			throw new KokuServiceException("ERROR while archiveMessages. See errorMsg: "+ e.getMessage(), e);
 		}
 	}
-	
+
 	/**
 	 * Archives old messages (more than 3 months older)
-	 * 
+	 *
 	 * @param userUid
 	 * @param folderType
 	 */
@@ -160,5 +158,5 @@ public class MessageService {
 		} catch (RuntimeException e) {
 			throw new KokuServiceException("ERROR while archiveOldMessages. See errorMsg: "+ e.getMessage(), e);
 		}
-	}	
+	}
 }

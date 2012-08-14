@@ -3,17 +3,18 @@ package fi.arcusys.koku.navi.util.impl;
 import static fi.arcusys.koku.common.util.Constants.JSON_APPOINTMENT_TOTAL;
 import static fi.arcusys.koku.common.util.Constants.JSON_ARCHIVE_INBOX;
 import static fi.arcusys.koku.common.util.Constants.JSON_CONSENTS_TOTAL;
+import static fi.arcusys.koku.common.util.Constants.JSON_DAYCARE_HOLIDAYS_TOTAL;
 import static fi.arcusys.koku.common.util.Constants.JSON_INBOX;
 import static fi.arcusys.koku.common.util.Constants.JSON_LOGIN_STATUS;
 import static fi.arcusys.koku.common.util.Constants.JSON_REQUESTS_TOTAL;
-import static fi.arcusys.koku.common.util.Constants.JSON_DAYCARE_HOLIDAYS_TOTAL;
 import static fi.arcusys.koku.common.util.Constants.TOKEN_STATUS_INVALID;
 import static fi.arcusys.koku.common.util.Constants.TOKEN_STATUS_VALID;
-import static fi.arcusys.koku.common.util.Properties.RECEIVED_REQUESTS_FILTER;
 import static fi.arcusys.koku.common.util.Properties.RECEIVED_DAYCARE_HOLIDAYS;
+import static fi.arcusys.koku.common.util.Properties.RECEIVED_REQUESTS_FILTER;
 import net.sf.json.JSONObject;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
 
 import fi.arcusys.koku.common.exceptions.KokuServiceException;
@@ -26,7 +27,7 @@ import fi.arcusys.koku.common.util.PortalRole;
 
 public class QueryProcessCitizenImpl extends AbstractQueryProcess {
 
-	private static final Logger LOG = Logger.getLogger(QueryProcessCitizenImpl.class);
+	private static final Logger LOG = LoggerFactory.getLogger(QueryProcessCitizenImpl.class);
 
 	public QueryProcessCitizenImpl(MessageSource messages) {
 		super(messages);

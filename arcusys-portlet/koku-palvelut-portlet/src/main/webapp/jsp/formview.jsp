@@ -125,12 +125,9 @@
 	}
 	
 	function getAttachment(path) {
-		var url="<%= attachmentURL %>";
-		return jQuery.ajax( {
-				url: path, 
-				type: "GET", 
-				async: false 
-			});		
+		var url = formatUrl("<%= attachmentURL %>");		
+		url = formatUrl(url);
+		window.location = url + "&path=" +path;
 	}
 	
 	
@@ -155,18 +152,18 @@
 		 * @param data XML-data
 		 */
 		send : function(service, message) {	
-			var url=formatUrl("<%= sendWsRequestURL %>");
+			var url=formatUrl("<%= sendWsRequestURL %>");		
 			var ajaxObject = {
 					"service":service,
 					"message":message
 				};
 			
 			var result = jQuery.ajax( {
-				url: url,
-				type: "POST",
+				url: url,  
+				type: "POST", 
 				data: ajaxObject, 
 			    dataType: "html",
-				async: false
+				async: false 
 			}).responseText;
 			return jQuery.parseJSON(result);
 
@@ -191,13 +188,13 @@
 	
 	function getKokuServicesEndpoints() {
 		var url="/palvelut-portlet/Services";
-		return jQuery.parseJSON(
-			 jQuery.ajax( {
+		var result = jQuery.ajax( {
 				url: url,  
 				type: "POST", 
 			    dataType: "html",
 				async: false 
-			}).responseText);
+			}).responseText;
+		return jQuery.parseJSON(result);
 	}
 
 	 
