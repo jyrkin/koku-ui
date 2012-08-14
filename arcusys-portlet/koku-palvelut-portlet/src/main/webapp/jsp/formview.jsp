@@ -207,6 +207,19 @@
 		}
 	};
 
+	/**
+	 * Invokes a send request and handles the responses
+	 *
+	 * @return response xml
+	 */
+	KokuWS.handleSendXML = function(serviceName, soapMessage) {
+            var xmlString = KokuWS.handleSend(SERVICE_NAME, SOAP_MESSAGE);
+            var xmlDoc = new jsx3.xml.Document();
+            xmlDoc.loadXML(xmlString);
+
+            return xmlDoc;
+	};
+
 	function getKokuServicesEndpoints() {
 		var url="/palvelut-portlet/Services";
 		var result = jQuery.ajax( {
@@ -217,7 +230,6 @@
 			}).responseText;
 		return jQuery.parseJSON(result);
 	}
-
 	 
 	/* add the formId to the intalio form for editting appointment form */
 	window.onload = function() {
