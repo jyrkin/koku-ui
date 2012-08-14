@@ -2,6 +2,7 @@ package fi.arcusys.koku.palvelut.controller;
 
 import static fi.arcusys.koku.common.util.Constants.ATTR_PREFERENCES;
 import static fi.arcusys.koku.common.util.Constants.JSON_RESULT;
+import static fi.arcusys.koku.common.util.Constants.JSON_WS_MESSAGE;
 import static fi.arcusys.koku.common.util.Constants.PREF_SHOW_ONLY_FORM_BY_DESCRIPTION;
 import static fi.arcusys.koku.common.util.Constants.PREF_SHOW_ONLY_FORM_BY_ID;
 import static fi.arcusys.koku.common.util.Constants.PREF_SHOW_TASKS_BY_ID;
@@ -94,6 +95,7 @@ public class ViewController extends FormHolderController {
 			XmlProxy proxy = new XmlProxy(service, message, user);
 			result = proxy.send(request);
 			modelmap.addAttribute(JSON_RESULT, RESPONSE_OK);
+			modelmap.addAttribute(JSON_WS_MESSAGE, result);
 		} catch (XMLStreamException xse) {
 			LOG.error("Unexpected XML-parsing error. User '" + username + "'", xse);
 		} catch (Exception e) {

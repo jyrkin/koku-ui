@@ -206,13 +206,14 @@ public class AjaxController {
 
 		final String username = request.getUserPrincipal().getName();
 		final UserInfo user = (UserInfo) request.getPortletSession().getAttribute(UserInfo.KEY_USER_INFO);
+		String result = null;
 		modelmap.addAttribute(JSON_RESULT, RESPONSE_FAIL);
 
 		try {
 			XmlProxy proxy = new XmlProxy(service, message, user);
-			String result = proxy.send(request);
-			modelmap.addAttribute(JSON_WS_MESSAGE, result);
+			result = proxy.send(request);
 			modelmap.addAttribute(JSON_RESULT, RESPONSE_OK);
+			modelmap.addAttribute(JSON_WS_MESSAGE, result);
 		} catch (XMLStreamException xse) {
 			LOG.error("Unexpected XML-parsing error. User '" + username + "'", xse);
 		} catch (Exception e) {
