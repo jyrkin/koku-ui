@@ -14,6 +14,9 @@
 	<portlet:param name="action" value="toHome" />
 </portlet:actionURL>
 
+<portlet:resourceURL var="attachmentURL" id="attachment"></portlet:resourceURL>
+
+
 <%!public String htmlToCode_old(String s)
 {
 	if(s == null) {
@@ -101,6 +104,12 @@ public String htmlToCode(String s)
 			}
 		}
 	}	
+	
+	function getAttachment(path) {
+		var url = formatUrl("<%= attachmentURL %>");		
+		url = formatUrl(url);
+		window.location = url + "&path=" +path;
+	}
 	
 	var KokuMessage = {
 			

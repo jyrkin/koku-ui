@@ -1,4 +1,5 @@
-package fi.arcusys.koku.palvelut.controller;
+package fi.arcusys.koku.web;
+
 
 import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
@@ -22,5 +23,4 @@ public class AttachmentController {
 			ResourceResponse response) {
 		new AttachmentDownload(request, response, path);
 	}
-
 }
