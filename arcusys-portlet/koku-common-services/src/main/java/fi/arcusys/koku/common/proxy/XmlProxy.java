@@ -31,7 +31,6 @@ import fi.arcusys.koku.common.proxy.restrictions.MessageProcessingServiceRestric
 import fi.arcusys.koku.common.proxy.restrictions.RequestProcessingServiceRestriction;
 import fi.arcusys.koku.common.proxy.restrictions.SuostumusProcessingServiceRestriction;
 import fi.arcusys.koku.common.proxy.restrictions.TietopyyntoProcessingServiceRestriction;
-import fi.arcusys.koku.common.proxy.restrictions.UsersAndGroupsServiceRestriction;
 import fi.arcusys.koku.common.proxy.restrictions.ValtakirjaProcessingServiceRestriction;
 import fi.arcusys.koku.common.proxy.restrictions.WSRestriction;
 import fi.arcusys.koku.common.proxy.util.WSCommonData;
@@ -77,7 +76,7 @@ public class XmlProxy {
     		LOG.info("Added new endpoint to XmlProxy: "+value);
 		}
 
-		restrictions.put(KokuWebServicesJS.USERS_AND_GROUPS_SERVICE, new UsersAndGroupsServiceRestriction());
+		//restrictions.put(KokuWebServicesJS.USERS_AND_GROUPS_SERVICE, new UsersAndGroupsServiceRestriction());
 		restrictions.put(KokuWebServicesJS.APPOINTMENT_PROCESSING_SERVICE, new AppointmentProcessingServiceRestriction());
 		restrictions.put(KokuWebServicesJS.KV_MESSAGE_SERVICE, new MessageProcessingServiceRestriction());
 		restrictions.put(KokuWebServicesJS.REQUEST_PROCESSING_SERVICE, new RequestProcessingServiceRestriction());
