@@ -21,12 +21,12 @@ public enum KokuWebServicesJS {
 	    return value;
 	}
 
-	public static KokuWebServicesJS fromValue(String v) {
-	    for (KokuWebServicesJS c: KokuWebServicesJS.values()) {
-	        if (c.toString().equals(v)) {
-	            return c;
+	public static KokuWebServicesJS fromValue(String value) {
+	    for (KokuWebServicesJS element: KokuWebServicesJS.values()) {
+	        if (element.value.equalsIgnoreCase(value)) {
+	            return element;
 	        }
 	    }
-	    throw new IllegalArgumentException(v);
+	    throw new IllegalArgumentException("Could not convert " + value + " to KokuWebServicesJS value");
 	}
 }

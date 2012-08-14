@@ -1,24 +1,26 @@
-package fi.arcusys.koku.common.wsproxy.servlet;
+package fi.arcusys.koku.common.proxy.restrictions;
 
 import org.apache.axiom.om.OMElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import fi.arcusys.koku.common.proxy.util.WSCommonData;
+import fi.arcusys.koku.common.proxy.util.WSCommonUtil;
 import fi.arcusys.koku.common.util.KokuWebServicesJS;
 import fi.arcusys.koku.common.util.Properties;
 
 /**
- * Restrict KokuRequestProcessingService methods
+ * Restrict KokuValtakirjaProcessingService methods
  *
  * @author Tapani Kiiskinen (tapani.kiiskinen@arcusys.fi)
  * Aug, 2012
  */
-public class RequestProcessingServiceRestriction implements WSRestriction {
+public class ValtakirjaProcessingServiceRestriction implements WSRestriction {
     private static final Logger logger = LoggerFactory.getLogger(MessageProcessingServiceRestriction.class);
 
     @Override
     public KokuWebServicesJS getAssociatedEndpoint() {
-        return KokuWebServicesJS.REQUEST_PROCESSING_SERVICE;
+        return KokuWebServicesJS.VALTAKIRJA_PROCESSING_SERVICE;
     }
 
     @Override
@@ -26,22 +28,23 @@ public class RequestProcessingServiceRestriction implements WSRestriction {
 
         boolean permitted = false;
 
-        // Methods exposed to Loora
-        if (Properties.IS_LOORA_PORTAL) {
+        // Methods exposed to Kunpo
+        if (Properties.IS_KUNPO_PORTAL) {
 
-            if (methodName.equals("getRequestTemplateSummary")) {
+            if (methodName.equals("selaaValtakirjapohjat")) {
 
-                String uid = WSCommonUtil.getTextOfChild(soapEnvelope, "user");
+                permitted = true;
+            }
+            else if (methodName.equals("getValtakirja")) {
 
-                // Only users themselves can ask for their templates.
+                String uid = WSCommonUtil.getTextOfChild(soapEnvelope, "kayttaja");
+
                 if (commonData.getCurrentUserUid().equals(uid)) {
                     permitted = true;
                 }
             }
-            else if (methodName.equals("getRequestTemplateById")) {
-                permitted = true;
-            }
         }
+
 
         if (permitted) {
             logger.info("Permission granted for " + commonData.getCurrentUserName()
@@ -60,13 +63,15 @@ public class RequestProcessingServiceRestriction implements WSRestriction {
 
         boolean permitted = false;
 
-        if (methodName.equals("getRequestTemplateSummary")) {
+        if (methodName.equals("selaaValtakirjapohjat")) {
             // All checks done in requestPermitted
             permitted = true;
         }
-        else if (methodName.equals("getRequestTemplateById")) {
+        else if (methodName.equals("getValtakirja")) {
             // All checks done in requestPermitted
             permitted = true;
+        }
+        else if (methodName.equals("")) {
         }
 
         if (permitted) {

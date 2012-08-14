@@ -1,24 +1,24 @@
-package fi.arcusys.koku.common.wsproxy.servlet;
+package fi.arcusys.koku.common.proxy.restrictions;
 
 import org.apache.axiom.om.OMElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import fi.arcusys.koku.common.proxy.util.WSCommonData;
 import fi.arcusys.koku.common.util.KokuWebServicesJS;
-import fi.arcusys.koku.common.util.Properties;
 
 /**
- * Restrict KokuTietopyyntoProcessingService methods
+ * Restrict KokuHakProcessingService methods
  *
  * @author Tapani Kiiskinen (tapani.kiiskinen@arcusys.fi)
  * Aug, 2012
  */
-public class TietopyyntoProcessingServiceRestriction implements WSRestriction {
+public class HakProcessingServiceRestriction implements WSRestriction {
     private static final Logger logger = LoggerFactory.getLogger(MessageProcessingServiceRestriction.class);
 
     @Override
     public KokuWebServicesJS getAssociatedEndpoint() {
-        return KokuWebServicesJS.TIETOPYYNTO_PROCESSING_SERVICE;
+        return KokuWebServicesJS.HAK_PROCESSING_SERVICE;
     }
 
     @Override
@@ -26,19 +26,7 @@ public class TietopyyntoProcessingServiceRestriction implements WSRestriction {
 
         boolean permitted = false;
 
-        // Methods exposed to Loora
-        if (Properties.IS_LOORA_PORTAL) {
-
-            if (methodName.equals("getTietoelementit")) {
-
-                String uid = WSCommonUtil.getTextOfChild(soapEnvelope, "userUid");
-
-                // User specific information elements only available to themselves
-                if (commonData.getCurrentUserUid().equals(uid)) {
-                    permitted = true;
-                }
-            }
-        }
+        // No methods currently exposed through proxy
 
         if (permitted) {
             logger.info("Permission granted for " + commonData.getCurrentUserName()
@@ -57,10 +45,7 @@ public class TietopyyntoProcessingServiceRestriction implements WSRestriction {
 
         boolean permitted = false;
 
-        if (methodName.equals("getTietoelementit")) {
-            // All checks done in requestPermitted
-            permitted = true;
-        }
+        // No methods currently exposed through proxy
 
         if (permitted) {
             logger.info("Permission granted for " + commonData.getCurrentUserName()

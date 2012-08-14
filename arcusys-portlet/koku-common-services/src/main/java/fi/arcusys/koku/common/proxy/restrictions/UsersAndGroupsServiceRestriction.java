@@ -1,12 +1,14 @@
 /**
  *
  */
-package fi.arcusys.koku.common.wsproxy.servlet;
+package fi.arcusys.koku.common.proxy.restrictions;
 
 import org.apache.axiom.om.OMElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import fi.arcusys.koku.common.proxy.util.WSCommonData;
+import fi.arcusys.koku.common.proxy.util.WSCommonUtil;
 import fi.arcusys.koku.common.util.KokuWebServicesJS;
 import fi.arcusys.koku.common.util.Properties;
 
@@ -50,7 +52,9 @@ public class UsersAndGroupsServiceRestriction implements WSRestriction {
 
         // UsersAndGroupsService - getKunpoNameByUserUid
         } else if (methodName.equalsIgnoreCase("getKunpoNameByUserUid")) {
-            // TODO: permit if necessary
+            // Permitted for Loora users
+            if (Properties.IS_LOORA_PORTAL)
+                permitted = true;
 
         // UsersAndGroupsService - getUserUidByLooraName
         } else if (methodName.equalsIgnoreCase("getUserUidByLooraName")) {
@@ -66,7 +70,9 @@ public class UsersAndGroupsServiceRestriction implements WSRestriction {
 
         // UsersAndGroupsService - getLooraNameByUserUid
         } else if (methodName.equalsIgnoreCase("getLooraNameByUserUid")) {
-            // TODO: permit if necessary
+            // Permitted for Loora users
+            if (Properties.IS_LOORA_PORTAL)
+                permitted = true;
 
         // UsersAndGroupsService - searchUsers
         } else if (methodName.equalsIgnoreCase("searchUsers")) {
@@ -88,7 +94,9 @@ public class UsersAndGroupsServiceRestriction implements WSRestriction {
 
         // UsersAndGroupsService - getUsersByGroupUid
         } else if (methodName.equalsIgnoreCase("getUsersByGroupUid")) {
-            // TODO: permit if necessary
+            // Permitted for Loora users
+            if (Properties.IS_LOORA_PORTAL)
+                permitted = true;
 
         // UsersAndGroupsService - searchChildren
         } else if (methodName.equalsIgnoreCase("searchChildren")) {
@@ -108,18 +116,15 @@ public class UsersAndGroupsServiceRestriction implements WSRestriction {
 
         // UsersAndGroupsService - getChildInfo
         } else if (methodName.equalsIgnoreCase("getChildInfo")) {
-            // TODO: permit if necessary
+            // Permitted for Loora users
+            if (Properties.IS_LOORA_PORTAL)
+                permitted = true;
 
         // UsersAndGroupsService - getUserInfo
         } else if (methodName.equalsIgnoreCase("getUserInfo")) {
-            final String userUid = WSCommonUtil.getTextOfChild(soapEnvelope, "userUid");
 
-            logger.info("getUserInfo: userUid = " + userUid);
-
-            if (userUid != null && commonData.getUserInfoAllowedUid().contains(userUid)) {
+            if (Properties.IS_LOORA_PORTAL) {
                 permitted = true;
-            } else {
-                logger.warn("User is not permitted to get the information about other non-relevant users");
             }
 
         // UsersAndGroupsService - getSsnByLdapName
@@ -190,8 +195,14 @@ public class UsersAndGroupsServiceRestriction implements WSRestriction {
 
         }
 
-        logger.info("User is "+(permitted ? "" : "not ")+"permitted to make this request ("+methodName+") on " +
-                (Properties.IS_KUNPO_PORTAL ? "KunPo" : "Loora"));
+        if (permitted) {
+            logger.info("User is permitted to make this request ("+methodName+") on " +
+                    (Properties.IS_KUNPO_PORTAL ? "KunPo" : "Loora"));
+        }
+        else {
+            logger.info("User is not permitted to make this request ("+methodName+") on " +
+                    (Properties.IS_KUNPO_PORTAL ? "KunPo" : "Loora"));
+        }
 
         return permitted;
     }

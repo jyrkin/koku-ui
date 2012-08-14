@@ -1,7 +1,7 @@
 /**
  *
  */
-package fi.arcusys.koku.common.wsproxy.servlet;
+package fi.arcusys.koku.common.proxy.util;
 
 import java.util.HashSet;
 import java.util.Iterator;

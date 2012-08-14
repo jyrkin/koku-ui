@@ -1,17 +1,16 @@
 /**
  *
  */
-package fi.arcusys.koku.common.wsproxy.servlet;
+package fi.arcusys.koku.common.proxy.util;
 
 import java.io.Serializable;
-import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.servlet.http.HttpSession;
+import javax.portlet.PortletSession;
 import javax.xml.stream.XMLStreamException;
 
 import org.apache.axiom.om.OMElement;
@@ -60,16 +59,15 @@ public class WSCommonData {
         public Set<String> avAllowedMeetingIdSet = new HashSet<String>();
     }
 
-    private final HttpSession session;
+    private final PortletSession session;
     private WSDataContainer dataContainer;
     private final Map<KokuWebServicesJS, String> endpoints;
-    private UserInfo currentUserInfo;
+    private final UserInfo currentUserInfo;
 
-    public WSCommonData(final HttpSession session, final Map<KokuWebServicesJS, String> endpoints) {
+    public WSCommonData(final PortletSession session, final UserInfo currentUserInfo, final Map<KokuWebServicesJS, String> endpoints) {
         this.session = session;
         this.endpoints = endpoints;
-
-        fetchCurrentUserInfo();
+        this.currentUserInfo = currentUserInfo;
 
         final String currentUser = getCurrentUserName();
         final String trackedUser = (String) session.getAttribute(TRACKED_USER_NAME);
@@ -127,19 +125,6 @@ public class WSCommonData {
                 AXIOMUtil.stringToOM(String.format(GET_USER_UID_LOORA, userName)));
 
         return WSCommonUtil.getTextOfChild(response, "userUid");
-    }
-
-    private void fetchCurrentUserInfo() {
-        currentUserInfo = null;
-
-        final Enumeration<String> names = session.getAttributeNames();
-        while (names.hasMoreElements()) {
-            String name = names.nextElement();
-
-            if (name.endsWith(UserInfo.KEY_USER_INFO)) {
-                currentUserInfo = (UserInfo) session.getAttribute(name);
-            }
-        }
     }
 
     private void fetchUserData() {
@@ -210,7 +195,7 @@ public class WSCommonData {
         }
     }
 
-    public HttpSession getSession() {
+    public PortletSession getSession() {
         return session;
     }
 

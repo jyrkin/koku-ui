@@ -2,7 +2,6 @@ package fi.arcusys.koku.palvelut.controller;
 
 import static fi.arcusys.koku.common.util.Constants.ATTR_PREFERENCES;
 import static fi.arcusys.koku.common.util.Constants.JSON_RESULT;
-import static fi.arcusys.koku.common.util.Constants.JSON_WS_MESSAGE;
 import static fi.arcusys.koku.common.util.Constants.PREF_SHOW_ONLY_FORM_BY_DESCRIPTION;
 import static fi.arcusys.koku.common.util.Constants.PREF_SHOW_ONLY_FORM_BY_ID;
 import static fi.arcusys.koku.common.util.Constants.PREF_SHOW_TASKS_BY_ID;
@@ -37,7 +36,7 @@ import org.springframework.web.portlet.bind.annotation.ResourceMapping;
 import fi.arcusys.koku.common.exceptions.KokuCommonException;
 import fi.arcusys.koku.common.proxy.AttachmentProxy;
 import fi.arcusys.koku.common.proxy.IllegalOperationCall;
-import fi.arcusys.koku.common.proxy.WsProxy;
+import fi.arcusys.koku.common.proxy.XmlProxy;
 import fi.arcusys.koku.common.services.intalio.Task;
 import fi.arcusys.koku.common.services.intalio.TaskHandle;
 import fi.arcusys.koku.palvelut.util.AjaxViewResolver;
@@ -79,7 +78,7 @@ public class ViewController extends FormHolderController {
 
 	@ResourceMapping(value = "serviceNames")
 	public String servicesAjax(ModelMap modelmap, PortletRequest request, PortletResponse response) {
-		modelmap.addAttribute("endpoints" , WsProxy.getServiceNames());
+		modelmap.addAttribute("endpoints" , XmlProxy.getServiceNames());
 		modelmap.addAttribute(JSON_RESULT, RESPONSE_OK);
 		return AjaxViewResolver.AJAX_PREFIX;
 	}
@@ -94,11 +93,12 @@ public class ViewController extends FormHolderController {
 
 		final String username = request.getUserPrincipal().getName();
 		final UserInfo user = (UserInfo) request.getPortletSession().getAttribute(UserInfo.KEY_USER_INFO);
+		String result = null;
 		modelmap.addAttribute(JSON_RESULT, RESPONSE_FAIL);
 
 		try {
-			WsProxy proxy = new WsProxy(service, message, user);
-			modelmap.addAttribute(JSON_WS_MESSAGE, proxy.send());
+			XmlProxy proxy = new XmlProxy(service, message, user);
+			result = proxy.send(request);
 			modelmap.addAttribute(JSON_RESULT, RESPONSE_OK);
 		} catch (IllegalOperationCall ioc) {
 			LOG.error("Illegal operation call. User '" + username + "' tried to call restricted method that he/she doesn't have sufficient permission. ", ioc);
