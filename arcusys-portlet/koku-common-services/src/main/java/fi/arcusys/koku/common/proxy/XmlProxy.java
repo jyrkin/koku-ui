@@ -19,9 +19,17 @@ import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMFactory;
 import org.apache.axiom.om.OMText;
 import org.apache.axiom.om.impl.builder.StAXOMBuilder;
+import org.apache.axis2.AxisFault;
 import org.apache.axis2.addressing.EndpointReference;
 import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
+import org.apache.axis2.context.ConfigurationContext;
+import org.apache.axis2.context.ConfigurationContextFactory;
+import org.apache.axis2.engine.ListenerManager;
+import org.apache.axis2.transport.http.HTTPConstants;
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
+import org.apache.commons.httpclient.params.HttpConnectionManagerParams;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -111,6 +119,38 @@ public class XmlProxy {
 		this.endpoint = KokuWebServicesJS.fromValue(endpointName);
 		this.endpointURI = JS_ENDPOINT_URI.get(endpoint);
 		this.restriction = JS_RESTRICTIONS.get(endpoint);
+
+        // Copied from fi.arcusys.koku.palvelut.bean.Configuration [palvelut-portlet]
+        // TODO: Refactor fi.arcusys.koku.palvelut.bean.Configuration to reuse the code
+        ConfigurationContext configurationContext = ListenerManager.defaultConfigurationContext;
+        if (configurationContext == null) {
+            try {
+                configurationContext = ConfigurationContextFactory
+                        .createConfigurationContextFromFileSystem(null, null);
+            } catch (final AxisFault e) {
+                throw new RuntimeException(e);
+            }
+            ListenerManager.defaultConfigurationContext = configurationContext;
+        }
+        final HttpClient cachedClient = (HttpClient) configurationContext
+                .getProperty(HTTPConstants.CACHED_HTTP_CLIENT);
+        if (cachedClient != null) {
+            cachedClient
+                    .getHttpConnectionManager()
+                    .getParams()
+                    .setDefaultMaxConnectionsPerHost(
+                            MultiThreadedHttpConnectionManager.DEFAULT_MAX_TOTAL_CONNECTIONS);
+        } else {
+            MultiThreadedHttpConnectionManager multiThreadedHttpConnectionManager = new MultiThreadedHttpConnectionManager();
+
+            HttpConnectionManagerParams params = new HttpConnectionManagerParams();
+            params.setDefaultMaxConnectionsPerHost(20);
+            multiThreadedHttpConnectionManager.setParams(params);
+            HttpClient httpClient = new HttpClient(
+                    multiThreadedHttpConnectionManager);
+            configurationContext.setProperty(HTTPConstants.CACHED_HTTP_CLIENT,
+                    httpClient);
+        }
 	}
 
 	public String send(PortletRequest request) throws XMLStreamException {
@@ -143,15 +183,10 @@ public class XmlProxy {
             LOG.warn("In-depth security checks are not defined for "+endpoint.value());
         }
 
+        LOG.info("ServiceClient.class was loaded from: " + ServiceClient.class.getProtectionDomain().getCodeSource().getLocation().getPath());
+
         Options options = new Options();
         options.setTo(new EndpointReference(endpointURI));
-
-        /*String action = request.getParameter("action");
-
-        if (action == null)
-            action = request.getHeader("soapaction");
-
-        options.setAction(action);*/
 
         OMElement soapResponse = null;
 
@@ -160,6 +195,9 @@ public class XmlProxy {
             client.setOptions(options);
 
             soapResponse = client.sendReceive(soapRequest);
+            soapResponse.build();
+
+            client.cleanupTransport();
 
         } catch (Exception exception) {
             return generateErrorResponse("Error sending request to WS backend. Exception: " + exception);
