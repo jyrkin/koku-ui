@@ -5,7 +5,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import fi.arcusys.koku.common.proxy.util.WSCommonData;
-import fi.arcusys.koku.common.proxy.util.WSCommonUtil;
 import fi.arcusys.koku.common.util.KokuWebServicesJS;
 import fi.arcusys.koku.common.util.Properties;
 
@@ -37,11 +36,7 @@ public class ValtakirjaProcessingServiceRestriction implements WSRestriction {
             }
             else if (methodName.equals("getValtakirja")) {
 
-                String uid = WSCommonUtil.getTextOfChild(soapEnvelope, "kayttaja");
-
-                if (commonData.getCurrentUserUid().equals(uid)) {
-                    permitted = true;
-                }
+                permitted = true;
             }
         }
 
