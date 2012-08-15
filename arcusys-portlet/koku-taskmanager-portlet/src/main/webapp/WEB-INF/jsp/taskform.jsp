@@ -96,49 +96,71 @@
 		window.location = url + "&path=" +path;
 	}
 
-	/**
-	 * 
-	 */
-	var KokuWS = {
-				
-		/**
-		 * Simple function to send some example ajax data 
-		 * 
-		 * @param service ServiceName (e.g AppoimentService)
-		 * @param data XML-data
-		 */
-		send : function(service, message) {	
-			var url=formatUrl("<%= sendWsRequestURL %>");		
-			var ajaxObject = {
-					"service":service,
-					"message":message
-				};
-			
-			var result = jQuery.ajax( {
-				url: url,  
-				type: "POST", 
-				data: ajaxObject, 
-			    dataType: "html",
-				async: false 
-			}).responseText;
-			return jQuery.parseJSON(result);
 
-		},
+	/**
+	 * KokuWS namespace
+	 */
+	var KokuWS = {}
+				
+	/**
+	 * Simple function to send some example ajax data
+	 *
+	 * @param service ServiceName (e.g AppoimentService)
+	 * @param data XML-data
+	 */
+	KokuWS.send = function(service, message) {
+		var url=formatUrl("<%= sendWsRequestURL %>");
+		var ajaxObject = {
+				"service":service,
+				"message":message
+			};
 		
-		/**
-		 *  Returns Koku WS services
-		 * 
-		 *	@return list of services
-		 */
-		 getKokuServices : function() {
-			var url=formatUrl("<%= serviceNamesURL %>");
-			var result = jQuery.ajax( {
-				url: url,  
-				type: "POST", 
-			    dataType: "html",
-				async: false 
-			}).responseText;
-			return jQuery.parseJSON(result);
+		var result = jQuery.ajax( {
+			url: url,
+			type: "POST",
+			data: ajaxObject,
+			dataType: "html",
+			async: false
+		}).responseText;
+		return jQuery.parseJSON(result);
+
+	};
+	
+	/**
+	 *  Returns Koku WS services
+	 *
+	 *  @return list of services
+	 */
+	 KokuWS.getKokuServices = function() {
+		var url=formatUrl("<%= serviceNamesURL %>");
+		var result = jQuery.ajax( {
+			url: url,
+			type: "POST",
+			dataType: "html",
+			async: false
+		}).responseText;
+		return jQuery.parseJSON(result);
+	};
+
+	/**
+	 * Invokes a send request and handles the responses
+	 *
+	 * @return response string
+	 */
+	KokuWS.handleSend = function(serviceName, soapMessage) {
+
+		var wsReply = KokuWS.send(serviceName, soapMessage);
+
+		if (wsReply == null) {
+			alert("Error completing proxy request. See browser console for request message.");
+			console.log("Service name: " + serviceName + "; request: " + soapMessage);
+		}
+		else if (wsReply.result != "OK") {
+			alert("Error completing proxy request. See browser console for request message and response.");
+			console.log("Service name: " + serviceName + "; Request: " + soapMessage + "; Response: " + wsReply.wsMessage);
+		}
+		else {
+			return wsReply.wsMessage;
 		}
 	};
 	

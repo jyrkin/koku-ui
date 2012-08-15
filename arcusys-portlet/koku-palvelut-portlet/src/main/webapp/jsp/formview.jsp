@@ -183,7 +183,7 @@
 			async: false
 		}).responseText;
 		return jQuery.parseJSON(result);
-	}
+	};
 
 	/**
 	 * Invokes a send request and handles the responses
