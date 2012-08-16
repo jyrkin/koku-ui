@@ -27,14 +27,16 @@ public class ValtakirjaProcessingServiceRestriction implements WSRestriction {
 
         boolean permitted = false;
 
+        // Methods exposed to Kunpo and Loora
+        if (methodName.equals("selaaValtakirjapohjat")) {
+
+            permitted = true;
+        }
+
         // Methods exposed to Kunpo
         if (Properties.IS_KUNPO_PORTAL) {
 
-            if (methodName.equals("selaaValtakirjapohjat")) {
-
-                permitted = true;
-            }
-            else if (methodName.equals("getValtakirja")) {
+            if (methodName.equals("getValtakirja")) {
 
                 permitted = true;
             }
