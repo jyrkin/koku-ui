@@ -15,24 +15,29 @@
 <portlet:actionURL var="archiveActionURL">
 	<portlet:param name="action" value="archiveLog" />
 	<portlet:param name="visited" value="---" />
+	<portlet:param name="${csrf_token}" value="${csrf_token_value}" />	
 </portlet:actionURL>
 
 <portlet:actionURL var="changeActionURL">
 	<portlet:param name="action" value="archiveLog" />
 	<portlet:param name="change" value="change" />
 	<portlet:param name="visited" value="---" />
+	<portlet:param name="${csrf_token}" value="${csrf_token_value}" />	
 </portlet:actionURL>
 
 <portlet:actionURL var="startArchiveActionURL">
 	<portlet:param name="action" value="startArchiveLog" />
+	<portlet:param name="${csrf_token}" value="${csrf_token_value}" />	
 </portlet:actionURL>
 
 <portlet:renderURL var="homeURL">
 	<portlet:param name="action" value="choose" />
+	<portlet:param name="${csrf_token}" value="${csrf_token_value}" />
 </portlet:renderURL>
 
 <portlet:renderURL var="searchUserURL">
 	<portlet:param name="action" value="searchUser" />
+	<portlet:param name="${csrf_token}" value="${csrf_token_value}" />	
 </portlet:renderURL>
 
 

@@ -15,14 +15,17 @@
 <portlet:actionURL var="searchActionURL">
 	<portlet:param name="action" value="searchLog" />
 	<portlet:param name="visited" value="---" />
+	<portlet:param name="${csrf_token}" value="${csrf_token_value}" />	
 </portlet:actionURL>
 
 <portlet:renderURL var="searchUserURL">
 	<portlet:param name="action" value="searchUser" />
+	<portlet:param name="${csrf_token}" value="${csrf_token_value}" />
 </portlet:renderURL>
 
 <portlet:renderURL var="archiveURL">
-	<portlet:param name="action" value="archiveLog" />
+	<portlet:param name="action" value="archiveLog" />	
+	<portlet:param name="${csrf_token}" value="${csrf_token_value}" />
 </portlet:renderURL>
 
 

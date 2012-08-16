@@ -20,10 +20,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.portlet.ActionResponse;
 import javax.portlet.PortletSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.support.SessionStatus;
 
 import fi.koku.calendar.CalendarUtil;
 import fi.koku.portlet.filter.userinfo.UserInfo;
@@ -391,4 +393,16 @@ public class LogUtils {
       return false;  
     }
   }
+  
+  public void setCsrfErrorPage(ActionResponse response,
+      SessionStatus sessionStatus) {
+    log.error("Possible CSRF attack detected, forwarding to error view!");
+    response.setRenderParameter("action", "showCsrfError");
+    sessionStatus.setComplete();
+  }
+  
+  public String getCsrfErrorPage() {
+    return "error";
+  }
+  
 }

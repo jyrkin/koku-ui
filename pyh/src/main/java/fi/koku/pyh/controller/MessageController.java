@@ -13,15 +13,21 @@ package fi.koku.pyh.controller;
 
 import java.util.List;
 
+import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
+import javax.portlet.PortletRequest;
+import javax.portlet.PortletSession;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.portlet.bind.annotation.ActionMapping;
 
+import fi.koku.portlet.filter.userinfo.SecurityUtils;
 import fi.koku.pyh.ui.common.Log;
 import fi.koku.pyh.ui.common.PyhConstants;
+import fi.koku.pyh.ui.common.PyhUtils;
 import fi.koku.services.entity.community.v1.AuditInfoType;
 import fi.koku.services.entity.community.v1.CommunityServiceConstants;
 import fi.koku.services.entity.community.v1.CommunityServiceFactory;
@@ -65,7 +71,13 @@ public class MessageController {
    * @throws ServiceFault
    */
   @ActionMapping(params = "action=acceptMessage")
-  public void accept(@RequestParam String userPic, @RequestParam String messageId, @RequestParam String currentFamilyId, @RequestParam boolean removeCurrentFamily, @RequestParam String requesterPic, ActionResponse response) throws ServiceFault {    
+  public void accept(@RequestParam String userPic, @RequestParam String messageId, @RequestParam String currentFamilyId, @RequestParam boolean removeCurrentFamily, @RequestParam String requesterPic
+      , ActionResponse response, PortletRequest request,PortletSession session, SessionStatus sessionStatus ) throws ServiceFault {    
+       
+    if ( !SecurityUtils.hasValidCSRFToken(request) ) {
+      PyhUtils.setCsrfErrorPage(response, sessionStatus);
+      return;
+    }
     
     String familyId = removeCurrentFamily ? currentFamilyId : null;
     
@@ -113,8 +125,14 @@ public class MessageController {
    * @throws ServiceFault
    */
   @ActionMapping(params = "action=rejectMessage")
-  public void reject(@RequestParam String userPic, @RequestParam String messageId, ActionResponse response) throws ServiceFault {
+  public void reject(@RequestParam String userPic, @RequestParam String messageId
+      , ActionResponse response , PortletRequest request,PortletSession session, SessionStatus sessionStatus) throws ServiceFault {
     Log.getInstance().update(userPic, "", "pyh.membership.approval", "Membership approval status for user " + userPic + " was set to '" + CommunityServiceConstants.MEMBERSHIP_REQUEST_STATUS_REJECTED + "'");
+    
+    if ( !SecurityUtils.hasValidCSRFToken(request) ) {
+      PyhUtils.setCsrfErrorPage(response, sessionStatus);
+      return;
+    }
     
     MembershipApprovalType membershipApproval = new MembershipApprovalType();
     membershipApproval.setApproverPic(userPic);

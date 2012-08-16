@@ -33,12 +33,15 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.portlet.bind.annotation.ActionMapping;
 import org.springframework.web.portlet.bind.annotation.RenderMapping;
 
 import fi.koku.portlet.filter.userinfo.UserInfoUtils;
+import fi.koku.portlet.filter.userinfo.SecurityUtils;
 import fi.koku.pyh.ui.common.Log;
 import fi.koku.pyh.ui.common.PyhConstants;
+import fi.koku.pyh.ui.common.PyhUtils;
 import fi.koku.services.entity.community.v1.AuditInfoType;
 import fi.koku.services.entity.community.v1.CommunitiesType;
 import fi.koku.services.entity.community.v1.CommunityQueryCriteriaType;
@@ -143,6 +146,7 @@ public class EditFamilyInformationController {
     model.addAttribute("parentsFull", familyHelper.isParentsSet(userPic, userFamily));
     model.addAttribute("messages", messageHelper.getSentMessages(user, messageSource.getMessage("ui.pyh.sent.messages.content", null, "", Locale.getDefault())));
     model.addAttribute("searchedUsers", null);
+    model.addAttribute(SecurityUtils.KEY_CSRF_TOKEN, SecurityUtils.getCSRFTokenFromSession(request));
     
     Boolean childsGuardianshipInformationNotFound = Boolean.valueOf(request.getParameter("childsGuardianshipInformationNotFound"));
     
@@ -193,6 +197,7 @@ public class EditFamilyInformationController {
     model.addAttribute("messages", sentMessages);
     model.addAttribute("searchedUsers", searchedUsers);
     model.addAttribute("familyCommunityId", familyCommunityId);
+    model.addAttribute(SecurityUtils.KEY_CSRF_TOKEN, SecurityUtils.getCSRFTokenFromSession(request));
     
     return "editfamilyinformation";
   }
@@ -208,8 +213,14 @@ public class EditFamilyInformationController {
    * @throws fi.koku.services.entity.community.v1.ServiceFault
    */
   @ActionMapping(params = "action=addDependantAsFamilyMember")
-  public void addDependantAsFamilyMember(ActionRequest request, @RequestParam String dependantPic, ActionResponse response) 
+  public void addDependantAsFamilyMember(ActionRequest request, @RequestParam String dependantPic, ActionResponse response
+                , SessionStatus sessionStatus) 
     throws TooManyFamiliesException, FamilyNotFoundException, fi.koku.services.entity.community.v1.ServiceFault {
+        
+    if ( !SecurityUtils.hasValidCSRFToken(request) ) {
+      PyhUtils.setCsrfErrorPage(response, sessionStatus);
+      return;
+    }
     
     String userPic = UserInfoUtils.getPicFromSession(request);
     insertDependantToFamily(userPic, dependantPic);
@@ -225,8 +236,13 @@ public class EditFamilyInformationController {
    * @throws fi.koku.services.entity.community.v1.ServiceFault
    */
   @ActionMapping(params = "action=removeFamilyMember")
-  public void removeFamilyMember(ActionRequest request, @RequestParam String familyMemberPic, ActionResponse response)
+  public void removeFamilyMember(ActionRequest request, @RequestParam String familyMemberPic, ActionResponse response, SessionStatus sessionStatus)
     throws fi.koku.services.entity.community.v1.ServiceFault {
+    
+    if ( !SecurityUtils.hasValidCSRFToken(request) ) {
+      PyhUtils.setCsrfErrorPage(response, sessionStatus);
+      return;
+    }
     
     String userPic = UserInfoUtils.getPicFromSession(request);
     removeFamilyMember(familyMemberPic, userPic);
@@ -242,8 +258,14 @@ public class EditFamilyInformationController {
    * @throws fi.koku.services.entity.community.v1.ServiceFault
    */
   @ActionMapping(params = "action=removeDependant")
-  public void removeDependant(ActionRequest request, @RequestParam String familyMemberPic, ActionResponse response)
+  public void removeDependant(ActionRequest request, @RequestParam String familyMemberPic, ActionResponse response
+      , SessionStatus sessionStatus)
     throws fi.koku.services.entity.community.v1.ServiceFault, fi.koku.services.entity.customer.v1.ServiceFault {
+    
+    if ( !SecurityUtils.hasValidCSRFToken(request) ) {
+      PyhUtils.setCsrfErrorPage(response, sessionStatus);
+      return;
+    }
     
     String userPic = UserInfoUtils.getPicFromSession(request);
     for (Dependant d : familyHelper.getDependantsAndFamily(userPic, null).getDependants()) {
@@ -263,7 +285,7 @@ public class EditFamilyInformationController {
    */
   @ActionMapping(params = "action=searchUsers")
   public void searchUsers(ActionRequest request, ActionResponse response) {
-    
+            
     String surname = request.getParameter("searchSurname");
     String pic = request.getParameter("searchPic");
     
@@ -283,8 +305,13 @@ public class EditFamilyInformationController {
    * @throws fi.koku.services.entity.community.v1.ServiceFault
    */
   @ActionMapping(params = "action=addUsersToFamily")
-  public void addUsersToFamily(ActionRequest request, ActionResponse response) throws FamilyNotFoundException,
+  public void addUsersToFamily(ActionRequest request, ActionResponse response, SessionStatus sessionStatus) throws FamilyNotFoundException,
     TooManyFamiliesException, fi.koku.services.entity.customer.v1.ServiceFault, fi.koku.services.entity.community.v1.ServiceFault {
+    
+    if ( !SecurityUtils.hasValidCSRFToken(request) ) {
+      PyhUtils.setCsrfErrorPage(response, sessionStatus);
+      return;
+    }
     
     String userPic = UserInfoUtils.getPicFromSession(request);
     HashMap<String, String> personMap = new HashMap<String, String>();

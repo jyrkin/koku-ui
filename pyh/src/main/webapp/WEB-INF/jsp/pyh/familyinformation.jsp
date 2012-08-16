@@ -25,6 +25,7 @@
 
 <portlet:renderURL var="editFamilyInformation">
 	<portlet:param name="action" value="editFamilyInformation" />
+	<portlet:param name="${csrf_token}" value="${csrf_token_value}" />
 </portlet:renderURL>
 
 <div class="koku-pyh">
@@ -113,6 +114,7 @@
 									<portlet:param name="action" value="rejectMessage" />
 									<portlet:param name="userPic" value="${user.pic}" />
 									<portlet:param name="messageId" value="${sentMessage.id}" />
+									<portlet:param name="${csrf_token}" value="${csrf_token_value}" />
 								</portlet:actionURL> <form:form name="reject" method="post" action="${reject}">
 									<input type="submit" class="portlet-form-button"
 										value="<spring:message code="ui.pyh.sent.messages.deny" />" />
@@ -136,6 +138,7 @@
 										<portlet:param name="action" value="rejectMessage" />
 										<portlet:param name="userPic" value="${user.pic}" />
 										<portlet:param name="messageId" value="${message.id}" />
+										<portlet:param name="${csrf_token}" value="${csrf_token_value}" />
 									</portlet:actionURL> <form:form name="reject" method="post" action="${reject}">
 										<input type="submit" class="portlet-form-button"
 											value="<spring:message code="ui.pyh.deny" />" />
@@ -145,6 +148,7 @@
 											<portlet:param name="action" value="acceptMessage" />
 											<portlet:param name="userPic" value="${user.pic}" />
 											<portlet:param name="messageId" value="${message.id}" />
+											<portlet:param name="${csrf_token}" value="${csrf_token_value}" />
 											<portlet:param name="currentFamilyId"
 												value="${currentFamilyId}" />
 											<portlet:param name="removeCurrentFamily"

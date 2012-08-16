@@ -15,6 +15,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
+import javax.portlet.PortletSession;
 import javax.portlet.RenderRequest;
 
 import org.slf4j.Logger;
@@ -130,8 +131,14 @@ public class FamilyInformationController {
     model.addAttribute("currentFamilyId", fidm.getFamilyId());
     model.addAttribute("messages", messages);
     model.addAttribute("sentMessages", messageHelper.getSentMessages(user, messageSource.getMessage("ui.pyh.sent.messages.content", null, "", Locale.getDefault())));
-    model.addAttribute("supportEmailAddress", PyhConstants.KOKU_SUPPORT_EMAIL_ADDRESS);
+    model.addAttribute("supportEmailAddress", PyhConstants.KOKU_SUPPORT_EMAIL_ADDRESS);    
     
     return "familyinformation";
   }
+  
+  @RenderMapping(params = "action=showCsrfError")
+  public String showError(PortletSession session, RenderRequest req, Model model) {
+      return "error";
+  }
+  
 }
