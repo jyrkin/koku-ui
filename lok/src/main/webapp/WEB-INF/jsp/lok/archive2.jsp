@@ -14,6 +14,7 @@
 
 <portlet:renderURL var="homeURL">
 	<portlet:param name="action" value="choose" />
+	<portlet:param name="${csrf_token}" value="${csrf_token_value}" />
 </portlet:renderURL>
 
 <div class="koku-lok">

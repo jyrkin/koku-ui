@@ -15,10 +15,12 @@
 <portlet:actionURL var="viewActionURL">
 	<portlet:param name="action" value="viewLog" />
 	<portlet:param name="visited" value="---" />
+	<portlet:param name="${csrf_token}" value="${csrf_token_value}" />	
 </portlet:actionURL>
 
 <portlet:renderURL var="homeURL">
 	<portlet:param name="action" value="home" />
+	<portlet:param name="${csrf_token}" value="${csrf_token_value}" />
 </portlet:renderURL>
 
 <div class="koku-lok">

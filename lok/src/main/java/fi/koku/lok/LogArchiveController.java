@@ -16,6 +16,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.PortletSession;
 import javax.portlet.RenderRequest;
@@ -32,11 +33,13 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.portlet.bind.annotation.ActionMapping;
 import org.springframework.web.portlet.bind.annotation.RenderMapping;
 
 import fi.koku.KoKuFaultException;
 import fi.koku.calendar.CalendarUtil;
+import fi.koku.portlet.filter.userinfo.SecurityUtils;
 import fi.koku.services.utility.authorizationinfo.util.AuthUtils;
 import fi.koku.services.utility.authorizationinfo.v1.AuthorizationInfoService;
 import fi.koku.services.utility.authorizationinfo.v1.model.Role;
@@ -105,7 +108,9 @@ public class LogArchiveController {
     if (AuthUtils.isOperationAllowed("AdminSystemLogFile", userRoles)) {
       model.addAttribute("allowedToView", true);
     }
-
+    
+    model.addAttribute(SecurityUtils.KEY_CSRF_TOKEN, SecurityUtils.getCSRFTokenFromSession(req));
+    
     try {
 
       if (error == null) {
@@ -163,8 +168,13 @@ public class LogArchiveController {
   @ActionMapping(params = "action=archiveLog")
   public void doArchive(@ModelAttribute(value = "logArchiveDate") LogArchiveDate logarchivedate, BindingResult result,
       @RequestParam(value = "visited") String visited, @RequestParam(value = "change", required = false) String change,
-      ActionResponse response) {
+      ActionResponse response, ActionRequest request, SessionStatus sessionStatus) {
 
+    if ( !SecurityUtils.hasValidCSRFToken(request) ) {
+      lu.setCsrfErrorPage(response, sessionStatus);
+      return;
+    }
+    
     response.setRenderParameter("visited", visited);
 
     if (change != null) {
@@ -199,6 +209,8 @@ public class LogArchiveController {
       model.addAttribute("allowedToView", true);
     }
 
+    model.addAttribute(SecurityUtils.KEY_CSRF_TOKEN, SecurityUtils.getCSRFTokenFromSession(req));
+    
     log.info("started archiving");
  
     if (error != null) {
@@ -216,8 +228,13 @@ public class LogArchiveController {
   @ActionMapping(params = "action=startArchiveLog")
   public void startArchive(PortletSession session,
       @ModelAttribute(value = "logArchiveDate") LogArchiveDate logarchivedate, BindingResult result,
-      ActionResponse response) {
-
+      ActionResponse response, ActionRequest request, SessionStatus sessionStatus) {
+    
+    if ( !SecurityUtils.hasValidCSRFToken(request) ) {
+      lu.setCsrfErrorPage(response, sessionStatus);
+      return;
+    }
+    
     // get user pic and role
     String userPic = LogUtils.getPicFromSession(session);
 

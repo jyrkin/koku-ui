@@ -33,6 +33,7 @@
 
 <portlet:actionURL var="addUsersToFamily">
 	<portlet:param name="action" value="addUsersToFamily" />
+	<portlet:param name="${csrf_token}" value="${csrf_token_value}" />
 </portlet:actionURL>
 
 <portlet:renderURL var="backURL">
@@ -95,6 +96,7 @@
 														var="removeFamilyMember">
 														<portlet:param name="action" value="removeDependant" />
 														<portlet:param name="familyMemberPic" value="${child.pic}" />
+														<portlet:param name="${csrf_token}" value="${csrf_token_value}" />
 													</portlet:actionURL> <a href="${removeFamilyMember}"
 													onclick="return doRemoveDependantConfirmation()"><spring:message
 															code="ui.pyh.remove.family" /></a>
@@ -105,6 +107,7 @@
 													<portlet:param name="action"
 														value="addDependantAsFamilyMember" />
 													<portlet:param name="dependantPic" value="${child.pic}" />
+													<portlet:param name="${csrf_token}" value="${csrf_token_value}" />
 												</portlet:actionURL>
 												<a href="${addDependantAsFamilyMember}"
 													onclick="return doAddDependantConfirmation()"><spring:message
@@ -127,6 +130,7 @@
 										<portlet:param name="action" value="removeFamilyMember" />
 										<portlet:param name="familyMemberPic"
 											value="${familyMember.pic}" />
+										<portlet:param name="${csrf_token}" value="${csrf_token_value}" />
 									</portlet:actionURL> <a href="${removeFamilyMember}"
 									onclick="return doRemoveFamilyMemberConfirmation()"><spring:message
 											code="ui.pyh.remove.family" /></a>
@@ -140,7 +144,6 @@
 			</br>
 		</c:if>
 
-
 		<c:if test="${not empty messages}">
 			<h3 class="portlet-section-subheader">
 				<spring:message code="ui.pyh.sent.messages" />
@@ -151,10 +154,13 @@
 					<div class="msg-left">
 						<c:out value="${message.text}" />
 					</div>
+					
+
 					<span class="msg-right"> <portlet:actionURL var="reject">
 							<portlet:param name="action" value="rejectMessage" />
 							<portlet:param name="userPic" value="${user.pic}" />
 							<portlet:param name="messageId" value="${message.id}" />
+							<portlet:param name="${csrf_token}" value="${csrf_token_value}" />
 						</portlet:actionURL> <form:form name="reject" method="post" action="${reject}">
 							<input type="submit" class="portlet-form-button"
 								value="<spring:message code="ui.pyh.sent.messages.deny" />" />

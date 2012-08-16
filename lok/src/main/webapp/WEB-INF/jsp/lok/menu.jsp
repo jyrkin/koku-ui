@@ -12,16 +12,18 @@
 
 <portlet:renderURL var="archiveURL">
 	<portlet:param name="action" value="archiveLog" />
+	<portlet:param name="${csrf_token}" value="${csrf_token_value}" />
 </portlet:renderURL>
 
 <portlet:renderURL var="searchUserURL">
-	<portlet:param name="action" value="searchUser" />
+	<portlet:param name="action" value="searchUser" />	
 </portlet:renderURL>
 
 <portlet:renderURL var="searchLogViewsURL">
 	<portlet:param name="action" value="viewLog" />
 	<portlet:param name="user" value="${user}" />
     <portlet:param name="userRole" value="${userRole}" />
+    <portlet:param name="${csrf_token}" value="${csrf_token_value}" />
 </portlet:renderURL>
 
 <div class="koku-lok">

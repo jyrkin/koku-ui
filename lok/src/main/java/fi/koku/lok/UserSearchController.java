@@ -14,6 +14,7 @@ package fi.koku.lok;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.PortletSession;
 import javax.portlet.RenderRequest;
@@ -26,10 +27,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.portlet.bind.annotation.ActionMapping;
 import org.springframework.web.portlet.bind.annotation.RenderMapping;
 
 import fi.koku.lok.model.User;
+import fi.koku.portlet.filter.userinfo.SecurityUtils;
 import fi.koku.services.utility.authorizationinfo.util.AuthUtils;
 import fi.koku.services.utility.authorizationinfo.v1.AuthorizationInfoService;
 import fi.koku.services.utility.authorizationinfo.v1.impl.AuthorizationInfoServiceDummyImpl;
@@ -64,6 +67,8 @@ public class UserSearchController {
 
   private AuthorizationInfoService authorizationInfoService;
 
+  private LogUtils lu = new LogUtils();
+  
   public UserSearchController() {
     ServiceFactory f = new ServiceFactory();
     authorizationInfoService = f.getAuthorizationInfoService();
@@ -81,6 +86,8 @@ public class UserSearchController {
     
     model.addAttribute("picType" ,DEFAULT_PIC );
 
+    model.addAttribute(SecurityUtils.KEY_CSRF_TOKEN, SecurityUtils.getCSRFTokenFromSession(req));
+    
     // add a flag for allowing this user to see the operations on page
     // search.jsp
     if (AuthUtils.isOperationAllowed("AdminSystemLogFile", userRoles)) {
@@ -94,8 +101,13 @@ public class UserSearchController {
 
   @ActionMapping(params = "action=searchUserWithParams")
   public void searchUserWithParams(ActionResponse response, @RequestParam(value = "pic", required = false) String pic,@RequestParam(value = "picSelection", required = false) String picSelection,
-      Model model) {
+      Model model, ActionRequest request, SessionStatus sessionStatus) {
 
+    if ( !SecurityUtils.hasValidCSRFToken(request) ) {
+      lu.setCsrfErrorPage(response, sessionStatus);
+      return;
+    }
+    
     // Form sending required to use ActionURL and now there parameters are send
     // forward to render method
 	
@@ -128,6 +140,8 @@ public class UserSearchController {
     }
     
     model.addAttribute("picType" ,picSelection == null ? DEFAULT_PIC : picSelection );
+    
+    model.addAttribute(SecurityUtils.KEY_CSRF_TOKEN, SecurityUtils.getCSRFTokenFromSession(req));
     
  // see http://fi.wikipedia.org/wiki/Henkil%C3%B6tunnus#Tunnuksen_muoto
     if (pic != null && pic.length() == 11 &&

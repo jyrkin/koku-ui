@@ -17,6 +17,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.PortletSession;
 import javax.portlet.RenderRequest;
@@ -34,10 +35,12 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.portlet.bind.annotation.ActionMapping;
 import org.springframework.web.portlet.bind.annotation.RenderMapping;
 
 import fi.koku.calendar.CalendarUtil;
+import fi.koku.portlet.filter.userinfo.SecurityUtils;
 import fi.koku.services.entity.customer.v1.CustomerServicePortType;
 import fi.koku.services.entity.person.v1.PersonService;
 import fi.koku.services.utility.authorizationinfo.util.AuthUtils;
@@ -111,6 +114,8 @@ public class LogSearchController {
       model.addAttribute("allowedToView", true);
     }
     
+    model.addAttribute(SecurityUtils.KEY_CSRF_TOKEN, SecurityUtils.getCSRFTokenFromSession(req));
+    
     if(visited == null){ // fill in the default values when the page is visited first time
 
       // these are runtime constants, not given by the user!
@@ -179,8 +184,13 @@ public class LogSearchController {
   // portlet action phase
   @ActionMapping(params = "action=searchLog")
   public void doSearch(@ModelAttribute(value = "logSearchCriteria") LogSearchCriteria criteria, BindingResult result,
-      @RequestParam(value = "visited") String visited, ActionResponse response) {   
+      @RequestParam(value = "visited") String visited, ActionResponse response, ActionRequest request, SessionStatus sessionStatus) {   
 
+    if ( !SecurityUtils.hasValidCSRFToken(request) ) {
+      lu.setCsrfErrorPage(response, sessionStatus);
+      return;
+    }
+    
     // pass criteria to render phase
     if (visited != null) {
       response.setRenderParameter("visited", visited);
