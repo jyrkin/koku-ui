@@ -13,22 +13,41 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import fi.arcusys.koku.common.exceptions.KokuCommonException;
+import fi.arcusys.koku.common.services.facades.Logging;
+import fi.arcusys.koku.common.services.logging.LoggingHandle;
+import fi.arcusys.koku.common.services.users.UserIdResolver;
 import fi.koku.portlet.filter.userinfo.UserInfo;
 
 public class AttachmentDownload {
 
 	private static final Logger LOG = LoggerFactory.getLogger(AttachmentDownload.class);
 
+	private final Logging serviceLog = new LoggingHandle();
+	private final UserIdResolver resolver = new UserIdResolver();
+
+
 	public AttachmentDownload(ResourceRequest request, ResourceResponse response, String path) {
 
-		UserInfo user = (UserInfo) request.getPortletSession().getAttribute(UserInfo.KEY_USER_INFO);
-		if (user == null) {
-			LOG.error("UserInfo is missing! Prevented user to download file: '" + path + "'");
-			generateErrorMsg("Access denied", user, response);
-			return;
-		}
+		final UserInfo user = (UserInfo) request.getPortletSession().getAttribute(UserInfo.KEY_USER_INFO);
 
 		try {
+			if (user == null) {
+				LOG.warn("UserInfo is missing! User session propably timeouted. Prevented user to download file: '" + path + "'");
+				generateErrorMsg("Access denied", user, response);
+				return;
+			}
+
+			// Looks strange? UserInfo.getUid returns portal username not WS UID.
+			final String uid = resolver.getUserId(user.getUid());
+
+			if (uid == null) {
+				final String msg = "For somereason WS couldn't resolve UID. User is logged in, but he doesn't have proper UID in KokuWS. User: '"+user.toString()+"'. Prevented user to download file: '" + path + "'";
+				LOG.error(msg);
+				serviceLog.logFileDownload(uid, path, msg);
+				generateErrorMsg("Access denied", user, response);
+				return;
+			}
+
 			final AttachmentProxy proxy = new AttachmentProxy(path, user);
 			byte[] fileContent = proxy.getFile();
 			LOG.debug("ResponseCode: "+proxy.getResponseCode());
@@ -36,10 +55,12 @@ public class AttachmentDownload {
 			LOG.debug("ContentType: "+proxy.getContentType());
 
 			if (proxy.getResponseCode() != 200) {
-				LOG.warn("User '"+user.getUid()+"' couldn't download file '"+path+"'. Proxy responseCode: '"+proxy.getResponseCode()+"'. ProxyPath: '"+proxy.getProxyURL(path)+"'");
+				LOG.warn("User '"+user.getUid()+"' (UID: '"+uid+"') couldn't download file '"+path+"'. Proxy responseCode: '"+proxy.getResponseCode()+"'. ProxyPath: '"+proxy.getProxyURL(path)+"'");
 				generateErrorMsg("Access denied", user, response);
+				serviceLog.logFileDownload(uid, path, "User (username: '"+user.getUid()+"') tried to download file, but it's missing. Proxy returned ResponseCode: '"+proxy.getResponseCode()+"'");
 				return;
 			}
+			serviceLog.logFileDownload(uid, path, "Accessed to file");
 
 			final Map<String, String> headers = proxy.getHeaders();
 			final Set<String> headerNames = headers.keySet();

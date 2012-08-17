@@ -60,6 +60,7 @@ public final class Properties {
 	public static final String KOKU_KUNPO_REQUEST_SERVICE;
     public static final String AV_EMPLOYEE_SERVICE;
     public static final String AV_CITIZEN_SERVICE;
+    public static final String LOGGING_SERVICE;
 
     /* Intalio WebServices */
     public static final String INTALIO_TOKEN_SERVICE;
@@ -113,6 +114,8 @@ public final class Properties {
 		KOKU_KUNPO_REQUEST_SERVICE =  loadProperty("KokuKunpoRequestService location:", "KokuKunpoRequestService");
 		AV_EMPLOYEE_SERVICE =  loadProperty("AvEmployeeService location:", "AvEmployeeService");
 		AV_CITIZEN_SERVICE =  loadProperty("AvCitizenService location:", "AvCitizenService");
+		LOGGING_SERVICE =  loadProperty("LoggingService location:", "LoggingService");
+
 
 		INTALIO_TOKEN_SERVICE = loadProperty("TokenService location:", "TokenService");
 		INTALIO_TASKMGR_SERVICE = loadProperty("TaskManagerService location:", "TaskManagerService");
