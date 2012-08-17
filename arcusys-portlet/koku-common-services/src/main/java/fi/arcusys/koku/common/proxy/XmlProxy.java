@@ -14,6 +14,7 @@ import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
+import fi.arcusys.koku.common.proxy.restrictions.*;
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMFactory;
@@ -33,14 +34,6 @@ import org.apache.commons.httpclient.params.HttpConnectionManagerParams;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import fi.arcusys.koku.common.proxy.restrictions.AppointmentProcessingServiceRestriction;
-import fi.arcusys.koku.common.proxy.restrictions.HakProcessingServiceRestriction;
-import fi.arcusys.koku.common.proxy.restrictions.MessageProcessingServiceRestriction;
-import fi.arcusys.koku.common.proxy.restrictions.RequestProcessingServiceRestriction;
-import fi.arcusys.koku.common.proxy.restrictions.SuostumusProcessingServiceRestriction;
-import fi.arcusys.koku.common.proxy.restrictions.TietopyyntoProcessingServiceRestriction;
-import fi.arcusys.koku.common.proxy.restrictions.ValtakirjaProcessingServiceRestriction;
-import fi.arcusys.koku.common.proxy.restrictions.WSRestriction;
 import fi.arcusys.koku.common.proxy.util.WSCommonData;
 import fi.arcusys.koku.common.util.KokuWebServicesJS;
 import fi.koku.portlet.filter.userinfo.UserInfo;
@@ -84,7 +77,7 @@ public class XmlProxy {
     		LOG.info("Added new endpoint to XmlProxy: "+value);
 		}
 
-		//restrictions.put(KokuWebServicesJS.USERS_AND_GROUPS_SERVICE, new UsersAndGroupsServiceRestriction());
+		restrictions.put(KokuWebServicesJS.USERS_AND_GROUPS_SERVICE, new UsersAndGroupsServiceRestriction());
 		restrictions.put(KokuWebServicesJS.APPOINTMENT_PROCESSING_SERVICE, new AppointmentProcessingServiceRestriction());
 		restrictions.put(KokuWebServicesJS.KV_MESSAGE_SERVICE, new MessageProcessingServiceRestriction());
 		restrictions.put(KokuWebServicesJS.REQUEST_PROCESSING_SERVICE, new RequestProcessingServiceRestriction());

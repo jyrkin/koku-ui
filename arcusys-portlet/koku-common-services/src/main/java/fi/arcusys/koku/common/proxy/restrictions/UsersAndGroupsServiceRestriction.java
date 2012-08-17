@@ -26,6 +26,26 @@ public class UsersAndGroupsServiceRestriction implements WSRestriction {
         return KokuWebServicesJS.USERS_AND_GROUPS_SERVICE;
     }
 
+    /*
+        Accessed methods:
+
+        getChildInfo
+        getKunpoNameByUserUid
+        getLooraNameByUserUid
+        getUserInfo
+        getUsernamesInRole
+        getUserOrganizations
+        getUserRoles
+        getUsersByGroupUid
+        getUsersChildren
+        getUserUidByLooraName
+        searchChildren
+        searchGroups
+        searchRoles
+        searchUsers
+        searchEmployees
+    */
+
     @Override
     public boolean requestPermitted(WSCommonData commonData, final String methodName, final OMElement soapEnvelope) {
         boolean permitted = false;
@@ -106,6 +126,10 @@ public class UsersAndGroupsServiceRestriction implements WSRestriction {
 
         // UsersAndGroupsService - getUsersChildren
         } else if (methodName.equalsIgnoreCase("getUsersChildren")) {
+            // Permitted for Loora users
+            if (Properties.IS_LOORA_PORTAL)
+                permitted = true;
+
             final String userUid = WSCommonUtil.getTextOfChild(soapEnvelope, "userUid");
 
             if (userUid != null && commonData.getUserInfoAllowedUid().contains(userUid)) {
@@ -122,10 +146,11 @@ public class UsersAndGroupsServiceRestriction implements WSRestriction {
 
         // UsersAndGroupsService - getUserInfo
         } else if (methodName.equalsIgnoreCase("getUserInfo")) {
+            final String userUid = WSCommonUtil.getTextOfChild(soapEnvelope, "userUid");
 
-            if (Properties.IS_LOORA_PORTAL) {
-                permitted = true;
-            }
+            // Always permitted (we have no way of properly populate the permission lists)
+            // Certain info is stripped from the result in the result checker
+            permitted = true;
 
         // UsersAndGroupsService - getSsnByLdapName
         } else if (methodName.equalsIgnoreCase("getSsnByLdapName")) {
@@ -209,6 +234,25 @@ public class UsersAndGroupsServiceRestriction implements WSRestriction {
 
     @Override
     public boolean responsePermitted(WSCommonData commonData, final String methodName, final OMElement soapEnvelope) {
+
+        // Strip sensitive data from user info
+        if (methodName.equalsIgnoreCase("getUserInfo")) {
+            OMElement userElement = WSCommonUtil.getFirstOMElement(soapEnvelope, "user");
+            final String uid = WSCommonUtil.getTextOfChild(userElement, "uid");
+
+            if (Properties.IS_KUNPO_PORTAL && !commonData.getUserInfoAllowedUid().contains(uid)) {
+                OMElement emailElement = WSCommonUtil.getFirstOMElement(userElement, "email");
+                if (emailElement != null) {
+                    emailElement.detach();
+                }
+
+                OMElement phoneElement = WSCommonUtil.getFirstOMElement(userElement, "phoneNumber");
+                if (phoneElement != null) {
+                    phoneElement.detach();
+                }
+            }
+        }
+
         return true;
     }
 
