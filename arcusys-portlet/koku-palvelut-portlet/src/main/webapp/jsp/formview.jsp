@@ -196,13 +196,15 @@
 
 		if (wsReply == null) {
 			alert("Error completing proxy request. See browser console for request message.");
-			console.log("Service name: " + serviceName + "; request: " + soapMessage);
-		}
-		else if (wsReply.result != "OK") {
+			if (typeof console != 'undefined') {
+				console.log("Service name: " + serviceName + "; request: " + soapMessage);
+			}
+		} else if (wsReply.result != "OK") {
 			alert("Error completing proxy request. See browser console for request message and response.");
-			console.log("Service name: " + serviceName + "; Request: " + soapMessage + "; Response: " + wsReply.wsMessage);
-		}
-		else {
+			if (typeof console != 'undefined') {
+				console.log("Service name: " + serviceName + "; Request: " + soapMessage + "; Response: " + wsReply.wsMessage);
+			}
+		} else {
 			return wsReply.wsMessage;
 		}
 	};
