@@ -91,7 +91,7 @@
 
 <div class="koku-kks">
 	<div class="portlet-section-body">
-
+       <div class="print">
 		<div class="kks-left">
 			<div class="kks-collection">
 				<div class="kks-error-bindings">
@@ -174,6 +174,15 @@
 
 				</div>
 				<br />
+				<c:if test="${can_print}">
+                    <span class="kks-right kks-no-print"> 
+                    
+					    <input name="save-button" type="submit"
+								class="portlet-form-button"
+								value="<spring:message code="ui.kks.print"/>"
+							onclick="window.print()">					
+					 </span>
+					 </c:if>
 				<c:if test="${empty print_mode}">
 					<div>
 						<a
@@ -252,7 +261,7 @@
 		<div class="kks-reset-floating"></div>
 
 		<div class="kks-content kks-print">
-
+			
 			<c:if test="${ empty_collection }">
 				<spring:message code="ui.kks.no.authorization" />
 			</c:if>
@@ -500,8 +509,11 @@
 				</form:form>
 
 			</c:if>
+								
 		</div>
 	</div>
+
+
 
 	<div id="sessionTimeoutWarning" style="display: none"></div>
 	<div id="savingDialog" style="display: none"></div>
