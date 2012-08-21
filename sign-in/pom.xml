@@ -38,6 +38,12 @@
       <!--scope>compile</scope-->
     </dependency>
     
+    <dependency>  
+      <groupId>kohti-kumppanuutta</groupId>  
+      <artifactId>portlet-common</artifactId>  
+      <version>0.0.32</version>  
+  </dependency> 
+    
     <dependency>
       <groupId>org.exoplatform.core</groupId>
       <artifactId>exo.core.component.organization.api</artifactId>
