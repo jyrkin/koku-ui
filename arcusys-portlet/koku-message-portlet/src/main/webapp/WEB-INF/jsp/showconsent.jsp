@@ -27,11 +27,13 @@
 
 	<div id="task-manager-wrap" class="single">
 		<div id="show-message" style="padding:12px">
-		<c:if test="${consent.model.targetPerson != null}">
+		<c:if test="${not empty consent.model.targetPerson}">
 		<span class="text-bold"><spring:message code="consent.requester" />: <c:out value="${consent.model.requesterUser.fullName}" /> </span><br />
 		</c:if>
 		<span class="text-bold"><spring:message code="consent.templateName" />:</span> <c:out value="${consent.model.templateName}" /><br />
+		<c:if test="${not empty consent.model.templateTypeName}">
 		<span class="text-bold"><spring:message code="consent.templateTypeName" />:</span> <c:out value="${consent.model.templateTypeName}" /><br />
+		</c:if>
 		<span class="text-bold"><spring:message code="consent.status"/>:</span> <c:out value="${consent.model.status}" /><br />
 		<span class="text-bold"><spring:message code="consent.approvalStatus"/>:</span> <c:out value="${consent.model.approvalStatus}" /><br />
 		<span class="text-bold"><spring:message code="consent.createType"/>:</span> <c:out value="${consent.model.createType}" /><br />
@@ -44,14 +46,16 @@
 		</c:forEach>
 		<br />
 		
-		<c:if test="${consent.model.targetPerson != null}">
+		<c:if test="${not empty consent.model.targetPerson}">
 		<span class="text-bold"><spring:message code="consent.targetPerson"/>:</span> <c:out value="${consent.model.targetPerson.fullName}" /><br />
 		</c:if>
 		
 		<span class="text-bold"><spring:message code="consent.comment"/>:</span> <c:out value="${consent.model.comment}" /><br />
 		
-		<c:if test="${consent.model.kksFormInstance != null}">
+		<c:if test="${not empty consent.model.kksFormInstance}">
+			<c:if test="${not empty consent.model.kksFormInstance.instanceName}">
 			<span class="text-bold"><spring:message code="consent.kksFormName"/>:</span> <c:out value="${consent.model.kksFormInstance.instanceName}" /><br />
+			</c:if>
 			
 			<c:if test="${not empty consent.model.kksFormInstance.fields}">
 				<span class="text-bold"><spring:message code="consent.kksFieldName"/>:</span>
