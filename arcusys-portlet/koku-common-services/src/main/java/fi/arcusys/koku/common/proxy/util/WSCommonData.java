@@ -168,8 +168,16 @@ public class WSCommonData {
             while (i.hasNext()) {
                 final OMElement child = i.next();
                 final String uid = WSCommonUtil.getTextOfChild(child, "uid");
-                logger.info("Adding allowed UID: " + dataContainer.userUid);
+                logger.info("Adding allowed UID (child): " + uid);
                 dataContainer.userInfoAllowedUid.add(uid);
+
+                final Iterator<OMElement> j = child.getChildrenWithLocalName("parents");
+                while (j.hasNext()) {
+                    final OMElement parent = j.next();
+                    final String parentUid = WSCommonUtil.getTextOfChild(parent, "uid");
+                    logger.info("Adding allowed UID (other guardian): " + parentUid);
+                    dataContainer.userInfoAllowedUid.add(parentUid);
+                }
             }
 
         } catch (Exception e) {

@@ -76,6 +76,16 @@ public class UsersAndGroupsServiceRestriction implements WSRestriction {
             if (Properties.IS_LOORA_PORTAL)
                 permitted = true;
 
+            final String userUid = WSCommonUtil.getTextOfChild(soapEnvelope, "userUid");
+
+            logger.info("getKunpoNameByUserUid: userUid = " + userUid);
+
+            if (userUid != null && commonData.getUserInfoAllowedUid().contains(userUid)) {
+                permitted = true;
+            } else {
+                logger.warn("User is not permitted to get the information about other non-relevant users");
+            }
+
         // UsersAndGroupsService - getUserUidByLooraName
         } else if (methodName.equalsIgnoreCase("getUserUidByLooraName")) {
             final String looraUsername = WSCommonUtil.getTextOfChild(soapEnvelope, "looraUsername");
@@ -93,6 +103,14 @@ public class UsersAndGroupsServiceRestriction implements WSRestriction {
             // Permitted for Loora users
             if (Properties.IS_LOORA_PORTAL)
                 permitted = true;
+
+            final String userUid = WSCommonUtil.getTextOfChild(soapEnvelope, "userUid");
+
+            if (userUid != null && commonData.getUserInfoAllowedUid().contains(userUid)) {
+                permitted = true;
+            } else {
+                logger.warn("User is not permitted to get the information about other non-relevant users");
+            }
 
         // UsersAndGroupsService - searchUsers
         } else if (methodName.equalsIgnoreCase("searchUsers")) {
