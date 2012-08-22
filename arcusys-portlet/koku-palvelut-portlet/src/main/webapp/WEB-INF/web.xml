@@ -60,39 +60,6 @@
 		<servlet-name>ViewRendererServlet</servlet-name>
 		<url-pattern>/WEB-INF/servlet/view</url-pattern>
 	</servlet-mapping>
-	
-    <servlet>
-      <servlet-name>WsProxyServlet2</servlet-name>
-      <servlet-class>fi.arcusys.koku.common.wsproxy.servlet.WsProxyServletRestricted</servlet-class>
-<!--         <init-param> -->
-<!--           <description>List of endpoints available for proxying.</description> -->
-<!--           <param-name>endpoints</param-name> -->
-<!--           <param-value> -->
-<!--                 http://trelx51x:8080/arcusys-koku-0.1-SNAPSHOT-av-model-0.1-SNAPSHOT/KokuAppointmentProcessingServiceImpl, -->
-<!--                 http://trelx51x:8080/arcusys-koku-0.1-SNAPSHOT-arcusys-common-0.1-SNAPSHOT/UsersAndGroupsServiceImpl, -->
-<!--                 http://trelx51x:8080/arcusys-koku-0.1-SNAPSHOT-tiva-model-0.1-SNAPSHOT/KokuSuostumusProcessingServiceImpl, -->
-<!--                 http://trelx51x:8080/arcusys-koku-0.1-SNAPSHOT-tiva-model-0.1-SNAPSHOT/KokuValtakirjaProcessingServiceImpl, -->
-<!--                 http://trelx51x:8080/arcusys-koku-0.1-SNAPSHOT-tiva-model-0.1-SNAPSHOT/KokuTietopyyntoProcessingServiceImpl, -->
-<!--                 http://trelx51x:8080/arcusys-koku-0.1-SNAPSHOT-hak-model-0.1-SNAPSHOT/KokuHakProcessingServiceImpl, -->
-<!--                 http://trelx51x:8080/arcusys-koku-0.1-SNAPSHOT-kv-model-0.1-SNAPSHOT/KokuRequestProcessingServiceImpl -->
-<!--           </param-value> -->
-<!--         </init-param> -->
-     </servlet>
-
-    <servlet-mapping>
-      <servlet-name>WsProxyServlet2</servlet-name>
-      <url-pattern>/ajaxforms/WsProxyServlet2</url-pattern>
-    </servlet-mapping>
-    
-     <servlet>
-      <servlet-name>WSUtils</servlet-name>
-      <servlet-class>fi.arcusys.koku.common.wsproxy.servlet.WSUtils</servlet-class>
-     </servlet>
-
-    <servlet-mapping>
-      <servlet-name>WSUtils</servlet-name>
-      <url-pattern>/Services</url-pattern>
-    </servlet-mapping>
     
   <!-- EPP only: start -->
 	 <filter>
