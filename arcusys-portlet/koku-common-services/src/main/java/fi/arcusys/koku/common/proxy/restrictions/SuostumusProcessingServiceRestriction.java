@@ -48,6 +48,8 @@ public class SuostumusProcessingServiceRestriction implements WSRestriction {
             }
             else if (methodName.equals("getKksFormInstances")) {
                 permitted = true;
+            } else if (methodName.equals("getKksFormTypes")) {
+                permitted = true;
             }
         }
 
@@ -81,6 +83,10 @@ public class SuostumusProcessingServiceRestriction implements WSRestriction {
             permitted = true;
         }
         else if (methodName.equals("getKksFormInstances")) {
+            // All checks done in requestPermitted
+            permitted = true;
+        }
+        else if (methodName.equals("getKksFormTypes")) {
             // All checks done in requestPermitted
             permitted = true;
         }
