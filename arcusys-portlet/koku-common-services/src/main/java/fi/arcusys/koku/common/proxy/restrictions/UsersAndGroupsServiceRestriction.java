@@ -88,6 +88,10 @@ public class UsersAndGroupsServiceRestriction implements WSRestriction {
 
         // UsersAndGroupsService - getUserUidByLooraName
         } else if (methodName.equalsIgnoreCase("getUserUidByLooraName")) {
+            // Permitted for Loora users
+            if (Properties.IS_LOORA_PORTAL)
+                permitted = true;
+
             final String looraUsername = WSCommonUtil.getTextOfChild(soapEnvelope, "looraUsername");
 
             logger.info("getUserUidByLooraName: looraUsername = " + looraUsername);
