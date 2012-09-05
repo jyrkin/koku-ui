@@ -166,6 +166,14 @@ public class UsersAndGroupsServiceRestriction implements WSRestriction {
             if (Properties.IS_LOORA_PORTAL)
                 permitted = true;
 
+            final String childUid = WSCommonUtil.getTextOfChild(soapEnvelope, "childUid");
+
+            if (childUid != null && commonData.getUserInfoAllowedUid().contains(childUid)) {
+                permitted = true;
+            } else {
+                logger.warn("User is not permitted to get the information about other non-relevant users");
+            }
+
         // UsersAndGroupsService - getUserInfo
         } else if (methodName.equalsIgnoreCase("getUserInfo")) {
             final String userUid = WSCommonUtil.getTextOfChild(soapEnvelope, "userUid");
